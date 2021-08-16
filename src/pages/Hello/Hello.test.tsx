@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { expect } from "chai";
 
-import App from "./App";
+import Hello from "./Hello";
 
-describe("App", () => {
+describe("Pages/Hello", () => {
   it("works", () => {
-    render(<App name="World" />);
+    render(<Hello name="World" />);
 
     const header = screen.getByText(/Hello, World!/i);
     expect(header).to.have.tagName("h1");

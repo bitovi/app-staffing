@@ -1,11 +1,20 @@
-export interface AppProps {
-  name: string;
-}
+import { Switch, Route } from "react-router-dom";
 
-export default function App({ name }: AppProps): JSX.Element {
+import Layout from "./components/Layout";
+
+import Hello from "./pages/Hello";
+
+export default function App(): JSX.Element {
   return (
-    <div>
-      <h1>Hello, {name}!</h1>
-    </div>
+    <Layout>
+      <Switch>
+        <Route path="/">
+          <Hello name="World" />
+        </Route>
+        <Route path="/bob">
+          <Hello name="Bob" />
+        </Route>
+      </Switch>
+    </Layout>
   );
 }
