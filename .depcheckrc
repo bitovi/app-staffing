@@ -1,0 +1,8 @@
+ignore-dirs:
+  - /build
+ignores:
+  - "@types/*"
+  - "@testing-library/*"
+  - "@typescript-eslint/*"
+  - eslint-*
+  - babel-eslint
