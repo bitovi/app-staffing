@@ -5,7 +5,8 @@
   "homepage": "https://bitovi.github.io/app-staffing",
   "scripts": {
     "depcheck": "depcheck .",
-    "eslint": "eslint .",
+    "eslint": "eslint src",
+    "prettier": "prettier --check src",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf build",
     "dev": "react-scripts start",
@@ -15,9 +16,8 @@
     "build": "react-scripts build"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app"
-    ],
+    "root": true,
+    "extends": "@hmudesign",
     "overrides": [
       {
         "files": [
@@ -28,6 +28,9 @@
         }
       }
     ]
+  },
+  "prettier": {
+    "trailingComma": "all"
   },
   "browserslist": {
     "production": [
@@ -46,6 +49,7 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@hmudesign/eslint-config": "^2.0.2",
     "@storybook/addon-actions": "^6.3.7",
     "@storybook/addon-essentials": "^6.3.7",
     "@storybook/addon-links": "^6.3.7",
@@ -63,6 +67,7 @@
     "chai": "^4.3.4",
     "chai-dom": "^1.9.0",
     "depcheck": "^1.4.2",
+    "prettier": "^2.3.2",
     "react-scripts": "4.0.3",
     "typescript": "^4.3.5"
   }

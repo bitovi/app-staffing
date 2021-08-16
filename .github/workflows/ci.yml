@@ -17,10 +17,12 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: ESLint
-        run: npm run eslint
       - name: Depcheck
         run: npm run depcheck
+      - name: ESLint
+        run: npm run eslint
+      - name: Prettier
+        run: npm run prettier
       - name: Typecheck
         run: npm run typecheck
 

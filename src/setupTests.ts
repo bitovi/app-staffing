@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 import chai from "chai";
 import chaiDom from "chai-dom";
 
