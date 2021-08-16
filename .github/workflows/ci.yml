@@ -27,8 +27,11 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Build
+      - name: Build App
         run: npm run build
+      - name: Build Storybook
+        run: npm run storybook:build
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

@@ -4,5 +4,6 @@ ignores:
   - "@types/*"
   - "@testing-library/*"
   - "@typescript-eslint/*"
+  - "@storybook/*"
   - eslint-*
   - babel-eslint
