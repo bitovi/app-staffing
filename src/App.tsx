@@ -3,6 +3,7 @@ import React, { Suspense } from 'react'
 import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
+import "./App.css";
 
 import Loading from "./components/Loading";
 
