@@ -1,9 +1,11 @@
-import { useEmployees } from "./useEmployees";
-import styles from "./employees.module.scss";
 import React, { useEffect, useState } from "react";
-import { Employee } from "../../services/api";
 import classNames from "classnames";
+
+import { useEmployees } from "./useEmployees";
+import { Employee } from "../../services/api";
 import EmployeeCard from "./components/EmployeeCard";
+
+import styles from "./employees.module.scss";
 
 export default function Employees(): JSX.Element {
   const { employees } = useEmployees();
@@ -25,7 +27,6 @@ export default function Employees(): JSX.Element {
           e.name.toLowerCase().includes(filterValue.toLowerCase()),
         );
         setFilteredEmployees(filtered);
-      } else {
       }
     } else {
       setFilteredEmployees(employees);
@@ -45,7 +46,6 @@ export default function Employees(): JSX.Element {
           />
           <button
             className={`${styles["alert"]} ${styles["action-bar-icon"]}`}
-            // className="action-bar-icon"
             onClick={() => {
               alert("NOTIFICATIONS");
             }}
@@ -54,7 +54,6 @@ export default function Employees(): JSX.Element {
           </button>
           <button
             className={`${styles["settings"]} ${styles["action-bar-icon"]}`}
-            // className="action-bar-icon"
             onClick={() => {
               alert("SETTINGS");
             }}

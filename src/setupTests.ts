@@ -4,6 +4,8 @@ import chai from "chai";
 import chaiDom from "chai-dom";
 chai.use(chaiDom);
 
+import "@testing-library/jest-dom";
+
 import { setupServer } from "msw/node";
 import mocks from "./services/mocks";
 const server = setupServer(...mocks);
