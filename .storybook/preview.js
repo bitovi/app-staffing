@@ -1,4 +1,4 @@
-import { addDecorator } from '@storybook/react'
+import { addDecorator } from "@storybook/react";
 
 import { setupWorker } from "msw";
 import mocks from "../src/services/mocks";

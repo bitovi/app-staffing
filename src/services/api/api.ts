@@ -1,6 +1,14 @@
 export interface Employee {
-  id: number;
+  id: string;
+  avatar: string;
   name: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  skills: {
+    name: string;
+  }[];
+  available: boolean;
 }
 
 export async function getData(foo?: string): Promise<Employee[]> {
