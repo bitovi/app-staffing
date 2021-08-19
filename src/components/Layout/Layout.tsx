@@ -12,7 +12,7 @@ export default function Layout({
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/bob">Bob</Link>
+          <Link to="/employees">Employees</Link>
         </li>
       </ul>
 

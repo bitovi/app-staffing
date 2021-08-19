@@ -1,10 +1,10 @@
-import type { CardData } from "../../services/api";
+import type { Employee } from "../../services/api";
 
 import { useEffect, useState } from "react";
 import { getData } from "../../services/api";
 
 export default function Hello({ name }: { name: string }): JSX.Element {
-  const [data, setData] = useState<CardData[]>();
+  const [data, setData] = useState<Employee[]>();
 
   useEffect(() => {
     getData(name).then(setData);

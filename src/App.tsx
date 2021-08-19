@@ -1,4 +1,5 @@
 import { Switch, Route } from "react-router-dom";
+import Employees from "./components/Employees";
 
 import Layout from "./components/Layout";
 
@@ -11,8 +12,8 @@ export default function App(): JSX.Element {
         <Route path="/" exact>
           <Hello name="World" />
         </Route>
-        <Route path="/bob">
-          <Hello name="Bob" />
+        <Route path="/employees">
+          <Employees />
         </Route>
         <Route>
           <Hello name="Error" />
