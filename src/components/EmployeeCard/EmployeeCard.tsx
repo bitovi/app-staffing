@@ -78,7 +78,7 @@ export default function Layout({
       </div>
       <div className="availability-container">
         <input type="checkbox">
-          <span className="slider round"></span>
+          <span className="slider round">{available}</span>
         </input>
       </div>
     </div>
