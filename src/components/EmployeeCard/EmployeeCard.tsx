@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Layout({
+export default function EmployeeCard({
   children,
   data,
 }: {
@@ -17,14 +17,14 @@ export default function Layout({
   const handleSave = () => {
     /* TODO: Add save handler */
     console.log("Save button clicked!");
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
-    /* TODO: Add cancel handler */
-    console.log("Cancel button clicked!");
+    setIsEditing(false);
   };
 
-  const { name, title, startDate, endDate, skills, available, avatar } = data;
+  const { name, title, startDate, endDate, skills, avatar } = data;
 
   return (
     <div className="card-container">
@@ -66,21 +66,21 @@ export default function Layout({
             Add Skill
           </button>
         </div>
-        <div className="availability-container"></div>
-      </div>
-      <div className="save-container">
-        <button className="card-cancel" onClick={handleCancel}>
-          Cancel
-        </button>
-        <button className="card-save" onClick={handleSave}>
-          Save
-        </button>
-      </div>
-      <div className="availability-container">
-        <input type="checkbox">
+        <div className="availability-container">
+          <input type="checkbox" />
           <span className="slider round"></span>
-        </input>
+        </div>
       </div>
+      {isEditing && (
+        <div className="save-container">
+          <button className="card-cancel" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button className="card-save" onClick={handleSave}>
+            Save
+          </button>
+        </div>
+      )}
     </div>
   );
 }
