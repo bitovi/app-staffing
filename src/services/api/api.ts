@@ -3,8 +3,8 @@ export interface Datum {
   name: string;
 }
 
-export async function getData(): Promise<Datum[]> {
-  const response = await fetch("/v1");
+export async function getData(foo?: string): Promise<Datum[]> {
+  const response = await fetch(`/v1?foo=${foo}`);
   const { data } = await response.json();
   return data;
 }

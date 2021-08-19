@@ -7,8 +7,8 @@ export default function Hello({ name }: { name: string }): JSX.Element {
   const [data, setData] = useState<Datum[]>();
 
   useEffect(() => {
-    getData().then(setData);
-  }, []);
+    getData(name).then(setData);
+  }, [name]);
 
   return (
     <div>

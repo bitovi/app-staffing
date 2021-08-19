@@ -1,6 +1,7 @@
 import { render } from "react-dom";
 import { StrictMode } from "react";
 import { HashRouter } from "react-router-dom";
+import { setupWorker } from "msw";
 
 import mocks from "./services/mocks";
 
@@ -12,7 +13,7 @@ if (process.env.PUBLIC_URL) {
   }
 }
 
-mocks.start({
+setupWorker(...mocks).start({
   onUnhandledRequest: "bypass",
   serviceWorker: {
     url: `${process.env.PUBLIC_URL}/mockServiceWorker.js`,
