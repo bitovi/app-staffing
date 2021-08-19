@@ -1,6 +1,6 @@
 import { rest } from "msw";
 
-const cardData = [
+export const cardData = [
   {
     id: "1",
     avatar:

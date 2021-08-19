@@ -1,12 +1,18 @@
-export interface Datum {
-  id: number;
+export interface CardData {
+  id: string;
+  avatar: string;
   name: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  skills: {
+    name: string;
+  }[];
+  available: boolean;
 }
 
-export async function getData(): Promise<Datum[]> {
-  return [
-    { id: 1, name: "car" },
-    { id: 2, name: "cam" },
-    { id: 3, name: "caz" },
-  ];
+import { cardData } from "../mocks";
+
+export async function getData(): Promise<CardData[]> {
+  return cardData;
 }
