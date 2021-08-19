@@ -19,7 +19,7 @@ export default function App(): JSX.Element {
             <Hello name="World" />
           </Route>
           <Route path="/employees">
-            <Hello name="Bob" />
+            <Employees />
           </Route>
           <Route path="/dylan">
             <Hello name="Dylan" />
