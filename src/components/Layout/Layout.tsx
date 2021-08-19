@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import SideNav from "../../components/SideNav/SideNav";
+import styles from "./Layout.module.css";
 
 export default function Layout({
   children,
@@ -6,15 +7,8 @@ export default function Layout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <div>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/employees">Employees</Link>
-        </li>
-      </ul>
+    <div className={styles.wrapper}>
+      <SideNav />
 
       <div>{children}</div>
     </div>
