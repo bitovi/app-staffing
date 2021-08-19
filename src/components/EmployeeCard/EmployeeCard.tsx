@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./EmployeeCard.module.css";
 
 export default function EmployeeCard({
   children,
@@ -27,48 +28,54 @@ export default function EmployeeCard({
   const { name, title, startDate, endDate, skills, avatar } = data;
 
   return (
-    <div className="card-container">
-      <div className="card-details">
-        <div className="person-container">
-          <div className="image-container">
-            <img src={avatar} placeholder="Profile Picture" alt="not found" />
-          </div>
-          <div className="employee-details-container">
-            <div className="employee-name">
+    <div className={styles.displayHorizontalContainer}>
+      <div className={`${styles.displayHorizontalContainer} ${styles.horizontalMargin}`}>
+        <div className="image-container">
+            <img src={avatar} className={styles.profilePicture} placeholder="Profile Picture" alt="not found" />
+        </div>
+        <div className={styles.displayHorizontalContainer}>
+          <div className={`${styles.employeeDetailsContainer} ${styles.displayVerticalContainer} ${styles.verticalMargin}`}>
+            <div className={styles.employeeDetail}>
               <input id="name" value={name} disabled={!isEditing} />
             </div>
-            <div className="employee-title">
+            <div className={styles.employeeDetail}>
               <input id="title" value={title} disabled={!isEditing} />
             </div>
           </div>
         </div>
-        <div className="dates-container">
-          <div className="start-date">
-            <label>
-              Start Date
-              <input id="title" value={startDate} disabled={!isEditing} />
+        <div className={styles.displayVerticalContainer}>
+          <div className={styles.dateContainer}>
+            <label className={styles.displayVerticalContainer}>
+              <span className={styles.bold}>Start Date</span>
+              <input className={styles.verticalPadding} id="title" value={startDate} disabled={!isEditing} />
             </label>
           </div>
-          <div className="end-date">
-            <label>
-              End Date
-              <input id="title" value={endDate} disabled={!isEditing} />
+          <div className={styles.dateContainer}>
+            <label className={styles.displayVerticalContainer}>
+              <span className={styles.bold}>End Date</span>
+              <input id="title" className={styles.verticalMargin} value={endDate} disabled={!isEditing} />
             </label>
           </div>
         </div>
-        <div className="skills-container">
-          {skills.map(({ name }) => (
-            <div id={title + name} className="skill" key={name}>
-              {name}
-            </div>
-          ))}
-          <button className="add-skill-btn" onClick={handleAddSkill}>
+        <div className={`${styles.displayVerticalContainer} ${styles.skillContainer}`}>
+          <span className={styles.bold}>Skills</span>
+          <div className={styles.displayHorizontalContainer}>
+            {skills.map(({ name }) => (
+              <div id={title + name} className={styles.skill} key={name}>
+                {name}
+              </div>
+            ))}            
+          </div>
+          <button className={styles.skillBtn} onClick={handleAddSkill}>
             Add Skill
           </button>
         </div>
-        <div className="availability-container">
-          <input type="checkbox" />
-          <span className="slider round"></span>
+        <div className={styles.displayVerticalContainer}>
+          <span className={styles.bold}>Available</span>
+          <div className={styles.availabilityContainer}>
+            <input type="checkbox" />
+            <span className={`${styles.round} ${styles.slider}`}></span>            
+          </div>
         </div>
       </div>
       {isEditing && (
