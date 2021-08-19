@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Layout({
+export default function EmployeeCard({
   children,
   data,
 }: {
