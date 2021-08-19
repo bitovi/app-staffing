@@ -1,27 +1,36 @@
 import { useEmployees } from "./useEmployees";
 import styles from "./employees.module.scss";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Employee } from "../../services/api";
+import classNames from "classnames";
+import EmployeeCard from "./components/EmployeeCard";
 
 export default function Employees(): JSX.Element {
   const { employees } = useEmployees();
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>();
+  const [isAdding, setIsAdding] = useState(false);
+  const [idBeingEdited, setIdBeingEdited] = useState<string>();
+
+  const handleSave = () => {
+    // eslint-disable-next-line no-console
+    console.log("SAVING!");
+    setIdBeingEdited(undefined);
+  };
 
   useEffect(() => {
-      if (filterValue) {
-
-          if (employees) {
-              const filtered = employees.filter((e) => e.name === filterValue); 
-              setFilteredEmployees(filtered);
-            } else {
-                
-            }
-        } else {
-            setFilteredEmployees(employees);
-        }
-
-  }, [filterValue, employees])
+    if (filterValue) {
+      if (employees) {
+        const filtered = employees.filter((e) =>
+          e.name.toLowerCase().includes(filterValue.toLowerCase()),
+        );
+        setFilteredEmployees(filtered);
+      } else {
+      }
+    } else {
+      setFilteredEmployees(employees);
+    }
+  }, [filterValue, employees]);
 
   return (
     <>
@@ -55,17 +64,40 @@ export default function Employees(): JSX.Element {
         </div>
       </div>
       <div className={styles["employee-table-action-row"]}>
-        <button className={styles["add-employee-button"]}>
+        <button
+          className={styles["add-employee-button"]}
+          onClick={() => {
+            setIsAdding(true);
+          }}
+        >
           Add Team Member +
         </button>
-        {filterValue && (<div className={styles['filter-tag-wrapper']}><div className={styles['filter-tag']}>{filterValue}</div></div>)}
+        {filterValue && (
+          <div className={styles["filter-tag-wrapper"]}>
+            <div className={styles["filter-tag"]}>{filterValue}</div>
+          </div>
+        )}
       </div>
       <div className={styles["employee-table-wrapper"]}>
+        {isAdding && (
+          <div
+            className={classNames(
+              styles["employee-table-row"],
+              styles["employee-table-row"],
+            )}
+          >
+            Employee: <input></input>
+          </div>
+        )}
         {filteredEmployees &&
           filteredEmployees.map((employee) => (
-            <div key={employee.id} className={styles["employee-table-row"]}>
-              Employee: {employee.name}
-            </div>
+            <EmployeeCard
+              key={employee.id}
+              employee={employee}
+              editing={idBeingEdited === employee.id}
+              onEdit={() => setIdBeingEdited(employee.id)}
+              onSave={handleSave}
+            />
           ))}
       </div>
     </>

@@ -9,7 +9,7 @@ export default {
   title: "Services/API/getData",
 } as Meta<{ id: string }>;
 
-export const Basic: Story<{ foo: string }> = (args) => {
+export const Basic: Story<{ id: string }> = (args) => {
   const [data, setData] = useState<Employee[]>();
 
   useEffect(() => {

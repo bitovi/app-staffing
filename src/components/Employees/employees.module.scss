@@ -37,35 +37,26 @@
     font-family: Arial, Helvetica, sans-serif;
   }
 
-  >.filter-tag-wrapper {
-      padding: 5px;
-      float: right;
-      bottom: 5px;
-      position: relative;
-      font-family: Arial, Helvetica, sans-serif;
-      display: flex;
+  > .filter-tag-wrapper {
+    padding: 5px;
+    float: right;
+    bottom: 5px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
 
-      > .filter-tag {
-        margin-left: 5px;
-        display: table;
-        font-size: 12px;
-        border-radius: 3px;
-        padding: 2px 5px;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-      }
+    > .filter-tag {
+      margin-left: 5px;
+      display: table;
+      font-size: 12px;
+      border-radius: 3px;
+      padding: 2px 5px;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    }
   }
 
-}
-
-.employee-table-wrapper {
-  width: 100%;
-  background-color: #ccc;
-
-  > .employee-table-row {
-      width: calc(100% - 40px);
-    min-height: 30px;
-    background-color: #aaa;
-    padding: 20px;
-    border-top: 1px solid rgb(126, 126, 126);
+  .employee-table-wrapper {
+    width: 100%;
+    background-color: #ccc;
   }
 }

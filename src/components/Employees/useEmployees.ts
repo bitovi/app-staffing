@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
-import { Employee, getData } from '../../services/api';
+import { useEffect, useState } from "react";
+import { Employee, getData } from "../../services/api";
 type Response = {
-    employees?: Employee[],
-}
+  employees?: Employee[];
+};
 
 export function useEmployees(): Response {
-    const [data, setData] = useState<Employee[]>()
+  const [data, setData] = useState<Employee[]>();
 
-    const getEmployees = async () => {
-        const employees = await getData();
-        setData(employees);
-    }
-    
-    useEffect(() => {
-        getEmployees();
-    }, []);
+  const getEmployees = async () => {
+    const employees = await getData();
+    setData(employees);
+  };
 
-    return {
-        employees: data,
-     };
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  return {
+    employees: data,
+  };
 }
