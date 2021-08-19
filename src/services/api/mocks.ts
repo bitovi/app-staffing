@@ -7,7 +7,10 @@ const cardData = [{
   title: "Software Developer",
   startDate: "08/19/2021",
   endDate: "12/12/2021",
-  skills: ["React", "Project Management"],
+  skills: [
+    { name: "React" },
+    { name: "Project Management"}
+  ],
   available: false,
 },
 {
@@ -17,7 +20,7 @@ const cardData = [{
   title: "Software Developer",
   startDate: "06/01/2021",
   endDate: "08/18/2021",
-  skills: ["Angular"],
+  skills: [{ name: "Angular" }],
   available: false,
 },
 {
@@ -27,7 +30,10 @@ const cardData = [{
   title: "Visual Designer",
   startDate: "08/19/2021",
   endDate: "12/12/2021",
-  skills: ["Design", "Frontend"],
+  skills: [
+    { name: "Design" },
+    { name: "Frontend" }
+  ],
   available: false,
 },
 {
@@ -37,7 +43,10 @@ const cardData = [{
   title: "UX",
   startDate: "08/19/2021",
   endDate: "12/12/2021",
-  skills: ["UX", "Project Management"],
+  skills: [
+    { name: "UX" },
+    { name: "Project Management" }
+  ],
   available: true,
 }]
 
