@@ -11,8 +11,8 @@ export interface CardData {
   available: boolean;
 }
 
-import { cardData } from "../mocks";
+import { employeeData } from "../mocks";
 
 export async function getData(): Promise<CardData[]> {
-  return cardData;
+  return employeeData;
 }

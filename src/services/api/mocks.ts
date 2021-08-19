@@ -1,6 +1,6 @@
 import { rest } from "msw";
 
-export const cardData = [
+export const employeeData = [
   {
     id: "1",
     avatar:
@@ -54,7 +54,7 @@ export default [
     return res(
       ctx.status(200),
       ctx.json({
-        data: cardData,
+        data: employeeData,
       }),
     );
   }),
