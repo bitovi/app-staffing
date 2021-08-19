@@ -20,6 +20,10 @@ export default function Employees(): JSX.Element {
     setIdBeingEdited(undefined);
   };
 
+  const handleCancel = () => {
+    setIdBeingEdited(undefined);
+  };
+
   useEffect(() => {
     if (filterValue) {
       if (employees) {
@@ -96,6 +100,7 @@ export default function Employees(): JSX.Element {
               editing={idBeingEdited === employee.id}
               onEdit={() => setIdBeingEdited(employee.id)}
               onSave={handleSave}
+              onCancel={handleCancel}
             />
           ))}
       </div>

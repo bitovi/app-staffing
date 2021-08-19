@@ -118,3 +118,7 @@ input:checked + .slider:before {
 .availableSpan {
     padding-top: 15px;
 }
+
+.cardSpacing {
+    margin-bottom: 40px;
+}

@@ -2,8 +2,6 @@ import type { Employee } from "../../services/api";
 
 import { useEffect, useState } from "react";
 import { getData } from "../../services/api";
-import EmployeeCard from "../../components/EmployeeCard";
-import { employeeData } from "../../services/api/mocks";
 
 export default function Hello({ name }: { name: string }): JSX.Element {
   const [data, setData] = useState<Employee[]>();
@@ -22,7 +20,6 @@ export default function Hello({ name }: { name: string }): JSX.Element {
           ))}
         </ul>
       )}
-      <EmployeeCard data={employeeData[0]} />
     </div>
   );
 }
