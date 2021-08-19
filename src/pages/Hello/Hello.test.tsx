@@ -10,6 +10,5 @@ describe("Pages/Hello", () => {
     render(<Hello name="World" />);
 
     expect(screen.getByText(/Hello, World!/i)).to.have.tagName("h1");
-
   });
 });
