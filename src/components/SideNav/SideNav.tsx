@@ -5,6 +5,7 @@ import BitoviLogo from "../../Icons/Bitovi.png";
 export default function SideNav(): JSX.Element {
   const links = [
     {
+      exact: true,
       link: "/",
       label: "Dashboard",
     },
@@ -21,19 +22,17 @@ export default function SideNav(): JSX.Element {
     <div className={styles.wrapper}>
       <img src={BitoviLogo} alt="Bitovi" className={styles.image} />
 
-      {links.length === 0
-        ? "Error"
-        : links.map(({ link, label }) => (
-            <NavLink
-              exact
-              key={label}
-              to={link}
-              activeClassName={styles.activeLink}
-              className={styles.links}
-            >
-              {label}
-            </NavLink>
-          ))}
+      {links.map(({ exact, link, label }) => (
+        <NavLink
+          exact={exact}
+          key={label}
+          to={link}
+          activeClassName={styles.activeLink}
+          className={styles.inactiveLinks}
+        >
+          {label}
+        </NavLink>
+      ))}
       <div />
     </div>
   );
