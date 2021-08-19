@@ -1,10 +1,10 @@
-import type { Datum } from "../../services/api";
+import type { CardData } from "../../services/api";
 
 import { useEffect, useState } from "react";
 import { getData } from "../../services/api";
 
 export default function Hello({ name }: { name: string }): JSX.Element {
-  const [data, setData] = useState<Datum[]>();
+  const [data, setData] = useState<CardData[]>();
 
   useEffect(() => {
     getData(name).then(setData);
