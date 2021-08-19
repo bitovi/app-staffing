@@ -1,4 +1,4 @@
-import type { CardData } from "./api";
+import type { Employee } from "./api";
 
 import { Story, Meta } from "@storybook/react";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ export default {
 } as Meta<{ id: string }>;
 
 export const Basic: Story<{ id: string }> = (args) => {
-  const [data, setData] = useState<CardData[]>();
+  const [data, setData] = useState<Employee[]>();
 
   useEffect(() => {
     getData(args.id).then(setData);
