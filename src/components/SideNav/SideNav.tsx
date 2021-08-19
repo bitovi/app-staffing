@@ -1,16 +1,37 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 import styles from "./SideNav.module.css";
-//NavLinks
 
 export default function SideNav(): JSX.Element {
-    return (
-        <div className={styles.wrapper}>
-            <NavLink to="/" className={styles.links}>
-                Dashboard
+  const links = [
+    {
+      link: "/",
+      label: "Dashboard",
+    },
+    {
+      link: "/bob",
+      label: "Employees",
+    },
+    {
+      link: "/dylan",
+      label: "Clients",
+    },
+  ];
+  return (
+    <div className={styles.wrapper}>
+      {links.length === 0
+        ? "Error"
+        : links.map(({ link, label }) => (
+            <NavLink
+              exact
+              key={label}
+              to={link}
+              activeClassName={styles.activeLink}
+              className={styles.links}
+            >
+              {label}
             </NavLink>
-            <NavLink to="/bob" className={styles.links}>
-                Employees
-            </NavLink>
-        </div>
-    );
+          ))}
+      <div />
+    </div>
+  );
 }
