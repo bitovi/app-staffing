@@ -31,7 +31,7 @@ export default function Layout({
       <div className="card-details">
         <div className="person-container">
           <div className="image-container">
-            <img src={avatar} placeholder="Profile Picture" />
+            <img src={avatar} placeholder="Profile Picture" alt="not found" />
           </div>
           <div className="employee-details-container">
             <div className="employee-name">
@@ -58,7 +58,7 @@ export default function Layout({
         </div>
         <div className="skills-container">
           {skills.map(({ name }) => (
-            <div id={title + name} className="skill">
+            <div id={title + name} className="skill" key={name}>
               {name}
             </div>
           ))}
@@ -75,6 +75,11 @@ export default function Layout({
         <button className="card-save" onClick={handleSave}>
           Save
         </button>
+      </div>
+      <div className="availability-container">
+        <input type="checkbox">
+          <span className="slider round"></span>
+        </input>
       </div>
     </div>
   );
