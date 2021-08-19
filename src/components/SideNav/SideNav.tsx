@@ -1,16 +1,16 @@
-// import MenuIcon from "../../Icons/menu.svg";
+import { NavLink } from 'react-router-dom';
 import styles from "./SideNav.module.css";
 //NavLinks
 
 export default function SideNav(): JSX.Element {
     return (
-        <div className={styles.Wrapper}>
-            <a href="/">
+        <div className={styles.wrapper}>
+            <NavLink to="/" className={styles.links}>
                 Dashboard
-            </a>
-            <a href="/bob">
+            </NavLink>
+            <NavLink to="/bob" className={styles.links}>
                 Employees
-            </a>
+            </NavLink>
         </div>
     );
 }

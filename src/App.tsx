@@ -1,6 +1,7 @@
 import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
+import "./App.css";
 
 import Hello from "./pages/Hello";
 

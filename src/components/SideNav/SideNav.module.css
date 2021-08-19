@@ -1,10 +1,13 @@
-.Wrapper {
-    height: 100%;
+.wrapper {
     width: 20%;
     min-width: 250px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color:#232323;
+    background-color:#474746;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.links {
+    padding-top: 20px;
 }
