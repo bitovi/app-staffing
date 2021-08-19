@@ -7,3 +7,4 @@ ignores:
   - "@storybook/*"
   - eslint-*
   - babel-eslint
+  - node-sass

@@ -1,0 +1,25 @@
+.wrapper {
+  width: 20%;
+  min-width: 250px;
+  background-color: #474746;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.image {
+  padding-left: 20px;
+  align-self: flex-start;
+}
+
+.links {
+  padding-top: 60px;
+  text-decoration: none;
+  color: white;
+  font-size: x-large;
+}
+
+.activeLink {
+  color: lightgrey;
+}

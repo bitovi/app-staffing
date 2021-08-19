@@ -1,6 +1,5 @@
-export interface CardData {
+export interface Employee {
   id: string;
-  avatar: string;
   name: string;
   title: string;
   startDate: string;
@@ -13,6 +12,6 @@ export interface CardData {
 
 import { employeeData } from "../mocks";
 
-export async function getData(): Promise<CardData[]> {
+export async function getData(): Promise<Employee[]> {
   return employeeData;
 }
