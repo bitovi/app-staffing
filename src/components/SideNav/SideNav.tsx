@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styles from "./SideNav.module.css";
+import BitoviLogo from "../../Icons/Bitovi.png";
 
 export default function SideNav(): JSX.Element {
   const links = [
@@ -18,6 +19,8 @@ export default function SideNav(): JSX.Element {
   ];
   return (
     <div className={styles.wrapper}>
+      <img src={BitoviLogo} alt="Bitovi" className={styles.image} />
+
       {links.length === 0
         ? "Error"
         : links.map(({ link, label }) => (

@@ -8,6 +8,11 @@
   padding-top: 20px;
 }
 
+.image {
+  padding-left: 20px;
+  align-self: flex-start;
+}
+
 .links {
   padding-top: 60px;
   text-decoration: none;
