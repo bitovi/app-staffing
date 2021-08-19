@@ -6,15 +6,22 @@ type Response = {
 
 export function useEmployees(): Response {
   const [data, setData] = useState<Employee[]>();
-
-  const getEmployees = async () => {
-    const employees = await getData();
-    setData(employees);
-  };
+  const [shouldSetData, setShouldSetData] = useState(true);
 
   useEffect(() => {
+    const getEmployees = async () => {
+      const employees = await getData();
+      if (shouldSetData) {
+        setData(employees);
+      }
+    };
+
     getEmployees();
-  }, []);
+
+    return () => {
+      setShouldSetData(false);
+    };
+  }, [shouldSetData]);
 
   return {
     employees: data,
