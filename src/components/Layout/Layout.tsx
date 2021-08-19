@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
-export interface LayoutProps {
+export default function Layout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function Layout({ children }: LayoutProps): JSX.Element {
+}): JSX.Element {
   return (
     <div>
       <ul>

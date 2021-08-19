@@ -8,11 +8,14 @@ export default function App(): JSX.Element {
   return (
     <Layout>
       <Switch>
-        <Route path="/">
+        <Route path="/" exact>
           <Hello name="World" />
         </Route>
         <Route path="/bob">
           <Hello name="Bob" />
+        </Route>
+        <Route>
+          <Hello name="Error" />
         </Route>
       </Switch>
     </Layout>

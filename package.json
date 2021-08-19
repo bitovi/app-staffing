@@ -2,7 +2,7 @@
   "name": "repo",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bitovi.github.io/app-staffing",
+  "homepage": "https://bitovi.github.io/app-staffing/",
   "scripts": {
     "depcheck": "depcheck .",
     "eslint": "eslint src",
@@ -11,8 +11,9 @@
     "clean": "rm -rf build",
     "dev": "react-scripts start",
     "test": "react-scripts test",
-    "storybook": "start-storybook -p 6006",
-    "storybook:build": "build-storybook -o build/storybook",
+    "test:ci": "CI=true react-scripts test --coverage",
+    "storybook": "start-storybook -s public -p 6006",
+    "storybook:build": "build-storybook -s public -o build/storybook",
     "build": "react-scripts build"
   },
   "eslintConfig": {
@@ -32,6 +33,25 @@
   "prettier": {
     "trailingComma": "all"
   },
+  "msw": {
+    "workerDirectory": "public"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "__test__",
+      "\\.stories\\.",
+      "<rootDir>/src/index.tsx"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 10,
+        "branches": 10,
+        "lines": 10,
+        "functions": 10
+      }
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -45,6 +65,7 @@
     ]
   },
   "dependencies": {
+    "msw": "^0.34.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0"
