@@ -17,14 +17,14 @@ export default function EmployeeCard({
   const handleSave = () => {
     /* TODO: Add save handler */
     console.log("Save button clicked!");
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
-    /* TODO: Add cancel handler */
-    console.log("Cancel button clicked!");
+    setIsEditing(false);
   };
 
-  const { name, title, startDate, endDate, skills, available, avatar } = data;
+  const { name, title, startDate, endDate, skills, avatar } = data;
 
   return (
     <div className="card-container">
@@ -66,21 +66,21 @@ export default function EmployeeCard({
             Add Skill
           </button>
         </div>
-        <div className="availability-container"></div>
+        <div className="availability-container">
+          <input type="checkbox" />
+          <span className="slider round"></span>
+        </div>
       </div>
-      <div className="save-container">
-        <button className="card-cancel" onClick={handleCancel}>
-          Cancel
-        </button>
-        <button className="card-save" onClick={handleSave}>
-          Save
-        </button>
-      </div>
-      <div className="availability-container">
-        <input type="checkbox">
-          <span className="slider round">{available}</span>
-        </input>
-      </div>
+      {isEditing && (
+        <div className="save-container">
+          <button className="card-cancel" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button className="card-save" onClick={handleSave}>
+            Save
+          </button>
+        </div>
+      )}
     </div>
   );
 }
