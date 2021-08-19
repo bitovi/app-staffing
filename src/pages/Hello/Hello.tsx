@@ -3,11 +3,7 @@ import type { Datum } from "../../services/api";
 import { useEffect, useState } from "react";
 import { getData } from "../../services/api";
 
-export interface HelloProps {
-  name: string;
-}
-
-export default function Hello({ name }: HelloProps): JSX.Element {
+export default function Hello({ name }: { name: string }): JSX.Element {
   const [data, setData] = useState<Datum[]>();
 
   useEffect(() => {

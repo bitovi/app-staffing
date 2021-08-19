@@ -4,7 +4,9 @@ export interface Datum {
 }
 
 export async function getData(): Promise<Datum[]> {
-  const response = await fetch("/v1");
-  const { data } = await response.json();
-  return data;
+  return [
+    { id: 1, name: "car" },
+    { id: 2, name: "cam" },
+    { id: 3, name: "caz" },
+  ];
 }
