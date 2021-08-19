@@ -1,12 +1,18 @@
+import React, { Suspense } from 'react'
+
 import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 
-import Hello from "./pages/Hello";
+import Loading from "./components/Loading";
+
+const Hello = React.lazy(() => import('./pages/Hello'));
+
 
 export default function App(): JSX.Element {
   return (
     <Layout>
+      <Suspense fallback={<Loading/>}>
       <Switch>
         <Route path="/" exact>
           <Hello name="World" />
@@ -18,6 +24,7 @@ export default function App(): JSX.Element {
           <Hello name="Error" />
         </Route>
       </Switch>
+      </Suspense>
     </Layout>
   );
 }
