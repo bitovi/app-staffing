@@ -9,7 +9,7 @@ export default function SideNav(): JSX.Element {
       label: "Dashboard",
     },
     {
-      link: "/bob",
+      link: "/employees",
       label: "Employees",
     },
     {
