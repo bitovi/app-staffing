@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 
 import { Switch, Route } from "react-router-dom";
+import Employees from "./components/Employees";
 
 import Layout from "./components/Layout";
 import "./App.css";
@@ -17,7 +18,7 @@ export default function App(): JSX.Element {
           <Route path="/" exact>
             <Hello name="World" />
           </Route>
-          <Route path="/bob">
+          <Route path="/employees">
             <Hello name="Bob" />
           </Route>
           <Route path="/dylan">

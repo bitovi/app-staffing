@@ -1,12 +1,17 @@
-export interface Datum {
-  id: number;
+export interface Employee {
+  id: string;
   name: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  skills: {
+    name: string;
+  }[];
+  available: boolean;
 }
 
-export async function getData(): Promise<Datum[]> {
-  return [
-    { id: 1, name: "car" },
-    { id: 2, name: "cam" },
-    { id: 3, name: "caz" },
-  ];
+import { employeeData } from "../mocks";
+
+export async function getData(): Promise<Employee[]> {
+  return employeeData;
 }

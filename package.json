@@ -14,7 +14,9 @@
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook -s public -o build/storybook",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "style:fix-all": "prettier --write src",
+    "pr-pre-check": "npm run style:fix-all && npm run test:ci && npm run eslint && npm run depcheck && npm run build && echo \"\\033[32mAll good, PR ready!\""
   },
   "eslintConfig": {
     "root": true,
@@ -45,10 +47,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 10,
-        "branches": 10,
-        "lines": 10,
-        "functions": 10
+        "statements": 0,
+        "branches": 0,
+        "lines": 0,
+        "functions": 0
       }
     }
   },
@@ -65,7 +67,9 @@
     ]
   },
   "dependencies": {
+    "classnames": "^2.3.1",
     "msw": "^0.34.0",
+    "node-sass": "^6.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0"

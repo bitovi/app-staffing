@@ -1,4 +1,4 @@
-import type { Datum } from "./api";
+import type { Employee } from "./api";
 
 import { Story, Meta } from "@storybook/react";
 import { useEffect, useState } from "react";
@@ -7,14 +7,14 @@ import { getData } from "./api";
 
 export default {
   title: "Services/API/getData",
-} as Meta<{ foo: string }>;
+} as Meta<{ id: string }>;
 
-export const Basic: Story<{ foo: string }> = (args) => {
-  const [data, setData] = useState<Datum[]>();
+export const Basic: Story<{ id: string }> = (args) => {
+  const [data, setData] = useState<Employee[]>();
 
   useEffect(() => {
-    getData(args.foo).then(setData);
-  }, [args.foo]);
+    getData(args.id).then(setData);
+  }, [args.id]);
 
   return (
     <ul>
@@ -26,5 +26,5 @@ export const Basic: Story<{ foo: string }> = (args) => {
 };
 
 Basic.args = {
-  foo: "hello",
+  id: "hello",
 };
