@@ -10,7 +10,7 @@ export default function Layout({
     <div className={styles.wrapper}>
       <SideNav />
 
-      <div>{children}</div>
+      <div className={styles.content}>{children}</div>
     </div>
   );
 }

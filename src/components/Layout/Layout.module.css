@@ -1,5 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;600&display=swap");
+
 .wrapper {
   display: flex;
   flex-direction: row;
   height: 100vh;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 300;
+}
+
+.content {
+  flex: 1 1;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 300;
 }
