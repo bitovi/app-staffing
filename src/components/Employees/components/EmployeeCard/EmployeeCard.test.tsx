@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 
 import EmployeeCard from "./EmployeeCard";
-import { employeeData } from "../../services/api/mocks";
+import { employeeData } from "../../../../services/api/mocks";
 
 const employee = employeeData[0];
 

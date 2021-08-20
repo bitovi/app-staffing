@@ -21,6 +21,11 @@ export default function EmployeeCard({
     console.log("Add skill button clicked!");
   };
 
+  const handleCancel = () => {
+    onCancel();
+    setFormData({ ...employee });
+  };
+
   const [formData, setFormData] = useState<Employee>({ ...employee });
   const { name, title, startDate, endDate, skills, avatar } = formData;
 
@@ -149,7 +154,7 @@ export default function EmployeeCard({
       </div>
       {editing && (
         <div className="save-container">
-          <button className="card-cancel" onClick={onCancel}>
+          <button className="card-cancel" onClick={handleCancel}>
             Cancel
           </button>
           <button className="card-save" onClick={onSave}>
