@@ -94,7 +94,6 @@ export default function Employees(): JSX.Element {
           Add Team Member +
         </button>
       </div>
-
       {!employees && (
         <div className={styles["empty-state-text"]}>LOADING ...</div>
       )}

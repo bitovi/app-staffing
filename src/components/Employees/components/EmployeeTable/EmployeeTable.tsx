@@ -41,21 +41,23 @@ export default function EmployeeTable({
               styles["employee-table-row"],
             )}
           >
-            Employee: <input></input>
-            <button
-              onChange={() => {
-                // handleAddSave();
+            <EmployeeCard
+              employee={{
+                id: "1234",
+                avatar:
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                name: "",
+                title: "",
+                startDate: "01/01/2021",
+                endDate: "",
+                skills: [],
+                available: true,
               }}
-            >
-              SAVE
-            </button>
-            <button
-              onChange={() => {
-                handleAddCancel();
-              }}
-            >
-              CANCEL
-            </button>
+              editing={true}
+              onEdit={() => setIdBeingEdited("1234")}
+              onSave={handleEditCancel}
+              onCancel={handleEditCancel}
+            />
           </div>
         )}
       </div>
@@ -67,10 +69,8 @@ export default function EmployeeTable({
             employee={employee}
             editing={idBeingEdited === employee.id}
             onEdit={() => setIdBeingEdited(employee.id)}
-            onSave={() => {
-              // setHandleEditSave()
-            }}
-            handleCancel={handleEditCancel}
+            onSave={handleEditCancel}
+            onCancel={handleEditCancel}
           />
         ))}
     </>

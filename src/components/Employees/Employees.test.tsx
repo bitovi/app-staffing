@@ -12,23 +12,23 @@ test("employee names render", async () => {
   render(<Employees />);
 
   // wait for the first row
-  expect(await screen.findByText(/Tom/i)).toBeInTheDocument();
+  expect(await screen.findByDisplayValue(/Tom/i)).toBeInTheDocument();
 
   // check the rest of the rows
-  expect(screen.getByText(/Sally/i)).toBeInTheDocument();
-  expect(screen.getByText(/Paul/i)).toBeInTheDocument();
-  expect(screen.getByText(/Stephanie/i)).toBeInTheDocument();
+  expect(screen.getByDisplayValue(/Sally/i)).toBeInTheDocument();
+  expect(screen.getByDisplayValue(/Paul/i)).toBeInTheDocument();
+  expect(screen.getByDisplayValue(/Stephanie/i)).toBeInTheDocument();
 });
 
 test("filter by employee name", async () => {
   render(<Employees />);
 
   // wait for the first row
-  expect(await screen.findByText(/Tom/i)).toBeInTheDocument();
+  expect(await screen.findByDisplayValue(/Tom/i)).toBeInTheDocument();
 
   // Filter by Sally
   userEvent.type(screen.getByPlaceholderText(/Filter/i), "Sally");
 
   // Make sure Tom is no longer visible
-  expect(screen.queryByText(/Tom/i)).not.toBeInTheDocument();
+  expect(screen.queryByDisplayValue(/Tom/i)).not.toBeInTheDocument();
 });
