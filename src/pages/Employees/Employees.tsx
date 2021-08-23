@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import type { Employee } from "../../services/api";
+
+import { useEffect, useState } from "react";
 
 import { useEmployees } from "./useEmployees";
-import { Employee } from "../../services/api";
-
-import styles from "./employees.module.scss";
 import EmployeeTable from "./components/EmployeeTable";
+
+import styles from "./Employees.module.scss";
 
 import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
 import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";

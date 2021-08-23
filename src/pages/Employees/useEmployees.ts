@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import { Employee, getData } from "../../services/api";
-type Response = {
-  employees?: Employee[];
-};
+import type { Employee } from "../../services/api";
 
-export function useEmployees(): Response {
+import { useEffect, useState } from "react";
+import { getData } from "../../services/api";
+
+export function useEmployees(): {
+  employees?: Employee[];
+} {
   const [data, setData] = useState<Employee[]>();
   const [shouldSetData, setShouldSetData] = useState(true);
 

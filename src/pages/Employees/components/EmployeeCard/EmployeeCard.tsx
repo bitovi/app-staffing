@@ -1,5 +1,8 @@
+import type { Employee } from "../../../../services/api";
+
 import { useState } from "react";
-import styles from "./EmployeeCard.module.css";
+
+import styles from "./EmployeeCard.module.scss";
 
 export default function EmployeeCard({
   employee,
@@ -130,7 +133,7 @@ export default function EmployeeCard({
         <div
           className={`${styles.displayVerticalContainer} ${styles.skillContainer}`}
         >
-          <span className={styles.bold}>Skills</span>
+          <span className={styles.bold}>Skill</span>
           <div className={styles.displayHorizontalContainer}>
             {skills.map(({ name }) => (
               <div id={title + name} className={styles.skill} key={name}>
@@ -162,19 +165,4 @@ export default function EmployeeCard({
       )}
     </div>
   );
-}
-
-export interface Employee {
-  id: string;
-  avatar: string;
-  name: string;
-  title: string;
-  startDate: string;
-  endDate: string;
-  skills: Skills[];
-  available: boolean;
-}
-
-export interface Skills {
-  name: string;
 }

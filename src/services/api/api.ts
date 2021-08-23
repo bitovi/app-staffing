@@ -5,10 +5,12 @@ export interface Employee {
   title: string;
   startDate: string;
   endDate: string;
-  skills: {
-    name: string;
-  }[];
+  skills: Skill[];
   available: boolean;
+}
+
+export interface Skill {
+  name: string;
 }
 
 export async function getData(id?: string): Promise<Employee[]> {

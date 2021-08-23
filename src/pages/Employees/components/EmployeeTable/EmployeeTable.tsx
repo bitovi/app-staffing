@@ -1,8 +1,10 @@
+import type { Employee } from "../../../../services/api";
+
 import classNames from "classnames";
-import React from "react";
-import { Employee } from "../../../../services/api";
+
 import EmployeeCard from "../EmployeeCard/EmployeeCard";
-import styles from "../../employees.module.scss";
+
+import styles from "./EmployeeTable.module.scss";
 
 export default function EmployeeTable({
   filterValue,

@@ -1,6 +1,6 @@
+import type { Story, Meta } from "@storybook/react";
 import type { Employee } from "./api";
 
-import { Story, Meta } from "@storybook/react";
 import { useEffect, useState } from "react";
 
 import { getData } from "./api";

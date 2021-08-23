@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
 import { getData } from "./api";
-import { employeeData } from "./mocks";
+import { employees } from "./fixtures";
 
 test("getData Works", async () => {
-  expect(await getData()).to.deep.equal(employeeData);
+  expect(await getData()).to.deep.equal(employees);
 });

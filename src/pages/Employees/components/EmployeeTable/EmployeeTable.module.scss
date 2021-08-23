@@ -1,0 +1,14 @@
+.employee-table-wrapper {
+  width: calc(100% - 40px);
+  margin: auto;
+  background-color: #ccc;
+}
+
+.empty-state-text {
+  width: 100%;
+  text-align: center;
+  display: table;
+  min-height: 30px;
+  color: #777;
+  padding: 30px 0;
+}

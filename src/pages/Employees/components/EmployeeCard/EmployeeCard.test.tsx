@@ -4,9 +4,9 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 
 import EmployeeCard from "./EmployeeCard";
-import { employeeData } from "../../../../services/api/mocks";
+import { employees } from "../../../../services/api/fixtures";
 
-const employee = employeeData[0];
+const employee = employees[0];
 
 describe("Components/Layout", () => {
   it("works", () => {

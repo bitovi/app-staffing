@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://bitovi.github.io/app-staffing/",
   "scripts": {
+    "pre-check": "npm run test:ci && npm run depcheck && npm run eslint && npm run prettier && npm run typecheck && npm run build && echo \"\\033[32mAll good, PR ready!\"",
     "depcheck": "depcheck .",
     "eslint": "eslint src",
     "prettier": "prettier --check src",
@@ -14,9 +15,7 @@
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook -s public -o build/storybook",
-    "build": "react-scripts build",
-    "style:fix-all": "prettier --write src",
-    "pr-pre-check": "npm run style:fix-all && npm run test:ci && npm run eslint && npm run depcheck && npm run build && echo \"\\033[32mAll good, PR ready!\""
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "root": true,
