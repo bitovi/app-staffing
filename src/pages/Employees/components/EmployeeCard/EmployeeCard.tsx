@@ -2,20 +2,21 @@ import { useState } from "react";
 import styles from "./EmployeeCard.module.css";
 
 export default function EmployeeCard({
-  children,
   employee,
   editing,
   onEdit,
   onSave,
   onCancel,
 }: {
-  children?: React.ReactNode;
   employee: Employee;
   editing: boolean;
   onEdit: () => void;
   onSave: () => void;
   onCancel: () => void;
 }): JSX.Element {
+  const [formData, setFormData] = useState<Employee>(employee);
+  const { name, title, startDate, endDate, skills, avatar } = formData;
+
   const handleAddSkill = () => {
     // eslint-disable-next-line no-console
     console.log("Add skill button clicked!");
@@ -23,15 +24,12 @@ export default function EmployeeCard({
 
   const handleCancel = () => {
     onCancel();
-    setFormData({ ...employee });
+    setFormData(employee);
   };
-
-  const [formData, setFormData] = useState<Employee>({ ...employee });
-  const { name, title, startDate, endDate, skills, avatar } = formData;
 
   const updateField = (evt: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = evt.currentTarget;
-    setFormData({ ...formData, [name]: value });
+    setFormData((formData) => ({ ...formData, [name]: value }));
   };
 
   return (

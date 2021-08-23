@@ -5,10 +5,10 @@ import { Switch, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import "./App.css";
 
-import Loading from "./components/Loading";
+import Loading from "./pages/Loading";
 
 const Hello = React.lazy(() => import("./pages/Hello"));
-const Employees = React.lazy(() => import("./components/Employees"));
+const Employees = React.lazy(() => import("./pages/Employees"));
 
 export default function App(): JSX.Element {
   return (
