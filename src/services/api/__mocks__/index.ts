@@ -1,17 +1,20 @@
+import { employees } from "../fixtures";
+
 export interface Employee {
   id: string;
+  avatar: string;
   name: string;
   title: string;
   startDate: string;
   endDate: string;
-  skills: {
-    name: string;
-  }[];
+  skills: Skill[];
   available: boolean;
 }
 
-import { employeeData } from "../mocks";
+export interface Skill {
+  name: string;
+}
 
 export async function getData(): Promise<Employee[]> {
-  return employeeData;
+  return employees;
 }

@@ -1,14 +1,13 @@
-import React, { Suspense } from "react";
-
+import { Suspense, lazy } from "react";
 import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
-import "./App.css";
+import Loading from "./pages/Loading";
 
-import Loading from "./components/Loading";
+import "./App.scss";
 
-const Hello = React.lazy(() => import("./pages/Hello"));
-const Employees = React.lazy(() => import("./components/Employees"));
+const Hello = lazy(() => import("./pages/Hello"));
+const Employees = lazy(() => import("./pages/Employees"));
 
 export default function App(): JSX.Element {
   return (

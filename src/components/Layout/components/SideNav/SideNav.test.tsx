@@ -14,6 +14,6 @@ describe("Side Nav", () => {
     let link = screen.getByText("Employees");
     expect(link).to.have.class("activeLink");
     link = screen.getByText("Dashboard");
-    expect(link).to.have.class("inactiveLinks");
+    expect(link).to.have.class("inactiveLink");
   });
 });

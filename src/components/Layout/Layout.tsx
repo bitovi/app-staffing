@@ -1,5 +1,6 @@
-import SideNav from "../../components/SideNav/SideNav";
-import styles from "./Layout.module.css";
+import SideNav from "./components/SideNav/SideNav";
+
+import styles from "./Layout.module.scss";
 
 export default function Layout({
   children,

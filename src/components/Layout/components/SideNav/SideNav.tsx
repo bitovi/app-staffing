@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
-import styles from "./SideNav.module.css";
-import BitoviLogo from "../../Icons/Bitovi.png";
+
+import styles from "./SideNav.module.scss";
+
+import BitoviLogo from "./assets/bitovi.png";
 
 export default function SideNav(): JSX.Element {
   const links = [
@@ -28,7 +30,7 @@ export default function SideNav(): JSX.Element {
           key={label}
           to={link}
           activeClassName={styles.activeLink}
-          className={styles.inactiveLinks}
+          className={styles.inactiveLink}
         >
           {label}
         </NavLink>

@@ -1,0 +1,57 @@
+.wrapper {
+  display: flex;
+  margin-bottom: 40px;
+
+  > * {
+    margin: 0px 7.5px 0px 7.5px;
+  }
+}
+
+.avatar {
+  display: block;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+
+  .detail {
+    margin: 7.5px 0px 7.5px 0px;
+    padding: 5px;
+  }
+
+  label,
+  .label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+  }
+
+  .skills {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      position: relative;
+      border-radius: 5px;
+      background-color: rgb(237, 237, 237);
+      width: 100px;
+      margin: auto 1em;
+      text-align: center;
+    }
+  }
+
+  .addSkill {
+    margin-top: 5px;
+    width: 100px;
+    border-radius: 5px;
+  }
+}
