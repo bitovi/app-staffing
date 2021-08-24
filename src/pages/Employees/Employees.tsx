@@ -13,6 +13,7 @@ import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 
 export default function Employees(): JSX.Element {
   const { employees } = useEmployees();
+
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [isAdding, setIsAdding] = useState(false);
