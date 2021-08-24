@@ -4,7 +4,7 @@ import useEmployees from "./useEmployees";
 import { employees } from "../fixtures";
 
 describe("useEmployees", () => {
-  it("should fetch", async () => {
+  it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useEmployees());
     expect(result.current.data).toBe(undefined);
 
