@@ -35,6 +35,8 @@ export default function Employees(): JSX.Element {
     // eslint-disable-next-line no-console
     console.log("SAVING:", employee);
     setIsAdding(false);
+    
+    fetch("/v1", {method:"POST", body: JSON.stringify(employee)})
   };
 
   const handleAddCancel = () => {
