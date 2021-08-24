@@ -7,9 +7,13 @@ export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
 };
 
+const pathPrefix = process.env.NODE_ENV === 'production'
+  ? '/app-staffing/storybook'
+  : '/'
+
 setupWorker(...mocks).start({
   onUnhandledRequest: "bypass",
-  // serviceWorker: {
-  //   url: `${process.env.PUBLIC_URL}/mockServiceWorker.js`,
-  // },
+  serviceWorker: {
+    url: `${pathPrefix}/mockServiceWorker.js`,
+  },
 });
