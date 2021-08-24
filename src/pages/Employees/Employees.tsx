@@ -55,39 +55,39 @@ export default function Employees(): JSX.Element {
   }, [filterValue, employees]);
 
   return (
-    <div className={styles["wrapper"]}>
-      <div className={styles["action-bar"]}>
-        <div className={styles["action-bar-title"]}>Team</div>
-        <div className={styles["action-bar-actions"]}>
+    <div className={styles.wrapper}>
+      <div className={styles.actionBar}>
+        <div className={styles.actionBarTitle}>Team</div>
+        <div className={styles.actionBarActions}>
           <input
             onChange={(e) => setFilterValue(e.target.value)}
             type="text"
             placeholder="Filter"
-            className={styles["action-bar-filter"]}
+            className={styles.actionBarFilter}
           />
           <button
-            className={`${styles["alert"]} ${styles["action-bar-icon"]}`}
+            className={`${styles.alert} ${styles.actionBarIcon}`}
             title="Notifications"
             onClick={() => {
               alert("NOTIFICATIONS");
             }}
           >
-            <BellSVG className={styles["icon"]} />
+            <BellSVG className={styles.icon} />
           </button>
           <button
-            className={`${styles["settings"]} ${styles["action-bar-icon"]}`}
+            className={`${styles.settings} ${styles.actionBarIcon}`}
             title="Settings"
             onClick={() => {
               alert("SETTINGS");
             }}
           >
-            <GearSVG className={styles["icon"]} />
+            <GearSVG className={styles.icon} />
           </button>
         </div>
       </div>
-      <div className={styles["employee-table-action-row"]}>
+      <div className={styles.row}>
         <button
-          className={styles["add-employee-button"]}
+          className={styles.addButton}
           onClick={() => {
             setIsAdding(true);
           }}
@@ -95,11 +95,9 @@ export default function Employees(): JSX.Element {
           Add Team Member +
         </button>
       </div>
-      {!employees && (
-        <div className={styles["empty-state-text"]}>LOADING ...</div>
-      )}
+      {!employees && <div className={styles.noResults}>LOADING ...</div>}
       {employees && employees.length === 0 && (
-        <div className={styles["empty-state-text"]}>NO DATA FOUND!</div>
+        <div className={styles.noResults}>NO DATA FOUND!</div>
       )}
       {employees && employees.length && (
         <EmployeeTable

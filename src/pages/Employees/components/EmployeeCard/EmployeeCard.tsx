@@ -36,131 +36,102 @@ export default function EmployeeCard({
   };
 
   return (
-    <div
-      className={`${styles.displayHorizontalContainer} ${styles.cardSpacing}`}
-    >
-      <div
-        className={`${styles.displayHorizontalContainer} ${styles.horizontalMargin}`}
-      >
-        <div className="image-container">
-          <img
-            className={styles.profilePicture}
-            src={avatar}
-            placeholder="Profile Picture"
-            alt="not found"
+    <div className={styles.wrapper}>
+      <img
+        className={styles.avatar}
+        src={avatar}
+        placeholder="Profile Picture"
+        alt="not found"
+      />
+      <div className={styles.details}>
+        <div
+          role="button"
+          className={styles.detail}
+          onClick={onEdit}
+          onKeyDown={onEdit}
+          tabIndex={-1}
+        >
+          <input
+            name="name"
+            id={name}
+            value={name}
+            disabled={!editing}
+            onChange={updateField}
           />
         </div>
-        <div className={styles.displayHorizontalContainer}>
-          <div
-            className={`${styles.employeeDetailsContainer} ${styles.displayVerticalContainer} ${styles.verticalMargin}`}
-          >
-            <div
-              role="button"
-              className={styles.employeeDetail}
-              onClick={onEdit}
-              onKeyDown={onEdit}
-              tabIndex={-1}
-            >
-              <input
-                name="name"
-                id={name}
-                value={name}
-                disabled={!editing}
-                onChange={updateField}
-              />
-            </div>
-            <div
-              role="button"
-              className={styles.employeeDetail}
-              onClick={onEdit}
-              onKeyDown={onEdit}
-              tabIndex={-1}
-            >
-              <input
-                name="title"
-                id={title}
-                value={title}
-                disabled={!editing}
-                onChange={updateField}
-              />
-            </div>
-          </div>
-        </div>
-        <div className={styles.displayVerticalContainer}>
-          <div
-            role="button"
-            className={styles.dateContainer}
-            onClick={onEdit}
-            onKeyDown={onEdit}
-            tabIndex={-1}
-          >
-            <label
-              className={`${styles.bold} ${styles.displayVerticalContainer}`}
-            >
-              Start Date
-              <input
-                className={styles.verticalMargin}
-                name="startDate"
-                id={startDate}
-                value={startDate}
-                disabled={!editing}
-                onChange={updateField}
-              />
-            </label>
-          </div>
-          <div
-            role="button"
-            className={styles.dateContainer}
-            onClick={onEdit}
-            onKeyDown={onEdit}
-            tabIndex={-1}
-          >
-            <label
-              className={`${styles.bold} ${styles.displayVerticalContainer}`}
-            >
-              End Date
-              <input
-                className={styles.verticalMargin}
-                name="endDate"
-                id={endDate}
-                value={endDate}
-                disabled={!editing}
-                onChange={updateField}
-              />
-            </label>
-          </div>
-        </div>
         <div
-          className={`${styles.displayVerticalContainer} ${styles.skillContainer}`}
+          role="button"
+          className={styles.detail}
+          onClick={onEdit}
+          onKeyDown={onEdit}
+          tabIndex={-1}
         >
-          <span className={styles.bold}>Skill</span>
-          <div className={styles.displayHorizontalContainer}>
-            {skills.map(({ name }) => (
-              <div id={title + name} className={styles.skill} key={name}>
-                {name}
-              </div>
-            ))}
-          </div>
-          <button className={styles.skillBtn} onClick={handleAddSkill}>
-            Add Skill
-          </button>
-        </div>
-        <div className={styles.displayVerticalContainer}>
-          <span className={styles.bold}>Available</span>
-          <div className={styles.availabilityContainer}>
-            <input type="checkbox" />
-            <span className={`${styles.round} ${styles.slider}`}></span>
-          </div>
+          <input
+            name="title"
+            id={title}
+            value={title}
+            disabled={!editing}
+            onChange={updateField}
+          />
         </div>
       </div>
+      <div className={styles.details}>
+        <div
+          role="button"
+          className={styles.detail}
+          onClick={onEdit}
+          onKeyDown={onEdit}
+          tabIndex={-1}
+        >
+          <label>
+            Start Date
+            <input
+              name="startDate"
+              id={startDate}
+              value={startDate}
+              disabled={!editing}
+              onChange={updateField}
+            />
+          </label>
+        </div>
+        <div
+          role="button"
+          className={styles.detail}
+          onClick={onEdit}
+          onKeyDown={onEdit}
+          tabIndex={-1}
+        >
+          <label>
+            End Date
+            <input
+              name="endDate"
+              id={endDate}
+              value={endDate}
+              disabled={!editing}
+              onChange={updateField}
+            />
+          </label>
+        </div>
+      </div>
+      <div className={styles.details}>
+        <span className={styles.label}>Skill</span>
+        <ul className={styles.skills}>
+          {skills.map(({ name }) => (
+            <li key={name} className={styles.skill}>
+              {name}
+            </li>
+          ))}
+        </ul>
+        {editing && (
+          <button className={styles.addSkill} onClick={handleAddSkill}>
+            Add Skill
+          </button>
+        )}
+      </div>
       {editing && (
-        <div className="save-container">
-          <button className="card-cancel" onClick={handleCancel}>
-            Cancel
-          </button>
-          <button className="card-save" onClick={onSave}>
-            Save
-          </button>
+        <div className={styles.details}>
+          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={onSave}>Save</button>
         </div>
       )}
     </div>

@@ -30,7 +30,7 @@ export default function SideNav(): JSX.Element {
           key={label}
           to={link}
           activeClassName={styles.activeLink}
-          className={styles.inactiveLinks}
+          className={styles.inactiveLink}
         >
           {label}
         </NavLink>
