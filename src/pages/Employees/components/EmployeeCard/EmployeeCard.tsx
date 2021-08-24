@@ -14,7 +14,7 @@ export default function EmployeeCard({
   employee: Employee;
   editing: boolean;
   onEdit: () => void;
-  onSave: () => void;
+  onSave: (employee: Employee) => void;
   onCancel: () => void;
 }): JSX.Element {
   const [formData, setFormData] = useState<Employee>(employee);
@@ -23,7 +23,6 @@ export default function EmployeeCard({
   const allSkills = ["React", "Angular", "DevOps", "Node", "UX", "Design"];
 
   const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {
-    debugger;
     const skill = evt.target.value
     
     setFormData((formData) => ({ ...formData, skills: [...skills, {name: skill}] }));
@@ -125,7 +124,7 @@ export default function EmployeeCard({
       {editing && (
         <div className={styles.details}>
           <button onClick={handleCancel}>Cancel</button>
-          <button onClick={onSave}>Save</button>
+          <button onClick={() => onSave(formData)}>Save</button>
         </div>
       )}
     </div>

@@ -49,7 +49,7 @@ export default function EmployeeTable({
             }}
             editing={true}
             onEdit={() => setIdBeingEdited("1234")}
-            onSave={handleEditCancel}
+            onSave={handleAddSave}
             onCancel={handleEditCancel}
           />
         )}
