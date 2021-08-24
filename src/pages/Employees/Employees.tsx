@@ -3,7 +3,7 @@ import type { Employee } from "../../services/api";
 import { useEffect, useState } from "react";
 import classnames from "classnames";
 
-import { useEmployees } from "./useEmployees";
+import { useEmployees } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 
 import styles from "./Employees.module.scss";
@@ -12,7 +12,7 @@ import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
 import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 
 export default function Employees(): JSX.Element {
-  const { employees } = useEmployees();
+  const { data: employees } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);

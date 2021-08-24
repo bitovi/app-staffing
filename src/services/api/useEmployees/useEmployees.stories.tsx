@@ -1,20 +1,13 @@
 import type { Story, Meta } from "@storybook/react";
-import type { Employee } from "./api";
 
-import { useEffect, useState } from "react";
-
-import { getData } from "./api";
+import useEmployees from "./useEmployees";
 
 export default {
   title: "Services/API/getData",
 } as Meta<{ id: string }>;
 
 export const Basic: Story<{ id: string }> = (args) => {
-  const [data, setData] = useState<Employee[]>();
-
-  useEffect(() => {
-    getData(args.id).then(setData);
-  }, [args.id]);
+  const { data } = useEmployees();
 
   return (
     <ul>
