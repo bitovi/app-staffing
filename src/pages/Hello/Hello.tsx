@@ -1,4 +1,4 @@
-import { useEmployees } from "../../services/api";
+import type { Employee } from "../../services/api";
 
 export default function Hello({ name }: { name: string }): JSX.Element {
   const { data: employees } = useEmployees();
