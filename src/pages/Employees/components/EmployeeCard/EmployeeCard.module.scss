@@ -24,26 +24,27 @@
   .detail {
     margin: 7.5px 0px 7.5px 0px;
     padding: 5px;
+  }
 
-    label,
-    .label {
-      display: flex;
-      flex-direction: column;
-      font-weight: 700;
-    }
+  label,
+  .label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
   }
 
   .skills {
     display: flex;
+    list-style: none;
     margin: 0;
     padding: 0;
 
     li {
+      position: relative;
       border-radius: 5px;
       background-color: rgb(237, 237, 237);
       width: 100px;
-      position: relative;
-      margin: auto;
+      margin: auto 1em;
       text-align: center;
     }
   }

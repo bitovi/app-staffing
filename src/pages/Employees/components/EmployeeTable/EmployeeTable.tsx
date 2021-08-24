@@ -1,7 +1,5 @@
 import type { Employee } from "../../../../services/api";
 
-import classNames from "classnames";
-
 import EmployeeCard from "../EmployeeCard";
 
 import styles from "./EmployeeTable.module.scss";

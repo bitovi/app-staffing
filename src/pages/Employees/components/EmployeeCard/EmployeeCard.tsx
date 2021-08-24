@@ -53,7 +53,6 @@ export default function EmployeeCard({
         >
           <input
             name="name"
-            id={name}
             value={name}
             disabled={!editing}
             onChange={updateField}
@@ -68,7 +67,6 @@ export default function EmployeeCard({
         >
           <input
             name="title"
-            id={title}
             value={title}
             disabled={!editing}
             onChange={updateField}
@@ -87,7 +85,6 @@ export default function EmployeeCard({
             Start Date
             <input
               name="startDate"
-              id={startDate}
               value={startDate}
               disabled={!editing}
               onChange={updateField}
@@ -105,7 +102,6 @@ export default function EmployeeCard({
             End Date
             <input
               name="endDate"
-              id={endDate}
               value={endDate}
               disabled={!editing}
               onChange={updateField}

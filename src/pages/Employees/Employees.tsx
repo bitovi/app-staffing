@@ -1,6 +1,7 @@
 import type { Employee } from "../../services/api";
 
 import { useEffect, useState } from "react";
+import classnames from "classnames";
 
 import { useEmployees } from "./useEmployees";
 import EmployeeTable from "./components/EmployeeTable";
@@ -66,7 +67,7 @@ export default function Employees(): JSX.Element {
             className={styles.actionBarFilter}
           />
           <button
-            className={`${styles.alert} ${styles.actionBarIcon}`}
+            className={classnames(styles.alert, styles.actionBarIcon)}
             title="Notifications"
             onClick={() => {
               alert("NOTIFICATIONS");
@@ -75,7 +76,7 @@ export default function Employees(): JSX.Element {
             <BellSVG className={styles.icon} />
           </button>
           <button
-            className={`${styles.settings} ${styles.actionBarIcon}`}
+            className={classnames(styles.settings, styles.actionBarIcon)}
             title="Settings"
             onClick={() => {
               alert("SETTINGS");

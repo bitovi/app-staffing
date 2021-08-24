@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://bitovi.github.io/app-staffing/",
   "scripts": {
-    "pre-check": "npm run test:ci && npm run depcheck && npm run eslint && npm run prettier && npm run typecheck && npm run build && echo \"\\033[32mAll good, PR ready!\"",
+    "precheck": "npm run test:ci && npm run depcheck && npm run eslint && npm run prettier && npm run typecheck && npm run build && echo \"\\033[32mAll good, PR ready!\"",
     "depcheck": "depcheck .",
     "eslint": "eslint src",
     "prettier": "prettier --check src",
