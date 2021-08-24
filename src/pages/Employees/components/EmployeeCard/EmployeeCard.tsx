@@ -18,7 +18,7 @@ export default function EmployeeCard({
   onCancel: () => void;
 }): JSX.Element {
   const [formData, setFormData] = useState<Employee>(employee);
-  const { name, title, startDate, endDate, skills, avatar } = formData;
+  const { name, startDate, endDate, skills } = formData;
 
   const handleAddSkill = () => {
     // eslint-disable-next-line no-console
@@ -37,12 +37,7 @@ export default function EmployeeCard({
 
   return (
     <div className={styles.wrapper}>
-      <img
-        className={styles.avatar}
-        src={avatar}
-        placeholder="Profile Picture"
-        alt="not found"
-      />
+      
       <div className={styles.details}>
         <div
           role="button"
@@ -65,12 +60,7 @@ export default function EmployeeCard({
           onKeyDown={onEdit}
           tabIndex={-1}
         >
-          <input
-            name="title"
-            value={title}
-            disabled={!editing}
-            onChange={updateField}
-          />
+       
         </div>
       </div>
       <div className={styles.details}>
