@@ -1,11 +1,10 @@
 import { rest } from "msw";
+import type { Employee } from ".";
 
 import { employees } from "./fixtures";
 
 export default [
   rest.get("/v1", (req, res, ctx) => {
-    // const id = req.url.searchParams.get("id");
-
     return res(
       ctx.status(200),
       ctx.json({
@@ -13,20 +12,19 @@ export default [
       }),
     );
   }),
-  rest.post("/v1", (req, res, ctx) => {
-    employees.push(JSON.parse(req.body as string));
 
-    return res(ctx.status(202));
+  rest.post("/v1", (req, res, ctx) => {
+    const newEmployee: Employee = JSON.parse(req.body as string);
+    employees.push(newEmployee);
+
+    return res(ctx.status(201), ctx.json({ data: newEmployee.id }));
   }),
   rest.put("/v1", (req, res, ctx) => {
     const employee = JSON.parse(req.body as string);
-    const index = employees.findIndex(x => x.id === employee.id);
+    const index = employees.findIndex((x) => x.id === employee.id);
 
-    if(index > -1)
-      employees[index] = employee
-    
-    return res(
-      ctx.status(202)
-    );
+    if (index > -1) employees[index] = employee;
+
+    return res(ctx.status(202));
   }),
 ];

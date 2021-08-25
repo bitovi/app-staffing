@@ -1,12 +1,12 @@
 import type { Employee } from "..";
-import type { APIResponse } from "../shared";
+import type { APIRead } from "../shared";
 
 import useSWR, { mutate } from "swr";
 
 import { fetcher } from "../shared";
 
 /** Hook for getting a list of the employees */
-export default function useEmployees(): APIResponse<Employee[]> {
+export default function useEmployees(): APIRead<Employee[]> {
   const { data: response, error } = useSWR<{ data: Employee[] }, Error>(
     `/v1`,
     fetcher,
