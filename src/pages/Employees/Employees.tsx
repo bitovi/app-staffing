@@ -1,4 +1,4 @@
-import type { Employee } from "../../services/api";
+import { Employee, useAddEmployee } from "../../services/api";
 
 import { useEffect, useState } from "react";
 import classnames from "classnames";
@@ -13,6 +13,11 @@ import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 
 export default function Employees(): JSX.Element {
   const { data: employees, refresh } = useEmployees();
+  const {
+    create: addEmployee,
+    data: addData,
+    error: addError,
+  } = useAddEmployee();
 
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
@@ -21,11 +26,10 @@ export default function Employees(): JSX.Element {
 
   const handleEditSave = (employee: Employee) => {
     // Todo: separate out into a hook
-    fetch("/v1", { method: "PUT", body: JSON.stringify(employee) })
-    .then(
-      (_) => refresh?.()
+    fetch("/v1", { method: "PUT", body: JSON.stringify(employee) }).then((_) =>
+      refresh?.(),
     );
-    
+
     setIdBeingEdited(undefined);
   };
 
@@ -35,14 +39,14 @@ export default function Employees(): JSX.Element {
     setIdBeingEdited(undefined);
   };
 
-  const handleAddSave = (employee: Employee) => {
-    // Todo: separate out into a hook
-    fetch("/v1", { method: "POST", body: JSON.stringify(employee) }).then(
-      (_) => {
-        refresh?.();
-      },
-    );
+  useEffect(() => {
+    if (addData) {
+      refresh();
+    }
+  }, [addData, addError, refresh]);
 
+  const handleAddSave = (employee: Employee) => {
+    addEmployee(employee);
     setIsAdding(false);
   };
 

@@ -19,6 +19,7 @@ export default [
 
     return res(ctx.status(201), ctx.json({ data: newEmployee.id }));
   }),
+
   rest.put("/v1", (req, res, ctx) => {
     const employee = JSON.parse(req.body as string);
     const index = employees.findIndex((x) => x.id === employee.id);
