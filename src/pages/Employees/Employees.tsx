@@ -1,4 +1,4 @@
-import { Employee, useAddEmployee } from "../../services/api";
+import type { Employee } from "../../services/api";
 
 import { useEffect, useState } from "react";
 import classnames from "classnames";
@@ -12,12 +12,7 @@ import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
 import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 
 export default function Employees(): JSX.Element {
-  const { data: employees, refresh } = useEmployees();
-  const {
-    create: addEmployee,
-    data: addData,
-    error: addError,
-  } = useAddEmployee();
+  const { data: employees, refresh, addEmployee } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
@@ -25,7 +20,7 @@ export default function Employees(): JSX.Element {
   const [idBeingEdited, setIdBeingEdited] = useState<string>();
 
   const handleEditSave = (employee: Employee) => {
-    // Todo: separate out into a hook
+    // @Todo: separate out into a hook
     fetch("/v1", { method: "PUT", body: JSON.stringify(employee) }).then((_) =>
       refresh?.(),
     );
@@ -38,12 +33,6 @@ export default function Employees(): JSX.Element {
     console.log("CANCELING!");
     setIdBeingEdited(undefined);
   };
-
-  useEffect(() => {
-    if (addData) {
-      refresh();
-    }
-  }, [addData, addError, refresh]);
 
   const handleAddSave = (employee: Employee) => {
     addEmployee(employee);

@@ -1,15 +1,7 @@
-interface APIInteraction<T> {
+export interface APIResponse<T> {
   data?: T;
   isLoading: boolean;
   error?: Error;
-}
-
-export interface APIRead<T> extends APIInteraction<T> {
-  refresh: () => void;
-}
-
-export interface APICreate<T, U> extends APIInteraction<T> {
-  create: (object: U) => void;
 }
 
 export interface Employee {

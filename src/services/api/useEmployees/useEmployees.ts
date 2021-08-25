@@ -1,23 +1,55 @@
 import type { Employee } from "..";
-import type { APIRead } from "../shared";
+import type { APIResponse } from "../shared";
 
 import useSWR, { mutate } from "swr";
+import { useCallback } from "react";
 
 import { fetcher } from "../shared";
 
+interface EmployeeActions {
+  refresh?: () => void;
+  addEmployee: (employee: Employee) => void;
+}
+
 /** Hook for getting a list of the employees */
-export default function useEmployees(): APIRead<Employee[]> {
+export default function useEmployees(): APIResponse<Employee[]> &
+  EmployeeActions {
+  const employeePath = "/v1";
+
   const { data: response, error } = useSWR<{ data: Employee[] }, Error>(
-    `/v1`,
+    employeePath,
     fetcher,
+  );
+
+  const refresh = useCallback(() => {
+    mutate(employeePath);
+  }, []);
+
+  const addEmployee = useCallback(
+    async (employee: Employee) => {
+      if (!response) return;
+
+      mutate(
+        employeePath,
+        { ...response, data: [...response?.data, employee] },
+        false,
+      ); // add locally
+
+      await fetch(employeePath, {
+        method: "POST",
+        body: JSON.stringify(employee),
+      });
+
+      refresh(); // revalidate data
+    },
+    [refresh, response],
   );
 
   return {
     data: response?.data,
     isLoading: !response && !error,
     error,
-    refresh: () => {
-      mutate("/v1");
-    },
+    refresh,
+    addEmployee,
   };
 }
