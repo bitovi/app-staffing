@@ -1,5 +1,4 @@
 import { rest } from "msw";
-// import type { Employee } from ".";
 
 import { employees } from "./fixtures";
 
@@ -18,5 +17,16 @@ export default [
     employees.push(JSON.parse(req.body as string));
 
     return res(ctx.status(202));
+  }),
+  rest.put("/v1", (req, res, ctx) => {
+    const employee = JSON.parse(req.body as string);
+    const index = employees.findIndex(x => x.id === employee.id);
+
+    if(index > -1)
+      employees[index] = employee
+    
+    return res(
+      ctx.status(202)
+    );
   }),
 ];

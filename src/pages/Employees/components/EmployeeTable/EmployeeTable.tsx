@@ -64,7 +64,7 @@ export default function EmployeeTable({
             employee={employee}
             editing={idBeingEdited === employee.id}
             onEdit={() => setIdBeingEdited(employee.id)}
-            onSave={handleEditCancel}
+            onSave={handleEditSave}
             onCancel={handleEditCancel}
           />
         ))}

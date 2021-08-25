@@ -20,8 +20,12 @@ export default function Employees(): JSX.Element {
   const [idBeingEdited, setIdBeingEdited] = useState<string>();
 
   const handleEditSave = (employee: Employee) => {
-    // eslint-disable-next-line no-console
-    console.log("SAVING:", employee);
+    // Todo: separate out into a hook
+    fetch("/v1", { method: "PUT", body: JSON.stringify(employee) })
+    .then(
+      (_) => refresh?.()
+    );
+    
     setIdBeingEdited(undefined);
   };
 
