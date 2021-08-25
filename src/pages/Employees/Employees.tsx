@@ -32,6 +32,7 @@ export default function Employees(): JSX.Element {
   };
 
   const handleAddSave = (employee: Employee) => {
+    // Todo: separate out into a hook
     fetch("/v1", { method: "POST", body: JSON.stringify(employee) }).then(
       (_) => {
         refresh?.();

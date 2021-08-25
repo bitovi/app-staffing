@@ -37,7 +37,7 @@ export default function EmployeeTable({
         {isAdding && (
           <EmployeeCard
             employee={{
-              id: "1234",
+              id: (Math.floor(Math.random() * 1000) + 1).toString(), // Temporary, can cause collisions with `key` when mapping over
               avatar:
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
               name: "",
@@ -47,8 +47,10 @@ export default function EmployeeTable({
               skills: [],
               available: true,
             }}
-            editing={true}
-            onEdit={() => setIdBeingEdited("1234")}
+            editing
+            onEdit={() => {
+              /** do nothing */
+            }}
             onSave={handleAddSave}
             onCancel={handleEditCancel}
           />

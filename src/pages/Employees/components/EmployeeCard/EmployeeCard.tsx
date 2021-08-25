@@ -23,9 +23,12 @@ export default function EmployeeCard({
   const allSkills = ["React", "Angular", "DevOps", "Node", "UX", "Design"];
 
   const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {
-    const skill = evt.target.value
-    
-    setFormData((formData) => ({ ...formData, skills: [...skills, {name: skill}] }));
+    const skill = evt.target.value;
+
+    setFormData((formData) => ({
+      ...formData,
+      skills: [...skills, { name: skill }],
+    }));
     // eslint-disable-next-line no-console
     console.log("Add skill button clicked!");
   };
@@ -63,9 +66,7 @@ export default function EmployeeCard({
           onClick={onEdit}
           onKeyDown={onEdit}
           tabIndex={-1}
-        >
-       
-        </div>
+        ></div>
       </div>
       <div className={styles.details}>
         <div
@@ -112,12 +113,15 @@ export default function EmployeeCard({
             </li>
           ))}
         </ul>
-        {editing && ( 
+        {editing && (
           // @Todo: See if there is a different event
           // eslint-disable-next-line jsx-a11y/no-onchange
           <select onChange={handleAddSkill}>
-            { 
-            allSkills.map(skill => <option key={skill} value={skill} >{skill}</option>) }
+            {allSkills.map((skill) => (
+              <option key={skill} value={skill}>
+                {skill}
+              </option>
+            ))}
           </select>
         )}
       </div>

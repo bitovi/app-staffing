@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import type { Employee } from ".";
+// import type { Employee } from ".";
 
 import { employees } from "./fixtures";
 
@@ -15,11 +15,7 @@ export default [
     );
   }),
   rest.post("/v1", (req, res, ctx) => {
-    // const id = req.url.searchParams.get("id");
-    console.log("adding to mocks");
-    console.log(req.body);
-
-    employees.push(req.body as Employee);
+    employees.push(JSON.parse(req.body as string));
 
     return res(ctx.status(202));
   }),
