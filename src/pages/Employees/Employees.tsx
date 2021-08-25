@@ -12,7 +12,7 @@ import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
 import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 
 export default function Employees(): JSX.Element {
-  const { data: employees, refresh, addEmployee } = useEmployees();
+  const { data: employees, addEmployee, updateEmployee } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
@@ -20,11 +20,7 @@ export default function Employees(): JSX.Element {
   const [idBeingEdited, setIdBeingEdited] = useState<string>();
 
   const handleEditSave = (employee: Employee) => {
-    // @Todo: separate out into a hook
-    fetch("/v1", { method: "PUT", body: JSON.stringify(employee) }).then((_) =>
-      refresh?.(),
-    );
-
+    updateEmployee(employee);
     setIdBeingEdited(undefined);
   };
 

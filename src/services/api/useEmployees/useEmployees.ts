@@ -9,6 +9,7 @@ import { fetcher } from "../shared";
 interface EmployeeActions {
   refresh?: () => void;
   addEmployee: (employee: Employee) => void;
+  updateEmployee: (employee: Employee) => void;
 }
 
 /** Hook for getting a list of the employees */
@@ -45,11 +46,33 @@ export default function useEmployees(): APIResponse<Employee[]> &
     [refresh, response],
   );
 
+  const updateEmployee = useCallback(
+    async (employee: Employee) => {
+      if (!response) return;
+
+      mutate(
+        employeePath,
+        { ...response, data: response?.data
+          .map( x => x.id === employee.id ? employee : x) },
+        false,
+      ); // add locally
+
+      await fetch(employeePath, {
+        method: "PUT",
+        body: JSON.stringify(employee),
+      });
+
+      refresh(); // revalidate data
+    },
+    [refresh, response],
+  );
+
   return {
     data: response?.data,
     isLoading: !response && !error,
     error,
     refresh,
     addEmployee,
+    updateEmployee
   };
 }
