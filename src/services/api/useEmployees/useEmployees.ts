@@ -1,7 +1,7 @@
 import type { Employee } from "..";
 import type { APIResponse } from "../shared";
 
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { fetcher } from "../shared";
 
@@ -16,5 +16,8 @@ export default function useEmployees(): APIResponse<Employee[]> {
     data: response?.data,
     isLoading: !response && !error,
     error,
+    refresh: () => {
+      mutate("/v1");
+    },
   };
 }

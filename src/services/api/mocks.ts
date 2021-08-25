@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { Employee } from "./api";
+import type { Employee } from ".";
 
 import { employees } from "./fixtures";
 
@@ -19,10 +19,8 @@ export default [
     console.log("adding to mocks");
     console.log(req.body);
 
-    employees.push(req.body as Employee)
+    employees.push(req.body as Employee);
 
-    return res(
-      ctx.status(202)
-    );
+    return res(ctx.status(202));
   }),
 ];

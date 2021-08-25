@@ -12,7 +12,7 @@ import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
 import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 
 export default function Employees(): JSX.Element {
-  const { data: employees } = useEmployees();
+  const { data: employees, refresh } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
@@ -32,11 +32,13 @@ export default function Employees(): JSX.Element {
   };
 
   const handleAddSave = (employee: Employee) => {
-    // eslint-disable-next-line no-console
-    console.log("SAVING:", employee);
+    fetch("/v1", { method: "POST", body: JSON.stringify(employee) }).then(
+      (_) => {
+        refresh?.();
+      },
+    );
+
     setIsAdding(false);
-    
-    fetch("/v1", {method:"POST", body: JSON.stringify(employee)})
   };
 
   const handleAddCancel = () => {

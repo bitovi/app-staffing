@@ -2,6 +2,7 @@ export interface APIResponse<T> {
   data?: T;
   isLoading: boolean;
   error?: Error;
+  refresh?: () => void;
 }
 
 export interface Employee {
