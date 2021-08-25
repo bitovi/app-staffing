@@ -26,6 +26,11 @@
     padding: 5px;
   }
 
+  .disabled{
+    pointer-events: none;
+    background-color:rgb(228, 228, 228);
+  }
+
   label,
   .label {
     display: flex;
