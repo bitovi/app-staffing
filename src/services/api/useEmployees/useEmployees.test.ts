@@ -17,7 +17,7 @@ describe("useEmployees", () => {
     const { result } = renderHook(() => useEmployees());
 
     const employee = {
-      id: (Math.floor(Math.random() * 1000) + 1).toString(), // Temporary, can cause collisions with `key` when mapping over
+      id: (Math.floor(Math.random() * 1000) + 1).toString(),
       avatar:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       name: "test",
