@@ -8,7 +8,7 @@ export default [
     return res(
       ctx.status(200),
       ctx.json({
-        data: employees,
+        data: employees.sort((lhs, rhs) => lhs.name.localeCompare(rhs.name)),
       }),
     );
   }),
