@@ -37,7 +37,7 @@ describe("useEmployees", () => {
   it("update an employee", async () => {
     const { result } = renderHook(() => useEmployees());
 
-    const employee =   {
+    const employee = {
       id: "1",
       avatar:
         "https://images.pexels.com/photos/937481/pexels-photo-937481.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -45,7 +45,11 @@ describe("useEmployees", () => {
       title: "Software Developer",
       startDate: "08/19/2021",
       endDate: "12/12/2021",
-      skills: [{ name: "React" }, { name: "Project Management" }, { name: "Angular" }],
+      skills: [
+        { name: "React" },
+        { name: "Project Management" },
+        { name: "Angular" },
+      ],
       available: false,
     };
 
