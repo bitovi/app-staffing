@@ -52,8 +52,12 @@ export default function useEmployees(): APIResponse<Employee[]> &
 
       mutate(
         employeePath,
-        { ...response, data: response?.data
-          .map( x => x.id === employee.id ? employee : x) },
+        {
+          ...response,
+          data: response?.data.map((x) =>
+            x.id === employee.id ? employee : x,
+          ),
+        },
         false,
       ); // add locally
 
@@ -73,6 +77,6 @@ export default function useEmployees(): APIResponse<Employee[]> &
     error,
     refresh,
     addEmployee,
-    updateEmployee
+    updateEmployee,
   };
 }
