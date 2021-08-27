@@ -16,8 +16,8 @@ export default function SideNav(): JSX.Element {
       label: "Employees",
     },
     {
-      link: "/dylan",
-      label: "Clients",
+      link: "/projects",
+      label: "Projects",
     },
   ];
   return (
