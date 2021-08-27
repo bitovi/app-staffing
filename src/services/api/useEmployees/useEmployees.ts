@@ -12,11 +12,11 @@ interface EmployeeActions {
   updateEmployee: (employee: Employee) => Promise<void>;
 }
 
+const employeePath = "/v1";
+
 /** Hook for getting a list of the employees */
 export default function useEmployees(): APIResponse<Employee[]> &
   EmployeeActions {
-  const employeePath = "/v1";
-
   const { data: response, error } = useSWR<{ data: Employee[] }, Error>(
     employeePath,
     fetcher,
@@ -30,13 +30,14 @@ export default function useEmployees(): APIResponse<Employee[]> &
         method: "POST",
         body: JSON.stringify(employee),
       })
-      .then(res=>res.json())
-      .then(newEmployee=>
-        mutate(
-          employeePath,
-          { ...response, data: [...response?.data, newEmployee] },
-          false,
-        ));
+        .then((res) => res.json())
+        .then((newEmployee) =>
+          mutate(
+            employeePath,
+            { ...response, data: [...response?.data, newEmployee] },
+            false,
+          ),
+        );
       // @TODO: handle errors from POST call and display appropriate message
     },
     [response],
@@ -50,18 +51,19 @@ export default function useEmployees(): APIResponse<Employee[]> &
         method: "PUT",
         body: JSON.stringify(employee),
       })
-      .then(res=>res.json())
-      .then(updatedEmployee=>
-        mutate(
-          employeePath,
-          {
-            ...response,
-            data: response?.data.map((x) =>
-              x.id === updatedEmployee.id ? updatedEmployee : x,
-            ),
-          },
-          false,
-        ));
+        .then((res) => res.json())
+        .then((updatedEmployee) =>
+          mutate(
+            employeePath,
+            {
+              ...response,
+              data: response?.data.map((x) =>
+                x.id === updatedEmployee.id ? updatedEmployee : x,
+              ),
+            },
+            false,
+          ),
+        );
       // @TODO: handle errors from PUT call and display appropriate message
     },
     [response],
