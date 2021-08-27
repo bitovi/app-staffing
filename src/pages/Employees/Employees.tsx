@@ -106,10 +106,10 @@ export default function Employees(): JSX.Element {
           filteredEmployees={filteredEmployees}
           idBeingEdited={idBeingEdited}
           setIdBeingEdited={setIdBeingEdited}
-          handleAddSave={handleAddSave}
-          handleEditSave={handleEditSave}
-          handleAddCancel={handleAddCancel}
-          handleEditCancel={handleEditCancel}
+          onAdd={handleAddSave}
+          onEdit={handleEditSave}
+          onAddCancel={handleAddCancel}
+          onEditCancel={handleEditCancel}
         />
       )}
     </div>

@@ -15,8 +15,8 @@ export default function EmployeeCard({
 }: {
   employee: Employee;
   editing: boolean;
-  onEdit: () => void;
-  onSave: (employee: Employee) => void;
+  onEdit?: () => void;
+  onSave?: (employee: Employee) => void;
   onCancel: () => void;
 }): JSX.Element {
   const [formData, setFormData] = useState<Employee>(employee);
@@ -124,7 +124,7 @@ export default function EmployeeCard({
       {editing && (
         <div className={styles.details}>
           <button onClick={handleCancel}>Cancel</button>
-          <button onClick={() => onSave(formData)}>Save</button>
+          <button onClick={() => onSave?.(formData)}>Save</button>
         </div>
       )}
     </div>

@@ -10,20 +10,20 @@ export default function EmployeeTable({
   filteredEmployees,
   idBeingEdited,
   setIdBeingEdited,
-  handleAddSave,
-  handleEditSave,
-  handleAddCancel,
-  handleEditCancel,
+  onAdd,
+  onEdit,
+  onAddCancel,
+  onEditCancel,
 }: {
   filterValue?: string;
   isAdding: boolean;
   filteredEmployees: Employee[];
   idBeingEdited?: string;
   setIdBeingEdited: (id: string) => void;
-  handleAddSave: (employee: Employee) => void;
-  handleAddCancel: () => void;
-  handleEditSave: (employee: Employee) => void;
-  handleEditCancel: () => void;
+  onAdd: (employee: Employee) => void;
+  onAddCancel: () => void;
+  onEdit: (employee: Employee) => void;
+  onEditCancel: () => void;
 }): JSX.Element {
   return (
     <>
@@ -48,11 +48,8 @@ export default function EmployeeTable({
               available: true,
             }}
             editing
-            onEdit={() => {
-              /** do nothing */
-            }}
-            onSave={handleAddSave}
-            onCancel={handleEditCancel}
+            onSave={onAdd}
+            onCancel={onAddCancel}
           />
         )}
       </div>
@@ -64,8 +61,8 @@ export default function EmployeeTable({
             employee={employee}
             editing={idBeingEdited === employee.id}
             onEdit={() => setIdBeingEdited(employee.id)}
-            onSave={handleEditSave}
-            onCancel={handleEditCancel}
+            onSave={onEdit}
+            onCancel={onEditCancel}
           />
         ))}
     </>
