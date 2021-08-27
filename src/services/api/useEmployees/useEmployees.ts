@@ -38,31 +38,24 @@ export default function useEmployees(): APIResponse<Employee[]> &
     );
   }, []);
 
-  const updateEmployee = useCallback(
-    async (employee: Employee) => {
-      if (!response) return;
+  const updateEmployee = useCallback(async (employee: Employee) => {
+    await mutate(
+      employeePath,
+      async (employeeResponse: { data: Employee[] }) => {
+        await fetch(employeePath, {
+          method: "PUT",
+          body: JSON.stringify(employee),
+        });
 
-      await fetch(employeePath, {
-        method: "PUT",
-        body: JSON.stringify(employee),
-      })
-        .then((res) => res.json())
-        .then((updatedEmployee) =>
-          mutate(
-            employeePath,
-            {
-              ...response,
-              data: response?.data.map((x) =>
-                x.id === updatedEmployee.id ? updatedEmployee : x,
-              ),
-            },
-            false,
+        return {
+          ...employeeResponse,
+          data: employeeResponse.data.map((x) =>
+            x.id === employee.id ? employee : x,
           ),
-        );
-      // @TODO: handle errors from PUT call and display appropriate message
-    },
-    [response],
-  );
+        };
+      },
+    );
+  }, []);
 
   return {
     data: response?.data,
