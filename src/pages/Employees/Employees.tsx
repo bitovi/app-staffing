@@ -19,8 +19,8 @@ export default function Employees(): JSX.Element {
   const [isAdding, setIsAdding] = useState(false);
   const [idBeingEdited, setIdBeingEdited] = useState<string>();
 
-  const handleEditSave = (employee: Employee) => {
-    updateEmployee(employee);
+  const handleEditSave = async (employee: Employee) => {
+    await updateEmployee(employee); // @TODO: add a loading spinner to save button
     setIdBeingEdited(undefined);
   };
 
@@ -30,8 +30,8 @@ export default function Employees(): JSX.Element {
     setIdBeingEdited(undefined);
   };
 
-  const handleAddSave = (employee: Employee) => {
-    addEmployee(employee);
+  const handleAddSave = async (employee: Employee) => {
+    await addEmployee(employee); // @TODO: add a loading spinner to save button
     setIsAdding(false);
   };
 

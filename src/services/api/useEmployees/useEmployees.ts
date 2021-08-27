@@ -8,8 +8,8 @@ import { fetcher } from "../shared";
 
 interface EmployeeActions {
   refresh?: () => void;
-  addEmployee: (employee: Employee) => void;
-  updateEmployee: (employee: Employee) => void;
+  addEmployee: (employee: Employee) => Promise<void>;
+  updateEmployee: (employee: Employee) => Promise<void>;
 }
 
 /** Hook for getting a list of the employees */
@@ -22,60 +22,55 @@ export default function useEmployees(): APIResponse<Employee[]> &
     fetcher,
   );
 
-  const refresh = useCallback(() => {
-    mutate(employeePath);
-  }, []);
-
   const addEmployee = useCallback(
     async (employee: Employee) => {
       if (!response) return;
 
-      mutate(
-        employeePath,
-        { ...response, data: [...response?.data, employee] },
-        false,
-      ); // add locally
-
       await fetch(employeePath, {
         method: "POST",
         body: JSON.stringify(employee),
-      });
-
-      refresh(); // revalidate data
+      })
+      .then(res=>res.json())
+      .then(newEmployee=>
+        mutate(
+          employeePath,
+          { ...response, data: [...response?.data, newEmployee] },
+          false,
+        ));
+      // @TODO: handle errors from POST call and display appropriate message
     },
-    [refresh, response],
+    [response],
   );
 
   const updateEmployee = useCallback(
     async (employee: Employee) => {
       if (!response) return;
 
-      mutate(
-        employeePath,
-        {
-          ...response,
-          data: response?.data.map((x) =>
-            x.id === employee.id ? employee : x,
-          ),
-        },
-        false,
-      ); // add locally
-
       await fetch(employeePath, {
         method: "PUT",
         body: JSON.stringify(employee),
-      });
-
-      refresh(); // revalidate data
+      })
+      .then(res=>res.json())
+      .then(updatedEmployee=>
+        mutate(
+          employeePath,
+          {
+            ...response,
+            data: response?.data.map((x) =>
+              x.id === updatedEmployee.id ? updatedEmployee : x,
+            ),
+          },
+          false,
+        ));
+      // @TODO: handle errors from PUT call and display appropriate message
     },
-    [refresh, response],
+    [response],
   );
 
   return {
     data: response?.data,
     isLoading: !response && !error,
     error,
-    refresh,
     addEmployee,
     updateEmployee,
   };
