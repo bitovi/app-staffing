@@ -22,26 +22,22 @@ export default function useEmployees(): APIResponse<Employee[]> &
     fetcher,
   );
 
-  const addEmployee = useCallback(
-    async (employee: Employee) => {
-      if (!response) return;
+  const addEmployee = useCallback(async (employee: Employee) => {
+    await mutate(
+      employeePath,
+      async (employeeResponse: { data: Employee[] }) => {
+        await fetch(employeePath, {
+          method: "POST",
+          body: JSON.stringify(employee),
+        });
 
-      await fetch(employeePath, {
-        method: "POST",
-        body: JSON.stringify(employee),
-      })
-        .then((res) => res.json())
-        .then((newEmployee) =>
-          mutate(
-            employeePath,
-            { ...response, data: [...response?.data, newEmployee] },
-            false,
-          ),
-        );
-      // @TODO: handle errors from POST call and display appropriate message
-    },
-    [response],
-  );
+        return {
+          ...employeeResponse,
+          data: [...employeeResponse.data, employee],
+        };
+      },
+    );
+  }, []);
 
   const updateEmployee = useCallback(
     async (employee: Employee) => {
