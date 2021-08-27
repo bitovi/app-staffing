@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  border: 2px solid #e5e5e5;
+  width: 900px;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dateGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1em;
+
+  input,
+  label {
+    display: block;
+  }
+}

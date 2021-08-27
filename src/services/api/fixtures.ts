@@ -50,8 +50,8 @@ export const employees = [
   },
 ];
 
-export const projects = Array(8).fill({
-  id: "1",
+export const projects = Array(1).fill({
+  id: Math.floor(Math.random() * 1000) + 1,
   role: "UX",
   startDate: "04-04-2021",
   endDate: "04-04-2021",

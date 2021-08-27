@@ -1,5 +1,7 @@
 import type { Project } from "../../../../services/api";
 
+import styles from "./ProjectCard.module.scss";
+
 const ProjectCard = ({
   project: {
     role,
@@ -13,10 +15,10 @@ const ProjectCard = ({
   project: Project;
 }): JSX.Element => {
   return (
-    <div>
-      <div>ROLE: {role}</div>
-      <div>
-        <div>
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <div>ROLE: {role}</div>
+        <div className={styles.dateGrid}>
           <label>
             Start Date
             <input value={startDate} />
@@ -26,8 +28,7 @@ const ProjectCard = ({
             End Date
             <input value={endDate} />
           </label>
-        </div>
-        <div>
+
           <label>
             Confidence
             <input value={startConfidence} />
@@ -37,6 +38,9 @@ const ProjectCard = ({
             <input value={endConfidence} />
           </label>
         </div>
+      </div>
+      <div className={styles.wrapper}>
+        <div>AssignedEmployees</div>
       </div>
     </div>
   );
