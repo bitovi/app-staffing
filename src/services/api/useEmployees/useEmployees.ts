@@ -1,4 +1,4 @@
-import type { Employee } from "..";
+import type { NewEmployee, Employee } from "..";
 import type { APIResponse } from "../shared";
 
 import useSWR, { mutate } from "swr";
@@ -7,7 +7,7 @@ import { useCallback } from "react";
 import { fetcher } from "../shared";
 
 interface EmployeeActions {
-  addEmployee: (employee: Employee) => Promise<void>;
+  addEmployee: (employee: NewEmployee) => Promise<void>;
   updateEmployee: (employee: Employee) => Promise<void>;
 }
 
@@ -21,18 +21,18 @@ export default function useEmployees(): APIResponse<Employee[]> &
     fetcher,
   );
 
-  const addEmployee = useCallback(async (employee: Employee) => {
+  const addEmployee = useCallback(async (employee: NewEmployee) => {
     await mutate(
       employeePath,
       async (employeeResponse: { data: Employee[] }) => {
-        await fetch(employeePath, {
+        const { data: id } = await fetch(employeePath, {
           method: "POST",
           body: JSON.stringify(employee),
-        });
+        }).then((res) => res.json());
 
         return {
           ...employeeResponse,
-          data: [...employeeResponse.data, employee],
+          data: [...employeeResponse.data, { ...employee, id }],
         };
       },
     );

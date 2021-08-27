@@ -1,4 +1,4 @@
-import type { Employee, SkillName } from "../../../../services/api";
+import type { NewEmployee, SkillName } from "../../../../services/api";
 
 import React, { useState } from "react";
 
@@ -6,20 +6,20 @@ import { skillList } from "../../../../services/api";
 
 import styles from "./EmployeeCard.module.scss";
 
-export default function EmployeeCard({
+export default function EmployeeCard<EmployeeType extends NewEmployee>({
   employee,
   editing,
   onEdit,
   onSave,
   onCancel,
 }: {
-  employee: Employee;
+  employee: EmployeeType;
   editing: boolean;
   onEdit?: () => void;
-  onSave?: (employee: Employee) => void;
+  onSave?: (employee: EmployeeType) => void;
   onCancel: () => void;
 }): JSX.Element {
-  const [formData, setFormData] = useState<Employee>(employee);
+  const [formData, setFormData] = useState<EmployeeType>(employee);
   const { name, startDate, endDate, skills } = formData;
 
   const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {

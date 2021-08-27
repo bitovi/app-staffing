@@ -4,8 +4,7 @@ export interface APIResponse<T> {
   error?: Error;
 }
 
-export interface Employee {
-  id: string;
+export interface NewEmployee {
   avatar: string;
   name: string;
   title: string;
@@ -13,6 +12,10 @@ export interface Employee {
   endDate: string;
   skills: Skill[];
   available: boolean;
+}
+
+export interface Employee extends NewEmployee {
+  id: string;
 }
 
 export const skillList = [

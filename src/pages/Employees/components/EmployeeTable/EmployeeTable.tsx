@@ -1,4 +1,4 @@
-import type { Employee } from "../../../../services/api";
+import type { NewEmployee, Employee } from "../../../../services/api";
 
 import EmployeeCard from "../EmployeeCard";
 
@@ -20,7 +20,7 @@ export default function EmployeeTable({
   filteredEmployees: Employee[];
   idBeingEdited?: string;
   setIdBeingEdited: (id: string) => void;
-  onAdd: (employee: Employee) => void;
+  onAdd: (employee: NewEmployee) => void;
   onAddCancel: () => void;
   onEdit: (employee: Employee) => void;
   onEditCancel: () => void;
@@ -37,7 +37,6 @@ export default function EmployeeTable({
         {isAdding && (
           <EmployeeCard
             employee={{
-              id: "",
               avatar:
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
               name: "",

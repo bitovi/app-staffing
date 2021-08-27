@@ -15,9 +15,10 @@ export default [
 
   rest.post("/v1", (req, res, ctx) => {
     const employee: Employee = JSON.parse(req.body as string);
-    employees.push(employee);
+    const id = (Math.floor(Math.random() * 1000) + 1).toString();
+    employees.push({...employee, id});
 
-    return res(ctx.status(201), ctx.json({ data: employee.id }));
+    return res(ctx.status(201), ctx.json({ data: id }));
   }),
 
   rest.put("/v1", (req, res, ctx) => {

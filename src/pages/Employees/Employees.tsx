@@ -1,4 +1,4 @@
-import type { Employee } from "../../services/api";
+import type { NewEmployee, Employee } from "../../services/api";
 
 import { useEffect, useState } from "react";
 import classnames from "classnames";
@@ -30,7 +30,7 @@ export default function Employees(): JSX.Element {
     setIdBeingEdited(undefined);
   };
 
-  const handleAddSave = async (employee: Employee) => {
+  const handleAddSave = async (employee: NewEmployee) => {
     await addEmployee(employee); // @TODO: add a loading spinner to save button
     setIsAdding(false);
   };
