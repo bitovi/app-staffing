@@ -29,8 +29,6 @@ export default function EmployeeCard({
       ...formData,
       skills: [...skills, { name: skill as SkillName }],
     }));
-    // eslint-disable-next-line no-console
-    console.log("Add skill button clicked!");
   };
 
   const handleCancel = () => {
@@ -114,8 +112,6 @@ export default function EmployeeCard({
           ))}
         </ul>
         {editing && (
-          // @Todo: See if there is a different event
-          // eslint-disable-next-line jsx-a11y/no-onchange
           <select onChange={handleAddSkill}>
             {skillList.map((skill) => (
               <option key={skill} value={skill}>

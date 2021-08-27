@@ -20,6 +20,9 @@
   "eslintConfig": {
     "root": true,
     "extends": "@hmudesign",
+    "rules": {
+      "jsx-a11y/no-onchange": "off"
+    },
     "overrides": [
       {
         "files": [
