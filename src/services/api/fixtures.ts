@@ -7,7 +7,7 @@ export const employees = [
     title: "Software Developer",
     startDate: "08/19/2021",
     endDate: "12/12/2021",
-    skills: [{ name: "React" }, { name: "Project Management" }],
+    skills: [{ name: "React" }, { name: "Node" }],
     available: false,
   },
   {
@@ -29,7 +29,7 @@ export const employees = [
     title: "Visual Designer",
     startDate: "08/19/2021",
     endDate: "12/12/2021",
-    skills: [{ name: "Design" }, { name: "Frontend" }],
+    skills: [{ name: "Design" }, { name: "React" }],
     available: false,
   },
   {
@@ -40,7 +40,7 @@ export const employees = [
     title: "UX",
     startDate: "08/19/2021",
     endDate: "12/12/2021",
-    skills: [{ name: "UX" }, { name: "Project Management" }],
+    skills: [{ name: "UX" }, { name: "Design" }],
     available: true,
   },
 ];

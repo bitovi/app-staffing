@@ -1,6 +1,8 @@
-import type { Employee } from "../../../../services/api";
+import type { Employee, SkillName } from "../../../../services/api";
 
 import React, { useState } from "react";
+
+import { skillList } from "../../../../services/api";
 
 import styles from "./EmployeeCard.module.scss";
 
@@ -20,14 +22,12 @@ export default function EmployeeCard({
   const [formData, setFormData] = useState<Employee>(employee);
   const { name, startDate, endDate, skills } = formData;
 
-  const allSkills = ["React", "Angular", "DevOps", "Node", "UX", "Design"];
-
   const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {
     const skill = evt.target.value;
 
     setFormData((formData) => ({
       ...formData,
-      skills: [...skills, { name: skill }],
+      skills: [...skills, { name: skill as SkillName }],
     }));
     // eslint-disable-next-line no-console
     console.log("Add skill button clicked!");
@@ -117,7 +117,7 @@ export default function EmployeeCard({
           // @Todo: See if there is a different event
           // eslint-disable-next-line jsx-a11y/no-onchange
           <select onChange={handleAddSkill}>
-            {allSkills.map((skill) => (
+            {skillList.map((skill) => (
               <option key={skill} value={skill}>
                 {skill}
               </option>
