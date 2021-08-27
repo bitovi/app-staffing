@@ -16,7 +16,7 @@ const ProjectCard = ({
 }): JSX.Element => {
   return (
     <div className={styles.container}>
-      <div className={styles.wrapper}>
+      <div className={styles.flexBetween}>
         <div>ROLE: {role}</div>
         <div className={styles.dateGrid}>
           <label>
@@ -39,8 +39,26 @@ const ProjectCard = ({
           </label>
         </div>
       </div>
-      <div className={styles.wrapper}>
+      <div>
         <div>AssignedEmployees</div>
+        {assignedEmployees.map((employee) => (
+          <div className={styles.flexBetween} key={employee.id}>
+            <select>
+              <option>Example</option>
+            </select>
+            <div className={styles.inputContainer}>
+              <label>
+                Start Date
+                <input value={employee.projectStartDate} />
+              </label>
+
+              <label>
+                End Date
+                <input value={employee.projectEndDate} />
+              </label>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

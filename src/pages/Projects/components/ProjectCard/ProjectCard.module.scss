@@ -4,9 +4,10 @@
   padding: 1em;
   border: 2px solid #e5e5e5;
   width: 900px;
+  margin: 0.5em 0;
 }
 
-.wrapper {
+.flexBetween {
   display: flex;
   justify-content: space-between;
 }
@@ -15,6 +16,15 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 1em;
+
+  input,
+  label {
+    display: block;
+  }
+}
+
+.inputContainer {
+  display: flex;
 
   input,
   label {
