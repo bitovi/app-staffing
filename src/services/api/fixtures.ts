@@ -49,3 +49,19 @@ export const employees = [
     available: true,
   },
 ];
+
+export const projects = Array(8).fill({
+  id: "1",
+  role: "UX",
+  startDate: "04-04-2021",
+  endDate: "04-04-2021",
+  startConfidence: 50,
+  endConfidence: 10,
+  assignedEmployees: [
+    {
+      ...employees[0],
+      projectStartDate: "04-04-2021",
+      projectEndDate: "04-04-2021",
+    },
+  ],
+});
