@@ -21,9 +21,15 @@ export default [
   }),
 
   rest.put("/v1", (req, res, ctx) => {
-    const employee = JSON.parse(req.body as string);
+    const employee: Employee = JSON.parse(req.body as string);
     const index = employees.findIndex((x) => x.id === employee.id);
-    if (index > -1) employees[index] = employee;
+
+    if (index > -1) {
+      return res(
+        ctx.status(400),
+        ctx.json({ data: "Could not find employee with id " + employee.id }),
+      );
+    }
 
     return res(ctx.status(202));
   }),
