@@ -7,7 +7,6 @@ import { useCallback } from "react";
 import { fetcher } from "../shared";
 
 interface EmployeeActions {
-  refresh?: () => void;
   addEmployee: (employee: Employee) => Promise<void>;
   updateEmployee: (employee: Employee) => Promise<void>;
 }
