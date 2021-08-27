@@ -54,7 +54,7 @@ export default function EmployeeCard({
           <input
             name="name"
             value={name}
-            className={!editing ? styles.disabled : ""}
+            className={editing ? "" : styles.disabled}
             onChange={updateField}
           />
         </div>
@@ -79,7 +79,7 @@ export default function EmployeeCard({
             <input
               name="startDate"
               value={startDate}
-              className={!editing ? styles.disabled : ""}
+              className={editing ? "" : styles.disabled}
               onChange={updateField}
             />
           </label>
@@ -96,7 +96,7 @@ export default function EmployeeCard({
             <input
               name="endDate"
               value={endDate}
-              className={!editing ? styles.disabled : ""}
+              className={editing ? "" : styles.disabled}
               onChange={updateField}
             />
           </label>
