@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import type { Employee } from ".";
+import type { NewEmployee, Employee } from ".";
 
 import { employees } from "./fixtures";
 
@@ -14,7 +14,7 @@ export default [
   }),
 
   rest.post("/v1", (req, res, ctx) => {
-    const employee: Employee = JSON.parse(req.body as string);
+    const employee: NewEmployee = JSON.parse(req.body as string);
     const id = (Math.floor(Math.random() * 1000) + 1).toString();
     employees.push({ ...employee, id });
 

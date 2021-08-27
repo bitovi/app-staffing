@@ -2,6 +2,9 @@ import { renderHook, act } from "@testing-library/react-hooks";
 
 import useEmployees from "./useEmployees";
 import { employees } from "../fixtures";
+import { skillList } from "../shared";
+
+const [react, angular] = skillList;
 
 describe("useEmployees", () => {
   it("works", async () => {
@@ -17,21 +20,24 @@ describe("useEmployees", () => {
     const { result } = renderHook(() => useEmployees());
 
     const employee = {
-      id: (Math.floor(Math.random() * 1000) + 1).toString(),
       avatar:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       name: "test",
       title: "arch wizard",
       startDate: "01/01/2021",
       endDate: "01/01/2022",
-      skills: [{ name: "react" }],
+      skills: [{ name: react }],
       available: true,
     };
 
     await act(() => result.current.addEmployee(employee));
+    const id = employees.find(({ name }) => name === employee.name)?.id;
+    const newEmployee = { ...employee, id };
 
     expect(result.current.data).toEqual(employees);
-    expect(employees.find(({ id }) => id === employee.id)).toEqual(employee);
+    expect(employees.find(({ id }) => id === newEmployee.id)).toEqual(
+      newEmployee,
+    );
   });
 
   it("update an employee", async () => {
@@ -45,11 +51,7 @@ describe("useEmployees", () => {
       title: "Software Developer",
       startDate: "08/19/2021",
       endDate: "12/12/2021",
-      skills: [
-        { name: "React" },
-        { name: "Project Management" },
-        { name: "Angular" },
-      ],
+      skills: [{ name: react }, { name: angular }],
       available: false,
     };
 
