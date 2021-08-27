@@ -58,13 +58,6 @@ export default function EmployeeCard({
             onChange={updateField}
           />
         </div>
-        <div
-          role="button"
-          className={styles.detail}
-          onClick={onEdit}
-          onKeyDown={onEdit}
-          tabIndex={-1}
-        ></div>
       </div>
       <div className={styles.details}>
         <div
