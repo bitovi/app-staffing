@@ -1,4 +1,4 @@
-import type { Employee } from "../../../../services/api";
+import type { NewEmployee, Employee } from "../../../../services/api";
 
 import EmployeeCard from "../EmployeeCard";
 
@@ -10,20 +10,20 @@ export default function EmployeeTable({
   filteredEmployees,
   idBeingEdited,
   setIdBeingEdited,
-  handleAddSave,
-  handleEditSave,
-  handleAddCancel,
-  handleEditCancel,
+  onAdd,
+  onEdit,
+  onAddCancel,
+  onEditCancel,
 }: {
   filterValue?: string;
   isAdding: boolean;
   filteredEmployees: Employee[];
   idBeingEdited?: string;
   setIdBeingEdited: (id: string) => void;
-  handleAddSave: (employee: Employee) => void;
-  handleAddCancel: () => void;
-  handleEditSave: (employee: Employee) => void;
-  handleEditCancel: () => void;
+  onAdd: (employee: NewEmployee) => void;
+  onAddCancel: () => void;
+  onEdit: (employee: Employee) => void;
+  onEditCancel: () => void;
 }): JSX.Element {
   return (
     <>
@@ -37,7 +37,6 @@ export default function EmployeeTable({
         {isAdding && (
           <EmployeeCard
             employee={{
-              id: "1234",
               avatar:
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
               name: "",
@@ -47,10 +46,9 @@ export default function EmployeeTable({
               skills: [],
               available: true,
             }}
-            editing={true}
-            onEdit={() => setIdBeingEdited("1234")}
-            onSave={handleEditCancel}
-            onCancel={handleEditCancel}
+            editing
+            onSave={onAdd}
+            onCancel={onAddCancel}
           />
         )}
       </div>
@@ -62,8 +60,8 @@ export default function EmployeeTable({
             employee={employee}
             editing={idBeingEdited === employee.id}
             onEdit={() => setIdBeingEdited(employee.id)}
-            onSave={handleEditCancel}
-            onCancel={handleEditCancel}
+            onSave={onEdit}
+            onCancel={onEditCancel}
           />
         ))}
     </>

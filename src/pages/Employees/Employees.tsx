@@ -1,4 +1,4 @@
-import type { Employee } from "../../services/api";
+import type { NewEmployee, Employee } from "../../services/api";
 
 import { useEffect, useState } from "react";
 import classnames from "classnames";
@@ -12,16 +12,15 @@ import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
 import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 
 export default function Employees(): JSX.Element {
-  const { data: employees } = useEmployees();
+  const { data: employees, addEmployee, updateEmployee } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [idBeingEdited, setIdBeingEdited] = useState<string>();
 
-  const handleEditSave = (employee: Employee) => {
-    // eslint-disable-next-line no-console
-    console.log("SAVING:", employee);
+  const handleEditSave = async (employee: Employee) => {
+    await updateEmployee(employee); // @TODO: add a loading spinner to save button
     setIdBeingEdited(undefined);
   };
 
@@ -31,9 +30,8 @@ export default function Employees(): JSX.Element {
     setIdBeingEdited(undefined);
   };
 
-  const handleAddSave = (employee: Employee) => {
-    // eslint-disable-next-line no-console
-    console.log("SAVING:", employee);
+  const handleAddSave = async (employee: NewEmployee) => {
+    await addEmployee(employee); // @TODO: add a loading spinner to save button
     setIsAdding(false);
   };
 
@@ -108,10 +106,10 @@ export default function Employees(): JSX.Element {
           filteredEmployees={filteredEmployees}
           idBeingEdited={idBeingEdited}
           setIdBeingEdited={setIdBeingEdited}
-          handleAddSave={handleAddSave}
-          handleEditSave={handleEditSave}
-          handleAddCancel={handleAddCancel}
-          handleEditCancel={handleEditCancel}
+          onAdd={handleAddSave}
+          onEdit={handleEditSave}
+          onAddCancel={handleAddCancel}
+          onEditCancel={handleEditCancel}
         />
       )}
     </div>

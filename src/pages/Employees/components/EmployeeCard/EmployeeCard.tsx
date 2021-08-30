@@ -1,28 +1,34 @@
-import type { Employee } from "../../../../services/api";
+import type { NewEmployee, SkillName } from "../../../../services/api";
 
-import { useState } from "react";
+import React, { useState } from "react";
+
+import { skillList } from "../../../../services/api";
 
 import styles from "./EmployeeCard.module.scss";
 
-export default function EmployeeCard({
+export default function EmployeeCard<EmployeeType extends NewEmployee>({
   employee,
   editing,
   onEdit,
   onSave,
   onCancel,
 }: {
-  employee: Employee;
+  employee: EmployeeType;
   editing: boolean;
-  onEdit: () => void;
-  onSave: () => void;
+  onEdit?: () => void;
+  onSave?: (employee: EmployeeType) => void;
   onCancel: () => void;
 }): JSX.Element {
-  const [formData, setFormData] = useState<Employee>(employee);
-  const { name, title, startDate, endDate, skills, avatar } = formData;
+  const [formData, setFormData] = useState<EmployeeType>(employee);
+  const { name, startDate, endDate, skills } = formData;
 
-  const handleAddSkill = () => {
-    // eslint-disable-next-line no-console
-    console.log("Add skill button clicked!");
+  const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {
+    const skill = evt.target.value;
+
+    setFormData((formData) => ({
+      ...formData,
+      skills: [...skills, { name: skill as SkillName }],
+    }));
   };
 
   const handleCancel = () => {
@@ -37,12 +43,6 @@ export default function EmployeeCard({
 
   return (
     <div className={styles.wrapper}>
-      <img
-        className={styles.avatar}
-        src={avatar}
-        placeholder="Profile Picture"
-        alt="not found"
-      />
       <div className={styles.details}>
         <div
           role="button"
@@ -54,20 +54,6 @@ export default function EmployeeCard({
           <input
             name="name"
             value={name}
-            disabled={!editing}
-            onChange={updateField}
-          />
-        </div>
-        <div
-          role="button"
-          className={styles.detail}
-          onClick={onEdit}
-          onKeyDown={onEdit}
-          tabIndex={-1}
-        >
-          <input
-            name="title"
-            value={title}
             disabled={!editing}
             onChange={updateField}
           />
@@ -119,15 +105,19 @@ export default function EmployeeCard({
           ))}
         </ul>
         {editing && (
-          <button className={styles.addSkill} onClick={handleAddSkill}>
-            Add Skill
-          </button>
+          <select onChange={handleAddSkill}>
+            {skillList.map((skill) => (
+              <option key={skill} value={skill}>
+                {skill}
+              </option>
+            ))}
+          </select>
         )}
       </div>
-      {editing && (
+      {editing && onSave && (
         <div className={styles.details}>
           <button onClick={handleCancel}>Cancel</button>
-          <button onClick={onSave}>Save</button>
+          <button onClick={() => onSave(formData)}>Save</button>
         </div>
       )}
     </div>

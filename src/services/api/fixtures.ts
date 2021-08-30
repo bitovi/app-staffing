@@ -1,3 +1,8 @@
+import { skillList } from ".";
+import { SkillName } from "./shared";
+
+const [react, angular, , node, ux, design] = skillList;
+
 export const employees = [
   {
     id: "1",
@@ -7,7 +12,7 @@ export const employees = [
     title: "Software Developer",
     startDate: "08/19/2021",
     endDate: "12/12/2021",
-    skills: [{ name: "React" }, { name: "Project Management" }],
+    skills: [{ name: react as SkillName }, { name: node as SkillName }],
     available: false,
   },
   {
@@ -18,7 +23,7 @@ export const employees = [
     title: "Software Developer",
     startDate: "06/01/2021",
     endDate: "08/18/2021",
-    skills: [{ name: "Angular" }],
+    skills: [{ name: angular as SkillName }],
     available: false,
   },
   {
@@ -29,7 +34,7 @@ export const employees = [
     title: "Visual Designer",
     startDate: "08/19/2021",
     endDate: "12/12/2021",
-    skills: [{ name: "Design" }, { name: "Frontend" }],
+    skills: [{ name: design as SkillName }, { name: react as SkillName }],
     available: false,
   },
   {
@@ -40,7 +45,7 @@ export const employees = [
     title: "UX",
     startDate: "08/19/2021",
     endDate: "12/12/2021",
-    skills: [{ name: "UX" }, { name: "Project Management" }],
+    skills: [{ name: ux as SkillName }, { name: design as SkillName }],
     available: true,
   },
 ];

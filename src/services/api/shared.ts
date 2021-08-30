@@ -4,8 +4,7 @@ export interface APIResponse<T> {
   error?: Error;
 }
 
-export interface Employee {
-  id: string;
+export interface NewEmployee {
   avatar: string;
   name: string;
   title: string;
@@ -15,8 +14,22 @@ export interface Employee {
   available: boolean;
 }
 
+export interface Employee extends NewEmployee {
+  id: string;
+}
+
+export const skillList = [
+  "React",
+  "Angular",
+  "DevOps",
+  "Node",
+  "UX",
+  "Design",
+] as const;
+
+export type SkillName = typeof skillList[number];
 export interface Skill {
-  name: string;
+  name: SkillName;
 }
 
 /**
