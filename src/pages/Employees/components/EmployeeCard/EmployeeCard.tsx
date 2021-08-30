@@ -114,10 +114,10 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           </select>
         )}
       </div>
-      {editing && (
+      {editing && onSave && (
         <div className={styles.details}>
           <button onClick={handleCancel}>Cancel</button>
-          <button onClick={() => onSave?.(formData)}>Save</button>
+          <button onClick={() => onSave(formData)}>Save</button>
         </div>
       )}
     </div>
