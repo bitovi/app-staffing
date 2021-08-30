@@ -31,6 +31,18 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
     }));
   };
 
+  const handleRemoveSkill = (evt: React.FormEvent<HTMLButtonElement>) => {
+    const skill = evt.currentTarget.value;
+
+    setFormData((formData) => ({
+      ...formData,
+      skills: skills.filter((x) => x.name != skill),
+    }));
+
+    // eslint-disable-next-line no-console
+    console.log("remove skill button clicked!");
+  };
+
   const handleCancel = () => {
     onCancel();
     setFormData(employee);
@@ -101,6 +113,15 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           {skills.map(({ name }) => (
             <li key={name} className={styles.skill}>
               {name}
+              <button
+                className={!editing ? styles.disabled : styles.editing}
+                onClick={handleRemoveSkill}
+                onKeyDown={handleRemoveSkill}
+                tabIndex={-1}
+                value={name}
+              >
+                X
+              </button>
             </li>
           ))}
         </ul>
