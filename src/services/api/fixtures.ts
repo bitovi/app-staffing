@@ -1,5 +1,5 @@
+import type { SkillName } from ".";
 import { skillList } from ".";
-import { SkillName } from "./shared";
 
 const [react, angular, , node, ux, design] = skillList;
 
