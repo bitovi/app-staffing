@@ -2,63 +2,22 @@ import type { Project } from "../../../../services/api";
 
 import styles from "./ProjectCard.module.scss";
 
-const ProjectCard = ({
-  project: {
-    role,
-    startDate,
-    endDate,
-    startConfidence,
-    endConfidence,
-    assignedEmployees,
-  },
-}: {
-  project: Project;
-}): JSX.Element => {
+const ProjectCard = ({ project }: { project?: Project }): JSX.Element => {
   return (
     <div className={styles.container}>
       <div className={styles.flexBetween}>
-        <div>ROLE: {role}</div>
+        <div>Project: {project?.projectName}</div>
         <div className={styles.dateGrid}>
           <label>
             Start Date
-            <input value={startDate} />
-          </label>
-
-          <label>
-            End Date
-            <input value={endDate} />
-          </label>
-
-          <label>
-            Confidence
-            <input value={startConfidence} />
-          </label>
-          <label>
-            Confidence
-            <input value={endConfidence} />
+            <input
+              value={project?.roles?.reduce((a, c) => a ?? c)?.startDate}
+            />
           </label>
         </div>
-      </div>
-      <div>
-        <div>AssignedEmployees</div>
-        {assignedEmployees.map((employee) => (
-          <div className={styles.flexBetween} key={employee.id}>
-            <select>
-              <option>Example</option>
-            </select>
-            <div className={styles.inputContainer}>
-              <label>
-                Start Date
-                <input value={employee.projectStartDate} />
-              </label>
-
-              <label>
-                End Date
-                <input value={employee.projectEndDate} />
-              </label>
-            </div>
-          </div>
-        ))}
+        <div>
+          <button className={styles.button}>View Project</button>
+        </div>
       </div>
     </div>
   );

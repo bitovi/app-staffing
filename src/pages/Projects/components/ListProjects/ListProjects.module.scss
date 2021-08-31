@@ -1,6 +1,27 @@
-.wrapper {
+.container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 1em;
+  margin: 0.5em 0;
+}
+
+.flexLeft {
+  display: flex;
+  justify-content: left;
+}
+
+.button {
+  background: none;
+  border: none;
+  outline: none;
+  float: left;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 3px 6px;
+
+  &:hover {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  }
 }

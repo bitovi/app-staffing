@@ -32,19 +32,20 @@ export interface Skill {
   name: SkillName;
 }
 
-export interface AssignedEmployee extends Employee {
-  projectStartDate: string;
-  projectEndDate: string;
-}
-
-export interface Project {
-  id: string;
-  role: string;
+export interface Role {
+  skill: Skill;
   startDate: string;
   endDate: string;
-  startConfidence: number;
-  endConfidence: number;
-  assignedEmployees: AssignedEmployee[];
+  employee?: Employee;
+}
+
+export interface NewProject {
+  projectName: string;
+  roles: Role[];
+}
+
+export interface Project extends NewProject {
+  id: string;
 }
 
 /**

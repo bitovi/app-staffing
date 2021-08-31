@@ -2,8 +2,8 @@ export type {
   NewEmployee,
   Employee,
   Skill,
+  Role,
   Project,
-  AssignedEmployee,
   SkillName,
 } from "./shared";
 

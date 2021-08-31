@@ -10,10 +10,12 @@ export default function Projects({
   onAddNew: () => void;
 }): JSX.Element {
   return (
-    <div className={styles.flexBetween}>
-      <button className={styles.addButton} onClick={onAddNew}>
-        Add Project +
-      </button>
+    <div className={styles.container}>
+      <div className={styles.flexLeft}>
+        <button className={styles.button} onClick={onAddNew}>
+          + Add Project
+        </button>
+      </div>
 
       {projects?.map((project) => (
         <ProjectCard key={project.id} project={project} />

@@ -1,7 +1,7 @@
 import type { SkillName } from ".";
 import { skillList } from ".";
 
-const [react, angular, , node, ux, design] = skillList;
+const [react, angular, devops, node, ux, design] = skillList;
 
 export const employees = [
   {
@@ -50,18 +50,34 @@ export const employees = [
   },
 ];
 
-export const projects = Array(7).fill({
-  id: Math.floor(Math.random() * 1000) + 1,
-  role: "UX",
-  startDate: "04-04-2021",
-  endDate: "04-04-2021",
-  startConfidence: 50,
-  endConfidence: 10,
-  assignedEmployees: [
-    {
-      ...employees[0],
-      projectStartDate: "04-04-2021",
-      projectEndDate: "04-04-2021",
-    },
-  ],
+export const projects = [...Array(7).keys()].map((n) => {
+  return {
+    id: Math.floor(Math.random() * 1000) + 1,
+    projectName: [
+      "Acme Corporation",
+      "Globex Corporation",
+      "Soylent Corp",
+      "Initech",
+      "Umbrella Corporation",
+      "Hooli",
+      "Massive Dynamic",
+    ][n],
+    roles: [
+      {
+        skill: ux as SkillName,
+        startDate: "01/01/2022",
+        endDate: "",
+      },
+      {
+        skill: react as SkillName,
+        startDate: "01/01/2022",
+        endDate: "",
+      },
+      {
+        skill: devops as SkillName,
+        startDate: "01/01/2022",
+        endDate: "",
+      },
+    ],
+  };
 });

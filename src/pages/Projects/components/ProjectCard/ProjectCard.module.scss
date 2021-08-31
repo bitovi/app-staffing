@@ -12,22 +12,19 @@
   justify-content: space-between;
 }
 
-.dateGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1em;
+.button {
+  color: rgb(91, 160, 248);
+  background: none;
+  border: none;
+  outline: none;
+  float: left;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 3px 6px;
 
-  input,
-  label {
-    display: block;
-  }
-}
-
-.inputContainer {
-  display: flex;
-
-  input,
-  label {
-    display: block;
+  &:hover {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   }
 }

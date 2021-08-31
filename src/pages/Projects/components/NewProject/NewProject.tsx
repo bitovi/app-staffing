@@ -9,10 +9,14 @@ export default function Projects({
   onSave: (project: Project) => void;
 }): JSX.Element {
   return (
-    <div className={styles.flexBetween}>
-      <button className={styles.addButton} onClick={onCancel}>
-        Cancel
-      </button>
+    <div className={styles.container}>
+      <div className={styles.flexBetween}>
+        <button className={styles.button} onClick={onCancel}>
+          &lt; Cancel
+        </button>
+      </div>
+
+      <div className={styles.projectDetail}>placeholder</div>
     </div>
   );
 }
