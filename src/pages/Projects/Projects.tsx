@@ -24,7 +24,7 @@ export default function Projects(): JSX.Element {
   const cancelEditProject = () => {
     setEditingProject(undefined);
   };
-  const updateProject = (project: Project) => {
+  const updateProject = (_project: Project) => {
     // @TODO: persist update
     setEditingProject(undefined);
   };

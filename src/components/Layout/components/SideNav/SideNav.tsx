@@ -1,14 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
-import {
-  faHome as homeIcon,
-  faUserAlt as userIcon,
-  faTasks as tasksIcon,
-} from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./SideNav.module.scss";
 
 import BitoviLogo from "./assets/bitovi.png";
+import homeIcon from "./assets/Home.png";
+import userIcon from "./assets/User.png";
+import projectIcon from "./assets/Activity.png";
 
 export default function SideNav(): JSX.Element {
   const links = [
@@ -26,7 +23,7 @@ export default function SideNav(): JSX.Element {
     {
       link: "/projects",
       label: "Projects",
-      icon: tasksIcon,
+      icon: projectIcon,
     },
   ];
   return (
@@ -41,7 +38,7 @@ export default function SideNav(): JSX.Element {
           activeClassName={styles.activeLink}
           className={styles.inactiveLink}
         >
-          <Icon icon={icon} />
+          <img src={icon} alt={label} className={styles.icon} />
           {label}
         </NavLink>
       ))}
