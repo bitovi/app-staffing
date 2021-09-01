@@ -2,7 +2,13 @@ import type { Project } from "../../../../services/api";
 
 import styles from "./ProjectCard.module.scss";
 
-const ProjectCard = ({ project }: { project?: Project }): JSX.Element => {
+const ProjectCard = ({
+  project,
+  onView,
+}: {
+  project: Project;
+  onView: (project: Project) => void;
+}): JSX.Element => {
   return (
     <div className={styles.container}>
       <div className={styles.flexBetween}>
@@ -11,12 +17,14 @@ const ProjectCard = ({ project }: { project?: Project }): JSX.Element => {
           <label>
             Start Date
             <input
-              value={project?.roles?.reduce((a, c) => a ?? c)?.startDate}
+              defaultValue={project?.roles?.reduce((a, c) => a ?? c)?.startDate}
             />
           </label>
         </div>
         <div>
-          <button className={styles.button}>View Project</button>
+          <button className={styles.button} onClick={() => onView(project)}>
+            View Project
+          </button>
         </div>
       </div>
     </div>

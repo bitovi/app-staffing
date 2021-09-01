@@ -1,4 +1,4 @@
-import NewProject from "./components/NewProject";
+import ProjectDetail from "./components/ProjectDetail";
 import ListProjects from "./components/ListProjects";
 
 import { useState } from "react";
@@ -10,20 +10,41 @@ import styles from "./Projects.module.scss";
 export default function Projects(): JSX.Element {
   const { data: projects } = useProjects();
   const [isAdding, setIsAdding] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | undefined>();
 
   const addNewProject = () => setIsAdding(true);
   const cancelAddingProject = () => setIsAdding(false);
   const saveNewProject = (project: Project) => {
-    setIsAdding(false);
     // @TODO: save new project
+    setIsAdding(false);
+  };
+  const editProject = (project: Project) => {
+    setEditingProject(project);
+  };
+  const cancelEditProject = () => {
+    setEditingProject(undefined);
+  };
+  const updateProject = (project: Project) => {
+    // @TODO: persist update
+    setEditingProject(undefined);
   };
 
   return (
     <div className={styles.wrapper}>
       {isAdding ? (
-        <NewProject onCancel={cancelAddingProject} onSave={saveNewProject} />
+        <ProjectDetail onCancel={cancelAddingProject} onSave={saveNewProject} />
+      ) : editingProject ? (
+        <ProjectDetail
+          onCancel={cancelEditProject}
+          onSave={updateProject}
+          project={editingProject}
+        />
       ) : (
-        <ListProjects projects={projects} onAddNew={addNewProject} />
+        <ListProjects
+          onAddNew={addNewProject}
+          onView={editProject}
+          projects={projects}
+        />
       )}
     </div>
   );

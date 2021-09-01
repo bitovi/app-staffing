@@ -1,12 +1,14 @@
 import { Project } from "../../../../services/api";
-import styles from "./NewProject.module.scss";
+import styles from "./ProjectDetail.module.scss";
 
 export default function Projects({
   onCancel,
   onSave,
+  project,
 }: {
   onCancel: () => void;
   onSave: (project: Project) => void;
+  project?: Project;
 }): JSX.Element {
   return (
     <div className={styles.container}>
@@ -16,7 +18,9 @@ export default function Projects({
         </button>
       </div>
 
-      <div className={styles.projectDetail}>placeholder</div>
+      <div className={styles.projectDetail}>
+        {project ? "TODO: edit project form" : "TODO: new project form"}
+      </div>
     </div>
   );
 }

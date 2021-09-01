@@ -3,11 +3,13 @@ import ProjectCard from "../ProjectCard";
 import styles from "./ListProjects.module.scss";
 
 export default function Projects({
-  projects,
   onAddNew,
+  onView,
+  projects,
 }: {
-  projects?: Project[];
   onAddNew: () => void;
+  onView: (project: Project) => void;
+  projects?: Project[];
 }): JSX.Element {
   return (
     <div className={styles.container}>
@@ -18,7 +20,7 @@ export default function Projects({
       </div>
 
       {projects?.map((project) => (
-        <ProjectCard key={project.id} project={project} />
+        <ProjectCard key={project.id} project={project} onView={onView} />
       ))}
     </div>
   );
