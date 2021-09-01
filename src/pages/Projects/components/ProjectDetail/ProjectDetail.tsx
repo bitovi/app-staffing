@@ -12,11 +12,9 @@ export default function Projects({
 }): JSX.Element {
   return (
     <div className={styles.container}>
-      <div className={styles.flexBetween}>
-        <button className={styles.button} onClick={onCancel}>
-          &lt; Cancel
-        </button>
-      </div>
+      <button className={styles.button} onClick={onCancel}>
+        &lt; Cancel
+      </button>
 
       <div className={styles.projectDetail}>
         {project ? "TODO: edit project form" : "TODO: new project form"}
