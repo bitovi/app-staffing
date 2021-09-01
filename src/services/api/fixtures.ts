@@ -65,18 +65,18 @@ export const projects = [...Array(7).keys()].map((n) => {
     roles: [
       {
         skill: ux as SkillName,
-        startDate: "01/01/2022",
+        startDate: n == 3 ? "" : `${n + 1}/01/2022`,
         endDate: "",
       },
       {
         skill: react as SkillName,
-        startDate: "01/01/2022",
+        startDate: "",
         endDate: "",
       },
       {
         skill: devops as SkillName,
-        startDate: "01/01/2022",
-        endDate: "",
+        startDate: "",
+        endDate: n == 5 ? "12/30/2022" : "",
       },
     ],
   };

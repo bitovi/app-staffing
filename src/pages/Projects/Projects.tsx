@@ -34,6 +34,7 @@ export default function Projects(): JSX.Element {
       {isAdding ? (
         <ProjectDetail onCancel={cancelAddingProject} onSave={saveNewProject} />
       ) : editingProject ? (
+        /* @TODO: viewing/editing should be handled through routing */
         <ProjectDetail
           onCancel={cancelEditProject}
           onSave={updateProject}

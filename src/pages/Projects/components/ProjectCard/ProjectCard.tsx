@@ -9,6 +9,16 @@ const ProjectCard = ({
   project: Project;
   onView: (project: Project) => void;
 }): JSX.Element => {
+  // @TODO: these are overly simple and need revisited
+  const startDate = project?.roles
+    ?.map((x) => x.startDate)
+    .filter((x) => !!x)
+    .reduce((a, c) => a || c, "");
+  const endDate = project?.roles
+    ?.map((x) => x.endDate)
+    .filter((x) => !!x)
+    .reduce((a, c) => a || c, "");
+
   return (
     <div className={styles.container}>
       <div className={styles.projectName}>
@@ -17,14 +27,19 @@ const ProjectCard = ({
         </div>
       </div>
       <div className={styles.dates}>
-        <div>
-          Start Date
-          <span>{project?.roles?.reduce((a, c) => a ?? c)?.startDate}</span>
-        </div>
-        {/* <div>
-          End Date
-          <span>{project?.roles?.reduce((a, c) => a ?? c)?.startDate}</span>
-        </div> */}
+        {/* @TODO: use a date component */}
+        {startDate && (
+          <div>
+            Start Date
+            <span>{startDate}</span>
+          </div>
+        )}
+        {endDate && (
+          <div>
+            End Date
+            <span>{endDate}</span>
+          </div>
+        )}
       </div>
       <div>
         <button className={styles.viewProject} onClick={() => onView(project)}>
