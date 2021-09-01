@@ -52,7 +52,7 @@ export const employees = [
 
 export const projects = [...Array(7).keys()].map((n) => {
   return {
-    id: Math.floor(Math.random() * 1000) + 1,
+    id: (Math.floor(Math.random() * 1000) + 1).toString(),
     projectName: [
       "Acme Corporation",
       "Globex Corporation",
@@ -64,17 +64,17 @@ export const projects = [...Array(7).keys()].map((n) => {
     ][n],
     roles: [
       {
-        skill: ux as SkillName,
+        skill: { name: ux as SkillName },
         startDate: n == 3 ? "" : `${n + 1}/01/2022`,
         endDate: "",
       },
       {
-        skill: react as SkillName,
+        skill: { name: react as SkillName },
         startDate: "",
         endDate: "",
       },
       {
-        skill: devops as SkillName,
+        skill: { name: devops as SkillName },
         startDate: "",
         endDate: n == 5 ? "12/30/2022" : "",
       },
