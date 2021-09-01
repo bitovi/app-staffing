@@ -15,7 +15,7 @@ export default function SideNav(): JSX.Element {
     {
       exact: true,
       link: "/",
-      label: "Dashboard",
+      label: "Home",
       icon: homeIcon,
     },
     {

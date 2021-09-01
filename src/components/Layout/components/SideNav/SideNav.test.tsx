@@ -13,7 +13,7 @@ describe("Side Nav", () => {
 
     let link = screen.getByText("Employees");
     expect(link).to.have.class("activeLink");
-    link = screen.getByText("Dashboard");
+    link = screen.getByText("Home");
     expect(link).to.have.class("inactiveLink");
   });
 });
