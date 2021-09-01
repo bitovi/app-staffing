@@ -1,4 +1,4 @@
-import type { SkillName } from ".";
+import type { Project, SkillName } from ".";
 import { skillList } from ".";
 
 const [react, angular, devops, node, ux, design] = skillList;
@@ -53,7 +53,7 @@ export const employees = [
 export const projects = [...Array(7).keys()].map((n) => {
   return {
     id: (Math.floor(Math.random() * 1000) + 1).toString(),
-    projectName: [
+    name: [
       "Acme Corporation",
       "Globex Corporation",
       "Soylent Corp",
@@ -79,5 +79,5 @@ export const projects = [...Array(7).keys()].map((n) => {
         endDate: n == 5 ? "12/30/2022" : "",
       },
     ],
-  };
+  } as Project;
 });

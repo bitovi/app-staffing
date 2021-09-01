@@ -23,7 +23,7 @@ const ProjectCard = ({
     <div className={styles.container}>
       <div className={styles.projectName}>
         <div>
-          Project: <span>{project?.projectName}</span>
+          Project: <span>{project?.name}</span>
         </div>
       </div>
       <div className={styles.dates}>

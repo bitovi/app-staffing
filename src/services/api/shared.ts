@@ -40,7 +40,7 @@ export interface Role {
 }
 
 export interface NewProject {
-  projectName: string;
+  name: string;
   roles: Role[];
 }
 
