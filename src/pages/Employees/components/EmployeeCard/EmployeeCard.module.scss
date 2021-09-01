@@ -57,7 +57,8 @@
         visibility: hidden;
       }
 
-      &:hover {
+      &:hover,
+      &:focus {
         button.editing {
           visibility: visible;
         }
