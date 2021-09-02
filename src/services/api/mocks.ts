@@ -1,5 +1,6 @@
+import type { NewEmployee, NewProject, Employee } from ".";
+
 import { rest } from "msw";
-import type { NewEmployee, Employee } from ".";
 
 import { employees, projects } from "./fixtures";
 
@@ -43,5 +44,13 @@ export default [
         data: projects,
       }),
     );
+  }),
+
+  rest.post("/v1/projects", (req, res, ctx) => {
+    const project: NewProject = JSON.parse(req.body as string);
+    const id = (Math.floor(Math.random() * 1000) + 1).toString();
+    projects.push({ ...project, id });
+
+    return res(ctx.status(201), ctx.json({ data: id }));
   }),
 ];
