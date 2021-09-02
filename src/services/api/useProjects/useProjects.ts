@@ -34,7 +34,21 @@ export default function useProjects(): APIResponse<Project[]> & ProjectActions {
     });
   }, []);
 
-  const updateProject = useCallback(async (project: Project) => {}, []);
+  const updateProject = useCallback(async (project: Project) => {
+    await mutate(projectPath, async (projectResponse: { data: Project[] }) => {
+      await fetch(projectPath, {
+        method: "PUT",
+        body: JSON.stringify(project),
+      });
+
+      return {
+        ...projectResponse,
+        data: projectResponse.data.map((p) =>
+          p.id === project.id ? project : p,
+        ),
+      };
+    });
+  }, []);
 
   return {
     data: response?.data,

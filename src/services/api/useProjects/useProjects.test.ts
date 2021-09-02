@@ -31,4 +31,21 @@ describe("useEmployees", () => {
       newProjectWithId,
     );
   });
+
+  it("updates a project", async () => {
+    const { result } = renderHook(() => useProjects());
+
+    const editedProject = {
+      id: projects[0].id,
+      name: "Edited Project",
+      roles: [],
+    };
+
+    await act(() => result.current.updateProject(editedProject));
+
+    expect(result.current.data).toEqual(projects);
+    expect(projects.find(({ id }) => id === editedProject.id)).toEqual(
+      editedProject,
+    );
+  });
 });
