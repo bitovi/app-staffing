@@ -1,9 +1,11 @@
+import type { Project } from "../../services/api";
+
 import ProjectDetail from "./components/ProjectDetail";
 import ListProjects from "./components/ListProjects";
 
 import { useState } from "react";
 
-import { Project, useProjects } from "../../services/api";
+import { useProjects } from "../../services/api";
 
 import styles from "./Projects.module.scss";
 

@@ -50,7 +50,7 @@ export const employees = [
   },
 ];
 
-export const projects = [...Array(7).keys()].map((n) => {
+export const projects: Project[] = [...Array(7).keys()].map((n) => {
   return {
     id: (Math.floor(Math.random() * 1000) + 1).toString(),
     name: [
@@ -79,5 +79,5 @@ export const projects = [...Array(7).keys()].map((n) => {
         endDate: n == 5 ? "12/30/2022" : "",
       },
     ],
-  } as Project;
+  };
 });
