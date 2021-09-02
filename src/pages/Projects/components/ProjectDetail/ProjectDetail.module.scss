@@ -7,6 +7,16 @@
   margin: 0.5em 0em;
 }
 
+.projectName {
+  text-decoration: underline;
+  outline: none;
+  border: none;
+  width: 100%;
+  font-weight: 700;
+  font-size: 27px;
+  margin-bottom: 1em;
+}
+
 .button {
   background: none;
   border: none;
@@ -26,9 +36,52 @@
 .projectDetail {
   display: flex;
   flex-direction: column;
-  border: 2px solid #e5e5e5;
   width: 800px;
-  height: 1200px;
+  margin: 1em 0;
+}
+
+.dateContainer {
+  :first-child {
+    margin-bottom: 0.5em;
+  }
+}
+
+.roleContainer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #e5e5e5;
+
+  border-top: 1px solid #c4c4c4;
+  border-bottom: 1px solid #c4c4c4;
   padding: 1em;
-  margin: 0.5em 0;
+
+  label,
+  .label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+  }
+
+  input,
+  .input {
+    background-color: #e5e5e5;
+
+    border: none;
+    border-bottom: 1px solid #000000;
+  }
+
+  select,
+  .select {
+    align-self: flex-start;
+  }
+
+  .button,
+  button {
+    align-self: flex-end;
+  }
+}
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
