@@ -1,7 +1,7 @@
 import { rest } from "msw";
 import type { NewEmployee, Employee } from ".";
 
-import { employees } from "./fixtures";
+import { employees, projects } from "./fixtures";
 
 export default [
   rest.get("/v1", (req, res, ctx) => {
@@ -39,6 +39,15 @@ export default [
     return res(
       ctx.status(404),
       ctx.json({ data: "Could not find employee with id " + employee.id }),
+    );
+  }),
+
+  rest.get("/v1/projects", (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        data: projects,
+      }),
     );
   }),
 ];

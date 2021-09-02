@@ -1,7 +1,7 @@
+import type { Project, SkillName } from ".";
 import { skillList } from ".";
-import { SkillName } from "./shared";
 
-const [react, angular, , node, ux, design] = skillList;
+const [react, angular, devops, node, ux, design] = skillList;
 
 export const employees = [
   {
@@ -49,3 +49,35 @@ export const employees = [
     available: true,
   },
 ];
+
+export const projects: Project[] = [...Array(7).keys()].map((n) => {
+  return {
+    id: (Math.floor(Math.random() * 1000) + 1).toString(),
+    name: [
+      "Acme Corporation",
+      "Globex Corporation",
+      "Soylent Corp",
+      "Initech",
+      "Umbrella Corporation",
+      "Hooli",
+      "Massive Dynamic",
+    ][n],
+    roles: [
+      {
+        skill: { name: ux as SkillName },
+        startDate: n == 3 ? "" : `${n + 1}/01/2022`,
+        endDate: "",
+      },
+      {
+        skill: { name: react as SkillName },
+        startDate: "",
+        endDate: "",
+      },
+      {
+        skill: { name: devops as SkillName },
+        startDate: "",
+        endDate: n == 5 ? "12/30/2022" : "",
+      },
+    ],
+  };
+});

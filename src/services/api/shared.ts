@@ -32,6 +32,22 @@ export interface Skill {
   name: SkillName;
 }
 
+export interface Role {
+  skill: Skill;
+  startDate: string;
+  endDate: string;
+  employee?: Employee;
+}
+
+export interface NewProject {
+  name: string;
+  roles: Role[];
+}
+
+export interface Project extends NewProject {
+  id: string;
+}
+
 /**
  * A fetcher function for the `useSWR` hook.
  *

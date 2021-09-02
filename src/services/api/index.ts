@@ -1,4 +1,12 @@
-export type { NewEmployee, Employee, Skill, SkillName } from "./shared";
+export type {
+  NewEmployee,
+  Employee,
+  Skill,
+  Role,
+  Project,
+  SkillName,
+} from "./shared";
 
-export { default as useEmployees } from "./useEmployees";
 export { skillList } from "./shared";
+export { default as useEmployees } from "./useEmployees";
+export { default as useProjects } from "./useProjects";

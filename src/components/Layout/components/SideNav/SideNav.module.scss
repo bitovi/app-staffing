@@ -1,25 +1,35 @@
 .wrapper {
   width: 20%;
-  min-width: 250px;
+  min-width: 200px;
   background-color: #474746;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
+  align-items: left;
+  padding: 20px 0 0 20px;
 }
 
 .image {
-  padding-left: 20px;
+  padding-bottom: 60px;
   align-self: flex-start;
 }
 
 .inactiveLink {
-  padding-top: 60px;
+  padding: 20px 0;
   text-decoration: none;
   color: white;
-  font-size: x-large;
+
+  .icon {
+    margin-right: 5px;
+    filter: invert(100%);
+  }
 }
 
 .activeLink {
-  color: lightgrey;
+  color: rgb(191, 92, 88);
+
+  .icon {
+    // https://codepen.io/sosuke/pen/Pjoqqp
+    filter: invert(38%) sepia(30%) saturate(1289%) hue-rotate(314deg)
+      brightness(104%) contrast(68%);
+  }
 }

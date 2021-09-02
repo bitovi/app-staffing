@@ -8,6 +8,7 @@ import "./App.scss";
 
 const Hello = lazy(() => import("./pages/Hello"));
 const Employees = lazy(() => import("./pages/Employees"));
+const Projects = lazy(() => import("./pages/Projects"));
 
 export default function App(): JSX.Element {
   return (
@@ -20,8 +21,8 @@ export default function App(): JSX.Element {
           <Route path="/employees">
             <Employees />
           </Route>
-          <Route path="/dylan">
-            <Hello name="Dylan" />
+          <Route path="/projects">
+            <Projects />
           </Route>
           <Route>
             <Hello name="Error" />
