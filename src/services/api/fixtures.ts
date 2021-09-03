@@ -12,7 +12,11 @@ export const employees = [
     title: "Software Developer",
     startDate: "08/19/2021",
     endDate: "12/12/2021",
-    skills: [{ name: react as SkillName }, { name: node as SkillName }],
+    skills: [
+      { name: react as SkillName },
+      { name: node as SkillName },
+      { name: devops as SkillName },
+    ],
     available: false,
   },
   {
@@ -74,19 +78,22 @@ export const projects = [...Array(7).keys()].map((n) => {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
     roles: [
       {
-        skill: { name: ux as SkillName },
+        skill: employees[0].skills[0],
         startDate: n == 3 ? "" : `${n + 1}/01/2022`,
         endDate: "",
+        employee: employees[1],
       },
       {
-        skill: { name: react as SkillName },
+        skill: employees[1].skills[0],
         startDate: "",
         endDate: "",
+        employee: employees[1],
       },
       {
-        skill: { name: devops as SkillName },
+        skill: employees[2].skills[0],
         startDate: "",
         endDate: n == 5 ? "12/30/2022" : "",
+        employee: employees[2],
       },
     ],
   } as Project;

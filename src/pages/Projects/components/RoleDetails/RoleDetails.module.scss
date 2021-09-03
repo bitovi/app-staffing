@@ -1,0 +1,40 @@
+.dateContainer {
+  :first-child {
+    margin-bottom: 0.5em;
+  }
+}
+
+.roleContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-top: 1px solid #c4c4c4;
+  padding: 1em;
+
+  label,
+  .label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+  }
+
+  input,
+  .input {
+    border: none;
+  }
+
+  select,
+  .select {
+    align-self: flex-start;
+  }
+
+  .button,
+  button {
+    align-self: flex-end;
+  }
+}
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
