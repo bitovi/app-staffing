@@ -1,0 +1,41 @@
+.projectDescription {
+  font-size: 18px;
+
+  input,
+  .input,
+  input:disabled {
+    border: none;
+    background-color: #fff;
+    opacity: 1;
+  }
+
+  .label,
+  label {
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+.sectionLabel {
+  font-weight: 700;
+  font-size: 18px;
+  padding-bottom: 1em;
+}
+
+.dateContainer {
+  display: flex;
+  flex-direction: column;
+  > * {
+    padding-bottom: 1em;
+    margin-right: 1em;
+  }
+}
+
+.dateEstimateContainer {
+  display: flex;
+}

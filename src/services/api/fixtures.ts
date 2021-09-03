@@ -62,6 +62,16 @@ export const projects = [...Array(7).keys()].map((n) => {
       "Hooli",
       "Massive Dynamic",
     ][n],
+    startDate: {
+      date: "00/00/0000",
+      confidence: "50%",
+    },
+    endDate: {
+      date: "00/00/0000",
+      confidence: "50%",
+    },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
     roles: [
       {
         skill: { name: ux as SkillName },

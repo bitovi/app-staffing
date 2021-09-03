@@ -39,8 +39,16 @@ export interface Role {
   employee?: Employee;
 }
 
+export interface EstimatedDate {
+  date: string;
+  confidence: string;
+}
+
 export interface NewProject {
   name: string;
+  description: string;
+  startDate: EstimatedDate;
+  endDate: EstimatedDate;
   roles: Role[];
 }
 
