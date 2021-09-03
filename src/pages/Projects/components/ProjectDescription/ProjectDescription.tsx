@@ -1,4 +1,4 @@
-import { Project } from "../../../../services/api";
+import type { Project } from "../../../../services/api";
 
 import styles from "./ProjectDescription.module.scss";
 

@@ -1,4 +1,6 @@
-import { Role, skillList, useEmployees } from "../../../../services/api";
+import type { Role } from "../../../../services/api";
+
+import { skillList, useEmployees } from "../../../../services/api";
 
 import styles from "./RoleDetails.module.scss";
 

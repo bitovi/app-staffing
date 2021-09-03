@@ -1,4 +1,5 @@
-import { Role, skillList } from "../../../../services/api";
+import type { Role } from "../../../../services/api";
+import { skillList } from "../../../../services/api";
 
 import RoleDetails from "../RoleDetails";
 
