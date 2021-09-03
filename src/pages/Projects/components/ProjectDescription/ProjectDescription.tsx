@@ -2,7 +2,11 @@ import type { Project } from "../../../../services/api";
 
 import styles from "./ProjectDescription.module.scss";
 
-export default function ProjectDescription({ project }: { project: Project }) {
+export default function ProjectDescription({
+  project,
+}: {
+  project: Project;
+}): JSX.Element {
   return (
     <div className={styles.projectDescription}>
       <input

@@ -4,7 +4,7 @@ import { skillList, useEmployees } from "../../../../services/api";
 
 import styles from "./RoleDetails.module.scss";
 
-export default function RoleDetails({ role }: { role: Role }) {
+export default function RoleDetails({ role }: { role: Role }): JSX.Element {
   const { data: employees } = useEmployees();
 
   return (
