@@ -7,3 +7,10 @@
   padding: 1em;
   margin: 0.5em 0em;
 }
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

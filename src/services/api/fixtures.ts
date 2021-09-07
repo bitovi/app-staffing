@@ -56,7 +56,7 @@ export const employees = [
 
 export const projects = [...Array(7).keys()].map((n) => {
   return {
-    id: (Math.floor(Math.random() * 1000) + 1).toString(),
+    id: (100 + n).toString(),
     name: [
       "Acme Corporation",
       "Globex Corporation",

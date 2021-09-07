@@ -10,7 +10,7 @@ export default function ProjectDescription({
   project: Project;
   onEdit: (project: Project) => void;
 }): JSX.Element {
-  const updateField = ({
+  const updateMainField = ({
     currentTarget,
   }: React.FormEvent<HTMLInputElement>) => {
     // @TODO add debounce
@@ -24,7 +24,7 @@ export default function ProjectDescription({
       <input
         className={styles.sectionLabel}
         name="name"
-        onChange={updateField}
+        onChange={updateMainField}
         value={project.name}
       />
       <div className={styles.dateEstimateContainer}>
