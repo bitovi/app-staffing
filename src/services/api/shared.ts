@@ -33,6 +33,7 @@ export interface Skill {
 }
 
 export interface Role {
+  id: string;
   skill: Skill;
   startDate: string;
   endDate: string;

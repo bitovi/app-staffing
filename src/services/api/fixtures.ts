@@ -67,32 +67,35 @@ export const projects = [...Array(7).keys()].map((n) => {
       "Massive Dynamic",
     ][n],
     startDate: {
-      date: "00/00/0000",
+      date: "12/19/2021",
       confidence: "50%",
     },
     endDate: {
-      date: "00/00/0000",
+      date: "12/19/2022",
       confidence: "50%",
     },
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
     roles: [
       {
+        id: "123",
         skill: employees[0].skills[0],
         startDate: n == 3 ? "" : `${n + 1}/01/2022`,
-        endDate: "",
+        endDate: "12/19/2023",
         employee: employees[0],
       },
       {
+        id: "145",
         skill: employees[1].skills[0],
-        startDate: "",
-        endDate: "",
+        startDate: "12/19/2022",
+        endDate: "12/19/2023",
         employee: employees[1],
       },
       {
+        id: "098",
         skill: employees[2].skills[0],
-        startDate: "",
-        endDate: n == 5 ? "12/30/2022" : "",
+        startDate: "12/19/2022",
+        endDate: "12/19/2023",
         employee: employees[2],
       },
     ],

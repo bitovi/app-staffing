@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import ProjectDescription from "../components/ProjectDescription";
-// import RoleList from "../components/RoleList";
+import RoleList from "../components/RoleList";
 import { useProjects } from "../../../services/api";
 
 import styles from "./ProjectDetail.module.scss";
@@ -33,7 +33,7 @@ export default function ProjectDetail(): JSX.Element {
         {projectData && (
           <>
             <ProjectDescription onEdit={onSave} project={projectData} />
-            {/* <RoleList roles={projectData.roles} /> */}
+            <RoleList onEdit={onSave} project={projectData} />
           </>
         )}
       </div>

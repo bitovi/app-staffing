@@ -1,12 +1,35 @@
-import type { Role } from "../../../../services/api";
+import type { Role, Project } from "../../../../services/api";
 import { skillList } from "../../../../services/api";
 
 import RoleDetails from "../RoleDetails";
 
 import styles from "./RoleList.module.scss";
 
-export default function RoleList({ roles }: { roles: Role[] }): JSX.Element {
-  console.log(roles);
+export default function RoleList({
+  project,
+  onEdit,
+}: {
+  project: Project;
+  onEdit: (project: Project) => void;
+}): JSX.Element {
+  const editRole = (editId: string) => (role: Role) => {
+    const roles = project.roles;
+    const index = roles.findIndex(({ id }) => id === editId);
+    roles[index] = role;
+
+    onEdit({
+      ...project,
+      roles,
+    });
+  };
+
+  const deleteRole = (deleteId: string) => (role: Role) => {
+    onEdit({
+      ...project,
+      roles: project.roles.filter(({ id }) => id != deleteId),
+    });
+  };
+
   return (
     <>
       <div className={styles.skillFilter}>
@@ -14,8 +37,13 @@ export default function RoleList({ roles }: { roles: Role[] }): JSX.Element {
           <p key={s}>{s}</p>
         ))}
       </div>
-      {roles.map((role, index) => (
-        <RoleDetails role={role} key={role.employee?.id || index} />
+      {project.roles.map((role) => (
+        <RoleDetails
+          role={role}
+          key={role.id}
+          editRole={editRole(role.id)}
+          deleteRole={deleteRole(role.id)}
+        />
       ))}
     </>
   );
