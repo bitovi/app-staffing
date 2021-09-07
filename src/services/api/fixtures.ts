@@ -81,7 +81,7 @@ export const projects = [...Array(7).keys()].map((n) => {
         skill: employees[0].skills[0],
         startDate: n == 3 ? "" : `${n + 1}/01/2022`,
         endDate: "",
-        employee: employees[1],
+        employee: employees[0],
       },
       {
         skill: employees[1].skills[0],

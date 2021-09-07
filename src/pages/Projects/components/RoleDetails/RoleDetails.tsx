@@ -11,7 +11,7 @@ export default function RoleDetails({ role }: { role: Role }): JSX.Element {
     <div className={styles.roleContainer}>
       <div>
         <div>Role:</div>
-        <select>
+        <select defaultValue={skillList[0]}>
           {skillList.map((name) => (
             <option key={name} value={name}>
               {name}
@@ -30,9 +30,9 @@ export default function RoleDetails({ role }: { role: Role }): JSX.Element {
           <input value="01/01/2001" />
         </label>
       </div>
-      <select>
+      <select defaultValue={role.employee?.name}>
         {employees?.map(({ name, id }) => (
-          <option selected={role.employee?.name === name} value={id} key={id}>
+          <option value={id} key={id}>
             {name}
           </option>
         ))}

@@ -6,6 +6,7 @@ import RoleDetails from "../RoleDetails";
 import styles from "./RoleList.module.scss";
 
 export default function RoleList({ roles }: { roles: Role[] }): JSX.Element {
+  console.log(roles);
   return (
     <>
       <div className={styles.skillFilter}>
