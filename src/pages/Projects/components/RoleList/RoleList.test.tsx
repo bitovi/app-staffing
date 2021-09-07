@@ -1,0 +1,14 @@
+import { render, screen } from "@testing-library/react";
+import { expect } from "chai";
+import { projects } from "../../../../services/api/fixtures";
+
+import RoleList from "./RoleList";
+
+describe.only("Pages/Projects/components/RoleLists", () => {
+  it("works", () => {
+    render(<RoleList project={projects[0]} onEdit={() => {}} />);
+
+    const node = screen.getAllByText("Node");
+    expect(node[0]).to.have.tagName("p");
+  });
+});

@@ -4,18 +4,16 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 
 import ProjectDetail from "./ProjectDetail";
-import { projects } from "../../../services/api/fixtures";
-
-const project = projects[0];
 
 describe("Components/Layout", () => {
   it("works", () => {
-    // render(
-    //   <MemoryRouter>
-    //     <ProjectDetail key={project.id} />
-    //   </MemoryRouter>,
-    // );
-    // const projectContainer = screen.getByText(/Cancel/i);
+    render(
+      <MemoryRouter initialEntries={["/project/100"]}>
+        <ProjectDetail />
+      </MemoryRouter>,
+    );
+
+    // const projectContainer = screen.getByText(/Delete/i);
     // expect(projectContainer).to.have.tagName("button");
   });
 });
