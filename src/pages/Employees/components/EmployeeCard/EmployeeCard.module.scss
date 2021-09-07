@@ -1,6 +1,10 @@
 .wrapper {
   display: flex;
-  margin-bottom: 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  border-top: 2px #dedede solid;
 
   > * {
     margin: 0px 7.5px 0px 7.5px;
@@ -21,54 +25,110 @@
   flex-direction: column;
   padding: 5px;
 
-  .detail {
-    margin: 7.5px 0px 7.5px 0px;
-    padding: 5px;
+  .name {
+    font-size: large;
   }
 
-  input:disabled {
-    pointer-events: none;
-    background-color: rgb(228, 228, 228);
+  input[aria-disabled] {
+    border: none;
+    background: none;
+    font-weight: bold;
   }
 
   label,
   .label {
     display: flex;
     flex-direction: column;
-    font-weight: 700;
+  }
+}
+
+.date {
+  margin-top: 10px;
+  label {
+    color: rgb(110, 110, 110);
+    font-size: x-small;
+    font-weight: bold;
+    input {
+      display: block;
+      color: black;
+      font-weight: normal;
+    }
+  }
+}
+
+.skills {
+  padding-top: 10px;
+
+  span.label {
+    font-size: x-small;
   }
 
-  .skills {
+  ul {
     display: flex;
+    flex-wrap: wrap;
     list-style: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
 
     li {
       position: relative;
       border-radius: 5px;
       background-color: rgb(237, 237, 237);
-      width: 100px;
-      margin: auto 1em;
+      margin-right: 1em;
+      margin-bottom: 5px;
+      padding: 2px 5px;
       text-align: center;
+      font-size: small;
 
       button {
         margin-left: 5px;
+        padding: 0;
         visibility: hidden;
+
+        img.delete {
+          display: inline-block;
+          max-width: 50%;
+        }
       }
 
       &:hover,
       &:focus {
-        button.editing {
+        button[aria-disabled="false"] {
           visibility: visible;
         }
       }
     }
   }
+}
 
-  .addSkill {
-    margin-top: 5px;
-    width: 100px;
-    border-radius: 5px;
+.controls {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+
+  .buttons {
+    margin-top: auto;
+
+    button {
+      border-radius: 1px;
+      border: 0;
+      padding: 5px 10px;
+    }
+
+    :disabled {
+      visibility: hidden;
+    }
+
+    .save {
+      color: white;
+      background-color: black;
+      margin-left: 1em;
+    }
   }
+}
+
+.addSkill {
+  margin-top: 5px;
+  width: 100px;
+  border-radius: 5px;
 }
