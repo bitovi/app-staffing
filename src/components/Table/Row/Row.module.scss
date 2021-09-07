@@ -1,0 +1,10 @@
+.row {
+  flex: 1 1;
+  min-height: 60px;
+  display: flex;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.row:nth-child(even) {
+  background-color: #f8f8f8;
+}

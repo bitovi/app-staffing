@@ -1,1 +1,4 @@
-export { Table, Header, Row, Cell } from './Table'
+export { Cell } from "./Cell";
+export { Header } from "./Header";
+export { Row } from "./Row";
+export { Table } from "./Table";
