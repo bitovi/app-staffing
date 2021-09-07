@@ -1,18 +1,30 @@
+import React from "react";
 import type { Project } from "../../../../services/api";
 
 import styles from "./ProjectDescription.module.scss";
 
 export default function ProjectDescription({
   project,
+  onEdit,
 }: {
   project: Project;
+  onEdit: (project: Project) => void;
 }): JSX.Element {
+  const updateField = ({
+    currentTarget,
+  }: React.FormEvent<HTMLInputElement>) => {
+    // @TODO add debounce
+    const { name, value } = currentTarget;
+
+    onEdit({ ...project, [name]: value });
+  };
+
   return (
     <div className={styles.projectDescription}>
       <input
         className={styles.sectionLabel}
         name="name"
-        disabled
+        onChange={updateField}
         value={project.name}
       />
       <div className={styles.dateEstimateContainer}>

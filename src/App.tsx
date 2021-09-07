@@ -4,6 +4,8 @@ import { Switch, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Loading from "./pages/Loading";
 
+import ProjectDetails from "./pages/Projects/components/ProjectDetail";
+
 import "./App.scss";
 
 const Hello = lazy(() => import("./pages/Hello"));
@@ -23,6 +25,9 @@ export default function App(): JSX.Element {
           </Route>
           <Route path="/projects">
             <Projects />
+          </Route>
+          <Route path="/project/:id">
+            <ProjectDetails />
           </Route>
           <Route>
             <Hello name="Error" />
