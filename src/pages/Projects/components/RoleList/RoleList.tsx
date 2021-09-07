@@ -12,9 +12,9 @@ export default function RoleList({
   project: Project;
   onEdit: (project: Project) => void;
 }): JSX.Element {
-  const editRole = (editId: string) => (role: Role) => {
+  const editRole = (role: Role) => {
     const roles = project.roles;
-    const index = roles.findIndex(({ id }) => id === editId);
+    const index = roles.findIndex(({ id }) => id === role.id);
     roles[index] = role;
 
     onEdit({
@@ -23,10 +23,10 @@ export default function RoleList({
     });
   };
 
-  const deleteRole = (deleteId: string) => (role: Role) => {
+  const deleteRole = (role: Role) => {
     onEdit({
       ...project,
-      roles: project.roles.filter(({ id }) => id != deleteId),
+      roles: project.roles.filter(({ id }) => id != role.id),
     });
   };
 
@@ -41,8 +41,8 @@ export default function RoleList({
         <RoleDetails
           role={role}
           key={role.id}
-          editRole={editRole(role.id)}
-          deleteRole={deleteRole(role.id)}
+          editRole={editRole}
+          deleteRole={deleteRole}
         />
       ))}
     </>
