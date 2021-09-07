@@ -1,8 +1,8 @@
-import ListProjects from "./components/ListProjects";
+import ListProjects from "../components/ListProjects";
 
 import { useHistory } from "react-router-dom";
 
-import { Project, useProjects } from "../../services/api";
+import { Project, useProjects } from "../../../services/api";
 
 import styles from "./Projects.module.scss";
 
