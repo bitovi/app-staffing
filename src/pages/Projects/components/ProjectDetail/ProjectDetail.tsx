@@ -1,4 +1,5 @@
-import { Project } from "../../../../services/api";
+import type { Project } from "../../../../services/api";
+
 import styles from "./ProjectDetail.module.scss";
 
 export default function Projects({

@@ -1,6 +1,6 @@
 import type { Role, Project } from "../../../../services/api";
-import { skillList } from "../../../../services/api";
 
+import { skillList } from "../../../../services/api";
 import RoleDetails from "../RoleDetails";
 
 import styles from "./RoleList.module.scss";

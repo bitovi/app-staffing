@@ -1,5 +1,6 @@
-import React from "react";
 import type { Role, SkillName } from "../../../../services/api";
+
+import React from "react";
 
 import { skillList, useEmployees } from "../../../../services/api";
 
