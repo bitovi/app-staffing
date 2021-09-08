@@ -8,6 +8,7 @@
     "depcheck": "depcheck .",
     "eslint": "eslint src",
     "prettier": "prettier --check src",
+    "prettier:write": "prettier --write src",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf build",
     "dev": "react-scripts start",

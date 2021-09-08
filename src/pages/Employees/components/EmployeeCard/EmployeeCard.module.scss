@@ -51,6 +51,18 @@
       width: 100px;
       margin: auto 1em;
       text-align: center;
+
+      button {
+        margin-left: 5px;
+        visibility: hidden;
+      }
+
+      &:hover,
+      &:focus {
+        button.editing {
+          visibility: visible;
+        }
+      }
     }
   }
 

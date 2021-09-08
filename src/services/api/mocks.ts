@@ -6,10 +6,16 @@ import { employees, projects } from "./fixtures";
 
 export default [
   rest.get("/v1", (req, res, ctx) => {
+    const sort = req.url.searchParams.get("sort");
+
     return res(
       ctx.status(200),
       ctx.json({
-        data: employees,
+        data: employees.sort((lhs, rhs) =>
+          sort === "desc"
+            ? rhs.name.localeCompare(lhs.name)
+            : lhs.name.localeCompare(rhs.name),
+        ),
       }),
     );
   }),
