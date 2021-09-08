@@ -6,7 +6,7 @@ import { skillList } from "../../../../services/api";
 
 import styles from "./EmployeeCard.module.scss";
 
-import deleteIcon from "./assets/X.svg";
+import { ReactComponent as XIcon } from "./assets/X.svg";
 
 export default function EmployeeCard<EmployeeType extends NewEmployee>({
   employee,
@@ -108,10 +108,10 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
                 value={name}
                 data-testid="remove-skill"
               >
-                <img
+                <XIcon
                   className={styles.delete}
-                  src={deleteIcon}
-                  alt={`delete ${name}`}
+                  width="0.75em"
+                  height="0.75em"
                 />
               </button>
             </li>

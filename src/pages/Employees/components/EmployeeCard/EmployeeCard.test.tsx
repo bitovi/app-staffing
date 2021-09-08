@@ -34,7 +34,7 @@ describe("Components/Layout", () => {
         <EmployeeCard
           key={employee.id}
           employee={employee}
-          editing={true}
+          editing
           onEdit={() => null}
           onSave={() => null}
           onCancel={() => null}
@@ -54,7 +54,7 @@ describe("Components/Layout", () => {
         <EmployeeCard
           key={employee.id}
           employee={employee}
-          editing={true}
+          editing
           onEdit={() => null}
           onSave={() => null}
           onCancel={() => null}
@@ -66,7 +66,7 @@ describe("Components/Layout", () => {
     userEvent.selectOptions(screen.getByTestId("select-skills"), [expected]);
 
     const container = screen.getByTestId("display-skills").children.item(2);
-    expect(container).to.have.text(expected);
+    expect(container).to.contains.text(expected);
   });
 
   it("should remove a skill", () => {
@@ -75,7 +75,7 @@ describe("Components/Layout", () => {
         <EmployeeCard
           key={employee.id}
           employee={employee}
-          editing={true}
+          editing
           onEdit={() => null}
           onSave={() => null}
           onCancel={() => null}

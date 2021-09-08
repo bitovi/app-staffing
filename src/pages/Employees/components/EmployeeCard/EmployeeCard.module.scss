@@ -85,9 +85,8 @@
         padding: 0;
         visibility: hidden;
 
-        img.delete {
-          display: inline-block;
-          max-width: 50%;
+        svg.delete {
+          display: block;
         }
       }
 
