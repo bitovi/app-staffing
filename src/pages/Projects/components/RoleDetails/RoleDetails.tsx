@@ -22,24 +22,16 @@ export default function RoleDetails({
     editRole({ ...role, [name]: value });
   };
 
-  const onRoleSelect = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
-    editRole({ ...role, skill: { name: target.value as SkillName } });
-  };
-
-  const onEmployeeSelect = ({
-    target,
-  }: React.ChangeEvent<HTMLSelectElement>) => {
-    editRole({
-      ...role,
-      employee: employees?.find(({ id }) => id === target.value),
-    });
-  };
-
   return (
     <div className={styles.roleContainer}>
       <div>
         <div>Role:</div>
-        <select onChange={onRoleSelect} defaultValue={role.skill.name}>
+        <select
+          onChange={({ target }) =>
+            editRole({ ...role, skill: { name: target.value as SkillName } })
+          }
+          defaultValue={role.skill.name}
+        >
           {skillList.map((name) => (
             <option key={name} value={name}>
               {name}
@@ -52,17 +44,24 @@ export default function RoleDetails({
         <label>
           Start Date:
           <input
-            value={role.startDate}
+            defaultValue={role.startDate}
             name="startDate"
-            onChange={updateRole}
+            onBlur={updateRole}
           />
         </label>
         <label>
           End Date:
-          <input value={role.endDate} name="endDate" onChange={updateRole} />
+          <input value={role.endDate} name="endDate" onBlur={updateRole} />
         </label>
       </div>
-      <select onChange={onEmployeeSelect}>
+      <select
+        onChange={({ target }) =>
+          editRole({
+            ...role,
+            employee: employees?.find(({ id }) => id === target.value),
+          })
+        }
+      >
         {employees?.map((e, idx) => (
           <option
             value={e.id}

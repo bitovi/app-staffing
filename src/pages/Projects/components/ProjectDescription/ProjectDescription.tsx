@@ -16,68 +16,41 @@ export default function ProjectDescription({
   const updateMainField = ({
     currentTarget,
   }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // @TODO add debounce
     const { name, value } = currentTarget;
 
     onEdit({ ...project, [name]: value });
   };
-
-  const createConfidenceUpdater =
-    (dateName: "startDate" | "endDate") =>
-    ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
-      const { value } = target;
-
-      onEdit({
-        ...project,
-        [dateName]: {
-          ...project[dateName],
-          confidence: value,
-        },
-      });
-    };
-
-  const createDateUpdater =
-    (dateName: "startDate" | "endDate") =>
-    ({ currentTarget }: React.FormEvent<HTMLInputElement>) => {
-      const { value } = currentTarget;
-
-      onEdit({
-        ...project,
-        [dateName]: {
-          ...project[dateName],
-          date: value,
-        },
-      });
-    };
 
   return (
     <div className={styles.projectDescription}>
       <input
         className={styles.sectionLabel}
         name="name"
-        onChange={updateMainField}
-        value={project.name}
+        onBlur={updateMainField}
+        defaultValue={project.name}
       />
       <div className={styles.dateEstimateContainer}>
         <ProjectDate
           title="Start Date"
           estimatedDate={project.startDate}
-          onConfidenceSelect={createConfidenceUpdater("startDate")}
-          onDateChange={createDateUpdater("startDate")}
+          onChange={(startDate) => {
+            onEdit({ ...project, startDate });
+          }}
         />
         <ProjectDate
           title="End Date"
           estimatedDate={project.endDate}
-          onConfidenceSelect={createConfidenceUpdater("endDate")}
-          onDateChange={createDateUpdater("endDate")}
+          onChange={(endDate) => {
+            onEdit({ ...project, endDate });
+          }}
         />
       </div>
       <div>
         <p className={styles.sectionLabel}>Description:</p>
         <textarea
           name="description"
-          value={project.description}
-          onChange={updateMainField}
+          defaultValue={project.description}
+          onBlur={updateMainField}
         ></textarea>
       </div>
     </div>

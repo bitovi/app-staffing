@@ -5,25 +5,30 @@ import styles from "./ProjectDate.module.scss";
 export default function ProjectDate({
   title,
   estimatedDate,
-  onConfidenceSelect,
-  onDateChange,
+  onChange,
 }: {
   title: "Start Date" | "End Date";
   estimatedDate: EstimatedDate;
-  onConfidenceSelect: (evt: React.ChangeEvent<HTMLSelectElement>) => void;
-  onDateChange: (evt: React.FormEvent<HTMLInputElement>) => void;
+  onChange: (date: EstimatedDate) => void;
 }): JSX.Element {
   return (
     <div className={styles.dateContainer}>
       <label>
         {title}
-        <input value={estimatedDate.date} onChange={onDateChange} />
+        <input
+          value={estimatedDate.date}
+          onChange={(e) => {
+            onChange({ ...estimatedDate, date: e.target.value });
+          }}
+        />
       </label>
       <label>
         Confidence:
         <select
           defaultValue={estimatedDate.confidence}
-          onChange={onConfidenceSelect}
+          onChange={(e) => {
+            onChange({ ...estimatedDate, confidence: e.currentTarget.value });
+          }}
         >
           {Array.from(Array(21).keys()).map((n) => (
             <option value={n * 5} key={title + n}>{`${n * 5}%`}</option>
