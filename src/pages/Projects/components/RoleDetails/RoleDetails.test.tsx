@@ -48,5 +48,8 @@ describe("Pages/Projects/components/RoleDetails", () => {
 
     fireEvent.blur(await screen.getByLabelText("End Date:"));
     expect(onEditMock).toHaveBeenCalledTimes(4);
+
+    fireEvent.click(await screen.getByText("Delete"));
+    expect(onDeleteMock).toHaveBeenCalled();
   });
 });
