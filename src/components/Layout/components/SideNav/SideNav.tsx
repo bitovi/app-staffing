@@ -2,10 +2,10 @@ import { NavLink } from "react-router-dom";
 
 import styles from "./SideNav.module.scss";
 
-import BitoviLogo from "./assets/bitovi.png";
-import homeIcon from "./assets/Home.png";
-import userIcon from "./assets/User.png";
-import projectIcon from "./assets/Activity.png";
+import BitoviLogo from "./assets/bitovi.svg";
+import homeIcon from "./assets/Home.svg";
+import userIcon from "./assets/User.svg";
+import projectIcon from "./assets/Activity.svg";
 
 export default function SideNav(): JSX.Element {
   const links = [
