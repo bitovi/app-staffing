@@ -17,7 +17,7 @@ export default function ProjectDate({
         {title}
         <input
           defaultValue={estimatedDate.date}
-          onChange={(e) => {
+          onBlur={(e) => {
             onChange({ ...estimatedDate, date: e.target.value });
           }}
         />

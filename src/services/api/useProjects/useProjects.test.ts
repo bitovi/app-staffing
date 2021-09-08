@@ -2,6 +2,7 @@ import { renderHook, act } from "@testing-library/react-hooks";
 
 import useProjects from "./useProjects";
 import { projects } from "../fixtures";
+import { NewProject } from "../shared";
 
 describe("useEmployees", () => {
   it("works", async () => {
@@ -16,8 +17,17 @@ describe("useEmployees", () => {
   it("adds a project", async () => {
     const { result } = renderHook(() => useProjects());
 
-    const newProject = {
+    const newProject: NewProject = {
       name: "New Test Project",
+      description: "description",
+      startDate: {
+        date: "",
+        confidence: "",
+      },
+      endDate: {
+        date: "",
+        confidence: "",
+      },
       roles: [],
     };
 
@@ -36,6 +46,7 @@ describe("useEmployees", () => {
     const { result } = renderHook(() => useProjects());
 
     const editedProject = {
+      ...projects[0],
       id: projects[0].id,
       name: "Edited Project",
       roles: [],

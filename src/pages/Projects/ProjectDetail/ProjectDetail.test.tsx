@@ -1,5 +1,4 @@
-import { render, screen } from "@testing-library/react";
-import { expect } from "chai";
+import { render } from "@testing-library/react";
 
 import { MemoryRouter } from "react-router-dom";
 
@@ -12,8 +11,5 @@ describe("Components/Layout", () => {
         <ProjectDetail />
       </MemoryRouter>,
     );
-
-    // const projectContainer = screen.getByText(/Delete/i);
-    // expect(projectContainer).to.have.tagName("button");
   });
 });

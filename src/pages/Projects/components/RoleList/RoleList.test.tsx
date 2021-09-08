@@ -6,7 +6,7 @@ import RoleList from "./RoleList";
 
 describe("Pages/Projects/components/RoleLists", () => {
   it("works", () => {
-    render(<RoleList project={projects[0]} onEdit={() => {}} />);
+    render(<RoleList project={projects[0]} onEdit={jest.fn()} />);
 
     const node = screen.getAllByText("Node");
     expect(node[0]).to.have.tagName("p");
