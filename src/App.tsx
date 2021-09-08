@@ -4,7 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Loading from "./pages/Loading";
 
-import { ProjectDetail, Projects } from "./pages/Projects";
+import { ProjectRouter } from "./pages/Projects";
 
 import "./App.scss";
 
@@ -22,12 +22,7 @@ export default function App(): JSX.Element {
           <Route path="/employees">
             <Employees />
           </Route>
-          <Route path="/projects">
-            <Projects />
-          </Route>
-          <Route path="/project/:id">
-            <ProjectDetail />
-          </Route>
+          <ProjectRouter />
           <Route>
             <Hello name="Error" />
           </Route>

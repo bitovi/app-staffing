@@ -16,7 +16,7 @@ export default function Projects(): JSX.Element {
   };
 
   const editProject = (project: Project) => {
-    history.push(`/project/${project.id}`);
+    history.push(`/${project.id}`);
   };
 
   return (
