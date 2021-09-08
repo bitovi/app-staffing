@@ -16,7 +16,7 @@ export default function ProjectDate({
       <label>
         {title}
         <input
-          value={estimatedDate.date}
+          defaultValue={estimatedDate.date}
           onChange={(e) => {
             onChange({ ...estimatedDate, date: e.target.value });
           }}
@@ -31,7 +31,7 @@ export default function ProjectDate({
           }}
         >
           {Array.from(Array(21).keys()).map((n) => (
-            <option value={n * 5} key={title + n}>{`${n * 5}%`}</option>
+            <option value={`${n * 5}%`} key={title + n}>{`${n * 5}%`}</option>
           ))}
         </select>
       </label>

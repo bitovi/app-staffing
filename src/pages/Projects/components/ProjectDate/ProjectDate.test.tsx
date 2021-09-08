@@ -1,21 +1,20 @@
 import { render, screen } from "@testing-library/react";
-import { expect } from "chai";
 import { projects } from "../../../../services/api/fixtures";
 
 import ProjectDate from "./ProjectDate";
 
 describe.only("Pages/Projects/components/ProjectDates", () => {
   it("works", () => {
+    const change = jest.fn();
+
     render(
       <ProjectDate
         title="Start Date"
         estimatedDate={projects[0].startDate}
-        onConfidenceSelect={() => {}}
-        onDateChange={() => {}}
+        onChange={change}
       />,
     );
 
-    const projectContainer = screen.getByText(/Confidence/i);
-    expect(projectContainer).to.have.tagName("label");
+    expect(screen.getByText("Confidence:")).toBeInTheDocument();
   });
 });

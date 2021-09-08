@@ -4,7 +4,7 @@ import { projects } from "../../../../services/api/fixtures";
 
 import RoleList from "./RoleList";
 
-describe.only("Pages/Projects/components/RoleLists", () => {
+describe("Pages/Projects/components/RoleLists", () => {
   it("works", () => {
     render(<RoleList project={projects[0]} onEdit={() => {}} />);
 

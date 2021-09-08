@@ -51,27 +51,30 @@ export default function RoleDetails({
         </label>
         <label>
           End Date:
-          <input value={role.endDate} name="endDate" onBlur={updateRole} />
+          <input
+            defaultValue={role.endDate}
+            name="endDate"
+            onBlur={updateRole}
+          />
         </label>
       </div>
-      <select
-        onChange={({ target }) =>
-          editRole({
-            ...role,
-            employee: employees?.find(({ id }) => id === target.value),
-          })
-        }
-      >
-        {employees?.map((e, idx) => (
-          <option
-            value={e.id}
-            key={e.id + idx}
-            selected={e.id === role.employee?.id}
-          >
-            {e.name}
-          </option>
-        ))}
-      </select>
+      {role.employee && employees && (
+        <select
+          onChange={({ target }) => {
+            editRole({
+              ...role,
+              employee: employees.find(({ name }) => name === target.value),
+            });
+          }}
+          defaultValue={role.employee.name}
+        >
+          {employees.map((e, idx) => (
+            <option value={e.name} key={e.id + idx}>
+              {e.name}
+            </option>
+          ))}
+        </select>
+      )}
 
       <button onClick={() => deleteRole(role)}>Delete</button>
     </div>
