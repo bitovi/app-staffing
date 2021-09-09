@@ -1,0 +1,21 @@
+.select {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  color: #464646;
+
+  // https://react-select.com/styles#using-classnames
+  :global(.react-select__control) {
+    background-color: #f8f8f8;
+    border: 1px solid #000000;
+    border-radius: 10px;
+  }
+}
+
+.label {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #000000;
+}
