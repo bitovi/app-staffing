@@ -39,7 +39,7 @@ export default function AssignedEmployeeDetails({
           onChange={({ target }) => updateEmployee(target.value)}
         >
           {possibleOtherEmployees.map((e) => (
-            <option value={e.name} key={e.id + Math.random()}>
+            <option value={e.name} key={e.id}>
               {e.name}
             </option>
           ))}

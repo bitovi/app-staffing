@@ -14,6 +14,22 @@ export default function RoleList({
   project: Project;
   onEdit: (project: Project) => void;
 }): JSX.Element {
+  const createNewRole = (): Role => {
+    return {
+      id: Math.floor(Math.random() * 1000).toString(),
+      skill: { name: "Node" },
+      startDate: {
+        date: "",
+        confidence: "",
+      },
+      endDate: {
+        date: "",
+        confidence: "",
+      },
+      employees: [],
+    };
+  };
+
   const editRole = (role: Role) => {
     const roles = cloneDeep(project.roles);
     const index = roles.findIndex(({ id }) => id === role.id);
@@ -34,6 +50,13 @@ export default function RoleList({
 
   return (
     <>
+      <button
+        onClick={() =>
+          onEdit({ ...project, roles: [createNewRole(), ...project.roles] })
+        }
+      >
+        Add Role
+      </button>
       <div className={styles.skillFilter}>
         {skillList.map((s) => (
           <p key={s}>{s}</p>

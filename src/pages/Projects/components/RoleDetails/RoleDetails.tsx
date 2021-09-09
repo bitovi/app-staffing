@@ -1,13 +1,14 @@
-import type {
+import {
   AssignedEmployee,
   Employee,
   Role,
+  skillList,
   SkillName,
 } from "../../../../services/api";
 
 import cloneDeep from "lodash.clonedeep";
 
-import { skillList, useEmployees } from "../../../../services/api";
+import { useEmployees } from "../../../../services/api";
 
 import styles from "./RoleDetails.module.scss";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
@@ -85,7 +86,7 @@ export default function RoleDetails({
     <div className={styles.roleContainer}>
       <div>Role</div>
       <select
-        disabled
+        disabled={role.employees.length > 0}
         onChange={({ target }) =>
           editRole({ ...role, skill: { name: target.value as SkillName } })
         }
