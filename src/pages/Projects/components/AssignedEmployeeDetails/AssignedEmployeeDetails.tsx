@@ -1,4 +1,8 @@
-import { AssignedEmployee, useEmployees } from "../../../../services/api";
+import {
+  AssignedEmployee,
+  Employee,
+  useEmployees,
+} from "../../../../services/api";
 
 import styles from "./AssignedEmployeeDetails.module.scss";
 
@@ -6,8 +10,10 @@ export default function AssignedEmployeeDetails({
   assignedEmployee,
   changeEmployee,
   onChange,
+  possibleOtherEmployees,
 }: {
   assignedEmployee: AssignedEmployee;
+  possibleOtherEmployees: Employee[];
   changeEmployee: (
     previousEmployeeId: string,
     newAssignedEmployee: AssignedEmployee,
@@ -32,8 +38,8 @@ export default function AssignedEmployeeDetails({
           defaultValue={assignedEmployee.name}
           onChange={({ target }) => updateEmployee(target.value)}
         >
-          {employees.map((e) => (
-            <option value={e.name} key={e.id}>
+          {possibleOtherEmployees.map((e) => (
+            <option value={e.name} key={e.id + Math.random()}>
               {e.name}
             </option>
           ))}

@@ -1,12 +1,13 @@
 import type {
   AssignedEmployee,
+  Employee,
   Role,
   SkillName,
 } from "../../../../services/api";
 
 import cloneDeep from "lodash.clonedeep";
 
-import { skillList } from "../../../../services/api";
+import { skillList, useEmployees } from "../../../../services/api";
 
 import styles from "./RoleDetails.module.scss";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
@@ -21,6 +22,25 @@ export default function RoleDetails({
   editRole: (role: Role) => void;
   deleteRole: (role: Role) => void;
 }): JSX.Element {
+  const { data: employees, getEmployeesWithSkill } = useEmployees();
+
+  const createEmployeeChoices = (
+    assignedEmployee: AssignedEmployee,
+  ): Employee[] => {
+    const { assignmentStartDate, assignmnetEndDate, ...employee } =
+      assignedEmployee;
+
+    // This list consists of the current assigned employees and any other
+    // employee which has the skill but isn't already assigned
+    return [
+      employee,
+      ...getEmployeesWithSkill(role.skill).filter(
+        (possibleEmployee) =>
+          !role.employees.map(({ id }) => id).includes(possibleEmployee.id),
+      ),
+    ];
+  };
+
   const editAssignedEmployee = (assignedEmployee: AssignedEmployee) => {
     const employees = cloneDeep(role.employees);
     const index = employees.findIndex(({ id }) => id === assignedEmployee.id);
@@ -52,6 +72,7 @@ export default function RoleDetails({
     <div className={styles.roleContainer}>
       <div>Role</div>
       <select
+        disabled
         onChange={({ target }) =>
           editRole({ ...role, skill: { name: target.value as SkillName } })
         }
@@ -76,14 +97,16 @@ export default function RoleDetails({
         />
       </div>
       Assigned Employees
-      {role.employees.map((assignedEmployee) => (
-        <AssignedEmployeeDetails
-          key={assignedEmployee.id + role.id}
-          assignedEmployee={assignedEmployee}
-          onChange={editAssignedEmployee}
-          changeEmployee={changeAssignedEmployee}
-        />
-      ))}
+      {employees &&
+        role.employees.map((assignedEmployee) => (
+          <AssignedEmployeeDetails
+            key={assignedEmployee.id + role.id}
+            assignedEmployee={assignedEmployee}
+            onChange={editAssignedEmployee}
+            changeEmployee={changeAssignedEmployee}
+            possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
+          />
+        ))}
       <button onClick={() => deleteRole(role)}>Delete</button>
     </div>
   );
