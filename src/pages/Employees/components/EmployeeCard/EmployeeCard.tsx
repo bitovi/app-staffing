@@ -4,25 +4,25 @@ import React, { useState } from "react";
 
 import { skillList } from "../../../../services/api";
 
-import styles from "./EmployeeCard.module.scss";
 import { Button } from "../../../../components/Layout/components/Button";
+import styles from "./EmployeeCard.module.scss";
 
 import { ReactComponent as XIcon } from "./assets/X.svg";
 
-export default function EmployeeCard<Employee extends NewEmployee>({
+export default function EmployeeCard<EmployeeType extends NewEmployee>({
   employee,
   editing,
   onEdit,
   onSave,
   onCancel,
 }: {
-  employee: Employee;
+  employee: EmployeeType;
   editing: boolean;
   onEdit?: () => void;
-  onSave: (employee: Employee) => void;
+  onSave: (employee: EmployeeType) => void;
   onCancel: () => void;
 }): JSX.Element {
-  const [formData, setFormData] = useState<Employee>(employee);
+  const [formData, setFormData] = useState<EmployeeType>(employee);
   const { name, startDate, endDate, skills } = formData;
 
   const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {
