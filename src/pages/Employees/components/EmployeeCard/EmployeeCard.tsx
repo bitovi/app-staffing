@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { skillList } from "../../../../services/api";
 
 import styles from "./EmployeeCard.module.scss";
+import { Button } from "../../../../components/Layout/components/Button";
 
 import { ReactComponent as XIcon } from "./assets/X.svg";
 
@@ -33,12 +34,10 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
     }));
   };
 
-  const handleRemoveSkill = (evt: React.FormEvent<HTMLButtonElement>) => {
-    const skill = evt.currentTarget.value;
-
+  const handleRemoveSkill = (skillName: string) => {
     setFormData((formData) => ({
       ...formData,
-      skills: skills.filter((x) => x.name != skill),
+      skills: skills.filter((x) => x.name != skillName),
     }));
 
     // eslint-disable-next-line no-console
@@ -100,20 +99,17 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           {skills.map(({ name }) => (
             <li key={name} className={styles.skill}>
               {name}
-              <button
-                aria-disabled={!editing}
-                onClick={handleRemoveSkill}
-                onKeyDown={handleRemoveSkill}
+              <Button
+                disabled={!editing}
+                className={styles.removeSkillButton}
+                onClick={() => handleRemoveSkill(name)}
+                onKeyDown={() => handleRemoveSkill(name)}
                 tabIndex={-1}
-                value={name}
+                variant="link"
                 data-testid="remove-skill"
               >
-                <XIcon
-                  className={styles.delete}
-                  width="0.75em"
-                  height="0.75em"
-                />
-              </button>
+                <XIcon width="0.75em" height="0.75em" />
+              </Button>
             </li>
           ))}
         </ul>
@@ -132,23 +128,23 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           Billable?
           <input type="checkbox" />
         </label>
-        <div className={styles.buttons}>
-          <button
+        <div>
+          <Button
             disabled={!editing}
-            className={styles.cancel}
             onClick={handleCancel}
             onKeyDown={handleCancel}
           >
             CANCEL
-          </button>
-          <button
+          </Button>
+          <Button
             disabled={!editing}
             className={styles.save}
+            variant="primary"
             onClick={() => onSave(employee)}
             onKeyDown={() => onSave(employee)}
           >
             SAVE
-          </button>
+          </Button>
         </div>
       </div>
     </div>
