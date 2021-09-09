@@ -1,5 +1,5 @@
+import { Button } from "../../../../components/Layout/components/Button";
 import type { Project } from "../../../../services/api";
-
 import styles from "./ProjectDetail.module.scss";
 
 export default function Projects({
@@ -13,9 +13,7 @@ export default function Projects({
 }): JSX.Element {
   return (
     <div className={styles.container}>
-      <button className={styles.button} onClick={onCancel}>
-        &lt; Cancel
-      </button>
+      <Button onClick={onCancel}>&lt; Cancel</Button>
 
       <div className={styles.projectDetail}>
         {project ? "TODO: edit project form" : "TODO: new project form"}

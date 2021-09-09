@@ -1,3 +1,4 @@
+import { Button } from "../../../../components/Layout/components/Button";
 import { Project } from "../../../../services/api";
 import ProjectCard from "../ProjectCard";
 import styles from "./ListProjects.module.scss";
@@ -13,9 +14,9 @@ export default function Projects({
 }): JSX.Element {
   return (
     <div className={styles.container}>
-      <button className={styles.button} onClick={onAddNew}>
+      <Button variant="link" onClick={onAddNew}>
         + Add Project
-      </button>
+      </Button>
 
       {projects?.map((project) => (
         <ProjectCard key={project.id} project={project} onView={onView} />

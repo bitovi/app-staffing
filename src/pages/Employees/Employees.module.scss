@@ -27,28 +27,9 @@
     border-radius: 3px;
   }
 
-  .actionBarIcon {
-    border: none;
-    outline: none;
-    background-color: white;
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 100%;
-    padding: 2px;
-    width: 25px;
-    height: 25px;
-    margin-left: 5px;
-
-    &:hover {
-      box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
-      // background-color: #ccc;
-    }
-
-    > .icon {
-      width: 20px;
-      height: 20px;
-    }
+  .icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -57,21 +38,6 @@
   display: table;
   min-height: 30px;
   width: calc(100% - 60px);
-}
-
-.addButton {
-  background: none;
-  border: none;
-  outline: none;
-  float: left;
-  font-family: Arial, Helvetica, sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 3px 6px;
-
-  &:hover {
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  }
 }
 
 .noResults {

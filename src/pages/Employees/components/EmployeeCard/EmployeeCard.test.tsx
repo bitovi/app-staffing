@@ -4,13 +4,13 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
-import { skillList, SkillName } from "../../../../services/api";
+import { Employee, skillList } from "../../../../services/api";
 
 import EmployeeCard from "./EmployeeCard";
 
 const [react, , devops, node, ,] = skillList;
 
-const employee = {
+const employee: Employee = {
   id: "1",
   avatar:
     "https://images.pexels.com/photos/937481/pexels-photo-937481.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -18,11 +18,7 @@ const employee = {
   title: "Software Developer",
   startDate: "08/19/2021",
   endDate: "12/12/2021",
-  skills: [
-    { name: react as SkillName },
-    { name: node as SkillName },
-    { name: devops as SkillName },
-  ],
+  skills: [{ name: react }, { name: node }, { name: devops }],
   available: false,
 };
 
