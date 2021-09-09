@@ -1,14 +1,13 @@
-import {
+import type {
   AssignedEmployee,
   Employee,
   Role,
-  skillList,
   SkillName,
 } from "../../../../services/api";
 
 import cloneDeep from "lodash.clonedeep";
 
-import { useEmployees } from "../../../../services/api";
+import { skillList, useEmployees } from "../../../../services/api";
 
 import styles from "./RoleDetails.module.scss";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";

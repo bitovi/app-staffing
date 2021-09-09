@@ -7,7 +7,7 @@ import { useCallback } from "react";
 import { fetcher } from "../shared";
 
 interface ProjectActions {
-  addProject: (project: NewProject) => Promise<void>;
+  addProject: (project: NewProject) => Promise<string>;
   updateProject: (project: Project) => Promise<void>;
 }
 
@@ -20,19 +20,31 @@ export default function useProjects(): APIResponse<Project[]> & ProjectActions {
     fetcher,
   );
 
-  const addProject = useCallback(async (project: NewProject) => {
-    await mutate(projectPath, async (projectResponse: { data: Project[] }) => {
-      const { data: id } = await fetch(projectPath, {
-        method: "POST",
-        body: JSON.stringify(project),
-      }).then((res) => res.json());
+  const addProject = useCallback(
+    async (project: NewProject): Promise<string> => {
+      let newId = "";
 
-      return {
-        ...projectResponse,
-        data: [...projectResponse.data, { ...project, id }],
-      };
-    });
-  }, []);
+      await mutate(
+        projectPath,
+        async (projectResponse: { data: Project[] }) => {
+          const { data: id } = await fetch(projectPath, {
+            method: "POST",
+            body: JSON.stringify(project),
+          }).then((res) => res.json());
+
+          newId = id;
+
+          return {
+            ...projectResponse,
+            data: [...projectResponse.data, { ...project, id }],
+          };
+        },
+      );
+
+      return newId;
+    },
+    [],
+  );
 
   const updateProject = useCallback(async (project: Project) => {
     await mutate(projectPath, async (projectResponse: { data: Project[] }) => {
