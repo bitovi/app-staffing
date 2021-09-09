@@ -1,4 +1,4 @@
-import type { Employee, SkillName } from "../../../../services/api";
+import type { NewEmployee, SkillName } from "../../../../services/api";
 
 import React, { useState } from "react";
 
@@ -9,7 +9,7 @@ import { Button } from "../../../../components/Layout/components/Button";
 
 import { ReactComponent as XIcon } from "./assets/X.svg";
 
-export default function EmployeeCard({
+export default function EmployeeCard<Employee extends NewEmployee>({
   employee,
   editing,
   onEdit,
