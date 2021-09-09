@@ -4,6 +4,7 @@ import classnames from "classnames";
 import styles from "./Button.module.scss";
 
 interface ButtonProps {
+  "data-testid"?: string;
   children: ReactNode;
   className?: string;
   disabled?: boolean;
@@ -23,9 +24,11 @@ export function Button({
   variant = "basic",
   onClick,
   onKeyDown,
+  ...restOfProps
 }: ButtonProps): JSX.Element {
   return (
     <button
+      data-testid={restOfProps["data-testid"]}
       className={classnames(
         styles.button,
         {
