@@ -24,6 +24,19 @@ export default function RoleDetails({
 }): JSX.Element {
   const { data: employees, getEmployeesWithSkill } = useEmployees();
 
+  const createUnassignedEmployee = (): AssignedEmployee => {
+    return {
+      id: Math.floor(Math.random() * 1000).toString(),
+      name: "unassigned",
+      avatar: "",
+      title: "",
+      startDate: "",
+      endDate: "",
+      skills: [],
+      available: true,
+    };
+  };
+
   const createEmployeeChoices = (
     assignedEmployee: AssignedEmployee,
   ): Employee[] => {
@@ -98,15 +111,25 @@ export default function RoleDetails({
       </div>
       Assigned Employees
       {employees &&
-        role.employees.map((assignedEmployee) => (
+        role.employees.map((assignedEmployee, index) => (
           <AssignedEmployeeDetails
-            key={assignedEmployee.id + role.id}
+            key={assignedEmployee.id + role.id + index}
             assignedEmployee={assignedEmployee}
             onChange={editAssignedEmployee}
             changeEmployee={changeAssignedEmployee}
             possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
           />
         ))}
+      <button
+        onClick={() =>
+          editRole({
+            ...role,
+            employees: [...role.employees, createUnassignedEmployee()],
+          })
+        }
+      >
+        Add Another Team Member
+      </button>
       <button onClick={() => deleteRole(role)}>Delete</button>
     </div>
   );
