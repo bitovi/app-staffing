@@ -20,18 +20,12 @@ describe("useEmployees", () => {
     const newProject: NewProject = {
       name: "New Test Project",
       description: "description",
-      startDate: {
-        date: "",
-        confidence: "",
-      },
-      endDate: {
-        date: "",
-        confidence: "",
-      },
       roles: [],
     };
 
-    await act(() => result.current.addProject(newProject));
+    await act(async () => {
+      await result.current.addProject(newProject);
+    });
 
     const id = projects.find(({ name }) => name === newProject.name)?.id;
     const newProjectWithId = { ...newProject, id };
