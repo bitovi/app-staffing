@@ -6,6 +6,8 @@ import { skillList } from "../../../../services/api";
 
 import styles from "./EmployeeCard.module.scss";
 
+import { ReactComponent as XIcon } from "./assets/X.svg";
+
 export default function EmployeeCard<EmployeeType extends NewEmployee>({
   employee,
   editing,
@@ -16,7 +18,7 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
   employee: EmployeeType;
   editing: boolean;
   onEdit?: () => void;
-  onSave?: (employee: EmployeeType) => void;
+  onSave: (employee: EmployeeType) => void;
   onCancel: () => void;
 }): JSX.Element {
   const [formData, setFormData] = useState<EmployeeType>(employee);
@@ -56,77 +58,67 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
   return (
     <div className={styles.wrapper}>
       <div className={styles.details}>
-        <div
-          role="button"
-          className={styles.detail}
-          onClick={onEdit}
-          onKeyDown={onEdit}
-          tabIndex={-1}
-        >
-          <input
-            name="name"
-            value={name}
-            disabled={!editing}
-            onChange={updateField}
-          />
-        </div>
+        <input
+          name="name"
+          className={styles.name}
+          value={name}
+          aria-disabled={!editing}
+          onFocus={onEdit}
+          onChange={updateField}
+          data-testid="name"
+        />
       </div>
       <div className={styles.details}>
-        <div
-          role="button"
-          className={styles.detail}
-          onClick={onEdit}
-          onKeyDown={onEdit}
-          tabIndex={-1}
-        >
+        <div role="button" className={styles.date} tabIndex={-1}>
           <label>
             Start Date
             <input
               name="startDate"
               value={startDate}
-              disabled={!editing}
+              aria-disabled={!editing}
+              onFocus={onEdit}
               onChange={updateField}
             />
           </label>
         </div>
-        <div
-          role="button"
-          className={styles.detail}
-          onClick={onEdit}
-          onKeyDown={onEdit}
-          tabIndex={-1}
-        >
+        <div role="button" className={styles.date} tabIndex={-1}>
           <label>
             End Date
             <input
               name="endDate"
               value={endDate}
-              disabled={!editing}
+              aria-disabled={!editing}
+              onFocus={onEdit}
               onChange={updateField}
             />
           </label>
         </div>
       </div>
-      <div className={styles.details}>
-        <span className={styles.label}>Skill</span>
-        <ul className={styles.skills}>
+      <div className={styles.skills}>
+        <span className={styles.label}>Skills</span>
+        <ul data-testid="display-skills">
           {skills.map(({ name }) => (
             <li key={name} className={styles.skill}>
               {name}
               <button
-                className={!editing ? styles.disabled : styles.editing}
+                aria-disabled={!editing}
                 onClick={handleRemoveSkill}
                 onKeyDown={handleRemoveSkill}
                 tabIndex={-1}
                 value={name}
+                data-testid="remove-skill"
               >
-                X
+                <XIcon
+                  className={styles.delete}
+                  width="0.75em"
+                  height="0.75em"
+                />
               </button>
             </li>
           ))}
         </ul>
         {editing && (
-          <select onChange={handleAddSkill}>
+          <select onChange={handleAddSkill} data-testid="select-skills">
             {skillList.map((skill) => (
               <option key={skill} value={skill}>
                 {skill}
@@ -135,12 +127,30 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           </select>
         )}
       </div>
-      {editing && onSave && (
-        <div className={styles.details}>
-          <button onClick={handleCancel}>Cancel</button>
-          <button onClick={() => onSave(formData)}>Save</button>
+      <div className={styles.controls}>
+        <label>
+          Billable?
+          <input type="checkbox" />
+        </label>
+        <div className={styles.buttons}>
+          <button
+            disabled={!editing}
+            className={styles.cancel}
+            onClick={handleCancel}
+            onKeyDown={handleCancel}
+          >
+            CANCEL
+          </button>
+          <button
+            disabled={!editing}
+            className={styles.save}
+            onClick={() => onSave(employee)}
+            onKeyDown={() => onSave(employee)}
+          >
+            SAVE
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
