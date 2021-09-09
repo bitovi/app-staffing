@@ -2,12 +2,29 @@ import { render, screen } from "@testing-library/react";
 import { expect } from "chai";
 
 import { MemoryRouter } from "react-router-dom";
-
-import EmployeeCard from "./EmployeeCard";
-import { employees } from "../../../../services/api/fixtures";
 import userEvent from "@testing-library/user-event";
 
-const employee = employees[0];
+import { skillList, SkillName } from "../../../../services/api";
+
+import EmployeeCard from "./EmployeeCard";
+
+const [react, , devops, node, ,] = skillList;
+
+const employee = {
+  id: "1",
+  avatar:
+    "https://images.pexels.com/photos/937481/pexels-photo-937481.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  name: "Tom",
+  title: "Software Developer",
+  startDate: "08/19/2021",
+  endDate: "12/12/2021",
+  skills: [
+    { name: react as SkillName },
+    { name: node as SkillName },
+    { name: devops as SkillName },
+  ],
+  available: false,
+};
 
 describe("Components/Layout", () => {
   it("works", () => {
@@ -65,7 +82,7 @@ describe("Components/Layout", () => {
     const expected = "Angular";
     userEvent.selectOptions(screen.getByTestId("select-skills"), [expected]);
 
-    const container = screen.getByTestId("display-skills").children.item(2);
+    const container = screen.getByTestId("display-skills").children.item(3);
     expect(container).to.contains.text(expected);
   });
 
