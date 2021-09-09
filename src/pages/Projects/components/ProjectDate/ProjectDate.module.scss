@@ -1,0 +1,12 @@
+.dateContainer {
+  display: flex;
+  flex-direction: column;
+  > * {
+    padding-bottom: 1em;
+    margin-right: 1em;
+  }
+}
+
+.dateEstimateContainer {
+  display: flex;
+}

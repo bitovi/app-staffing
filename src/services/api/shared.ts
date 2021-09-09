@@ -33,14 +33,23 @@ export interface Skill {
 }
 
 export interface Role {
+  id: string;
   skill: Skill;
   startDate: string;
   endDate: string;
   employee?: Employee;
 }
 
+export interface EstimatedDate {
+  date: string;
+  confidence: string;
+}
+
 export interface NewProject {
   name: string;
+  description: string;
+  startDate: EstimatedDate;
+  endDate: EstimatedDate;
   roles: Role[];
 }
 

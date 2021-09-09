@@ -4,11 +4,12 @@ import { Switch, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Loading from "./pages/Loading";
 
+import { ProjectRouter } from "./pages/Projects";
+
 import "./App.scss";
 
 const Hello = lazy(() => import("./pages/Hello"));
 const Employees = lazy(() => import("./pages/Employees"));
-const Projects = lazy(() => import("./pages/Projects"));
 
 export default function App(): JSX.Element {
   return (
@@ -21,9 +22,7 @@ export default function App(): JSX.Element {
           <Route path="/employees">
             <Employees />
           </Route>
-          <Route path="/projects">
-            <Projects />
-          </Route>
+          <ProjectRouter />
           <Route>
             <Hello name="Error" />
           </Route>

@@ -1,0 +1,53 @@
+.projectDescription {
+  font-size: 18px;
+  width: 100%;
+
+  input,
+  .input,
+  input:disabled {
+    border: none;
+    background-color: #fff;
+    opacity: 1;
+  }
+
+  .label,
+  label {
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+  }
+  p {
+    margin: 0;
+  }
+
+  .textarea,
+  textarea {
+    border: none;
+    width: 100%;
+    height: auto;
+    height: 75px;
+    resize: none;
+    font-size: 18px;
+    font-family: inherit;
+  }
+}
+
+.sectionLabel {
+  font-weight: 700;
+  font-size: 18px;
+  padding-bottom: 1em;
+}
+
+.dateContainer {
+  display: flex;
+  flex-direction: column;
+  > * {
+    padding-bottom: 1em;
+    margin-right: 1em;
+  }
+}
+
+.dateEstimateContainer {
+  display: flex;
+}

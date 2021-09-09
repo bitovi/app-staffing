@@ -1,5 +1,6 @@
 export type {
   NewEmployee,
+  NewProject,
   Employee,
   Skill,
   Role,
