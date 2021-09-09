@@ -6,7 +6,7 @@ import { skillList } from "../../../../services/api";
 
 import styles from "./RoleDetails.module.scss";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
-import ProjectDate from "../ProjectDate";
+import ProjectDate from "../RoleDate";
 
 export default function RoleDetails({
   role,
@@ -17,14 +17,6 @@ export default function RoleDetails({
   editRole: (role: Role) => void;
   deleteRole: (role: Role) => void;
 }): JSX.Element {
-  // const { data: employees } = useEmployees();
-
-  // const updateRole = ({ currentTarget }: React.FormEvent<HTMLInputElement>) => {
-  //   const { name, value } = currentTarget;
-
-  //   editRole({ ...role, [name]: value });
-  // };
-
   return (
     <div className={styles.roleContainer}>
       <div>Role</div>
@@ -60,40 +52,6 @@ export default function RoleDetails({
           onChange={() => null}
         />
       ))}
-      {/* <select
-          onChange={({ target }) => {
-            editRole({
-              ...role,
-              employee: employees.find(({ name }) => name === target.value),
-            });
-          }}
-          defaultValue={role.employee.name}
-        >
-          {employees.map((e, idx) => (
-            <option value={e.name} key={e.id + idx}>
-              {e.name}
-            </option>
-          ))}
-        </select>
-      )} */}
-      {/* <div className={styles.dateContainer}>
-        <label>
-          Start Date:
-          <input
-            defaultValue={role.startDate}
-            name="startDate"
-            onBlur={updateRole}
-          />
-        </label>
-        <label>
-          End Date:
-          <input
-            defaultValue={role.endDate}
-            name="endDate"
-            onBlur={updateRole}
-          />
-        </label>
-      </div> */}
       <button onClick={() => deleteRole(role)}>Delete</button>
     </div>
   );

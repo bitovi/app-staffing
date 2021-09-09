@@ -27,22 +27,6 @@ export default function ProjectDescription({
         onBlur={updateMainField}
         defaultValue={project.name}
       />
-      {/* <div className={styles.dateEstimateContainer}>
-        <ProjectDate
-          title="Start Date"
-          estimatedDate={project.startDate}
-          onChange={(startDate) => {
-            onEdit({ ...project, startDate });
-          }}
-        />
-        <ProjectDate
-          title="End Date"
-          estimatedDate={project.endDate}
-          onChange={(endDate) => {
-            onEdit({ ...project, endDate });
-          }}
-        />
-      </div> */}
       <div>
         <p className={styles.sectionLabel}>Description:</p>
         <textarea

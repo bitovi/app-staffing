@@ -19,22 +19,6 @@
   }
 }
 
-.dates {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  div {
-    color: rgb(110, 110, 110);
-    font-size: x-small;
-    font-weight: bold;
-    span {
-      display: block;
-      color: black;
-      font-size: small;
-      font-weight: normal;
-    }
-  }
-}
-
 .viewProject {
   color: rgb(91, 160, 248);
   background: none;

@@ -1,16 +1,16 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { projects } from "../../../../services/api/fixtures";
 
-import ProjectDate from "./ProjectDate";
+import RoleDate from "./RoleDate";
 
-describe.only("Pages/Projects/components/ProjectDates", () => {
+describe.only("Pages/Projects/components/RoleDates", () => {
   it("works", async () => {
     const change = jest.fn();
 
     render(
-      <ProjectDate
+      <RoleDate
         title="Start Date"
-        estimatedDate={projects[0].startDate}
+        estimatedDate={projects[0].roles[0].startDate}
         onChange={change}
       />,
     );
@@ -23,9 +23,9 @@ describe.only("Pages/Projects/components/ProjectDates", () => {
     const change = jest.fn();
 
     render(
-      <ProjectDate
+      <RoleDate
         title="Start Date"
-        estimatedDate={projects[0].startDate}
+        estimatedDate={projects[0].roles[0].startDate}
         onChange={change}
       />,
     );

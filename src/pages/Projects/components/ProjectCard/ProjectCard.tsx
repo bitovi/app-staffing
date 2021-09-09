@@ -16,8 +16,6 @@ const ProjectCard = ({
           Project: <span>{project?.name}</span>
         </div>
       </div>
-      <div className={styles.dates}></div>
-      {/** remove css class name */}
       <div>
         <button className={styles.viewProject} onClick={() => onView(project)}>
           View Project
