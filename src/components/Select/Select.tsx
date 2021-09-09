@@ -6,12 +6,12 @@ import styles from "./Select.module.scss";
 interface SelectProps {
   name: string;
   label: string;
-  value: string;
+  value?: string;
   options: Array<{
-    value: string;
+    value?: string;
     label: ReactNode;
   }>;
-  onChange(value: string): void;
+  onChange(value?: string): void;
 }
 
 export function Select({
@@ -32,7 +32,7 @@ export function Select({
         name={name}
         value={activeOption}
         options={options}
-        onChange={(option) => onChange(option?.value || "")}
+        onChange={(option) => onChange(option?.value ?? undefined)}
       />
     </label>
   );

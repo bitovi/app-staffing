@@ -15,9 +15,9 @@ export default {
 } as ComponentMeta<typeof Select>;
 
 export const Basic: ComponentStory<typeof Select> = (args) => {
-  const [currentValue, setCurrentValue] = useState<string>("");
+  const [currentValue, setCurrentValue] = useState<string>();
 
-  const handleChange = (value: string) => setCurrentValue(value);
+  const handleChange = (value?: string) => setCurrentValue(value);
 
   return (
     <Select
