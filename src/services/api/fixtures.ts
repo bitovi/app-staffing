@@ -66,14 +66,6 @@ export const projects = [...Array(7).keys()].map((n) => {
       "Hooli",
       "Massive Dynamic",
     ][n],
-    startDate: {
-      date: "12/19/2021",
-      confidence: "50%",
-    },
-    endDate: {
-      date: "12/19/2022",
-      confidence: "50%",
-    },
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
     roles: [
@@ -88,13 +80,13 @@ export const projects = [...Array(7).keys()].map((n) => {
         employees: [
           {
             ...employees[0],
-            startDate: "2014-02-09",
-            endDate: "2014-02-10",
+            assignmentStartDate: "2014-02-09",
+            assignmnetEndDate: "2014-02-10",
           },
         ],
       },
       {
-        id: (1000 + n).toString(),
+        id: (2000 + n).toString(),
         skill: { name: react as SkillName },
         startDate: {
           confidence: "70%",
@@ -105,11 +97,11 @@ export const projects = [...Array(7).keys()].map((n) => {
           {
             ...employees[1],
             startDate: "2014-02-19",
-            endDate: "2014-02-20",
+            assignmnetEndDate: "2014-02-20",
           },
           {
             ...employees[2],
-            startDate: "2014-02-19",
+            assignmentStartDate: "2014-02-19",
           },
           {
             ...employees[3],

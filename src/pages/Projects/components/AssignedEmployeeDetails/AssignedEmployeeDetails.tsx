@@ -4,30 +4,48 @@ import styles from "./AssignedEmployeeDetails.module.scss";
 
 export default function AssignedEmployeeDetails({
   assignedEmployee,
+  changeEmployee,
   onChange,
 }: {
   assignedEmployee: AssignedEmployee;
+  changeEmployee: (
+    previousEmployeeId: string,
+    newAssignedEmployee: AssignedEmployee,
+  ) => void;
   onChange: (assignedEmployee: AssignedEmployee) => void;
 }): JSX.Element {
   const { data: employees } = useEmployees();
 
+  const updateEmployee = (newName: string) => {
+    const newEmployee = employees?.find(({ name }) => name === newName);
+
+    changeEmployee(assignedEmployee.id, {
+      ...assignedEmployee,
+      ...newEmployee,
+    });
+  };
+
   return (
     <div className={styles.assignedEmployeecontainer}>
-      <select defaultValue={assignedEmployee.name}>
-        {employees?.map((e) => (
-          <option value={e.name} key={e.id}>
-            {e.name}
-          </option>
-        ))}
-      </select>
+      {employees && (
+        <select
+          defaultValue={assignedEmployee.name}
+          onChange={({ target }) => updateEmployee(target.value)}
+        >
+          {employees.map((e) => (
+            <option value={e.name} key={e.id}>
+              {e.name}
+            </option>
+          ))}
+        </select>
+      )}
       <label>
         Start Date:
-        {/* 2014-02-09 */}
         <input
           type="date"
-          defaultValue={assignedEmployee.startDate}
+          defaultValue={assignedEmployee.assignmentStartDate}
           onChange={({ target }) =>
-            onChange({ ...assignedEmployee, startDate: target.value })
+            onChange({ ...assignedEmployee, assignmentStartDate: target.value })
           }
         />
       </label>
@@ -35,9 +53,9 @@ export default function AssignedEmployeeDetails({
         End Date:
         <input
           type="date"
-          defaultValue={assignedEmployee.endDate}
+          defaultValue={assignedEmployee.assignmnetEndDate}
           onChange={({ target }) =>
-            onChange({ ...assignedEmployee, endDate: target.value })
+            onChange({ ...assignedEmployee, assignmnetEndDate: target.value })
           }
         />
       </label>

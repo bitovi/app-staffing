@@ -1,5 +1,7 @@
 import type { Role, Project } from "../../../../services/api";
 
+import cloneDeep from "lodash.clonedeep";
+
 import { skillList } from "../../../../services/api";
 import RoleDetails from "../RoleDetails";
 
@@ -13,7 +15,7 @@ export default function RoleList({
   onEdit: (project: Project) => void;
 }): JSX.Element {
   const editRole = (role: Role) => {
-    const roles = project.roles;
+    const roles = cloneDeep(project.roles);
     const index = roles.findIndex(({ id }) => id === role.id);
     roles[index] = role;
 

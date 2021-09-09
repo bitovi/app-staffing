@@ -16,6 +16,7 @@ export default function RoleDate({
       <label>
         {title}
         <input
+          type="date"
           defaultValue={estimatedDate.date}
           onBlur={(e) => {
             onChange({ ...estimatedDate, date: e.target.value });
