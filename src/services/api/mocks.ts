@@ -65,9 +65,7 @@ export default [
     const index = projects.findIndex((x) => x.id === project.id);
 
     if (index > -1) {
-      // console.log({ before: project.roles[0] });
       projects[index] = project;
-      // console.log({ after: project.roles[0] });
       return res(ctx.status(202));
     }
 

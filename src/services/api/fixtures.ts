@@ -96,7 +96,7 @@ export const projects = [...Array(7).keys()].map((n) => {
         employees: [
           {
             ...employees[1],
-            startDate: "2014-02-19",
+            assignmentStartDate: "2014-02-19",
             assignmnetEndDate: "2014-02-20",
           },
           {

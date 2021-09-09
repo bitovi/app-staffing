@@ -35,7 +35,6 @@ export default function useProjects(): APIResponse<Project[]> & ProjectActions {
   }, []);
 
   const updateProject = useCallback(async (project: Project) => {
-    // console.log(project);
     await mutate(projectPath, async (projectResponse: { data: Project[] }) => {
       await fetch(projectPath, {
         method: "PUT",

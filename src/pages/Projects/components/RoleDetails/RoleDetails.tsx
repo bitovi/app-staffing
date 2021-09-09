@@ -27,11 +27,6 @@ export default function RoleDetails({
 
     employees[index] = assignedEmployee;
 
-    console.log({
-      ...role,
-      employees,
-    });
-
     editRole({
       ...role,
       employees,
