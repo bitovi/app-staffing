@@ -78,25 +78,43 @@ export const projects = [...Array(7).keys()].map((n) => {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
     roles: [
       {
-        id: "123",
-        skill: employees[0].skills[0],
-        startDate: n == 3 ? "" : `${n + 1}/01/2022`,
-        endDate: "12/19/2023",
-        employee: employees[0],
+        id: (1000 + n).toString(),
+        skill: { name: ux as SkillName },
+        startDate: {
+          confidence: "60%",
+          date: "2014-02-09",
+        },
+        endDate: { confidence: "50%", date: "2014-02-10" },
+        employees: [
+          {
+            ...employees[0],
+            startDate: "2014-02-09",
+            endDate: "2014-02-10",
+          },
+        ],
       },
       {
-        id: "145",
-        skill: employees[1].skills[0],
-        startDate: "12/19/2022",
-        endDate: "12/19/2023",
-        employee: employees[1],
-      },
-      {
-        id: "098",
-        skill: employees[2].skills[0],
-        startDate: "12/19/2022",
-        endDate: "12/19/2023",
-        employee: employees[2],
+        id: (1000 + n).toString(),
+        skill: { name: react as SkillName },
+        startDate: {
+          confidence: "70%",
+          date: "2014-02-19",
+        },
+        endDate: { confidence: "80%", date: "2014-02-20" },
+        employees: [
+          {
+            ...employees[1],
+            startDate: "2014-02-19",
+            endDate: "2014-02-20",
+          },
+          {
+            ...employees[2],
+            startDate: "2014-02-19",
+          },
+          {
+            ...employees[3],
+          },
+        ],
       },
     ],
   } as Project;

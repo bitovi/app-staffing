@@ -2,8 +2,6 @@ import type { Project } from "../../../../services/api";
 
 import React from "react";
 
-import ProjectDate from "../ProjectDate";
-
 import styles from "./ProjectDescription.module.scss";
 
 export default function ProjectDescription({
@@ -29,7 +27,7 @@ export default function ProjectDescription({
         onBlur={updateMainField}
         defaultValue={project.name}
       />
-      <div className={styles.dateEstimateContainer}>
+      {/* <div className={styles.dateEstimateContainer}>
         <ProjectDate
           title="Start Date"
           estimatedDate={project.startDate}
@@ -44,7 +42,7 @@ export default function ProjectDescription({
             onEdit({ ...project, endDate });
           }}
         />
-      </div>
+      </div> */}
       <div>
         <p className={styles.sectionLabel}>Description:</p>
         <textarea
