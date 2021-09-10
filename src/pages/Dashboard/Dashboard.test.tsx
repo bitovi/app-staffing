@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import { Dashboard } from "./Dashboard";
+import Dashboard from "./Dashboard";
 
 describe("Pages/Dashboard", () => {
   it("works", async () => {
