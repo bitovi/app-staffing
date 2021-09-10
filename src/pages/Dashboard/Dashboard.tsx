@@ -1,6 +1,6 @@
 import { Cell, Header, Row, Table } from "../../components/Table";
 
-export function Dashboard(): JSX.Element {
+export default function Dashboard(): JSX.Element {
   return (
     <div>
       <Table>
