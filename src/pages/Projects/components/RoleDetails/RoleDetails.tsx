@@ -5,6 +5,7 @@ import React from "react";
 import { skillList, useEmployees } from "../../../../services/api";
 
 import styles from "./RoleDetails.module.scss";
+import { Button } from "../../../../components/Layout/components/Button";
 
 export default function RoleDetails({
   role,
@@ -76,8 +77,9 @@ export default function RoleDetails({
           ))}
         </select>
       )}
-
-      <button onClick={() => deleteRole(role)}>Delete</button>
+      <div>
+        <Button onClick={() => deleteRole(role)}>Delete</Button>
+      </div>
     </div>
   );
 }
