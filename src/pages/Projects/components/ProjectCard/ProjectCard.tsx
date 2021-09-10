@@ -21,35 +21,37 @@ const ProjectCard = ({
     .reduce((a, c) => a || c, "");
 
   return (
-    <div className={styles.container}>
-      <div className={styles.projectName}>
-        <div>
-          Project: <span>{project?.name}</span>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <div className={styles.projectName}>
+          <div>
+            Project: <span>{project?.name}</span>
+          </div>
         </div>
-      </div>
-      <div className={styles.dates}>
-        {/* @TODO: use a date component */}
-        {startDate && (
-          <div>
-            Start Date
-            <span>{startDate}</span>
-          </div>
-        )}
-        {endDate && (
-          <div>
-            End Date
-            <span>{endDate}</span>
-          </div>
-        )}
-      </div>
-      <div>
-        <Button
-          variant="link"
-          className={styles.viewProject}
-          onClick={() => onView(project)}
-        >
-          View Project
-        </Button>
+        <div className={styles.dates}>
+          {/* @TODO: use a date component */}
+          {startDate && (
+            <div>
+              Start Date
+              <span>{startDate}</span>
+            </div>
+          )}
+          {endDate && (
+            <div>
+              End Date
+              <span>{endDate}</span>
+            </div>
+          )}
+        </div>
+        <div>
+          <Button
+            variant="link"
+            className={styles.viewProject}
+            onClick={() => onView(project)}
+          >
+            View Project
+          </Button>
+        </div>
       </div>
     </div>
   );

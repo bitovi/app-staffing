@@ -5,11 +5,15 @@
   flex-direction: row;
   font-family: "Montserrat", sans-serif;
   font-weight: 300;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 .content {
   flex: 1 1;
   font-family: "Montserrat", sans-serif;
   font-weight: 300;
+  padding: 16px;
+  overflow-y: auto;
 }
