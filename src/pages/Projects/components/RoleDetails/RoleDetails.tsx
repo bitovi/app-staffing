@@ -8,10 +8,10 @@ import type {
 import cloneDeep from "lodash.clonedeep";
 
 import { skillList, useEmployees } from "../../../../services/api";
+import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
+import RoleDate from "../RoleDate";
 
 import styles from "./RoleDetails.module.scss";
-import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
-import ProjectDate from "../RoleDate";
 
 export default function RoleDetails({
   role,
@@ -98,12 +98,12 @@ export default function RoleDetails({
         ))}
       </select>
       <div className={styles.dateContainer}>
-        <ProjectDate
+        <RoleDate
           title="Start Date"
           estimatedDate={role.startDate}
           onChange={(startDate) => editRole({ ...role, startDate })}
         />
-        <ProjectDate
+        <RoleDate
           title="End Date"
           estimatedDate={role.endDate}
           onChange={(endDate) => editRole({ ...role, endDate })}

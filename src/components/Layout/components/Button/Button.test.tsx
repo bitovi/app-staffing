@@ -10,9 +10,19 @@ describe("Components/Button", () => {
 
     const button = screen.getByText(/Click here/i);
     expect(button.tagName).toBe("BUTTON");
-    expect(button).toHaveClass("primary");
     fireEvent.click(button);
     expect(mockOnClick).toHaveBeenCalled();
+  });
+
+  it("renders primary variant", () => {
+    render(
+      <Button variant="primary" onClick={mockOnClick}>
+        Click here
+      </Button>,
+    );
+
+    const button = screen.getByText(/Click here/i);
+    expect(button).toHaveClass("primary");
   });
 
   it("renders link variant", () => {

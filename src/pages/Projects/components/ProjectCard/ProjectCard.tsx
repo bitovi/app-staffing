@@ -1,3 +1,4 @@
+import { Button } from "../../../../components/Layout/components/Button";
 import type { Project } from "../../../../services/api";
 
 import styles from "./ProjectCard.module.scss";
@@ -17,9 +18,13 @@ const ProjectCard = ({
         </div>
       </div>
       <div>
-        <button className={styles.viewProject} onClick={() => onView(project)}>
+        <Button
+          variant="link"
+          className={styles.viewProject}
+          onClick={() => onView(project)}
+        >
           View Project
-        </button>
+        </Button>
       </div>
     </div>
   );

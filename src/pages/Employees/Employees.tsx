@@ -1,7 +1,6 @@
 import type { NewEmployee, Employee } from "../../services/api";
 
 import { useEffect, useState } from "react";
-import classnames from "classnames";
 
 import { useEmployees } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
@@ -10,6 +9,7 @@ import styles from "./Employees.module.scss";
 
 import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
 import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
+import { Button } from "../../components/Layout/components/Button";
 
 export default function Employees(): JSX.Element {
   const { data: employees, addEmployee, updateEmployee } = useEmployees();
@@ -25,8 +25,6 @@ export default function Employees(): JSX.Element {
   };
 
   const handleEditCancel = () => {
-    // eslint-disable-next-line no-console
-    console.log("CANCELING!");
     setIdBeingEdited(undefined);
   };
 
@@ -36,8 +34,6 @@ export default function Employees(): JSX.Element {
   };
 
   const handleAddCancel = () => {
-    // eslint-disable-next-line no-console
-    console.log("CANCELING!");
     setIsAdding(false);
   };
 
@@ -65,35 +61,35 @@ export default function Employees(): JSX.Element {
             placeholder="Filter"
             className={styles.actionBarFilter}
           />
-          <button
-            className={classnames(styles.alert, styles.actionBarIcon)}
+          <Button
             title="Notifications"
+            variant="link"
             onClick={() => {
               alert("NOTIFICATIONS");
             }}
           >
             <BellSVG className={styles.icon} />
-          </button>
-          <button
-            className={classnames(styles.settings, styles.actionBarIcon)}
+          </Button>
+          <Button
             title="Settings"
+            variant="link"
             onClick={() => {
               alert("SETTINGS");
             }}
           >
             <GearSVG className={styles.icon} />
-          </button>
+          </Button>
         </div>
       </div>
       <div className={styles.row}>
-        <button
-          className={styles.addButton}
+        <Button
+          variant="link"
           onClick={() => {
             setIsAdding(true);
           }}
         >
           Add Team Member +
-        </button>
+        </Button>
       </div>
       {!employees && <div className={styles.noResults}>LOADING ...</div>}
       {employees && employees.length === 0 && (
