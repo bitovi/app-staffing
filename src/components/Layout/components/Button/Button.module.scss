@@ -37,9 +37,11 @@
   &:hover {
     border: unset;
     box-shadow: none;
+    background-color: unset;
   }
 
   &:disabled {
+    background-color: unset;
     color: #9a9a9a;
   }
 }
