@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { select as selectEvent } from "react-select-event";
 import { projects } from "../../../../services/api/fixtures";
 
 import ProjectDate from "./ProjectDate";
@@ -33,7 +34,8 @@ describe.only("Pages/Projects/components/ProjectDates", () => {
     fireEvent.blur(await screen.findByLabelText("Start Date"));
     expect(change).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(await screen.findByLabelText("Confidence:"));
+    await selectEvent(screen.getByLabelText(/Confidence/), "20%");
+    // fireEvent.change(await screen.findByLabelText("Confidence:"));
     expect(change).toHaveBeenCalledTimes(2);
   });
 });

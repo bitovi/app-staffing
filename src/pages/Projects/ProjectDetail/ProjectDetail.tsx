@@ -1,6 +1,5 @@
 import type { Project } from "../../../services/api";
 
-import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import ProjectDescription from "../components/ProjectDescription";
@@ -13,15 +12,7 @@ export default function ProjectDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const { data: projects, updateProject } = useProjects();
 
-  const [projectData, setProjectData] = useState<Project | undefined>(
-    projects?.find((p) => p.id === id),
-  );
-
-  useEffect(() => {
-    if (!projects) return;
-
-    setProjectData(projects.find((p) => p.id === id));
-  }, [projects, id]);
+  const projectData = projects?.find((p) => p.id === id);
 
   const onSave = (project: Project) => {
     updateProject(project);

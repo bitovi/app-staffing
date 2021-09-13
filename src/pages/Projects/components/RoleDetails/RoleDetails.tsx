@@ -1,8 +1,12 @@
-import type { Role, SkillName } from "../../../../services/api";
-
 import React from "react";
 
-import { skillList, useEmployees } from "../../../../services/api";
+import {
+  isSkillName,
+  Role,
+  skillList,
+  useEmployees,
+} from "../../../../services/api";
+import { Select } from "../../../../components/Select";
 
 import styles from "./RoleDetails.module.scss";
 import { Button } from "../../../../components/Layout/components/Button";
@@ -27,19 +31,20 @@ export default function RoleDetails({
   return (
     <div className={styles.roleContainer}>
       <div>
-        <div>Role:</div>
-        <select
-          onChange={({ target }) =>
-            editRole({ ...role, skill: { name: target.value as SkillName } })
+        <Select
+          label="Role:"
+          name="role"
+          onChange={(value) =>
+            value &&
+            isSkillName(value) &&
+            editRole({ ...role, skill: { name: value } })
           }
-          defaultValue={role.skill.name}
-        >
-          {skillList.map((name) => (
-            <option key={name} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
+          value={role.skill.name}
+          options={skillList.map((name) => ({
+            label: name,
+            value: name,
+          }))}
+        />
         <div className={styles.roleGrid}></div>
       </div>
       <div className={styles.dateContainer}>
@@ -61,21 +66,22 @@ export default function RoleDetails({
         </label>
       </div>
       {role.employee && employees && (
-        <select
-          onChange={({ target }) => {
+        <Select
+          data-testid="role-employee"
+          label=""
+          name="roleEmployee"
+          onChange={(value) => {
             editRole({
               ...role,
-              employee: employees.find(({ name }) => name === target.value),
+              employee: employees.find(({ name }) => name === value),
             });
           }}
-          defaultValue={role.employee.name}
-        >
-          {employees.map((e, idx) => (
-            <option value={e.name} key={e.id + idx}>
-              {e.name}
-            </option>
-          ))}
-        </select>
+          value={role.employee.name}
+          options={employees.map((e) => ({
+            label: e.name,
+            value: e.name,
+          }))}
+        />
       )}
       <div>
         <Button onClick={() => deleteRole(role)}>Delete</Button>

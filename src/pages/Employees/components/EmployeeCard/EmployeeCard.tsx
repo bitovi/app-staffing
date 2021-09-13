@@ -1,13 +1,14 @@
-import type { NewEmployee, SkillName } from "../../../../services/api";
+import type { NewEmployee } from "../../../../services/api";
 
 import React, { useState } from "react";
 
-import { skillList } from "../../../../services/api";
+import { skillList, isSkillName } from "../../../../services/api";
 
 import { Button } from "../../../../components/Layout/components/Button";
 import styles from "./EmployeeCard.module.scss";
 
 import { ReactComponent as XIcon } from "./assets/X.svg";
+import { Select } from "../../../../components/Select";
 
 export default function EmployeeCard<EmployeeType extends NewEmployee>({
   employee,
@@ -25,13 +26,13 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
   const [formData, setFormData] = useState<EmployeeType>(employee);
   const { name, startDate, endDate, skills } = formData;
 
-  const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {
-    const skill = evt.target.value;
-
-    setFormData((formData) => ({
-      ...formData,
-      skills: [...skills, { name: skill as SkillName }],
-    }));
+  const handleAddSkill = (skill: string) => {
+    if (isSkillName(skill) && !skills.some((s) => s.name === skill)) {
+      setFormData((formData) => ({
+        ...formData,
+        skills: [...skills, { name: skill }],
+      }));
+    }
   };
 
   const handleRemoveSkill = (skillName: string) => {
@@ -115,13 +116,15 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           ))}
         </ul>
         {editing && (
-          <select onChange={handleAddSkill} data-testid="select-skills">
-            {skillList.map((skill) => (
-              <option key={skill} value={skill}>
-                {skill}
-              </option>
-            ))}
-          </select>
+          <Select
+            data-testid="select-skills"
+            label="selectSkills"
+            name="selectSkills"
+            onChange={handleAddSkill}
+            options={skillList
+              .filter((skill) => !skills.some((s) => s.name === skill))
+              .map((skill) => ({ label: skill, value: skill }))}
+          />
         )}
       </div>
       <div className={styles.controls}>

@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { select as selectEvent } from "react-select-event";
 import { projects } from "../../../../services/api/fixtures";
 
 import RoleDetails from "./RoleDetails";
@@ -37,10 +38,10 @@ describe("Pages/Projects/components/RoleDetails", () => {
       expect(screen.queryByText(role.employee?.name || "Error")).toBeVisible();
     });
 
-    fireEvent.change(await screen.getByDisplayValue(role.skill.name));
+    await selectEvent(screen.getByLabelText(/Role/), "Angular");
     expect(onEditMock).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(await screen.getByDisplayValue(role.employee?.name || ""));
+    await selectEvent(screen.getByTestId("role-employee"), "Paul");
     expect(onEditMock).toHaveBeenCalledTimes(2);
 
     fireEvent.blur(await screen.getByLabelText("Start Date:"));

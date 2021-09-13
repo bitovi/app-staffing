@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { select as selectEvent } from "react-select-event";
 import { expect } from "chai";
 
 import { MemoryRouter } from "react-router-dom";
@@ -7,6 +8,7 @@ import userEvent from "@testing-library/user-event";
 import { Employee, skillList } from "../../../../services/api";
 
 import EmployeeCard from "./EmployeeCard";
+import { fireEvent } from "@testing-library/dom";
 
 const [react, , devops, node, ,] = skillList;
 
@@ -22,7 +24,7 @@ const employee: Employee = {
   available: false,
 };
 
-describe("Components/Layout", () => {
+describe("Components/EmployeeCard", () => {
   it("works", () => {
     render(
       <MemoryRouter>
@@ -61,7 +63,7 @@ describe("Components/Layout", () => {
     expect(container).to.have.value("Tom2");
   });
 
-  it("should add a skill", () => {
+  it("should add a skill", async () => {
     render(
       <MemoryRouter>
         <EmployeeCard
@@ -76,7 +78,9 @@ describe("Components/Layout", () => {
     );
 
     const expected = "Angular";
-    userEvent.selectOptions(screen.getByTestId("select-skills"), [expected]);
+    await screen.findByTestId("select-skills");
+    // await selectEvent(screen.getByLabelText(/selectSkills/), expected);
+    await selectEvent(screen.getByTestId("select-skills"), expected);
 
     const container = screen.getByTestId("display-skills").children.item(3);
     expect(container).to.contains.text(expected);

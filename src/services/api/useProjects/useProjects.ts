@@ -31,7 +31,7 @@ export default function useProjects(): APIResponse<Project[]> & ProjectActions {
         ...projectResponse,
         data: [...projectResponse.data, { ...project, id }],
       };
-    });
+    }, false);
   }, []);
 
   const updateProject = useCallback(async (project: Project) => {
@@ -47,7 +47,7 @@ export default function useProjects(): APIResponse<Project[]> & ProjectActions {
           p.id === project.id ? project : p,
         ),
       };
-    });
+    }, false);
   }, []);
 
   return {
