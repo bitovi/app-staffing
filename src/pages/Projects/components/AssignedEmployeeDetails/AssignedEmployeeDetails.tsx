@@ -25,6 +25,11 @@ export default function AssignedEmployeeDetails({
   const updateEmployee = (newName: string) => {
     const newEmployee = employees?.find(({ name }) => name === newName);
 
+    if (!newEmployee) {
+      // @Todo: Handle error
+      return;
+    }
+
     changeEmployee(assignedEmployee.id, {
       ...assignedEmployee,
       ...newEmployee,
@@ -38,9 +43,9 @@ export default function AssignedEmployeeDetails({
           defaultValue={assignedEmployee.name}
           onChange={({ target }) => updateEmployee(target.value)}
         >
-          {possibleOtherEmployees.map((e) => (
-            <option value={e.name} key={e.id}>
-              {e.name}
+          {possibleOtherEmployees.map(({ id, name }) => (
+            <option value={name} key={id}>
+              {name}
             </option>
           ))}
         </select>

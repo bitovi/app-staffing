@@ -5,7 +5,7 @@ import type {
   SkillName,
 } from "../../../../services/api";
 
-import cloneDeep from "lodash.clonedeep";
+import { cloneDeep } from "lodash";
 
 import { skillList, useEmployees } from "../../../../services/api";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";

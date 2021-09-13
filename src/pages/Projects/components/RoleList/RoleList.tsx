@@ -1,6 +1,6 @@
 import type { Role, Project } from "../../../../services/api";
 
-import cloneDeep from "lodash.clonedeep";
+import { cloneDeep } from "lodash";
 
 import { skillList } from "../../../../services/api";
 import RoleDetails from "../RoleDetails";
