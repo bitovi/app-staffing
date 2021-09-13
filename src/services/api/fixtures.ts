@@ -1,137 +1,85 @@
-import type { Project, SkillName } from ".";
-import { skillList } from ".";
+import type { Employee, Skill, Role } from "./shared";
 
-const [react, angular, devops, node, ux, design] = skillList;
+import faker from "faker";
 
-export const employees = [
-  {
-    id: "11",
-    avatar:
-      "https://images.pexels.com/photos/937481/pexels-photo-937481.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Tom",
-    title: "Software Developer",
-    startDate: "08/19/2021",
-    endDate: "12/12/2021",
-    skills: [
-      { name: react as SkillName },
-      { name: node as SkillName },
-      { name: devops as SkillName },
-      { name: angular as SkillName },
-      { name: design as SkillName },
-      { name: ux as SkillName },
-    ],
-    available: false,
-  },
-  {
-    id: "12",
-    avatar:
-      "https://images.pexels.com/photos/937483/pexels-photo-937483.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Sally",
-    title: "Software Developer",
-    startDate: "06/01/2021",
-    endDate: "08/18/2021",
-    skills: [
-      { name: react as SkillName },
-      { name: node as SkillName },
-      { name: devops as SkillName },
-      { name: angular as SkillName },
-      { name: design as SkillName },
-      { name: ux as SkillName },
-    ],
-    available: false,
-  },
-  {
-    id: "13",
-    avatar:
-      "https://st4.depositphotos.com/13193658/19840/i/600/depositphotos_198409160-stock-photo-handsome-young-businessman-smartphone-leaning.jpg",
-    name: "Paul",
-    title: "Visual Designer",
-    startDate: "08/19/2021",
-    endDate: "12/12/2021",
-    skills: [
-      { name: react as SkillName },
-      { name: node as SkillName },
-      { name: devops as SkillName },
-      { name: angular as SkillName },
-      { name: design as SkillName },
-      { name: ux as SkillName },
-    ],
-    available: false,
-  },
-  {
-    id: "14",
-    avatar:
-      "https://images.pexels.com/photos/2381069/pexels-photo-2381069.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Stephanie",
-    title: "UX",
-    startDate: "08/19/2021",
-    endDate: "12/12/2021",
-    skills: [
-      { name: react as SkillName },
-      { name: node as SkillName },
-      { name: devops as SkillName },
-      { name: angular as SkillName },
-      { name: design as SkillName },
-      { name: ux as SkillName },
-    ],
-    available: true,
-  },
+import { skillList } from "./shared";
+import { AssignedEmployee, Project } from ".";
+
+faker.seed(0);
+
+let id = 0;
+export function makeEmployee(employee?: Partial<Employee>): Employee {
+  const startDate = faker.date.past();
+
+  const skills: Skill[] = faker.random
+    .arrayElements(skillList, faker.datatype.number(3) + 1)
+    .map((name) => ({ name }));
+
+  return {
+    id: `${++id}`,
+    name: faker.name.findName(),
+    startDate: startDate.toISOString(),
+    skills,
+
+    ...employee,
+  };
+}
+
+export const employees: Employee[] = [
+  makeEmployee(),
+  makeEmployee(),
+  makeEmployee(),
+  makeEmployee(),
+  makeEmployee(),
 ];
 
-export const projects = [...Array(7).keys()].map((n) => {
+let roleId = 100;
+export function makeRole(role?: Partial<Role>): Role {
+  const startDate = {
+    date: faker.date.past().toISOString(),
+    confidence: `${faker.datatype.number({ min: 0, max: 100 })}%`,
+  };
+
+  const endDate = {
+    date: faker.date.past().toISOString(),
+    confidence: `${faker.datatype.number({ min: 0, max: 100 })}%`,
+  };
+
+  const assignedEmployees: AssignedEmployee[] = faker.random
+    .arrayElements(employees, faker.datatype.number(2) + 1)
+    .map((employee) => ({
+      ...employee,
+      assignmentStartDate: faker.date.past().toISOString(),
+      assignmnetEndDate: faker.datatype.boolean()
+        ? faker.date.future().toISOString()
+        : undefined,
+    }));
+
   return {
-    id: (100 + n).toString(),
-    name: [
-      "Acme Corporation",
-      "Globex Corporation",
-      "Soylent Corp",
-      "Initech",
-      "Umbrella Corporation",
-      "Hooli",
-      "Massive Dynamic",
-    ][n],
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
-    roles: [
-      {
-        id: (1000 + n).toString(),
-        skill: { name: ux as SkillName },
-        startDate: {
-          confidence: "60%",
-          date: "2014-02-09",
-        },
-        endDate: { confidence: "50%", date: "2014-02-10" },
-        employees: [
-          {
-            ...employees[0],
-            assignmentStartDate: "2014-02-09",
-            assignmnetEndDate: "2014-02-10",
-          },
-        ],
-      },
-      {
-        id: (2000 + n).toString(),
-        skill: { name: react as SkillName },
-        startDate: {
-          confidence: "70%",
-          date: "2014-02-19",
-        },
-        endDate: { confidence: "80%", date: "2014-02-20" },
-        employees: [
-          {
-            ...employees[1],
-            assignmentStartDate: "2014-02-19",
-            assignmnetEndDate: "2014-02-20",
-          },
-          {
-            ...employees[2],
-            assignmentStartDate: "2014-02-19",
-          },
-          {
-            ...employees[3],
-          },
-        ],
-      },
-    ],
-  } as Project;
-});
+    id: `${++roleId}`,
+    skill: { name: faker.random.arrayElement(skillList) },
+    startDate,
+    endDate,
+    employees: assignedEmployees,
+
+    ...role,
+  };
+}
+
+let projectId = 1000;
+export function makeProject(project?: Partial<Project>): Project {
+  return {
+    id: `${++projectId}`,
+    name: faker.name.jobDescriptor(),
+    description: faker.lorem.sentences(4),
+    roles: [makeRole(), makeRole(), makeRole()],
+    ...project,
+  };
+}
+
+export const projects = [
+  makeProject(),
+  makeProject(),
+  makeProject(),
+  makeProject(),
+];

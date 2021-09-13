@@ -29,12 +29,9 @@ export default function RoleDetails({
     return {
       id: Math.floor(Math.random() * 1000).toString(),
       name: "unassigned",
-      avatar: "",
-      title: "",
       startDate: "",
       endDate: "",
       skills: [],
-      available: true,
     };
   };
 
