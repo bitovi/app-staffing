@@ -16,7 +16,11 @@ type Cell = {
  * Can contain plain text or a component.
  *
  */
-export function Cell({ align, className, children }: Cell): JSX.Element {
+export function Cell({
+  align = "left",
+  className,
+  children,
+}: Cell): JSX.Element {
   return (
     <div
       className={classnames(
