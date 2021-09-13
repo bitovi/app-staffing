@@ -22,7 +22,8 @@
     "root": true,
     "extends": "@hmudesign",
     "rules": {
-      "jsx-a11y/no-onchange": "off"
+      "jsx-a11y/no-onchange": "off",
+      "@typescript-eslint/no-explicit-any": 0
     },
     "overrides": [
       {

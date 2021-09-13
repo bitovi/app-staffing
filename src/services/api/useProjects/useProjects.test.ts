@@ -4,7 +4,7 @@ import useProjects from "./useProjects";
 import { projects } from "../fixtures";
 import { NewProject } from "../shared";
 
-describe("useEmployees", () => {
+describe("useProjects", () => {
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useProjects());
     expect(result.current.data).toBe(undefined);

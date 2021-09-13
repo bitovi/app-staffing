@@ -34,7 +34,7 @@ export default [
 
     if (index > -1) {
       employees[index] = employee;
-      return res(ctx.status(202));
+      return res(ctx.status(200), ctx.json({ data: employee }));
     }
 
     return res(
@@ -66,7 +66,8 @@ export default [
 
     if (index > -1) {
       projects[index] = project;
-      return res(ctx.status(202));
+
+      return res(ctx.status(200), ctx.json({ data: project }));
     }
 
     return res(

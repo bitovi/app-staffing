@@ -1,10 +1,7 @@
 import type { Project } from "..";
 import type { APIResponse, NewProject } from "../shared";
 
-import useSWR, { mutate } from "swr";
-import { useCallback } from "react";
-
-import { fetcher } from "../shared";
+import useRest from "../useRest";
 
 interface ProjectActions {
   addProject: (project: NewProject) => Promise<string>;
@@ -15,58 +12,61 @@ const projectPath = "/v1/projects";
 
 /** Hook for getting a list of the projects */
 export default function useProjects(): APIResponse<Project[]> & ProjectActions {
-  const { data: response, error } = useSWR<{ data: Project[] }, Error>(
-    projectPath,
-    fetcher,
-  );
+  const { data, error, isLoading, useAdd, useUpdate } =
+    useRest<Project>(projectPath);
 
-  const addProject = useCallback(
-    async (project: NewProject): Promise<string> => {
-      let newId = "";
+  // const { data: response, error } = useSWR<{ data: Project[] }, Error>(
+  //   projectPath,
+  //   (url) => fetcher("GET", url),
+  // );
 
-      await mutate(
-        projectPath,
-        async (projectResponse: { data: Project[] }) => {
-          const { data: id } = await fetch(projectPath, {
-            method: "POST",
-            body: JSON.stringify(project),
-          }).then((res) => res.json());
+  // const addProject = useCallback(
+  //   async (project: NewProject): Promise<string> => {
+  //     let newId = "";
 
-          newId = id;
+  //     await mutate(
+  //       projectPath,
+  //       async (projectResponse: { data: Project[] }) => {
+  //         const { data: id } = await fetch(projectPath, {
+  //           method: "POST",
+  //           body: JSON.stringify(project),
+  //         }).then((res) => res.json());
 
-          return {
-            ...projectResponse,
-            data: [...projectResponse.data, { ...project, id }],
-          };
-        },
-      );
+  //         newId = id;
 
-      return newId;
-    },
-    [],
-  );
+  //         return {
+  //           ...projectResponse,
+  //           data: [...projectResponse.data, { ...project, id }],
+  //         };
+  //       },
+  //     );
 
-  const updateProject = useCallback(async (project: Project) => {
-    await mutate(projectPath, async (projectResponse: { data: Project[] }) => {
-      await fetch(projectPath, {
-        method: "PUT",
-        body: JSON.stringify(project),
-      });
+  //     return newId;
+  //   },
+  //   [],
+  // );
 
-      return {
-        ...projectResponse,
-        data: projectResponse.data.map((p) =>
-          p.id === project.id ? project : p,
-        ),
-      };
-    });
-  }, []);
+  // const updateProject = useCallback(async (project: Project) => {
+  //   await mutate(projectPath, async (projectResponse: { data: Project[] }) => {
+  //     await fetch(projectPath, {
+  //       method: "PUT",
+  //       body: JSON.stringify(project),
+  //     });
+
+  //     return {
+  //       ...projectResponse,
+  //       data: projectResponse.data.map((p) =>
+  //         p.id === project.id ? project : p,
+  //       ),
+  //     };
+  //   });
+  // }, []);
 
   return {
-    data: response?.data,
-    isLoading: !response && !error,
+    data,
+    isLoading,
     error,
-    addProject,
-    updateProject,
+    addProject: useAdd,
+    updateProject: useUpdate,
   };
 }

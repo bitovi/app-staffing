@@ -4,7 +4,7 @@ import useEmployees from "./useEmployees";
 import { employees } from "../fixtures";
 import { skillList } from "../shared";
 
-const [react, angular] = skillList;
+const [react] = skillList;
 
 describe("useEmployees", () => {
   it("works", async () => {
@@ -20,17 +20,16 @@ describe("useEmployees", () => {
     const { result } = renderHook(() => useEmployees());
 
     const employee = {
-      avatar:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       name: "test",
-      title: "arch wizard",
       startDate: "01/01/2021",
       endDate: "01/01/2022",
       skills: [{ name: react }],
-      available: true,
     };
 
-    await act(() => result.current.addEmployee(employee));
+    await act(async () => {
+      await result.current.addEmployee(employee);
+    });
+
     const id = employees.find(({ name }) => name === employee.name)?.id;
     const newEmployee = { ...employee, id };
 
@@ -43,16 +42,11 @@ describe("useEmployees", () => {
   it("update an employee", async () => {
     const { result } = renderHook(() => useEmployees());
 
+    expect(result.current.data).toEqual(employees);
+
     const employee = {
-      id: "11",
-      avatar:
-        "https://images.pexels.com/photos/937481/pexels-photo-937481.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-      name: "Tom2",
-      title: "Software Developer",
-      startDate: "08/19/2021",
-      endDate: "12/12/2021",
-      skills: [{ name: react }, { name: angular }],
-      available: false,
+      ...employees[0],
+      name: "FAKE NAME",
     };
 
     await act(() => result.current.updateEmployee(employee));

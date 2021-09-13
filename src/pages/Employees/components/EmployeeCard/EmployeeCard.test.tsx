@@ -4,23 +4,12 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
-import { Employee, skillList } from "../../../../services/api";
+import type { Employee } from "../../../../services/api";
 
 import EmployeeCard from "./EmployeeCard";
+import { employees } from "../../../../services/api/fixtures";
 
-const [react, , devops, node, ,] = skillList;
-
-const employee: Employee = {
-  id: "1",
-  avatar:
-    "https://images.pexels.com/photos/937481/pexels-photo-937481.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  name: "Tom",
-  title: "Software Developer",
-  startDate: "08/19/2021",
-  endDate: "12/12/2021",
-  skills: [{ name: react }, { name: node }, { name: devops }],
-  available: false,
-};
+const employee: Employee = employees[0];
 
 describe("Components/Layout", () => {
   it("works", () => {
@@ -58,7 +47,7 @@ describe("Components/Layout", () => {
     const container = screen.getByTestId("name");
     userEvent.type(container, "2");
 
-    expect(container).to.have.value("Tom2");
+    expect(container).to.have.value(employee.name + "2");
   });
 
   it("should add a skill", () => {

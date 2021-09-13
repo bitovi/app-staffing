@@ -55,12 +55,12 @@ export interface Project {
 
 export type NewProject = Omit<Project, "id">;
 
-/**
- * A fetcher function for the `useSWR` hook.
- *
- * @param url The url to request
- * @returns the JSON formatted response
- */
-export function fetcher<T>(url: string): Promise<T> {
-  return fetch(url).then((response) => response.json());
+export function fetcher<T>(
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  url: string,
+  body?: Record<string, any>,
+): Promise<T> {
+  return fetch(url, { method, body: JSON.stringify(body) }).then((response) =>
+    response.json(),
+  );
 }
