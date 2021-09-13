@@ -1,11 +1,13 @@
+.wrapper {
+  border: 2px solid #e5e5e5;
+  padding: 1em;
+  margin: 0.5em 0;
+}
+
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 1em;
-  border: 2px solid #e5e5e5;
-  width: 800px;
-  padding: 1em;
-  margin: 0.5em 0;
+  grid-gap: 16px;
 }
 
 .projectName {

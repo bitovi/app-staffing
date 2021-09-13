@@ -96,17 +96,18 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           {skills.map(({ name }) => (
             <li key={name} className={styles.skill}>
               {name}
-              <Button
-                disabled={!editing}
-                className={styles.removeSkillButton}
-                onClick={() => handleRemoveSkill(name)}
-                onKeyDown={() => handleRemoveSkill(name)}
-                tabIndex={-1}
-                variant="link"
-                data-testid="remove-skill"
-              >
-                <XIcon width="0.75em" height="0.75em" />
-              </Button>
+              {editing && (
+                <Button
+                  className={styles.removeSkillButton}
+                  onClick={() => handleRemoveSkill(name)}
+                  onKeyDown={() => handleRemoveSkill(name)}
+                  tabIndex={-1}
+                  variant="link"
+                  data-testid="remove-skill"
+                >
+                  <XIcon width="0.75em" height="0.75em" />
+                </Button>
+              )}
             </li>
           ))}
         </ul>
@@ -125,24 +126,21 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
           Billable?
           <input type="checkbox" />
         </label>
-        <div>
-          <Button
-            disabled={!editing}
-            onClick={handleCancel}
-            onKeyDown={handleCancel}
-          >
-            CANCEL
-          </Button>
-          <Button
-            disabled={!editing}
-            className={styles.save}
-            variant="primary"
-            onClick={() => onSave(employee)}
-            onKeyDown={() => onSave(employee)}
-          >
-            SAVE
-          </Button>
-        </div>
+        {editing && (
+          <div>
+            <Button onClick={handleCancel} onKeyDown={handleCancel}>
+              CANCEL
+            </Button>
+            <Button
+              className={styles.save}
+              variant="primary"
+              onClick={() => onSave(employee)}
+              onKeyDown={() => onSave(employee)}
+            >
+              SAVE
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
