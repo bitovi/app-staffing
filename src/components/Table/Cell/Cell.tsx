@@ -6,6 +6,7 @@ import styles from "./Cell.module.scss";
 type Cell = {
   className?: string;
   children?: ReactNode;
+  align?: "left" | "center" | "right";
 };
 
 /**
@@ -15,6 +16,24 @@ type Cell = {
  * Can contain plain text or a component.
  *
  */
-export function Cell({ className, children }: Cell): JSX.Element {
-  return <div className={classnames(styles.cell, className)}>{children}</div>;
+export function Cell({
+  align = "left",
+  className,
+  children,
+}: Cell): JSX.Element {
+  return (
+    <div
+      className={classnames(
+        styles.cell,
+        {
+          [styles.alignLeft]: align === "left",
+          [styles.alignCenter]: align === "center",
+          [styles.alignRight]: align === "right",
+        },
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
 }

@@ -8,6 +8,7 @@ import type {
 import { cloneDeep } from "lodash";
 
 import { skillList, useEmployees } from "../../../../services/api";
+import { Button } from "../../../../components/Layout/components/Button";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
 import RoleDate from "../RoleDate";
 
@@ -120,7 +121,7 @@ export default function RoleDetails({
             possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
           />
         ))}
-      <button
+      <Button
         onClick={() =>
           editRole({
             ...role,
@@ -129,8 +130,8 @@ export default function RoleDetails({
         }
       >
         Add Another Team Member
-      </button>
-      <button onClick={() => deleteRole(role)}>Delete</button>
+      </Button>
+      <Button onClick={() => deleteRole(role)}>Delete</Button>
     </div>
   );
 }
