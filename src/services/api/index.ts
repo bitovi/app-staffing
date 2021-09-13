@@ -7,6 +7,7 @@ export type {
   Project,
   SkillName,
   AssignedEmployee,
+  ResponseStatus,
 } from "./shared";
 
 export { skillList } from "./shared";

@@ -8,7 +8,7 @@ import { useProjects } from "../../../services/api";
 import styles from "./Projects.module.scss";
 
 export default function Projects(): JSX.Element {
-  const { data: projects, addProject } = useProjects();
+  const { projects, addProject } = useProjects();
   const history = useHistory();
 
   const addNewProject = async () => {

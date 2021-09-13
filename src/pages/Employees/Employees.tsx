@@ -12,7 +12,7 @@ import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 import { Button } from "../../components/Layout/components/Button";
 
 export default function Employees(): JSX.Element {
-  const { data: employees, addEmployee, updateEmployee } = useEmployees();
+  const { employees, addEmployee, updateEmployee } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);

@@ -7,11 +7,11 @@ export default {
 } as Meta<{ id: string }>;
 
 export const Basic: Story<{ id: string }> = (args) => {
-  const { data } = useProjects();
+  const { projects } = useProjects();
 
   return (
     <ul>
-      {data?.map(({ id, name }) => (
+      {projects?.map(({ id, name }) => (
         <li key={id}>{name}</li>
       ))}
     </ul>

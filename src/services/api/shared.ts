@@ -1,5 +1,8 @@
-export interface APIResponse<T> {
+export interface APIResponse<T> extends ResponseStatus {
   data?: T;
+}
+
+export interface ResponseStatus {
   isLoading: boolean;
   error?: Error;
 }

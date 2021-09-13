@@ -1,7 +1,7 @@
 import { useEmployees } from "../../services/api";
 
 export default function Hello({ name }: { name: string }): JSX.Element {
-  const { data: employees } = useEmployees();
+  const { employees } = useEmployees();
 
   return (
     <div>

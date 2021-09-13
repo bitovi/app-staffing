@@ -1,31 +1,42 @@
 import type { NewEmployee, Employee, Skill } from "..";
-import type { APIResponse } from "../shared";
+import type { ResponseStatus } from "../shared";
 
 import { useCallback } from "react";
 
-import { employees } from "../fixtures";
 import useRest from "../useRest";
 
 interface EmployeeActions {
+  employees?: Employee[];
   addEmployee: (employee: NewEmployee) => Promise<string>;
   updateEmployee: (employee: Employee) => Promise<void>;
   getEmployeesWithSkill: (skill: Skill) => Employee[];
 }
 
 /** Hook for getting a list of the employees */
-export default function useEmployees(): APIResponse<Employee[]> &
-  EmployeeActions {
-  const { data, error, isLoading, useAdd, useUpdate } =
-    useRest<Employee>("/v1");
+export default function useEmployees(): ResponseStatus & EmployeeActions {
+  const {
+    data: employees,
+    error,
+    isLoading,
+    useAdd,
+    useUpdate,
+  } = useRest<Employee>("/v1");
 
-  const getEmployeesWithSkill = useCallback((_skill: Skill): Employee[] => {
-    return employees.filter(({ skills }) =>
-      skills.map(({ name }) => name).includes(_skill.name),
-    );
-  }, []);
+  const getEmployeesWithSkill = useCallback(
+    (_skill: Skill): Employee[] => {
+      if (!employees) {
+        return [];
+      }
+
+      return employees.filter(({ skills }) =>
+        skills.map(({ name }) => name).includes(_skill.name),
+      );
+    },
+    [employees],
+  );
 
   return {
-    data,
+    employees,
     isLoading,
     error,
     addEmployee: useAdd,

@@ -9,11 +9,11 @@ const [react] = skillList;
 describe("useEmployees", () => {
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useEmployees());
-    expect(result.current.data).toBe(undefined);
+    expect(result.current.employees).toBe(undefined);
 
     await waitForNextUpdate();
 
-    expect(result.current.data).toEqual(employees);
+    expect(result.current.employees).toEqual(employees);
   });
 
   it("adds an employee", async () => {
@@ -33,7 +33,7 @@ describe("useEmployees", () => {
     const id = employees.find(({ name }) => name === employee.name)?.id;
     const newEmployee = { ...employee, id };
 
-    expect(result.current.data).toEqual(employees);
+    expect(result.current.employees).toEqual(employees);
     expect(employees.find(({ id }) => id === newEmployee.id)).toEqual(
       newEmployee,
     );
@@ -42,7 +42,7 @@ describe("useEmployees", () => {
   it("update an employee", async () => {
     const { result } = renderHook(() => useEmployees());
 
-    expect(result.current.data).toEqual(employees);
+    expect(result.current.employees).toEqual(employees);
 
     const employee = {
       ...employees[0],
@@ -51,7 +51,7 @@ describe("useEmployees", () => {
 
     await act(() => result.current.updateEmployee(employee));
 
-    expect(result.current.data).toEqual(employees);
+    expect(result.current.employees).toEqual(employees);
     expect(employees.find(({ id }) => id === employee.id)).toEqual(employee);
   });
 });
