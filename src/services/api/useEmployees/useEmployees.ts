@@ -1,14 +1,16 @@
-import type { NewEmployee, Employee } from "..";
+import type { NewEmployee, Employee, Skill } from "..";
 import type { APIResponse } from "../shared";
 
 import useSWR, { mutate } from "swr";
 import { useCallback } from "react";
 
 import { fetcher } from "../shared";
+import { employees } from "../fixtures";
 
 interface EmployeeActions {
   addEmployee: (employee: NewEmployee) => Promise<void>;
   updateEmployee: (employee: Employee) => Promise<void>;
+  getEmployeesWithSkill: (skill: Skill) => Employee[];
 }
 
 const employeePath = "/v1";
@@ -57,11 +59,18 @@ export default function useEmployees(): APIResponse<Employee[]> &
     );
   }, []);
 
+  const getEmployeesWithSkill = useCallback((_skill: Skill): Employee[] => {
+    return employees.filter(({ skills }) =>
+      skills.map(({ name }) => name).includes(_skill.name),
+    );
+  }, []);
+
   return {
     data: response?.data,
     isLoading: !response && !error,
     error,
     addEmployee,
     updateEmployee,
+    getEmployeesWithSkill,
   };
 }

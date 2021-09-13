@@ -8,11 +8,17 @@ import { useProjects } from "../../../services/api";
 import styles from "./Projects.module.scss";
 
 export default function Projects(): JSX.Element {
-  const { data: projects } = useProjects();
+  const { data: projects, addProject } = useProjects();
   const history = useHistory();
 
-  const addNewProject = () => {
-    /** @Todo */
+  const addNewProject = async () => {
+    const newProjectId = await addProject({
+      name: "New Project",
+      description: "click to edit",
+      roles: [],
+    });
+
+    history.push(`/${newProjectId}`);
   };
 
   const editProject = (project: Project) => {

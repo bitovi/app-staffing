@@ -16,7 +16,7 @@ describe("Pages/Projects/components/RoleDetails", () => {
       />,
     );
 
-    expect(screen.getByText("Role:")).toBeInTheDocument();
+    expect(screen.getByText("Role")).toBeInTheDocument();
   });
 
   it("fires onBlur/onChange", async () => {
@@ -34,20 +34,13 @@ describe("Pages/Projects/components/RoleDetails", () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(role.employee?.name || "Error")).toBeVisible();
+      expect(
+        screen.queryByText(role.employees[0].name || "Error"),
+      ).toBeVisible();
     });
 
     fireEvent.change(await screen.getByDisplayValue(role.skill.name));
     expect(onEditMock).toHaveBeenCalledTimes(1);
-
-    fireEvent.change(await screen.getByDisplayValue(role.employee?.name || ""));
-    expect(onEditMock).toHaveBeenCalledTimes(2);
-
-    fireEvent.blur(await screen.getByLabelText("Start Date:"));
-    expect(onEditMock).toHaveBeenCalledTimes(3);
-
-    fireEvent.blur(await screen.getByLabelText("End Date:"));
-    expect(onEditMock).toHaveBeenCalledTimes(4);
 
     fireEvent.click(await screen.getByText("Delete"));
     expect(onDeleteMock).toHaveBeenCalled();

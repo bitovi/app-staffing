@@ -1,11 +1,10 @@
 .dateContainer {
-  :first-child {
-    margin-bottom: 0.5em;
-  }
+  display: flex;
 }
 
 .roleContainer {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   width: 100%;
   border-top: 1px solid #c4c4c4;
@@ -32,9 +31,4 @@
   button {
     align-self: flex-end;
   }
-}
-
-.roleGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }

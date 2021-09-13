@@ -39,9 +39,6 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
       ...formData,
       skills: skills.filter((x) => x.name != skillName),
     }));
-
-    // eslint-disable-next-line no-console
-    console.log("remove skill button clicked!");
   };
 
   const handleCancel = () => {

@@ -1,11 +1,18 @@
-import type { Role, SkillName } from "../../../../services/api";
+import type {
+  AssignedEmployee,
+  Employee,
+  Role,
+  SkillName,
+} from "../../../../services/api";
 
-import React from "react";
+import { cloneDeep } from "lodash";
 
 import { skillList, useEmployees } from "../../../../services/api";
+import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
+import { Button } from "../../../../components/Layout/components/Button";
+import RoleDate from "../RoleDate";
 
 import styles from "./RoleDetails.module.scss";
-import { Button } from "../../../../components/Layout/components/Button";
 
 export default function RoleDetails({
   role,
@@ -16,70 +23,115 @@ export default function RoleDetails({
   editRole: (role: Role) => void;
   deleteRole: (role: Role) => void;
 }): JSX.Element {
-  const { data: employees } = useEmployees();
+  const { data: employees, getEmployeesWithSkill } = useEmployees();
 
-  const updateRole = ({ currentTarget }: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = currentTarget;
+  const createUnassignedEmployee = (): AssignedEmployee => {
+    return {
+      id: Math.floor(Math.random() * 1000).toString(),
+      name: "unassigned",
+      avatar: "",
+      title: "",
+      startDate: "",
+      endDate: "",
+      skills: [],
+      available: true,
+    };
+  };
 
-    editRole({ ...role, [name]: value });
+  const createEmployeeChoices = (
+    assignedEmployee: AssignedEmployee,
+  ): Employee[] => {
+    const { assignmentStartDate, assignmnetEndDate, ...employee } =
+      assignedEmployee;
+
+    // This list consists of the current assigned employees and any other
+    // employee which has the skill but isn't already assigned
+    return [
+      employee,
+      ...getEmployeesWithSkill(role.skill).filter(
+        (possibleEmployee) =>
+          !role.employees.map(({ id }) => id).includes(possibleEmployee.id),
+      ),
+    ];
+  };
+
+  const editAssignedEmployee = (assignedEmployee: AssignedEmployee) => {
+    const employees = cloneDeep(role.employees);
+    const index = employees.findIndex(({ id }) => id === assignedEmployee.id);
+
+    employees[index] = assignedEmployee;
+
+    editRole({
+      ...role,
+      employees,
+    });
+  };
+
+  const changeAssignedEmployee = (
+    previousId: string,
+    newAssignedEmployee: AssignedEmployee,
+  ) => {
+    const employees = cloneDeep(role.employees);
+    const index = employees.findIndex(({ id }) => id === previousId);
+
+    employees[index] = newAssignedEmployee;
+
+    editRole({
+      ...role,
+      employees,
+    });
   };
 
   return (
     <div className={styles.roleContainer}>
-      <div>
-        <div>Role:</div>
-        <select
-          onChange={({ target }) =>
-            editRole({ ...role, skill: { name: target.value as SkillName } })
-          }
-          defaultValue={role.skill.name}
-        >
-          {skillList.map((name) => (
-            <option key={name} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-        <div className={styles.roleGrid}></div>
-      </div>
+      <div>Role</div>
+      <select
+        disabled={role.employees.length > 0}
+        onChange={({ target }) =>
+          editRole({ ...role, skill: { name: target.value as SkillName } })
+        }
+        defaultValue={role.skill.name}
+      >
+        {skillList.map((name) => (
+          <option key={name + role.id} value={name}>
+            {name}
+          </option>
+        ))}
+      </select>
       <div className={styles.dateContainer}>
-        <label>
-          Start Date:
-          <input
-            defaultValue={role.startDate}
-            name="startDate"
-            onBlur={updateRole}
-          />
-        </label>
-        <label>
-          End Date:
-          <input
-            defaultValue={role.endDate}
-            name="endDate"
-            onBlur={updateRole}
-          />
-        </label>
+        <RoleDate
+          title="Start Date"
+          estimatedDate={role.startDate}
+          onChange={(startDate) => editRole({ ...role, startDate })}
+        />
+        <RoleDate
+          title="End Date"
+          estimatedDate={role.endDate}
+          onChange={(endDate) => editRole({ ...role, endDate })}
+        />
       </div>
-      {role.employee && employees && (
-        <select
-          onChange={({ target }) => {
-            editRole({
-              ...role,
-              employee: employees.find(({ name }) => name === target.value),
-            });
-          }}
-          defaultValue={role.employee.name}
-        >
-          {employees.map((e, idx) => (
-            <option value={e.name} key={e.id + idx}>
-              {e.name}
-            </option>
-          ))}
-        </select>
-      )}
-      <div>
-        <Button onClick={() => deleteRole(role)}>Delete</Button>
-      </div>
+      Assigned Employees
+      {employees &&
+        role.employees.map((assignedEmployee, index) => (
+          <AssignedEmployeeDetails
+            key={assignedEmployee.id + role.id + index}
+            assignedEmployee={assignedEmployee}
+            onChange={editAssignedEmployee}
+            changeEmployee={changeAssignedEmployee}
+            possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
+          />
+        ))}
+      <Button
+        onClick={() =>
+          editRole({
+            ...role,
+            employees: [...role.employees, createUnassignedEmployee()],
+          })
+        }
+      >
+        Add Another Team Member
+      </Button>
+      <Button onClick={() => deleteRole(role)}>Delete</Button>
     </div>
   );
 }

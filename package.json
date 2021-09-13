@@ -70,8 +70,8 @@
     ]
   },
   "dependencies": {
-    "@testing-library/react-hooks": "^7.0.1",
     "classnames": "^2.3.1",
+    "lodash": "^4.17.21",
     "msw": "^0.34.0",
     "node-sass": "^6.0.1",
     "react": "^17.0.2",
@@ -91,10 +91,12 @@
     "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
+    "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^12.8.3",
     "@types/chai": "^4.2.21",
     "@types/chai-dom": "0.0.10",
     "@types/jest": "^26.0.24",
+    "@types/lodash": "^4.14.172",
     "@types/node": "^12.20.19",
     "@types/react": "^17.0.18",
     "@types/react-dom": "^17.0.9",

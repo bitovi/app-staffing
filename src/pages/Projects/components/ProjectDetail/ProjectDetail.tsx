@@ -1,5 +1,7 @@
-import { Button } from "../../../../components/Layout/components/Button";
 import type { Project } from "../../../../services/api";
+
+import { Button } from "../../../../components/Layout/components/Button";
+
 import styles from "./ProjectDetail.module.scss";
 
 export default function Projects({

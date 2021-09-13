@@ -1,6 +1,7 @@
 .dateContainer {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   > * {
     padding-bottom: 1em;
     margin-right: 1em;

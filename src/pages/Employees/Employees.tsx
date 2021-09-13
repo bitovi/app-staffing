@@ -25,8 +25,6 @@ export default function Employees(): JSX.Element {
   };
 
   const handleEditCancel = () => {
-    // eslint-disable-next-line no-console
-    console.log("CANCELING!");
     setIdBeingEdited(undefined);
   };
 
@@ -36,8 +34,6 @@ export default function Employees(): JSX.Element {
   };
 
   const handleAddCancel = () => {
-    // eslint-disable-next-line no-console
-    console.log("CANCELING!");
     setIsAdding(false);
   };
 

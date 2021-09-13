@@ -6,6 +6,7 @@ export type {
   Role,
   Project,
   SkillName,
+  AssignedEmployee,
 } from "./shared";
 
 export { skillList } from "./shared";

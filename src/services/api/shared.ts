@@ -32,12 +32,17 @@ export interface Skill {
   name: SkillName;
 }
 
+export interface AssignedEmployee extends Employee {
+  assignmentStartDate?: string;
+  assignmnetEndDate?: string;
+}
+
 export interface Role {
   id: string;
   skill: Skill;
-  startDate: string;
-  endDate: string;
-  employee?: Employee;
+  startDate: EstimatedDate;
+  endDate: EstimatedDate;
+  employees: AssignedEmployee[];
 }
 
 export interface EstimatedDate {
@@ -48,8 +53,6 @@ export interface EstimatedDate {
 export interface NewProject {
   name: string;
   description: string;
-  startDate: EstimatedDate;
-  endDate: EstimatedDate;
   roles: Role[];
 }
 

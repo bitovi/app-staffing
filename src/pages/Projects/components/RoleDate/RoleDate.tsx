@@ -1,8 +1,8 @@
 import type { EstimatedDate } from "../../../../services/api/shared";
 
-import styles from "./ProjectDate.module.scss";
+import styles from "./RoleDate.module.scss";
 
-export default function ProjectDate({
+export default function RoleDate({
   title,
   estimatedDate,
   onChange,
@@ -16,6 +16,7 @@ export default function ProjectDate({
       <label>
         {title}
         <input
+          type="date"
           defaultValue={estimatedDate.date}
           onBlur={(e) => {
             onChange({ ...estimatedDate, date: e.target.value });
