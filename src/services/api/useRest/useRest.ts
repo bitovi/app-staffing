@@ -44,12 +44,16 @@ function useRest<T extends { id: string }>(path: string): RestActions<T> {
   >(
     async (updatedCollectionItem: Partial<T>) => {
       await mutate(path, async (updateResponse: { data: T[] }) => {
-        await fetcher<Promise<T>>("PUT", path, updatedCollectionItem);
+        const updatedItem = await fetcher<Promise<T>>(
+          "PUT",
+          path,
+          updatedCollectionItem,
+        );
 
         return {
           ...updateResponse,
           data: updateResponse.data.map((item) =>
-            item.id === updatedCollectionItem.id ? updatedCollectionItem : item,
+            item.id === updatedItem.id ? updatedItem : item,
           ),
         };
       });

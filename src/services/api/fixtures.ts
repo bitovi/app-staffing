@@ -70,7 +70,7 @@ let projectId = 1000;
 export function makeProject(project?: Partial<Project>): Project {
   return {
     id: `${++projectId}`,
-    name: faker.name.jobDescriptor(),
+    name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,
     description: faker.lorem.sentences(4),
     roles: [makeRole(), makeRole(), makeRole()],
     ...project,
