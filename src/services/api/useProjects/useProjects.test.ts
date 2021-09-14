@@ -4,14 +4,14 @@ import useProjects from "./useProjects";
 import { projects } from "../fixtures";
 import { NewProject } from "../shared";
 
-describe("useEmployees", () => {
+describe("useProjects", () => {
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useProjects());
-    expect(result.current.data).toBe(undefined);
+    expect(result.current.projects).toBe(undefined);
 
     await waitForNextUpdate();
 
-    expect(result.current.data).toEqual(projects);
+    expect(result.current.projects).toEqual(projects);
   });
 
   it("adds a project", async () => {
@@ -30,7 +30,7 @@ describe("useEmployees", () => {
     const id = projects.find(({ name }) => name === newProject.name)?.id;
     const newProjectWithId = { ...newProject, id };
 
-    expect(result.current.data).toEqual(projects);
+    expect(result.current.projects).toEqual(projects);
     expect(projects.find(({ id }) => id === newProjectWithId.id)).toEqual(
       newProjectWithId,
     );
@@ -48,7 +48,7 @@ describe("useEmployees", () => {
 
     await act(() => result.current.updateProject(editedProject));
 
-    expect(result.current.data).toEqual(projects);
+    expect(result.current.projects).toEqual(projects);
     expect(projects.find(({ id }) => id === editedProject.id)).toEqual(
       editedProject,
     );

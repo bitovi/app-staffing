@@ -11,7 +11,7 @@ import styles from "./ProjectDetail.module.scss";
 
 export default function ProjectDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>();
-  const { data: projects, updateProject } = useProjects();
+  const { projects, updateProject } = useProjects();
 
   const [projectData, setProjectData] = useState<Project | undefined>(
     projects?.find((p) => p.id === id),

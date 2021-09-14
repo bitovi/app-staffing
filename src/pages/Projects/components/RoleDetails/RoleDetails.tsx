@@ -8,8 +8,8 @@ import type {
 import { cloneDeep } from "lodash";
 
 import { skillList, useEmployees } from "../../../../services/api";
-import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
 import { Button } from "../../../../components/Layout/components/Button";
+import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
 import RoleDate from "../RoleDate";
 
 import styles from "./RoleDetails.module.scss";
@@ -23,18 +23,15 @@ export default function RoleDetails({
   editRole: (role: Role) => void;
   deleteRole: (role: Role) => void;
 }): JSX.Element {
-  const { data: employees, getEmployeesWithSkill } = useEmployees();
+  const { employees, getEmployeesWithSkill } = useEmployees();
 
   const createUnassignedEmployee = (): AssignedEmployee => {
     return {
       id: Math.floor(Math.random() * 1000).toString(),
       name: "unassigned",
-      avatar: "",
-      title: "",
       startDate: "",
       endDate: "",
       skills: [],
-      available: true,
     };
   };
 

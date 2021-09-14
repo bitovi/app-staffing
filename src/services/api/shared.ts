@@ -1,22 +1,21 @@
-export interface APIResponse<T> {
+export interface APIResponse<T> extends ResponseStatus {
   data?: T;
+}
+
+export interface ResponseStatus {
   isLoading: boolean;
   error?: Error;
 }
 
-export interface NewEmployee {
-  avatar: string;
+export interface Employee {
+  id: string;
   name: string;
-  title: string;
   startDate: string;
-  endDate: string;
+  endDate?: string;
   skills: Skill[];
-  available: boolean;
 }
 
-export interface Employee extends NewEmployee {
-  id: string;
-}
+export type NewEmployee = Omit<Employee, "id">;
 
 export const skillList = [
   "React",
@@ -50,22 +49,21 @@ export interface EstimatedDate {
   confidence: string;
 }
 
-export interface NewProject {
+export interface Project {
+  id: string;
   name: string;
   description: string;
   roles: Role[];
 }
 
-export interface Project extends NewProject {
-  id: string;
-}
+export type NewProject = Omit<Project, "id">;
 
-/**
- * A fetcher function for the `useSWR` hook.
- *
- * @param url The url to request
- * @returns the JSON formatted response
- */
-export function fetcher<T>(url: string): Promise<T> {
-  return fetch(url).then((response) => response.json());
+export function fetcher<T>(
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  url: string,
+  body?: Record<string, any>,
+): Promise<T> {
+  return fetch(url, { method, body: JSON.stringify(body) }).then((response) =>
+    response.json(),
+  );
 }
