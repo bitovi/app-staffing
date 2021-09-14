@@ -122,10 +122,6 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
         )}
       </div>
       <div className={styles.controls}>
-        <label>
-          Billable?
-          <input type="checkbox" />
-        </label>
         {editing && (
           <div>
             <Button onClick={handleCancel} onKeyDown={handleCancel}>
