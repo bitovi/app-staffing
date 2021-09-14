@@ -1,6 +1,8 @@
+import type { APIResponse } from "../shared";
+
 import { useCallback } from "react";
 import useSWR, { mutate } from "swr";
-import { APIResponse, fetcher } from "../shared";
+import { fetcher } from "../shared";
 
 interface RestActions<T> extends APIResponse<T[]> {
   useAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
