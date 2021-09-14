@@ -30,7 +30,7 @@ export const skillList = [
 export type SkillName = typeof skillList[number];
 
 export function isSkillName(skill: string): skill is SkillName {
-  return skillList.some(s => s === skill)
+  return skillList.some((s) => s === skill);
 }
 
 export interface Skill {

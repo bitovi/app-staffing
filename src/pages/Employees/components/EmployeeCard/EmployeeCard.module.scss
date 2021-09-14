@@ -57,10 +57,11 @@
 }
 
 .skills {
+  flex: 2 1;
   padding-top: 10px;
 
   span.label {
-    font-size: x-small;
+    font-size: small;
   }
 
   ul {
@@ -69,6 +70,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    margin-bottom: 16px;
 
     .skill {
       position: relative;
@@ -76,7 +78,7 @@
       background-color: rgb(237, 237, 237);
       width: 100px;
       padding: 8px;
-      margin: auto 1em;
+      margin: 4px 8px;
       text-align: center;
       font-size: small;
 
@@ -90,6 +92,7 @@
 }
 
 .controls {
+  flex: 1 1;
   display: flex;
   flex-direction: column;
   margin-left: auto;
@@ -99,10 +102,4 @@
   .save {
     margin-left: 1em;
   }
-}
-
-.addSkill {
-  margin-top: 5px;
-  width: 100px;
-  border-radius: 5px;
 }

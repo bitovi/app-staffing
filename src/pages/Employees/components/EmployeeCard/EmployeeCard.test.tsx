@@ -8,7 +8,6 @@ import userEvent from "@testing-library/user-event";
 import { Employee, skillList } from "../../../../services/api";
 
 import EmployeeCard from "./EmployeeCard";
-import { fireEvent } from "@testing-library/dom";
 
 const [react, , devops, node, ,] = skillList;
 
@@ -78,9 +77,7 @@ describe("Components/EmployeeCard", () => {
     );
 
     const expected = "Angular";
-    await screen.findByTestId("select-skills");
-    // await selectEvent(screen.getByLabelText(/selectSkills/), expected);
-    await selectEvent(screen.getByTestId("select-skills"), expected);
+    await selectEvent(screen.getByLabelText(/Add skill/), expected);
 
     const container = screen.getByTestId("display-skills").children.item(3);
     expect(container).to.contains.text(expected);

@@ -19,7 +19,7 @@ export default function RoleDetails({
   role: Role;
   editRole: (role: Role) => void;
   deleteRole: (role: Role) => void;
-}): JSX.Element {
+}): JSX.Element | null {
   const { data: employees } = useEmployees();
 
   const updateRole = ({ currentTarget }: React.FormEvent<HTMLInputElement>) => {
@@ -27,6 +27,10 @@ export default function RoleDetails({
 
     editRole({ ...role, [name]: value });
   };
+
+  if (!employees) {
+    return null;
+  }
 
   return (
     <div className={styles.roleContainer}>
@@ -77,9 +81,9 @@ export default function RoleDetails({
             });
           }}
           value={role.employee.name}
-          options={employees.map((e) => ({
-            label: e.name,
-            value: e.name,
+          options={employees.map(({ name }) => ({
+            label: name || "Paul",
+            value: name,
           }))}
         />
       )}

@@ -5,6 +5,7 @@ import styles from "./Select.module.scss";
 
 interface SelectProps {
   "data-testid"?: string;
+  className?: string;
   name: string;
   label: string;
   value?: string;
@@ -16,6 +17,7 @@ interface SelectProps {
 }
 
 export function Select({
+  className,
   name,
   label,
   value,
@@ -26,7 +28,7 @@ export function Select({
   const activeOption = options.find((option) => option.value === value);
 
   return (
-    <label data-testid={restOfProps["data-testid"]}>
+    <label data-testid={restOfProps["data-testid"]} className={className}>
       <div className={styles.label}>{label}</div>
       <ReactSelect
         className={styles.select}

@@ -117,8 +117,9 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
         </ul>
         {editing && (
           <Select
+            className={styles.addSkill}
             data-testid="select-skills"
-            label="selectSkills"
+            label="Add skill"
             name="selectSkills"
             onChange={handleAddSkill}
             options={skillList
