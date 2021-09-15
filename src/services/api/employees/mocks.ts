@@ -1,21 +1,63 @@
 import type { NewEmployee, Employee } from "./interfaces";
 
 import { rest } from "msw";
+import QueryLogic, { Filter } from "can-query-logic";
 
 import { employees } from "./fixtures";
 
+type ApiResponse<D = undefined, M = undefined> = {
+  data?: D;
+  metadata?: M;
+  error?: string;
+};
+
+type QueriableList<T> = {
+  filter: Filter<T>;
+  sort: string;
+  page?: number;
+  count?: number;
+};
+
+const queryLogic = new QueryLogic<Employee>({
+  identity: ["id"],
+  keys: {
+    id: "string",
+    name: "string",
+    startDate: "string",
+    endDate: "string",
+    skills: "string",
+  },
+});
+
 export default [
-  rest.get("/v1", (req, res, ctx) => {
-    const sort = req.url.searchParams.get("sort");
+  rest.get<
+    undefined,
+    ApiResponse<Employee[], { total: number }>,
+    QueriableList<Employee>
+  >("/v1", (req, res, ctx) => {
+    const { filter, sort, page = 1, count = 25 } = req.params;
+
+    const { data, count: total } = queryLogic.filterMembersAndGetCount(
+      {
+        filter,
+        sort,
+        page: {
+          start: (page - 1) * count,
+          end: page * count - 1,
+        },
+      },
+      {},
+      employees,
+    );
 
     return res(
       ctx.status(200),
       ctx.json({
-        data: employees.sort((lhs, rhs) =>
-          sort === "desc"
-            ? rhs.name.localeCompare(lhs.name)
-            : lhs.name.localeCompare(rhs.name),
-        ),
+        data,
+        metadata: {
+          total,
+          pages: Math.ceil(total / count),
+        },
       }),
     );
   }),
