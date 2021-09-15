@@ -1,5 +1,5 @@
-import type { Project } from "..";
-import type { ResponseStatus, NewProject } from "../shared";
+import type { Project, NewProject } from "../projects";
+import type { ResponseStatus } from "../shared";
 
 import useRest from "../useRest";
 

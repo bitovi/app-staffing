@@ -1,7 +1,7 @@
 import { renderHook, act } from "@testing-library/react-hooks";
 
 import useEmployees from "./useEmployees";
-import { employees } from "../fixtures";
+import { employees } from "../employees/fixtures";
 import { skillList } from "../shared";
 
 const [react] = skillList;

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { projects } from "../../../../services/api/fixtures";
 
+import { projects } from "../../../../services/api/projects/fixtures";
 import RoleDetails from "./RoleDetails";
 
 describe("Pages/Projects/components/RoleDetails", () => {
