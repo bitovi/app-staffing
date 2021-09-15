@@ -1,13 +1,12 @@
+import type { Employee } from "../../../../services/api";
+
 import { render, screen } from "@testing-library/react";
 import { expect } from "chai";
-
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
-import type { Employee } from "../../../../services/api";
-
 import EmployeeCard from "./EmployeeCard";
-import { employees } from "../../../../services/api/fixtures";
+import { employees } from "../../../../services/api/employees/fixtures";
 
 const employee: Employee = employees[0];
 

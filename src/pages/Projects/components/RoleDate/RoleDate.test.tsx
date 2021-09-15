@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { projects } from "../../../../services/api/fixtures";
 
+import { projects } from "../../../../services/api/projects/fixtures";
 import RoleDate from "./RoleDate";
 
 describe.only("Pages/Projects/components/RoleDates", () => {

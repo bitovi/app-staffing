@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 
 import ListProjects from "./ListProjects";
-import { projects } from "../../../../services/api/fixtures";
+import { projects } from "../../../../services/api/projects/fixtures";
 
 describe("Components/Layout", () => {
   it("works", () => {

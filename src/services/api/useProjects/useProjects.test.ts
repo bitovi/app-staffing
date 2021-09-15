@@ -1,8 +1,8 @@
 import { renderHook, act } from "@testing-library/react-hooks";
 
 import useProjects from "./useProjects";
-import { projects } from "../fixtures";
-import { NewProject } from "../shared";
+import { projects } from "../projects/fixtures";
+import { NewProject } from "../projects";
 
 describe("useProjects", () => {
   it("works", async () => {

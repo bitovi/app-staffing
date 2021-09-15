@@ -1,4 +1,4 @@
-import type { EstimatedDate } from "../../../../services/api/shared";
+import type { EstimatedDate } from "../../../../services/api";
 
 import styles from "./RoleDate.module.scss";
 

@@ -1,37 +1,12 @@
-import type { Employee, Skill, Role } from "./shared";
+import type { AssignedEmployee } from "../employees";
+import type { Project, Role } from "./interfaces";
 
 import faker from "faker";
 
-import { skillList } from "./shared";
-import { AssignedEmployee, Project } from ".";
+import { skillList } from "../shared";
+import { employees } from "../employees/fixtures";
 
 faker.seed(0);
-
-let id = 0;
-export function makeEmployee(employee?: Partial<Employee>): Employee {
-  const startDate = faker.date.past();
-
-  const skills: Skill[] = faker.random
-    .arrayElements(skillList, faker.datatype.number(3) + 1)
-    .map((name) => ({ name }));
-
-  return {
-    id: `${++id}`,
-    name: faker.name.findName(),
-    startDate: startDate.toISOString(),
-    skills,
-
-    ...employee,
-  };
-}
-
-export const employees: Employee[] = [
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-];
 
 let roleId = 100;
 export function makeRole(role?: Partial<Role>): Role {

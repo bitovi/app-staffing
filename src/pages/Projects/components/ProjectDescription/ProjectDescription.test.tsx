@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { projects } from "../../../../services/api/fixtures";
 
+import { projects } from "../../../../services/api/projects/fixtures";
 import ProjectDescription from "./ProjectDescription";
 
 describe.only("Pages/Projects/components/ProjectDescriptions", () => {

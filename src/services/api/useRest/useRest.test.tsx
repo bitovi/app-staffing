@@ -3,7 +3,7 @@ import type { Employee } from "..";
 import { renderHook, act } from "@testing-library/react-hooks";
 
 import useRest from "./useRest";
-import { employees } from "../fixtures";
+import { employees } from "../employees/fixtures";
 import { skillList } from "../shared";
 
 const [react] = skillList;

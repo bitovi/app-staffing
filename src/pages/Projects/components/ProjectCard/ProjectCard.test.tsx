@@ -1,10 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { expect } from "chai";
-
 import { MemoryRouter } from "react-router-dom";
 
 import ProjectCard from "./ProjectCard";
-import { projects } from "../../../../services/api/fixtures";
+import { projects } from "../../../../services/api/projects/fixtures";
 
 const project = projects[0];
 
