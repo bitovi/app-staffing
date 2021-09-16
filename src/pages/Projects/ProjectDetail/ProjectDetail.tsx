@@ -7,8 +7,6 @@ import ProjectDescription from "../components/ProjectDescription";
 import RoleList from "../components/RoleList";
 import { useProjects } from "../../../services/api";
 
-import styles from "./ProjectDetail.module.scss";
-
 export default function ProjectDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const { projects, updateProject } = useProjects();
@@ -28,15 +26,13 @@ export default function ProjectDetail(): JSX.Element {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
-        {projectData && (
-          <>
-            <ProjectDescription onEdit={onSave} project={projectData} />
-            <RoleList onEdit={onSave} project={projectData} />
-          </>
-        )}
-      </div>
+    <div>
+      {projectData && (
+        <>
+          <ProjectDescription onEdit={onSave} project={projectData} />
+          <RoleList onEdit={onSave} project={projectData} />
+        </>
+      )}
     </div>
   );
 }
