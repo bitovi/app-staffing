@@ -25,9 +25,7 @@ export function makeRole(role?: Partial<Role>): Role {
     .map((employee) => ({
       ...employee,
       assignmentStartDate: faker.date.past().toISOString(),
-      assignmnetEndDate: faker.datatype.boolean()
-        ? faker.date.future().toISOString()
-        : undefined,
+      assignmentEndDate: faker.date.future().toISOString(),
     }));
 
   return {

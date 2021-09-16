@@ -1,8 +1,7 @@
-import type { NewEmployee, Employee } from "./interfaces";
-import type { MockResponse, QueriableList } from "../shared";
+import type { Employee } from "./interfaces";
 
-import { rest } from "msw";
 import QueryLogic from "can-query-logic";
+import localStore from "can-local-store";
 
 import { employees } from "./fixtures";
 import { DateString } from "../shared";
@@ -19,4 +18,16 @@ const queryLogic = new QueryLogic<Employee>({
   },
 });
 
-export default [...requestCreator("/employees", employees, queryLogic)];
+const store = localStore<Employee>({ queryLogic, name: "employees" });
+
+export default [...requestCreator("/employees", store)];
+
+async function loadEmployees(): Promise<void> {
+  await store.updateListData(employees);
+}
+
+async function clearEmployees(): Promise<void> {
+  await store.clear();
+}
+
+export const employeeStoreManager = { loadEmployees, clearEmployees };

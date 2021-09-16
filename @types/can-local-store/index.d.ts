@@ -28,12 +28,18 @@ declare module "can-local-store" {
     [key in keyof T]?: T[key] | Array<T[key]> | PropertyFilter<T[key]>;
   };
 
+  export type CanLocalStore<T> = {
+    getData(baseId: { id: string }): Promise<?T>;
+    getListData(query: Query<T>): Promise<{ data: T[]; count: number }>;
+    createData(data: T): Promise<T>;
+    updateData(data: Partial<T> & { id: string }): Promise<?T>;
+    updateListData(data: T[]): Promise<Array<T>>;
+    destroyData(data: T): Promise<T>;
+    clear(): Promise<void>;
+  };
+
   export default function localStore<T extends BaseT>(connection: {
     queryLogic: any;
     name: string;
-  }): {
-    getData(id: string): ?T;
-    getListData(query: Query<T>): { data: T[]; count: number };
-    updateListData(data: T[]): void;
-  };
+  }): CanLocalStore<T>;
 }
