@@ -11,7 +11,7 @@ const [react] = skillList;
 describe("useRest", () => {
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/v1"),
+      useRest<Employee>("/api/v1/employees"),
     );
     expect(result.current.data).toBe(undefined);
 
@@ -21,7 +21,7 @@ describe("useRest", () => {
   });
 
   it("adds", async () => {
-    const { result } = renderHook(() => useRest<Employee>("/v1"));
+    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
 
     const employee = {
       name: "test",
@@ -44,7 +44,7 @@ describe("useRest", () => {
   });
 
   it("updates", async () => {
-    const { result } = renderHook(() => useRest<Employee>("/v1"));
+    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
 
     expect(result.current.data).toEqual(employees);
 
@@ -53,7 +53,7 @@ describe("useRest", () => {
       name: "FAKE NAME",
     };
 
-    await act(() => result.current.useUpdate(employee));
+    await act(() => result.current.useUpdate(employee.id, employee));
 
     expect(result.current.data).toEqual(employees);
     expect(employees.find(({ id }) => id === employee.id)).toEqual(employee);

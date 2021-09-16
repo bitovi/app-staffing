@@ -101,6 +101,7 @@
     "@types/faker": "^5.5.8",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^12.20.19",
     "@types/react": "^17.0.18",
     "@types/react-dom": "^17.0.9",

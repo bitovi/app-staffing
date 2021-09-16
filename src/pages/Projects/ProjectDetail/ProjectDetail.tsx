@@ -24,7 +24,7 @@ export default function ProjectDetail(): JSX.Element {
   }, [projects, id]);
 
   const onSave = (project: Project) => {
-    updateProject(project);
+    updateProject(project.id, project);
   };
 
   return (
