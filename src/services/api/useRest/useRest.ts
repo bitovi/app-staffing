@@ -21,6 +21,8 @@ function useRest<T extends { id: string }>(path: string): RestActions<T> {
     (newCollectionItem: Omit<T, "id">) => Promise<string>
   >(
     async (newCollectionItem: Omit<T, "id">) => {
+      console.log(newCollectionItem);
+
       let newId = "";
       await mutate(path, async (addResponse: { data: T[] }) => {
         const { data: newItem } = await fetcher<{ data: T }>(

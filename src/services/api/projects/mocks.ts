@@ -12,7 +12,14 @@ const queryLogic = new QueryLogic<Project>({
     id: "string",
     name: "string",
     description: "string",
-    roles: "string",
+    roles: {
+      type: "list",
+      values: {
+        keys: {
+          id: "string",
+        },
+      },
+    },
   },
 });
 
@@ -28,4 +35,12 @@ async function clearProjects(): Promise<void> {
   await store.clear();
 }
 
-export const projectStoreManager = { loadProjects, clearProjects };
+async function dataIsLoaded(): Promise<boolean> {
+  return store.getListData().then(({ data }) => data.length > 0);
+}
+
+export const projectStoreManager = {
+  loadProjects,
+  clearProjects,
+  dataIsLoaded,
+};

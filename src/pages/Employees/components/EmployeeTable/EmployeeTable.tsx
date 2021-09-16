@@ -37,14 +37,10 @@ export default function EmployeeTable({
         {isAdding && (
           <EmployeeCard
             employee={{
-              avatar:
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
               name: "",
-              title: "",
               startDate: "01/01/2021",
               endDate: "",
               skills: [],
-              available: true,
             }}
             editing
             onSave={onAdd}

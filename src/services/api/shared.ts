@@ -65,5 +65,12 @@ export function fetcher<T>(
   url: string,
   body?: any,
 ): Promise<T> {
-  return fetch(url, { method, body }).then((response) => response.json());
+  console.log(body);
+  return fetch(url, {
+    method,
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
 }
