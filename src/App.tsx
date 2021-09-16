@@ -10,11 +10,13 @@ import "./App.scss";
 const Hello = lazy(() => import("./pages/Hello"));
 const Employees = lazy(() => import("./pages/Employees"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const DataLoader = lazy(() => import("./components/DataLoader"));
 
 export default function App(): JSX.Element {
   return (
     <Layout>
       <Suspense fallback={<Loading />}>
+        <DataLoader />
         <Switch>
           <Route path="/" exact>
             <Dashboard />

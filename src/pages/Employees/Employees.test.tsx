@@ -1,10 +1,19 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { employees } from "../../services/api/employees/fixtures";
+import { employeeStoreManager } from "../../services/api/employees/mocks";
 
 import Employees from "./Employees";
 
 describe("Pages/Employees", () => {
+  beforeEach(async () => {
+    await employeeStoreManager.loadEmployees();
+  });
+
+  afterEach(async () => {
+    await employeeStoreManager.clearEmployees();
+  });
+
   it("works", async () => {
     render(<Employees />);
     expect(screen.getByText("Team")).toBeInTheDocument();

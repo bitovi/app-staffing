@@ -14,7 +14,18 @@ const queryLogic = new QueryLogic<Employee>({
     name: "string",
     startDate: DateString,
     endDate: DateString,
-    skills: "string",
+    // skills: {
+    //   type: "list",
+    //   values: {
+    //     keys: {
+    //       id: "string",
+    //       name: "string",
+    //     },
+    //   },
+    //   keys: {
+    //     count: "number",
+    //   },
+    // },
   },
 });
 
@@ -30,4 +41,12 @@ async function clearEmployees(): Promise<void> {
   await store.clear();
 }
 
-export const employeeStoreManager = { loadEmployees, clearEmployees };
+async function dataIsLoaded(): Promise<boolean> {
+  return store.getListData().then(({ data }) => data.length > 0);
+}
+
+export const employeeStoreManager = {
+  loadEmployees,
+  clearEmployees,
+  dataIsLoaded,
+};
