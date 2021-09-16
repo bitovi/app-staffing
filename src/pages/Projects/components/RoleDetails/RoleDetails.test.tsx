@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { employeeStoreManager } from "../../../../services/api/employees/mocks";
+import { select as selectEvent } from "react-select-event";
 
 import { projects } from "../../../../services/api/projects/fixtures";
 import RoleDetails from "./RoleDetails";
@@ -48,10 +49,10 @@ describe("Pages/Projects/components/RoleDetails", () => {
       ).toBeVisible();
     });
 
-    fireEvent.change(await screen.getByDisplayValue(role.skill.name));
+    await selectEvent(screen.getByLabelText(/Role/), "React");
     expect(onEditMock).toHaveBeenCalledTimes(1);
 
-    fireEvent.click(await screen.getByText("Delete"));
+    fireEvent.click(await screen.getByText(/Delete/));
     expect(onDeleteMock).toHaveBeenCalled();
   });
 });
