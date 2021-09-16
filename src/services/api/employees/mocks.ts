@@ -1,43 +1,11 @@
 import type { NewEmployee, Employee } from "./interfaces";
+import type { MockResponse, QueriableList } from "../shared";
 
 import { rest } from "msw";
-import QueryLogic, { Filter } from "can-query-logic";
+import QueryLogic from "can-query-logic";
 
 import { employees } from "./fixtures";
-
-type ApiResponse<D = undefined, M = undefined> = {
-  data?: D;
-  metadata?: M;
-  error?: string;
-};
-
-type QueriableList<T> = {
-  filter: Filter<T>;
-  sort: string;
-  page?: number;
-  count?: number;
-};
-
-class DateStringSet {
-  constructor(public value: string) {
-    this.value = value;
-  }
-  // used to convert to a number
-  valueOf(): number {
-    return new Date(this.value).getTime();
-  }
-
-  [Symbol.for("can.serialize")]() {
-    return this.value;
-  }
-}
-
-const DateString = {
-  [Symbol.for("can.new")]: function (v: string): string {
-    return v;
-  },
-  [Symbol.for("can.SetType")]: DateStringSet,
-};
+import { DateString } from "../shared";
 
 const queryLogic = new QueryLogic<Employee>({
   identity: ["id"],
@@ -51,7 +19,7 @@ const queryLogic = new QueryLogic<Employee>({
 });
 
 export default [
-  rest.get<undefined, ApiResponse<Employee>, { id: string }>(
+  rest.get<undefined, MockResponse<Employee>, { id: string }>(
     "/api/v1/employees/:id",
     (req, res, ctx) => {
       const id = req.params.id;
@@ -75,7 +43,7 @@ export default [
     },
   ),
 
-  rest.put<Partial<Employee>, ApiResponse<Employee>, { id: string }>(
+  rest.put<Partial<Employee>, MockResponse<Employee>, { id: string }>(
     "/api/v1/employees/:id",
     (req, res, ctx) => {
       const id = req.params.id;
@@ -102,7 +70,7 @@ export default [
     },
   ),
 
-  rest.delete<undefined, ApiResponse, { id: string }>(
+  rest.delete<undefined, MockResponse, { id: string }>(
     "/api/v1/employees/:id",
     (req, res, ctx) => {
       const id = req.params.id;
@@ -123,7 +91,7 @@ export default [
     },
   ),
 
-  rest.post<NewEmployee, ApiResponse<Employee>>(
+  rest.post<NewEmployee, MockResponse<Employee>>(
     "/api/v1/employees",
     (req, res, ctx) => {
       const id = (Math.floor(Math.random() * 1000) + 1).toString();
@@ -136,7 +104,7 @@ export default [
 
   rest.get<
     undefined,
-    ApiResponse<Employee[], { total: number }>,
+    MockResponse<Employee[], { total: number }>,
     QueriableList<Employee>
   >("/api/v1/employees", (req, res, ctx) => {
     const { filter, sort, page = 1, count = 25 } = req.params;
