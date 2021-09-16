@@ -1,5 +1,7 @@
 .dateContainer {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 32px;
 }
 
 .roleContainer {
@@ -30,5 +32,25 @@
   .button,
   button {
     align-self: flex-end;
+  }
+}
+
+.header {
+  width: calc(50% - 32px);
+  display: grid;
+  grid-template-rows: auto;
+  grid-row-gap: 32px;
+}
+
+.employees {
+  margin: 16px 0;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+
+  .button {
+    margin-left: 8px;
   }
 }
