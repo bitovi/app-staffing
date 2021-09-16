@@ -5,10 +5,19 @@ import { renderHook, act } from "@testing-library/react-hooks";
 import useRest from "./useRest";
 import { employees } from "../employees/fixtures";
 import { skillList } from "../shared";
+import { employeeStoreManager } from "../employees/mocks";
 
 const [react] = skillList;
 
 describe("useRest", () => {
+  beforeEach(async () => {
+    await employeeStoreManager.loadEmployees();
+  });
+
+  afterEach(async () => {
+    await employeeStoreManager.clearEmployees();
+  });
+
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useRest<Employee>("/api/v1/employees"),
@@ -30,23 +39,20 @@ describe("useRest", () => {
       skills: [{ name: react }],
     };
 
+    let id = "";
     await act(async () => {
-      await result.current.useAdd(employee);
+      id = await result.current.useAdd(employee);
     });
 
-    const id = employees.find(({ name }) => name === employee.name)?.id;
     const newEmployee = { ...employee, id };
 
-    expect(result.current.data).toEqual(employees);
-    expect(employees.find(({ id }) => id === newEmployee.id)).toEqual(
-      newEmployee,
-    );
+    expect(
+      result.current.data?.find(({ id }) => id === newEmployee.id),
+    ).toEqual(newEmployee);
   });
 
   it("updates", async () => {
     const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
-
-    expect(result.current.data).toEqual(employees);
 
     const employee = {
       ...employees[0],
@@ -55,7 +61,8 @@ describe("useRest", () => {
 
     await act(() => result.current.useUpdate(employee.id, employee));
 
-    expect(result.current.data).toEqual(employees);
-    expect(employees.find(({ id }) => id === employee.id)).toEqual(employee);
+    expect(result.current.data?.find(({ id }) => id === employee.id)).toEqual(
+      employee,
+    );
   });
 });

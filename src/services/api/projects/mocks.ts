@@ -1,7 +1,5 @@
-import type { NewProject, Project } from "./interfaces";
-import type { MockResponse, QueriableList } from "../shared";
+import type { Project } from "./interfaces";
 
-import { rest } from "msw";
 import QueryLogic from "can-query-logic";
 import localStore from "can-local-store";
 
@@ -19,6 +17,15 @@ const queryLogic = new QueryLogic<Project>({
 });
 
 const store = localStore<Project>({ queryLogic, name: "projects" });
-store.updateListData(projects);
 
-export default [...requestCreator("/projects", projects, queryLogic)];
+export default [...requestCreator("/projects", store)];
+
+async function loadProjects(): Promise<void> {
+  await store.updateListData(projects);
+}
+
+async function clearProjects(): Promise<void> {
+  await store.clear();
+}
+
+export const projectStoreManager = { loadProjects, clearProjects };
