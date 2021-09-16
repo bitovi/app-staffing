@@ -30,7 +30,7 @@ declare module "can-local-store" {
 
   export type CanLocalStore<T> = {
     getData(baseId: { id: string }): Promise<?T>;
-    getListData(query: Query<T>): Promise<{ data: T[]; count: number }>;
+    getListData(query?: Query<T>): Promise<{ data: T[]; count: number }>;
     createData(data: T): Promise<T>;
     updateData(data: Partial<T> & { id: string }): Promise<?T>;
     updateListData(data: T[]): Promise<Array<T>>;

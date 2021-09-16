@@ -94,7 +94,11 @@ export function requestCreator<Resource extends { id: string }>(
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
         const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
 
-        await store.createData(item);
+        console.dir({ b: req.body });
+
+        const a = await store.createData(item);
+
+        console.log(a);
 
         return res(ctx.status(201), ctx.json({ data: item }));
       },
