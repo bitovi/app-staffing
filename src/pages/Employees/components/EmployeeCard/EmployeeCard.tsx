@@ -1,65 +1,86 @@
-import type { NewEmployee, SkillName } from "../../../../services/api";
+import type { Employee, SkillName } from "../../../../services/api";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { isEqual } from "lodash";
 
 import { skillList } from "../../../../services/api";
-
+import { Select } from "../../../../components/Select";
 import { Button } from "../../../../components/Layout/components/Button";
-import styles from "./EmployeeCard.module.scss";
 
 import { ReactComponent as XIcon } from "./assets/X.svg";
+import styles from "./EmployeeCard.module.scss";
 
-export default function EmployeeCard<EmployeeType extends NewEmployee>({
+function useTimeout(callback: () => void, delay: number | null) {
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savedCallback = React.useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    const tick = () => savedCallback.current();
+    if (typeof delay === "number") {
+      timeoutRef.current = setTimeout(tick, delay);
+
+      return () => {
+        timeoutRef.current && window.clearTimeout(timeoutRef.current);
+      };
+    }
+  }, [delay]);
+
+  return timeoutRef;
+}
+
+export default function EmployeeCard<EmployeeType extends Employee>({
   employee,
-  editing,
-  onEdit,
   onSave,
-  onCancel,
 }: {
   employee: EmployeeType;
-  editing: boolean;
-  onEdit?: () => void;
   onSave: (employee: EmployeeType) => void;
-  onCancel: () => void;
 }): JSX.Element {
   const [formData, setFormData] = useState<EmployeeType>(employee);
-  const { name, startDate, endDate, skills } = formData;
+  const [hasFocus, setHasFocus] = useState<boolean>(false);
+  const handleFocus = () => setHasFocus(true);
+  const handleBlur = () => setHasFocus(false);
 
-  const handleAddSkill = (evt: React.ChangeEvent<HTMLSelectElement>) => {
-    const skill = evt.target.value;
+  useTimeout(
+    () => {
+      !isEqual(employee, formData) && onSave(formData);
+    },
+    hasFocus ? null : 300,
+  );
 
-    setFormData((formData) => ({
+  useEffect(() => {
+    setFormData(employee);
+  }, [employee]);
+
+  const handleAddSkill = (skillName: SkillName) => {
+    setFormData({
       ...formData,
-      skills: [...skills, { name: skill as SkillName }],
-    }));
+      skills: [...formData.skills, { name: skillName }],
+    });
   };
 
   const handleRemoveSkill = (skillName: string) => {
-    setFormData((formData) => ({
+    setFormData({
       ...formData,
-      skills: skills.filter((x) => x.name != skillName),
-    }));
-  };
-
-  const handleCancel = () => {
-    onCancel();
-    setFormData(employee);
+      skills: formData.skills.filter((x) => x.name != skillName),
+    });
   };
 
   const updateField = (evt: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = evt.currentTarget;
-    setFormData((formData) => ({ ...formData, [name]: value }));
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} onFocus={handleFocus} onBlur={handleBlur}>
       <div className={styles.details}>
         <input
           name="name"
           className={styles.name}
-          value={name}
-          aria-disabled={!editing}
-          onFocus={onEdit}
+          value={formData.name}
           onChange={updateField}
           data-testid="name"
         />
@@ -70,9 +91,7 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
             Start Date
             <input
               name="startDate"
-              value={startDate}
-              aria-disabled={!editing}
-              onFocus={onEdit}
+              value={formData.startDate}
               onChange={updateField}
             />
           </label>
@@ -82,9 +101,7 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
             End Date
             <input
               name="endDate"
-              value={endDate}
-              aria-disabled={!editing}
-              onFocus={onEdit}
+              value={formData.endDate}
               onChange={updateField}
             />
           </label>
@@ -93,50 +110,40 @@ export default function EmployeeCard<EmployeeType extends NewEmployee>({
       <div className={styles.skills}>
         <span className={styles.label}>Skills</span>
         <ul data-testid="display-skills">
-          {skills.map(({ name }) => (
+          {formData.skills.map(({ name }) => (
             <li key={name} className={styles.skill}>
               {name}
-              {editing && (
-                <Button
-                  className={styles.removeSkillButton}
-                  onClick={() => handleRemoveSkill(name)}
-                  onKeyDown={() => handleRemoveSkill(name)}
-                  tabIndex={-1}
-                  variant="link"
-                  data-testid="remove-skill"
-                >
-                  <XIcon width="0.75em" height="0.75em" />
-                </Button>
-              )}
+              <Button
+                className={styles.removeSkillButton}
+                onClick={() => handleRemoveSkill(name)}
+                onKeyDown={() => handleRemoveSkill(name)}
+                tabIndex={-1}
+                variant="link"
+                data-testid="remove-skill"
+              >
+                <XIcon width="0.75em" height="0.75em" />
+              </Button>
             </li>
           ))}
         </ul>
-        {editing && (
-          <select onChange={handleAddSkill} data-testid="select-skills">
-            {skillList.map((skill) => (
-              <option key={skill} value={skill}>
-                {skill}
-              </option>
-            ))}
-          </select>
-        )}
       </div>
       <div className={styles.controls}>
-        {editing && (
-          <div>
-            <Button onClick={handleCancel} onKeyDown={handleCancel}>
-              CANCEL
-            </Button>
-            <Button
-              className={styles.save}
-              variant="primary"
-              onClick={() => onSave(employee)}
-              onKeyDown={() => onSave(employee)}
-            >
-              SAVE
-            </Button>
-          </div>
-        )}
+        <Select
+          label="Add skills"
+          name="addSkills"
+          value=" "
+          onChange={handleAddSkill}
+          onFocus={handleFocus} // react-select will prevent the event from bubbling if this isn't set
+          data-testid="select-skills"
+          options={skillList
+            .filter(
+              (skill) =>
+                !formData.skills.some(
+                  (activeSkill) => activeSkill.name === skill,
+                ),
+            )
+            .map((skill) => ({ label: skill, value: skill }))}
+        />
       </div>
     </div>
   );

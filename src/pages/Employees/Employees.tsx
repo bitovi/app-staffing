@@ -1,54 +1,43 @@
-import type { NewEmployee, Employee } from "../../services/api";
+import type { Employee } from "../../services/api";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useEmployees } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 
 import styles from "./Employees.module.scss";
 
-import { ReactComponent as BellSVG } from "./assets/vectors/bell.svg";
-import { ReactComponent as GearSVG } from "./assets/vectors/gear.svg";
 import { Button } from "../../components/Layout/components/Button";
 
 export default function Employees(): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
-  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
-  const [isAdding, setIsAdding] = useState(false);
-  const [idBeingEdited, setIdBeingEdited] = useState<string>();
 
   const handleEditSave = async (employee: Employee) => {
-    await updateEmployee(employee); // @TODO: add a loading spinner to save button
-    setIdBeingEdited(undefined);
+    employee.name && (await updateEmployee(employee)); // @TODO: add a loading spinner to save button
   };
 
-  const handleEditCancel = () => {
-    setIdBeingEdited(undefined);
+  const handleAddEmployee = async () => {
+    await addEmployee({
+      name: "",
+      startDate: new Date().toLocaleString("en-US").split(",")[0],
+      endDate: "",
+      skills: [],
+    }); // @TODO: add a loading spinner to save button
   };
 
-  const handleAddSave = async (employee: NewEmployee) => {
-    await addEmployee(employee); // @TODO: add a loading spinner to save button
-    setIsAdding(false);
-  };
-
-  const handleAddCancel = () => {
-    setIsAdding(false);
-  };
-
-  useEffect(() => {
-    if (employees) {
-      if (filterValue) {
-        const filtered = employees.filter((e) =>
+  const filteredEmployees = (
+    filterValue
+      ? employees?.filter((e) =>
           e.name.toLowerCase().includes(filterValue.toLowerCase()),
-        );
-        setFilteredEmployees(filtered);
-      } else {
-        setFilteredEmployees(employees);
-      }
-    }
-  }, [filterValue, employees]);
+        )
+      : employees
+  )?.sort((employeeA, employeeB) =>
+    employeeA.name.split(" ").slice(-1) > employeeB.name.split(" ").slice(-1)
+      ? 1
+      : -1,
+  );
 
   return (
     <div className={styles.wrapper}>
@@ -61,31 +50,13 @@ export default function Employees(): JSX.Element {
             placeholder="Filter"
             className={styles.actionBarFilter}
           />
-          <Button
-            title="Notifications"
-            variant="link"
-            onClick={() => {
-              alert("NOTIFICATIONS");
-            }}
-          >
-            <BellSVG className={styles.icon} />
-          </Button>
-          <Button
-            title="Settings"
-            variant="link"
-            onClick={() => {
-              alert("SETTINGS");
-            }}
-          >
-            <GearSVG className={styles.icon} />
-          </Button>
         </div>
       </div>
       <div className={styles.row}>
         <Button
           variant="link"
           onClick={() => {
-            setIsAdding(true);
+            handleAddEmployee();
           }}
         >
           Add Team Member +
@@ -95,17 +66,11 @@ export default function Employees(): JSX.Element {
       {employees && employees.length === 0 && (
         <div className={styles.noResults}>NO DATA FOUND!</div>
       )}
-      {employees && employees.length && (
+      {filteredEmployees?.length && (
         <EmployeeTable
           filterValue={filterValue}
-          isAdding={isAdding}
           filteredEmployees={filteredEmployees}
-          idBeingEdited={idBeingEdited}
-          setIdBeingEdited={setIdBeingEdited}
-          onAdd={handleAddSave}
           onEdit={handleEditSave}
-          onAddCancel={handleAddCancel}
-          onEditCancel={handleEditCancel}
         />
       )}
     </div>
