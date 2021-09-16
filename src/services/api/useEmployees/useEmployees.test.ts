@@ -49,7 +49,7 @@ describe("useEmployees", () => {
       name: "FAKE NAME",
     };
 
-    await act(() => result.current.updateEmployee(employee));
+    await act(() => result.current.updateEmployee(employee.id, employee));
 
     expect(result.current.employees).toEqual(employees);
     expect(employees.find(({ id }) => id === employee.id)).toEqual(employee);

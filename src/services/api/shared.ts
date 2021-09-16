@@ -24,9 +24,7 @@ export interface Skill {
 export function fetcher<T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   url: string,
-  body?: Record<string, any>,
+  body?: any,
 ): Promise<T> {
-  return fetch(url, { method, body: JSON.stringify(body) }).then((response) =>
-    response.json(),
-  );
+  return fetch(url, { method, body }).then((response) => response.json());
 }

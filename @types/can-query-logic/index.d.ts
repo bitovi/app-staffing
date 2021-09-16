@@ -31,9 +31,10 @@ declare module "can-query-logic" {
   export default class QueryLogic<T extends BaseT> {
     constructor(schema: any);
 
+    filterMembersAndGetCount(queryA: Query<T>, allData: T[]);
     filterMembersAndGetCount(
       queryA: Query<T>,
-      queryB: Query<T>,
+      queryB?: Query<T>,
       allData: T[],
     ): {
       data: T[];

@@ -20,7 +20,7 @@ export default function Employees(): JSX.Element {
   const [idBeingEdited, setIdBeingEdited] = useState<string>();
 
   const handleEditSave = async (employee: Employee) => {
-    await updateEmployee(employee); // @TODO: add a loading spinner to save button
+    await updateEmployee(employee.id, employee); // @TODO: add a loading spinner to save button
     setIdBeingEdited(undefined);
   };
 

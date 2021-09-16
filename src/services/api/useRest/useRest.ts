@@ -6,7 +6,10 @@ import { fetcher } from "../shared";
 
 interface RestActions<T> extends APIResponse<T[]> {
   useAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
-  useUpdate: (updatedCollectionItem: Partial<T>) => Promise<void>;
+  useUpdate: (
+    collectionItemId: string,
+    updatedCollectionItem: Partial<T>,
+  ) => Promise<void>;
 }
 
 function useRest<T extends { id: string }>(path: string): RestActions<T> {
@@ -40,13 +43,16 @@ function useRest<T extends { id: string }>(path: string): RestActions<T> {
   );
 
   const useUpdate = useCallback<
-    (updatedCollectionItem: Partial<T>) => Promise<void>
+    (
+      collectionItemId: string,
+      updatedCollectionItem: Partial<T>,
+    ) => Promise<void>
   >(
-    async (updatedCollectionItem: Partial<T>) => {
+    async (collectionItemId: string, updatedCollectionItem: Partial<T>) => {
       await mutate(path, async (updateResponse: { data: T[] }) => {
         const updatedItem = await fetcher<Promise<T>>(
           "PUT",
-          path,
+          `${path}/${collectionItemId}`,
           updatedCollectionItem,
         );
 

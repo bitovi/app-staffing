@@ -4,7 +4,7 @@ import { rest } from "msw";
 import { projects } from "./fixtures";
 
 export default [
-  rest.get("/v1/projects", (req, res, ctx) => {
+  rest.get("/api/v1/projects", (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -13,16 +13,17 @@ export default [
     );
   }),
 
-  rest.post("/v1/projects", (req, res, ctx) => {
-    const project: NewProject = JSON.parse(req.body as string);
+  rest.post("/api/v1/projects", (req, res, ctx) => {
+    /** @TODO add typing */
+    const project: NewProject = req.body as unknown as Project;
     const id = (Math.floor(Math.random() * 1000) + 1).toString();
     projects.push({ ...project, id });
 
     return res(ctx.status(201), ctx.json({ data: id }));
   }),
 
-  rest.put("/v1/projects", (req, res, ctx) => {
-    const project: Project = JSON.parse(req.body as string);
+  rest.put("/api/v1/projects/:id", (req, res, ctx) => {
+    const project: Project = req.body as unknown as Project;
     const index = projects.findIndex((x) => x.id === project.id);
 
     if (index > -1) {
