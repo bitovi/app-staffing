@@ -6,7 +6,10 @@ import useRest from "../useRest";
 interface ProjectActions {
   projects?: Project[];
   addProject: (project: NewProject) => Promise<string>;
-  updateProject: (project: Project) => Promise<void>;
+  updateProject: (
+    projectId: string,
+    project: Partial<Project>,
+  ) => Promise<void>;
 }
 
 /** Hook for getting a list of the projects */
@@ -17,7 +20,7 @@ export default function useProjects(): ResponseStatus & ProjectActions {
     isLoading,
     useAdd,
     useUpdate,
-  } = useRest<Project>("/v1/projects");
+  } = useRest<Project>("/api/v1/projects");
 
   return {
     projects,

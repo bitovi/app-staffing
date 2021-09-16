@@ -46,7 +46,9 @@ describe("useProjects", () => {
       roles: [],
     };
 
-    await act(() => result.current.updateProject(editedProject));
+    await act(() =>
+      result.current.updateProject(editedProject.id, editedProject),
+    );
 
     expect(result.current.projects).toEqual(projects);
     expect(projects.find(({ id }) => id === editedProject.id)).toEqual(

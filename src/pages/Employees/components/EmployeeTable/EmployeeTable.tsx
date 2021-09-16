@@ -11,7 +11,7 @@ export default function EmployeeTable({
 }: {
   filterValue?: string;
   filteredEmployees: Employee[];
-  onEdit: (employee: Employee) => void;
+  onEdit: (id: string, employee: Employee) => void;
 }): JSX.Element {
   if (!filteredEmployees.length) {
     return (
@@ -22,7 +22,11 @@ export default function EmployeeTable({
   return (
     <>
       {filteredEmployees.map((employee) => (
-        <EmployeeCard key={employee.id} employee={employee} onSave={onEdit} />
+        <EmployeeCard
+          key={employee.id}
+          employee={employee}
+          onSave={(editedEmployee) => onEdit(employee.id, editedEmployee)}
+        />
       ))}
     </>
   );

@@ -14,8 +14,8 @@ export default function Employees(): JSX.Element {
 
   const [filterValue, setFilterValue] = useState<string>();
 
-  const handleEditSave = async (employee: Employee) => {
-    employee.name && (await updateEmployee(employee)); // @TODO: add a loading spinner to save button
+  const handleEditSave = async (id: string, employee: Employee) => {
+    employee.name && (await updateEmployee(id, employee)); // @TODO: add a loading spinner to save button
   };
 
   const handleAddEmployee = async () => {

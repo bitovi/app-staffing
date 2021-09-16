@@ -8,7 +8,10 @@ import useRest from "../useRest";
 interface EmployeeActions {
   employees?: Employee[];
   addEmployee: (employee: NewEmployee) => Promise<string>;
-  updateEmployee: (employee: Employee) => Promise<void>;
+  updateEmployee: (
+    employeeId: string,
+    employee: Partial<Employee>,
+  ) => Promise<void>;
   getEmployeesWithSkill: (skill: Skill) => Employee[];
 }
 
@@ -20,7 +23,7 @@ export default function useEmployees(): ResponseStatus & EmployeeActions {
     isLoading,
     useAdd,
     useUpdate,
-  } = useRest<Employee>("/v1");
+  } = useRest<Employee>("/api/v1/employees");
 
   const getEmployeesWithSkill = useCallback(
     (_skill: Skill): Employee[] => {
