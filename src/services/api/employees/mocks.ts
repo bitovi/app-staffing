@@ -1,7 +1,6 @@
 import type { Employee } from "./interfaces";
 
 import QueryLogic from "can-query-logic";
-import localStore from "can-local-store";
 
 import { employees } from "./fixtures";
 import { DateString } from "../baseMocks";
