@@ -107,7 +107,7 @@ describe("useRest", () => {
     );
   });
 
-  it("does the param stuff", async () => {
+  it("filters, sorts, and paginates", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useRest<Employee>("/api/v1/employees", {
         filter: { id: { $lte: "3" } },

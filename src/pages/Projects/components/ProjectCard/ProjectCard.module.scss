@@ -5,20 +5,19 @@
 }
 
 .container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.projectNameWrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-bottom: black 3px solid;
 }
 
 .projectName {
-  display: flex;
-  align-items: flex-start;
-  div {
-    border-bottom: black 3px solid;
-    span {
-      font-weight: bold;
-    }
-  }
+  font-weight: bold;
 }
 
 .viewProject {

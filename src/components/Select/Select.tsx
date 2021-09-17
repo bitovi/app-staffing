@@ -33,7 +33,7 @@ export function Select({
 
   return (
     <label className={className}>
-      <div className={styles.label}>{label}</div>
+      {label && <div className={styles.label}>{label}</div>}
       <ReactSelect
         className={styles.select}
         classNamePrefix="react-select" // https://react-select.com/styles#using-classnames

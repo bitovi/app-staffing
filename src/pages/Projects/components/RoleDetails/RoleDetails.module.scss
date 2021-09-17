@@ -1,5 +1,7 @@
 .dateContainer {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 32px;
 }
 
 .roleContainer {
@@ -7,8 +9,8 @@
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  border-top: 1px solid #c4c4c4;
-  padding: 1em;
+  border-top: 2px solid #c4c4c4;
+  padding: 2em 1em;
 
   label,
   .label {
@@ -30,5 +32,27 @@
   .button,
   button {
     align-self: flex-end;
+  }
+}
+
+.header {
+  width: calc(50% - 32px);
+  display: grid;
+  grid-template-rows: auto;
+  grid-row-gap: 32px;
+}
+
+.employees {
+  margin: 16px 0;
+  border: 1px solid #c4c4c4;
+  padding: 16px 24px;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+
+  .button {
+    margin-left: 8px;
   }
 }
