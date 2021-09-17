@@ -17,12 +17,12 @@ class DateStringSet {
   constructor(public value: string) {
     this.value = value;
   }
-  // used to convert to a number
+
   valueOf(): number {
     return new Date(this.value).getTime();
   }
 
-  [Symbol.for("can.serialize")]() {
+  [Symbol.for("can.serialize")](): string {
     return this.value;
   }
 }

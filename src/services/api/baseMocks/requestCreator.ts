@@ -1,4 +1,5 @@
 import type { MockResponse, QueriableList } from "./interfaces";
+import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 
 import { rest } from "msw";
 import { CanLocalStore } from "can-local-store";
@@ -6,7 +7,7 @@ import { CanLocalStore } from "can-local-store";
 export default function requestCreator<Resource extends { id: string }>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
-) {
+): Array<RestHandler<MockedRequest<DefaultRequestBody>>> {
   const basePath = "/api/v1";
 
   return [

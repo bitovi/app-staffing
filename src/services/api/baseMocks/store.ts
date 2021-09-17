@@ -23,6 +23,9 @@ export default function createStore<Resource>(
       await store.clear();
     },
     dataIsLoaded: async () =>
-      store.getListData().then(({ data }) => data.length > 0),
+      store
+        .getListData()
+        .then(({ data }) => data.length > 0)
+        .catch((_) => false), // If the data isn't loaded the promise is rejected
   };
 }

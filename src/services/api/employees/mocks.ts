@@ -3,8 +3,7 @@ import type { Employee } from "./interfaces";
 import QueryLogic from "can-query-logic";
 
 import { employees } from "./fixtures";
-import { DateString } from "../baseMocks";
-import { createStore, requestCreator } from "../baseMocks";
+import { createStore, requestCreator, DateString } from "../baseMocks";
 
 const queryLogic = new QueryLogic<Employee>({
   identity: ["id"],
