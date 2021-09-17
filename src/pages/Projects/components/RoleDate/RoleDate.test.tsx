@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { select as selectEvent } from "react-select-event";
 
 import { projects } from "../../../../services/api/projects/fixtures";
 import RoleDate from "./RoleDate";
@@ -33,7 +34,7 @@ describe.only("Pages/Projects/components/RoleDates", () => {
     fireEvent.blur(await screen.findByLabelText("Start Date"));
     expect(change).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(await screen.findByLabelText("Confidence:"));
+    await selectEvent(screen.getByLabelText(/Confidence/), "50%");
     expect(change).toHaveBeenCalledTimes(2);
   });
 });

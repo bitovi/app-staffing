@@ -1,3 +1,4 @@
+import { Select } from "../../../../components/Select";
 import type { EstimatedDate } from "../../../../services/api";
 
 import styles from "./RoleDate.module.scss";
@@ -16,6 +17,7 @@ export default function RoleDate({
       <label>
         {title}
         <input
+          data-testid={`role-${title.replace(" ", "-").toLowerCase()}`}
           type="date"
           defaultValue={estimatedDate.date}
           onBlur={(e) => {
@@ -23,19 +25,18 @@ export default function RoleDate({
           }}
         />
       </label>
-      <label>
-        Confidence:
-        <select
-          defaultValue={estimatedDate.confidence}
-          onChange={(e) => {
-            onChange({ ...estimatedDate, confidence: e.currentTarget.value });
-          }}
-        >
-          {Array.from(Array(21).keys()).map((n) => (
-            <option value={`${n * 5}%`} key={title + n}>{`${n * 5}%`}</option>
-          ))}
-        </select>
-      </label>
+      <Select
+        name={`${title.replace(" ", "")}Confidence`}
+        label="Confidence:"
+        value={estimatedDate.confidence}
+        onChange={(value) => {
+          value && onChange({ ...estimatedDate, confidence: value });
+        }}
+        options={Array.from(Array(21).keys()).map((n) => ({
+          value: `${n * 5}%`,
+          label: `${n * 5}%`,
+        }))}
+      />
     </div>
   );
 }

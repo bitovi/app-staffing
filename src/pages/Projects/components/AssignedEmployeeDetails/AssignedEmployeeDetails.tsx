@@ -1,3 +1,4 @@
+import { Select } from "../../../../components/Select";
 import {
   AssignedEmployee,
   Employee,
@@ -37,20 +38,21 @@ export default function AssignedEmployeeDetails({
   };
 
   return (
-    <div className={styles.assignedEmployeecontainer}>
+    <div className={styles.assignedEmployeeContainer}>
       {employees && (
-        <select
-          defaultValue={assignedEmployee.name}
-          onChange={({ target }) => updateEmployee(target.value)}
-        >
-          {possibleOtherEmployees.map(({ id, name }) => (
-            <option value={name} key={id}>
-              {name}
-            </option>
-          ))}
-        </select>
+        <Select
+          className={styles.employee}
+          label=""
+          name="assignedEmployee"
+          value={assignedEmployee.name}
+          onChange={(value) => updateEmployee(value || "")}
+          options={possibleOtherEmployees.map(({ name }) => ({
+            label: name,
+            value: name,
+          }))}
+        />
       )}
-      <label>
+      <label className={styles.date}>
         Start Date:
         <input
           type="date"
@@ -60,7 +62,7 @@ export default function AssignedEmployeeDetails({
           }
         />
       </label>
-      <label>
+      <label className={styles.date}>
         End Date:
         <input
           type="date"

@@ -14,9 +14,9 @@ const ProjectCard = ({
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <div className={styles.projectName}>
+        <div className={styles.projectNameWrapper}>
           <div>
-            Project: <span>{project?.name}</span>
+            Project: <span className={styles.projectName}>{project?.name}</span>
           </div>
         </div>
         <div>

@@ -48,10 +48,14 @@ describe("Pages/Projects/components/RoleDetails", () => {
       ).toBeVisible();
     });
 
-    fireEvent.change(await screen.getByDisplayValue(role.skill.name));
-    expect(onEditMock).toHaveBeenCalledTimes(1);
+    expect(screen.getByLabelText(/Role/)).toBeDisabled();
 
-    fireEvent.click(await screen.getByText("Delete"));
+    fireEvent.focus(screen.getByTestId("role-start-date"));
+    fireEvent.change(screen.getByTestId("role-start-date"), "01/23/2020");
+    fireEvent.blur(screen.getByTestId("role-start-date"));
+    expect(onEditMock).toHaveBeenCalled();
+
+    fireEvent.click(await screen.getByText(/Delete/));
     expect(onDeleteMock).toHaveBeenCalled();
   });
 });

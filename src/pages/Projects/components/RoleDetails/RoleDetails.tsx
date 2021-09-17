@@ -9,6 +9,7 @@ import { cloneDeep } from "lodash";
 
 import { skillList, useEmployees } from "../../../../services/api";
 import { Button } from "../../../../components/Layout/components/Button";
+import { Select } from "../../../../components/Select";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
 import RoleDate from "../RoleDate";
 
@@ -81,54 +82,59 @@ export default function RoleDetails({
 
   return (
     <div className={styles.roleContainer}>
-      <div>Role</div>
-      <select
-        disabled={role.employees.length > 0}
-        onChange={({ target }) =>
-          editRole({ ...role, skill: { name: target.value as SkillName } })
-        }
-        defaultValue={role.skill.name}
-      >
-        {skillList.map((name) => (
-          <option key={name + role.id} value={name}>
-            {name}
-          </option>
-        ))}
-      </select>
-      <div className={styles.dateContainer}>
-        <RoleDate
-          title="Start Date"
-          estimatedDate={role.startDate}
-          onChange={(startDate) => editRole({ ...role, startDate })}
+      <div className={styles.header}>
+        <Select
+          label="Role"
+          name="roleSkill"
+          disabled={role.employees.length > 0}
+          onChange={(value: SkillName) =>
+            value && editRole({ ...role, skill: { name: value } })
+          }
+          value={role.skill.name}
+          options={skillList.map((name) => ({ label: name, value: name }))}
         />
-        <RoleDate
-          title="End Date"
-          estimatedDate={role.endDate}
-          onChange={(endDate) => editRole({ ...role, endDate })}
-        />
-      </div>
-      Assigned Employees
-      {employees &&
-        role.employees.map((assignedEmployee, index) => (
-          <AssignedEmployeeDetails
-            key={assignedEmployee.id + role.id + index}
-            assignedEmployee={assignedEmployee}
-            onChange={editAssignedEmployee}
-            changeEmployee={changeAssignedEmployee}
-            possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
+        <div className={styles.dateContainer}>
+          <RoleDate
+            title="Start Date"
+            estimatedDate={role.startDate}
+            onChange={(startDate) => editRole({ ...role, startDate })}
           />
-        ))}
-      <Button
-        onClick={() =>
-          editRole({
-            ...role,
-            employees: [...role.employees, createUnassignedEmployee()],
-          })
-        }
-      >
-        Add Another Team Member
-      </Button>
-      <Button onClick={() => deleteRole(role)}>Delete</Button>
+          <RoleDate
+            title="End Date"
+            estimatedDate={role.endDate}
+            onChange={(endDate) => editRole({ ...role, endDate })}
+          />
+        </div>
+      </div>
+      <div className={styles.employees}>
+        Assigned Employees
+        {employees &&
+          role.employees.map((assignedEmployee, index) => (
+            <AssignedEmployeeDetails
+              key={assignedEmployee.id + role.id + index}
+              assignedEmployee={assignedEmployee}
+              onChange={editAssignedEmployee}
+              changeEmployee={changeAssignedEmployee}
+              possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
+            />
+          ))}
+      </div>
+      <div className={styles.controls}>
+        <Button
+          className={styles.button}
+          onClick={() =>
+            editRole({
+              ...role,
+              employees: [...role.employees, createUnassignedEmployee()],
+            })
+          }
+        >
+          Add Another Team Member
+        </Button>
+        <Button className={styles.button} onClick={() => deleteRole(role)}>
+          Delete Role
+        </Button>
+      </div>
     </div>
   );
 }
