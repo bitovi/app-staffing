@@ -4,7 +4,7 @@ import QueryLogic from "can-query-logic";
 import localStore from "can-local-store";
 
 import { employees } from "./fixtures";
-import { DateString } from "../shared";
+import { DateString } from "../baseMocks";
 import { createStore, requestCreator } from "../baseMocks";
 
 const queryLogic = new QueryLogic<Employee>({
