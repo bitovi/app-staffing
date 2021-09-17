@@ -1,4 +1,4 @@
-import type { MockResponse, QueriableList } from "../shared";
+import type { MockResponse, QueriableList } from "./interfaces";
 
 import { rest } from "msw";
 import { CanLocalStore } from "can-local-store";
