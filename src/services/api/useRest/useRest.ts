@@ -3,6 +3,8 @@ import type { APIResponse } from "../shared";
 import { useCallback } from "react";
 import useSWR, { mutate } from "swr";
 import { fetcher } from "../shared";
+import { QueriableList } from "../shared";
+import { values } from "lodash";
 
 interface RestActions<T> extends APIResponse<T[]> {
   useAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
@@ -12,9 +14,44 @@ interface RestActions<T> extends APIResponse<T[]> {
   ) => Promise<void>;
 }
 
-function useRest<T extends { id: string }>(path: string): RestActions<T> {
-  const { data: response, error } = useSWR<{ data: T[] }, Error>(path, (url) =>
-    fetcher("GET", url),
+function useRest<T extends { id: string }>(
+  path: string,
+  queryParams?: QueriableList<T>,
+): RestActions<T> {
+  // const createQuery = (): string => {
+  //   if (!queryParams) return "";
+
+  //   let query = "?";
+
+  //   if (queryParams.count) {
+  //     query += `count=${queryParams.count}&`;
+  //   }
+
+  //   if (queryParams.page) {
+  //     query += `page=${queryParams.page}&`;
+  //   }
+
+  //   if (queryParams.filter) {
+  //     query += `filter=${queryParams.filter}&`;
+  //   }
+
+  //   if (queryParams.sort) {
+  //     query += `sort=${queryParams.sort}&`;
+  //   }
+
+  //   return query[query.length - 1] === "&" ? query.slice(0, -1) : query;
+  // };
+
+  const { data: response, error } = useSWR<{ data: T[] }, Error>(
+    `${path}?${new URLSearchParams({
+      // count: queryParams!.count!.toString(),
+      // page: queryParams!.page!.toString(),
+      filter: JSON.stringify(queryParams!.filter),
+    })}`,
+    (url) => {
+      console.log(url);
+      return fetcher("GET", url);
+    },
   );
 
   const useAdd = useCallback<

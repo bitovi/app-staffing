@@ -1,8 +1,10 @@
-import type { MockResponse, QueriableList } from "./interfaces";
+import type { MockResponse } from "./interfaces";
+import type { QueriableList } from "../shared";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 
 import { rest } from "msw";
 import { CanLocalStore } from "can-local-store";
+import { Filter } from "can-query-logic";
 
 export default function requestCreator<Resource extends { id: string }>(
   resourcePath: string,
@@ -106,7 +108,13 @@ export default function requestCreator<Resource extends { id: string }>(
       MockResponse<Resource[], { total: number }>,
       QueriableList<Resource>
     >(`${basePath}${resourcePath}`, async (req, res, ctx) => {
-      const { filter, sort, page = 1, count = 25 } = req.params;
+      const { sort } = req.params;
+
+      const count = Number(req.url.searchParams.get("count")) || 25;
+      const page = Number(req.url.searchParams.get("page")) || 1;
+      const filter = JSON.parse(
+        req.url.searchParams.get("filter") || "",
+      ) as Filter<Resource>;
 
       const { data, count: total } = await store.getListData({
         filter,
@@ -116,6 +124,8 @@ export default function requestCreator<Resource extends { id: string }>(
           end: page * count - 1,
         },
       });
+
+      console.log(data);
 
       return res(
         ctx.status(200),

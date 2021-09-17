@@ -65,4 +65,31 @@ describe("useRest", () => {
       employee,
     );
   });
+
+  it("paginates", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useRest<Employee>("/api/v1/employees", {
+        count: 1,
+        page: 2,
+      }),
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.data?.length).toBe(1);
+    expect(result.current.data).toEqual([employees[1]]);
+  });
+
+  it.only("filters", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useRest<Employee>("/api/v1/employees", {
+        filter: { name: employees[1].name },
+      }),
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.data?.length).toBe(1);
+    expect(result.current.data).toEqual([employees[1]]);
+  });
 });
