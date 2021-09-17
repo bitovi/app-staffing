@@ -80,7 +80,7 @@ describe("useRest", () => {
     expect(result.current.data).toEqual([employees[1]]);
   });
 
-  it.only("filters", async () => {
+  it("filters", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useRest<Employee>("/api/v1/employees", {
         filter: { name: employees[1].name },
@@ -91,5 +91,46 @@ describe("useRest", () => {
 
     expect(result.current.data?.length).toBe(1);
     expect(result.current.data).toEqual([employees[1]]);
+  });
+
+  it("sorts", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useRest<Employee>("/api/v1/employees", {
+        sort: "name",
+      }),
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.data).toEqual(
+      employees.sort((a, b) => (a.name < b.name ? -1 : 1)),
+    );
+  });
+
+  it("does the param stuff", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useRest<Employee>("/api/v1/employees", {
+        filter: { id: { $lte: "3" } },
+        page: 1,
+        count: 2,
+        sort: "name",
+      }),
+    );
+
+    await waitForNextUpdate();
+    expect(result.current.data?.length).toBe(2);
+
+    result.current.data?.forEach(({ id }) => {
+      expect(id < "3").toBeTruthy();
+    });
+
+    const firstEmployeeName = result.current.data?.[0].name;
+    const secondEmployeeName = result.current.data?.[1].name;
+
+    if (!firstEmployeeName || !secondEmployeeName) {
+      fail("employee names should have values");
+    }
+
+    expect(firstEmployeeName < secondEmployeeName).toBeTruthy();
   });
 });
