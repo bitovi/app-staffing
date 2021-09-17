@@ -17,7 +17,6 @@ class DateStringSet {
   constructor(public value: string) {
     this.value = value;
   }
-
   valueOf(): number {
     return new Date(this.value).getTime();
   }
