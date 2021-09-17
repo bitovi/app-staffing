@@ -1,12 +1,12 @@
-import type { Employee } from "../../../../services/api";
+import { render, screen, within } from "@testing-library/react";
+import { select as selectEvent } from "react-select-event";
 
-import { render, screen } from "@testing-library/react";
-import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
-import EmployeeCard from "./EmployeeCard";
+import { Employee } from "../../../../services/api";
 import { employees } from "../../../../services/api/employees/fixtures";
+import EmployeeCard from "./EmployeeCard";
 
 const employee: Employee = employees[0];
 
@@ -17,16 +17,13 @@ describe("Components/Layout", () => {
         <EmployeeCard
           key={employee.id}
           employee={employee}
-          editing={false}
-          onEdit={() => null}
           onSave={() => null}
-          onCancel={() => null}
         />
       </MemoryRouter>,
     );
 
     const container = screen.getByText(/Start Date/i);
-    expect(container).to.have.tagName("label");
+    expect(container.tagName).toBe("LABEL");
   });
 
   it("update a field", () => {
@@ -35,10 +32,7 @@ describe("Components/Layout", () => {
         <EmployeeCard
           key={employee.id}
           employee={employee}
-          editing
-          onEdit={() => null}
           onSave={() => null}
-          onCancel={() => null}
         />
       </MemoryRouter>,
     );
@@ -46,28 +40,22 @@ describe("Components/Layout", () => {
     const container = screen.getByTestId("name");
     userEvent.type(container, "2");
 
-    expect(container).to.have.value(employee.name + "2");
+    expect(container).toHaveValue(employee.name + "2");
   });
 
-  it("should add a skill", () => {
+  it("should add a skill", async () => {
     render(
       <MemoryRouter>
         <EmployeeCard
           key={employee.id}
           employee={employee}
-          editing
-          onEdit={() => null}
-          onSave={() => null}
-          onCancel={() => null}
+          onSave={jest.fn()}
         />
       </MemoryRouter>,
     );
 
-    const expected = "Angular";
-    userEvent.selectOptions(screen.getByTestId("select-skills"), [expected]);
-
-    const container = screen.getByTestId("display-skills").children.item(3);
-    expect(container).to.contains.text(expected);
+    selectEvent(screen.getByLabelText(/Add skill/i), /Angular/i);
+    await within(screen.getByTestId("display-skills")).findByText(/Angular/i);
   });
 
   it("should remove a skill", () => {
@@ -76,10 +64,7 @@ describe("Components/Layout", () => {
         <EmployeeCard
           key={employee.id}
           employee={employee}
-          editing
-          onEdit={() => null}
           onSave={() => null}
-          onCancel={() => null}
         />
       </MemoryRouter>,
     );
@@ -88,6 +73,6 @@ describe("Components/Layout", () => {
     userEvent.click(screen.getAllByTestId("remove-skill")[1]);
 
     const container = screen.getByTestId("display-skills");
-    expect(container).to.not.contains.text(expected);
+    expect(container).not.toHaveTextContent(expected);
   });
 });
