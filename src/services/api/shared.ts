@@ -65,7 +65,6 @@ export function fetcher<T>(
   url: string,
   body?: any,
 ): Promise<T> {
-  console.log(body);
   return fetch(url, {
     method,
     body: JSON.stringify(body),
