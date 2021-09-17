@@ -28,7 +28,7 @@ const { store, ...storeManager } = createStore(
   "projects",
 );
 
-export default [...requestCreator("/projects", store)];
+export default requestCreator("/projects", store);
 
 export const projectStoreManager = {
   ...storeManager,

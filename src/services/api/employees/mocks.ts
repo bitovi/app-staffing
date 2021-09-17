@@ -33,7 +33,7 @@ const { store, ...storeManager } = createStore(
   "employees",
 );
 
-export default [...requestCreator("/employees", store)];
+export default requestCreator("/employees", store);
 
 export const employeeStoreManager = {
   ...storeManager,
