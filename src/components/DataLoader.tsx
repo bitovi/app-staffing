@@ -7,11 +7,11 @@ export default function LoadData(): null {
   useEffect(() => {
     (async function () {
       if (!(await employeeStoreManager.dataIsLoaded())) {
-        await employeeStoreManager.loadEmployees();
+        await employeeStoreManager.loadResources();
       }
 
       if (!(await projectStoreManager.dataIsLoaded())) {
-        await projectStoreManager.loadProjects();
+        await projectStoreManager.loadResources();
       }
     })();
   }, []);

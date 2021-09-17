@@ -7,11 +7,11 @@ import Employees from "./Employees";
 
 describe("Pages/Employees", () => {
   beforeEach(async () => {
-    await employeeStoreManager.loadEmployees();
+    await employeeStoreManager.loadResources();
   });
 
   afterEach(async () => {
-    await employeeStoreManager.clearEmployees();
+    await employeeStoreManager.clearResources();
   });
 
   it("works", async () => {

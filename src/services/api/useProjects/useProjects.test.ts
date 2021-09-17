@@ -7,11 +7,11 @@ import { projectStoreManager } from "../projects/mocks";
 
 describe("useProjects", () => {
   beforeAll(async () => {
-    await projectStoreManager.loadProjects();
+    await projectStoreManager.loadResources();
   });
 
   afterAll(async () => {
-    await projectStoreManager.clearProjects();
+    await projectStoreManager.clearResources();
   });
 
   it("works", async () => {
