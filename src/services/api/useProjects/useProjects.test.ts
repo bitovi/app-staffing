@@ -3,8 +3,17 @@ import { renderHook, act } from "@testing-library/react-hooks";
 import useProjects from "./useProjects";
 import { projects } from "../projects/fixtures";
 import { NewProject } from "../projects";
+import { projectStoreManager } from "../projects/mocks";
 
 describe("useProjects", () => {
+  beforeAll(async () => {
+    await projectStoreManager.loadResources();
+  });
+
+  afterAll(async () => {
+    await projectStoreManager.clearResources();
+  });
+
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useProjects());
     expect(result.current.projects).toBe(undefined);
@@ -23,17 +32,16 @@ describe("useProjects", () => {
       roles: [],
     };
 
+    let id = "";
     await act(async () => {
-      await result.current.addProject(newProject);
+      id = await result.current.addProject(newProject);
     });
 
-    const id = projects.find(({ name }) => name === newProject.name)?.id;
     const newProjectWithId = { ...newProject, id };
 
-    expect(result.current.projects).toEqual(projects);
-    expect(projects.find(({ id }) => id === newProjectWithId.id)).toEqual(
-      newProjectWithId,
-    );
+    expect(
+      result.current.projects?.find(({ id }) => id === newProjectWithId.id),
+    ).toEqual(newProjectWithId);
   });
 
   it("updates a project", async () => {
@@ -46,11 +54,12 @@ describe("useProjects", () => {
       roles: [],
     };
 
-    await act(() => result.current.updateProject(editedProject));
-
-    expect(result.current.projects).toEqual(projects);
-    expect(projects.find(({ id }) => id === editedProject.id)).toEqual(
-      editedProject,
+    await act(() =>
+      result.current.updateProject(editedProject.id, editedProject),
     );
+
+    expect(
+      result.current.projects?.find(({ id }) => id === editedProject.id),
+    ).toEqual(editedProject);
   });
 });

@@ -5,13 +5,22 @@ import { renderHook, act } from "@testing-library/react-hooks";
 import useRest from "./useRest";
 import { employees } from "../employees/fixtures";
 import { skillList } from "../shared";
+import { employeeStoreManager } from "../employees/mocks";
 
 const [react] = skillList;
 
 describe("useRest", () => {
+  beforeEach(async () => {
+    await employeeStoreManager.loadResources();
+  });
+
+  afterEach(async () => {
+    await employeeStoreManager.clearResources();
+  });
+
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/v1"),
+      useRest<Employee>("/api/v1/employees"),
     );
     expect(result.current.data).toBe(undefined);
 
@@ -21,7 +30,7 @@ describe("useRest", () => {
   });
 
   it("adds", async () => {
-    const { result } = renderHook(() => useRest<Employee>("/v1"));
+    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
 
     const employee = {
       name: "test",
@@ -30,32 +39,30 @@ describe("useRest", () => {
       skills: [{ name: react }],
     };
 
+    let id = "";
     await act(async () => {
-      await result.current.useAdd(employee);
+      id = await result.current.useAdd(employee);
     });
 
-    const id = employees.find(({ name }) => name === employee.name)?.id;
     const newEmployee = { ...employee, id };
 
-    expect(result.current.data).toEqual(employees);
-    expect(employees.find(({ id }) => id === newEmployee.id)).toEqual(
-      newEmployee,
-    );
+    expect(
+      result.current.data?.find(({ id }) => id === newEmployee.id),
+    ).toEqual(newEmployee);
   });
 
   it("updates", async () => {
-    const { result } = renderHook(() => useRest<Employee>("/v1"));
-
-    expect(result.current.data).toEqual(employees);
+    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
 
     const employee = {
       ...employees[0],
       name: "FAKE NAME",
     };
 
-    await act(() => result.current.useUpdate(employee));
+    await act(() => result.current.useUpdate(employee.id, employee));
 
-    expect(result.current.data).toEqual(employees);
-    expect(employees.find(({ id }) => id === employee.id)).toEqual(employee);
+    expect(result.current.data?.find(({ id }) => id === employee.id)).toEqual(
+      employee,
+    );
   });
 });

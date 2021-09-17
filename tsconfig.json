@@ -22,7 +22,8 @@
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+    "typeRoots": ["./@types", "./node_modules/@types"]
   },
   "include": ["src"]
 }

@@ -1,9 +1,18 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { employeeStoreManager } from "../../../../services/api/employees/mocks";
 
 import { projects } from "../../../../services/api/projects/fixtures";
 import RoleDetails from "./RoleDetails";
 
 describe("Pages/Projects/components/RoleDetails", () => {
+  beforeEach(async () => {
+    await employeeStoreManager.loadResources();
+  });
+
+  afterEach(async () => {
+    await employeeStoreManager.clearResources();
+  });
+
   it("works", () => {
     const onEditMock = jest.fn();
     const onDeleteMock = jest.fn();

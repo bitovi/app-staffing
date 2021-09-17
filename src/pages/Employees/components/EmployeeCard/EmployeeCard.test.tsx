@@ -54,7 +54,7 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    selectEvent(screen.getByLabelText(/Add skill/i), /Angular/i);
+    await selectEvent(screen.getByLabelText(/Add skill/i), /Angular/i);
     await within(screen.getByTestId("display-skills")).findByText(/Angular/i);
   });
 

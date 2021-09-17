@@ -1,39 +1,35 @@
-import type { NewProject, Project } from ".";
+import type { Project } from "./interfaces";
 
-import { rest } from "msw";
+import QueryLogic from "can-query-logic";
+
 import { projects } from "./fixtures";
+import { createStore, requestCreator } from "../baseMocks";
 
-export default [
-  rest.get("/v1/projects", (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        data: projects,
-      }),
-    );
-  }),
+const queryLogic = new QueryLogic<Project>({
+  identity: ["id"],
+  keys: {
+    id: "string",
+    name: "string",
+    description: "string",
+    roles: {
+      type: "list",
+      values: {
+        keys: {
+          id: "string",
+        },
+      },
+    },
+  },
+});
 
-  rest.post("/v1/projects", (req, res, ctx) => {
-    const project: NewProject = JSON.parse(req.body as string);
-    const id = (Math.floor(Math.random() * 1000) + 1).toString();
-    projects.push({ ...project, id });
+const { store, ...storeManager } = createStore(
+  projects,
+  queryLogic,
+  "projects",
+);
 
-    return res(ctx.status(201), ctx.json({ data: id }));
-  }),
+export default requestCreator("/projects", store);
 
-  rest.put("/v1/projects", (req, res, ctx) => {
-    const project: Project = JSON.parse(req.body as string);
-    const index = projects.findIndex((x) => x.id === project.id);
-
-    if (index > -1) {
-      projects[index] = project;
-
-      return res(ctx.status(200), ctx.json({ data: project }));
-    }
-
-    return res(
-      ctx.status(404),
-      ctx.json({ data: "Could not find project with id " + project.id }),
-    );
-  }),
-];
+export const projectStoreManager = {
+  ...storeManager,
+};
