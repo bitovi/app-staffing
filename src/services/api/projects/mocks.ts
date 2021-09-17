@@ -1,7 +1,6 @@
 import type { Project } from "./interfaces";
 
 import QueryLogic from "can-query-logic";
-import localStore from "can-local-store";
 
 import { projects } from "./fixtures";
 import { createStore, requestCreator } from "../baseMocks";
