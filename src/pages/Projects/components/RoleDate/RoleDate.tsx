@@ -17,6 +17,7 @@ export default function RoleDate({
       <label>
         {title}
         <input
+          data-testid={`role-${title.replace(" ", "-").toLowerCase()}`}
           type="date"
           defaultValue={estimatedDate.date}
           onBlur={(e) => {

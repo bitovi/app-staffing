@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { employeeStoreManager } from "../../../../services/api/employees/mocks";
-import { select as selectEvent } from "react-select-event";
 
 import { projects } from "../../../../services/api/projects/fixtures";
 import RoleDetails from "./RoleDetails";
@@ -49,8 +48,12 @@ describe("Pages/Projects/components/RoleDetails", () => {
       ).toBeVisible();
     });
 
-    await selectEvent(screen.getByLabelText(/Role/), "React");
-    expect(onEditMock).toHaveBeenCalledTimes(1);
+    expect(screen.getByLabelText(/Role/)).toBeDisabled();
+
+    fireEvent.focus(screen.getByTestId("role-start-date"));
+    fireEvent.change(screen.getByTestId("role-start-date"), "01/23/2020");
+    fireEvent.blur(screen.getByTestId("role-start-date"));
+    expect(onEditMock).toHaveBeenCalled();
 
     fireEvent.click(await screen.getByText(/Delete/));
     expect(onDeleteMock).toHaveBeenCalled();
