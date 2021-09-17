@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import { employeeStoreManager } from "../services/api/employees/mocks";
-import { projectStoreManager } from "../services/api/projects/mocks";
+import { employeeStoreManager } from "./api/employees/mocks";
+import { projectStoreManager } from "./api/projects/mocks";
 
 export default function LoadData(): null {
   useEffect(() => {
