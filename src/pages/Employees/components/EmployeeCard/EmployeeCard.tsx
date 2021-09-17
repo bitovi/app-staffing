@@ -134,7 +134,6 @@ export default function EmployeeCard<EmployeeType extends Employee>({
           value=" "
           onChange={handleAddSkill}
           onFocus={handleFocus} // react-select will prevent the event from bubbling if this isn't set
-          data-testid="select-skills"
           options={skillList
             .filter(
               (skill) =>

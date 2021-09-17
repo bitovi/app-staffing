@@ -27,17 +27,11 @@ export default function Employees(): JSX.Element {
     }); // @TODO: add a loading spinner to save button
   };
 
-  const filteredEmployees = (
-    filterValue
-      ? employees?.filter((e) =>
-          e.name.toLowerCase().includes(filterValue.toLowerCase()),
-        )
-      : employees
-  )?.sort((employeeA, employeeB) =>
-    employeeA.name.split(" ").slice(-1) > employeeB.name.split(" ").slice(-1)
-      ? 1
-      : -1,
-  );
+  const filteredEmployees = filterValue
+    ? employees?.filter((e) =>
+        e.name.toLowerCase().includes(filterValue.toLowerCase()),
+      )
+    : employees;
 
   return (
     <div className={styles.wrapper}>
