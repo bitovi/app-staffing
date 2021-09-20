@@ -1,3 +1,4 @@
+import { Filter } from "can-query-logic";
 export interface APIResponse<T> extends ResponseStatus {
   data?: T;
 }
@@ -6,6 +7,13 @@ export interface ResponseStatus {
   isLoading: boolean;
   error?: Error;
 }
+
+export type QueriableList<T> = {
+  filter?: Filter<T>;
+  sort?: string;
+  page?: number;
+  count?: number;
+};
 
 export const skillList = [
   "React",

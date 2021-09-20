@@ -1,7 +1,9 @@
-import type { MockResponse, QueriableList } from "./interfaces";
+import type { MockResponse } from "./interfaces";
+import type { QueriableList } from "../shared";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 
 import { rest } from "msw";
+import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
 
 export default function requestCreator<Resource extends { id: string }>(
@@ -106,7 +108,12 @@ export default function requestCreator<Resource extends { id: string }>(
       MockResponse<Resource[], { total: number }>,
       QueriableList<Resource>
     >(`${basePath}${resourcePath}`, async (req, res, ctx) => {
-      const { filter, sort, page = 1, count = 25 } = req.params;
+      const {
+        filter,
+        sort,
+        page = 1,
+        count = 25,
+      } = deparam(req.url.searchParams.toString());
 
       const { data, count: total } = await store.getListData({
         filter,

@@ -1,5 +1,5 @@
 import type { NewEmployee, Employee, Skill } from "..";
-import type { ResponseStatus } from "../shared";
+import type { ResponseStatus, QueriableList } from "../shared";
 
 import { useCallback } from "react";
 
@@ -16,14 +16,16 @@ interface EmployeeActions {
 }
 
 /** Hook for getting a list of the employees */
-export default function useEmployees(): ResponseStatus & EmployeeActions {
+export default function useEmployees(
+  queryParams?: QueriableList<Employee>,
+): ResponseStatus & EmployeeActions {
   const {
     data: employees,
     error,
     isLoading,
     useAdd,
     useUpdate,
-  } = useRest<Employee>("/api/v1/employees");
+  } = useRest<Employee>("/api/v1/employees", queryParams);
 
   const getEmployeesWithSkill = useCallback(
     (_skill: Skill): Employee[] => {
