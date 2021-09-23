@@ -12,6 +12,7 @@ interface RestActions<T> extends APIResponse<T[]> {
     collectionItemId: string,
     updatedCollectionItem: Partial<T>,
   ) => Promise<void>;
+  useDelete: (collectionItemId: string) => Promise<void>;
 }
 
 function useRest<T extends { id: string }>(
@@ -46,6 +47,7 @@ function useRest<T extends { id: string }>(
             data: [...addResponse.data, newItem],
           };
         },
+        false,
       );
 
       return newId;
@@ -81,12 +83,32 @@ function useRest<T extends { id: string }>(
     [path, queryParams],
   );
 
+  const useDelete = useCallback(
+    async (collectionItemId: string) => {
+      await mutate(
+        `${path}?${param(queryParams)}`,
+        async (deleteResponse: { data: T[] }) => {
+          await fetcher("DELETE", `${path}/${collectionItemId}`);
+
+          return {
+            ...deleteResponse,
+            data: deleteResponse.data.filter(
+              (item) => item.id !== collectionItemId,
+            ),
+          };
+        },
+      );
+    },
+    [path, queryParams],
+  );
+
   return {
     data: response?.data,
     error,
     isLoading: !response && !error,
     useAdd,
     useUpdate,
+    useDelete,
   };
 }
 

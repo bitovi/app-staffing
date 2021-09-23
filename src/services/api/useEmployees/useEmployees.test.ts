@@ -61,4 +61,12 @@ describe("useEmployees", () => {
       result.current.employees?.find(({ id }) => id === employee.id),
     ).toEqual(employee);
   });
+
+  it("delete an employee", async () => {
+    const { result } = renderHook(() => useEmployees());
+
+    await act(() => result.current.deleteEmployee(employees[0].id));
+
+    expect(result.current.employees).not.toContain(employees[0]);
+  });
 });
