@@ -1,7 +1,7 @@
+import { Button as ChakraButton } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import classnames from "classnames";
 
-import styles from "./Button.module.scss";
+// import styles from "./Button.module.scss";
 
 interface ButtonProps {
   "data-testid"?: string;
@@ -9,10 +9,8 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   tabIndex?: number;
-  title?: string;
-  variant?: "basic" | "primary" | "link";
+  variant?: "primary" | "secondary" | "link";
   onClick(): void;
-  onKeyDown?(): void;
 }
 
 export function Button({
@@ -20,30 +18,19 @@ export function Button({
   className,
   disabled,
   tabIndex,
-  title,
-  variant = "basic",
+  variant = "primary",
   onClick,
-  onKeyDown,
   ...restOfProps
 }: ButtonProps): JSX.Element {
   return (
-    <button
+    <ChakraButton
+      variant={variant}
       data-testid={restOfProps["data-testid"]}
-      className={classnames(
-        styles.button,
-        {
-          [styles.primary]: variant === "primary",
-          [styles.link]: variant === "link",
-        },
-        className,
-      )}
       disabled={disabled}
       tabIndex={tabIndex}
-      title={title}
       onClick={onClick}
-      onKeyDown={onKeyDown || onClick}
     >
       {children}
-    </button>
+    </ChakraButton>
   );
 }

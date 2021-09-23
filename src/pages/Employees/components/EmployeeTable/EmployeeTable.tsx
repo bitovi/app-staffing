@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Stack, StackDivider } from "@chakra-ui/layout";
 import type { Employee } from "../../../../services/api";
 
 import EmployeeCard from "../EmployeeCard";
@@ -20,7 +22,7 @@ export default function EmployeeTable({
   }
 
   return (
-    <>
+    <Stack spacing={4} divider={<StackDivider borderColor="gray.200" />}>
       {filteredEmployees.map((employee) => (
         <EmployeeCard
           key={employee.id}
@@ -28,6 +30,6 @@ export default function EmployeeTable({
           onSave={(editedEmployee) => onEdit(employee.id, editedEmployee)}
         />
       ))}
-    </>
+    </Stack>
   );
 }

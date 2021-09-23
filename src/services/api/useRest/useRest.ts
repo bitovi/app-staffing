@@ -78,6 +78,7 @@ function useRest<T extends { id: string }>(
             ),
           };
         },
+        false,
       );
     },
     [path, queryParams],
@@ -97,6 +98,7 @@ function useRest<T extends { id: string }>(
             ),
           };
         },
+        false,
       );
     },
     [path, queryParams],
