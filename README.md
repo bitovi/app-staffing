@@ -30,12 +30,12 @@ Tech Stack/Libraries
 - [React](https://reactjs.org/docs/getting-started.html)
 - [swr](https://swr.vercel.app/docs/getting-started)
 - [StoryBook](https://storybook.js.org/docs/react/get-started/introduction)
-- [Typescript]()
+- [Typescript](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html)
 
 Dependencies
 
 - [API]()
-- 
+- []
 
 
 ## 🔧 Project Setup
@@ -88,7 +88,7 @@ Pinned.args = {
 
 ### Folder Structure
 
-      ├── docs                        # Documentation files
+      ├── @types                      # Type declarations.
       ├── src                         # Source files
       │   ├── components              # Reusable components.
       │   ├── pages                   # Indvidual Pages accrocess the application
