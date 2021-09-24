@@ -1,17 +1,125 @@
-# Staffing App
+<div align="center">
+  <h1>Staffing App</h1>
+  <strong>A tool to view and manage current and future resourcing needs.</strong>
+</div>
 
-A tool to view and manage current and future resourcing needs.
-
+## Staffing App
+------
+ A tool to view and manage current and future resourcing needs.
 > Mission
 > To have more accurate and responsive staffing decisions.
 
-# Quick Links
+## 🔗 Quick Links
 
 - [Deployed site (also in about)](bitovi.github.io/app-staffing/)
 
 - [Storybook](https://bitovi.github.io/app-staffing/storybook/)
+- [Project WIKI](https://github.com/bitovi/app-staffing/wiki)
+- [Project Board](https://github.com/bitovi/app-staffing/projects)
 
-## Available Scripts
+## 🏗 Build Status
+
+------
+
+*TBD: Project build status if any*
+
+## 🗂 Tech Stack & Project Dependencies
+
+Tech Stack/Libraries
+
+- [React](https://reactjs.org/docs/getting-started.html)
+- [swr](https://swr.vercel.app/docs/getting-started)
+- [StoryBook](https://storybook.js.org/docs/react/get-started/introduction)
+- [Typescript]()
+
+Dependencies
+
+- [API]()
+- 
+
+
+## 🔧 Project Setup
+
+Follow these steps for setting up this project on ur local machine.
+
+- **Running the project.**
+     1. Run `npm install` to install packages 
+     2. Run `npm run dev` to start the app in the development mode.
+     3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+## 📜 Documentation
+
+Components are documented using storybook.
+
+```tsx
+/** 
+ * task.stories.tsx
+ * Documenting the different states for a Task component
+ */
+export default {
+    component: Task,
+    title: 'Task',
+};
+
+const Template = args => <Task {...args} />;
+
+export const Default = Template.bind({});
+Default.args = {
+    task: {
+        id: '1',
+        title: 'Test Task',
+        state: 'TASK_INBOX',
+        updatedAt: new Date(2021, 0, 1, 9, 0),
+    },
+};
+
+export const Pinned = Template.bind({});
+Pinned.args = {
+    task: {
+        ...Default.args.task,
+        state: 'TASK_PINNED',
+    },
+};
+```
+
+> Additional project documentation can be found on project [wiki](https://github.com/bitovi/app-staffing/wiki)
+
+## 🦺 Style & Coding Guidelines
+
+### Folder Structure
+
+      ├── docs                        # Documentation files
+      ├── src                         # Source files
+      │   ├── components              # Reusable components.
+      │   ├── pages                   # Indvidual Pages accrocess the application
+      │   ├── services                # Service layer
+      │   ├── app.tsx                 # Main layout 
+      │   └── index.tsx               # Application entry point
+      └── README.md
+
+
+### Guidelines
+
+*TBD: link to other readme that further explain coding styles.*
+
+## 🚀 Deployment
+
+*TBD: Any deployment guideline.*
+
+## 🧪 Tests
+
+The project uses [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) for test scripts.
+Tests are created along with their associated component/module.
+
+      ├── module
+      │   └── module.tsx
+      │   └── module.test.tsx
+
+Run `npm run test` to run test scripts.
+
+[comment]: <> (TBD testing guidelines)
+
+## 🧰 Available Scripts
 
 In the project directory, you can run:
 
@@ -38,12 +146,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `npm run storybook`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Run storybook development environment.\
+Open [http://localhost:6006](http://localhost:6006/?path=/story/introduction--page) to view storybook dashboard. for viewing component.
