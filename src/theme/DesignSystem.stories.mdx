@@ -1,8 +1,17 @@
-
 import { Meta } from "@storybook/addon-docs";
-import { Box } from "@chakra-ui/layout";
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  HStack,
+  Stack,
+  Text,
+} from "@chakra-ui/layout";
+import { Avatar } from "@chakra-ui/avatar";
+import { Tag } from "@chakra-ui/tag";
+import { Button } from "@chakra-ui/button";
 import { ChakraProvider } from "@chakra-ui/react";
-
 
 <Meta title="Design System" />
 
@@ -10,13 +19,13 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 [Official Documentation](https://chakra-ui.com/)
 
-The official document for Chakra UI is very complete, if there are any questions, definitely refer back to it. However, this document will outline some of the most important concepts and how we implement Chakra-UI at Bitovi specifically. After reading this, you should be able to know where to find example components to reference to and what links to follow to learn any questions you may have.
+The official document for Chakra UI is very complete, if there are any questions, definitely refer back to it. However, this document will outline some of the most important concepts and how we implement Chakra-UI at Bitovi specifically. After reading this, you should be able to know where to find example components to reference and what links to follow to learn any questions you may have.
 
 ## Bitovi Design System - Design Principles
 
 ### Abstraction
 
-Bitovis Design Principles align very well with Chakra-UI, but it's important to understand that Chakra-UI is only an implementation detail and we are still abstracting common components away. Keep this in mind as you are creating common components. Ensure that we are able to replace a common component with another library if ever need to.
+Bitovis Design Principles align very well with Chakra-UI, but it's important to understand that Chakra-UI is only an implementation detail and we are still abstracting common components away. Keep this in mind as you are creating common components. Ensure that we are able to replace a common component with another library if ever needed to.
 
 Example Component: `Select`
 
@@ -27,7 +36,7 @@ e.g. `Box`, `Flex`, `Grid`, `Stack`
 
 ### Accessibility
 
-Accessibility should always be consider when creating your component. Chakra-UI components all are built with a11y in mind and will throw errors if you are missing any required props. An example is the `<IconButton />` that will require to add `aria-label` to the component. By Default all Chakra-UI components have keyboard navigation, focus management, and correct `aria-*` attributes.
+Accessibility should always be considered when creating your component. Chakra-UI components all are built with a11y in mind and will throw errors if you are missing any required props. An example is the `<IconButton />` that will require adding `aria-label` to the component. By Default all Chakra-UI components have keyboard navigation, focus management, and correct `aria-*` attributes.
 
 ### Component Props
 
@@ -39,23 +48,24 @@ Only expose props that are needed, even if the underlying library supports more.
 import { Tag as ChakraTag, TagProps } from "@chakra-ui/tag";
 
 type Props = TagProps & {
-    customProp: string;
-}
+  customProp: string,
+};
 
 export const Tag = (props: Props) => <ChakraTag {...props} />;
 
 // ✅  Full control of what the props are
 import { Tag as ChakraTag, TagProps } from "@chakra-ui/tag";
 type Props = {
-    children: JSX.Element;
-    variant: "solid" | "outline" | "subtle";
-    customProp: string;
-}
+  children: JSX.Element,
+  variant: "solid" | "outline" | "subtle",
+  customProp: string,
+};
 
-export const Tag = ({children, variant, customProp}: Props) => (
-    <ChakraTag variant={variant} customProps={customProp}>{children}</ChakraTag>
-)
-
+export const Tag = ({ children, variant, customProp }: Props) => (
+  <ChakraTag variant={variant} customProps={customProp}>
+    {children}
+  </ChakraTag>
+);
 ```
 
 > ⚠️ Some specifics have been omitted
@@ -70,7 +80,7 @@ First let's check out what a common Component would look like. If you are famili
 
 ### Button - Single Part Component
 
-First start with the actual component. All Markup and Logic will go into here. Note that there no Layout concerns in the component. Properties like `Margin` should be handled by the Layout not the component itself.
+First start with the actual component. All Markup and Logic will go into here. There are no Layout concerns in the component. Properties like `margin` should be handled by the Layout not the component itself.
 
 ```jsx
 // /src/components/Button/Button.tsx
@@ -145,7 +155,7 @@ Let's highlight some of the most important takeaways from this example:
 
 #### Style Config
 
-Every theme component is based on `baseStyle`, `sizes`, and `variants`. Inheritance follows the same direction, meaning `sizes` takes precedent over `variants` and `variants` takes precedent over `sizes`. There is also an optional `defaultProps` that can be used to set default values for the component.
+Every theme component is based on `baseStyle`, `sizes`, and `variants`. Inheritance follows the same direction, meaning `sizes` takes precedence over `variants` and `variants` takes precedence over `sizes`. There is also an optional `defaultProps` that can be used to set default values for the component.
 
 This theme object is then added to the `theme` using [`extendTheme({})`](https://chakra-ui.com/docs/theming/customize-theme), which itself is added to the `<ThemeProivder>`
 
@@ -176,7 +186,7 @@ See more: https://chakra-ui.com/docs/theming/advanced#theme-typings
 
 ### Accordion - Multi Part Component
 
-Multi part components are being styled the same way as single part components are - with one exception. Styles can have `parts` this is a sublevel within the previously mentioned `baseStyle` and `sizes` and `variants` properties.
+Multi part components are being styled the same way as single part components are - with one exception. Styles can have `parts`; this is a sublevel within the previously mentioned `baseStyle` and `sizes` and `variants` properties.
 Let's take Chakra-UI's [Accordion](https://chakra-ui.com/docs/disclosure/accordion) as an example. When clicking on `View Theme source` and you scroll to the bottom you will find:
 
 ```jsx
@@ -185,8 +195,7 @@ const baseStyle: PartsStyleObject<typeof parts> = {
   button: baseStyleButton,
   panel: baseStylePanel,
   icon: baseStyleIcon,
-}
-
+};
 ```
 
 [GitHub Source](https://github.com/chakra-ui/chakra-ui/blob/4e2d7b5899467a74df81f2ed601424fd726980e7/packages/theme/src/components/accordion.ts#L43)
@@ -235,7 +244,9 @@ e.g.: `20px / 4 = 5`
 This value can be used in all of our spacing properties, such as `margin` and `padding`.
 
 ```jsx
-  <Box margin={4} padding={2}>I have 16px of margin and 8px of padding 🙂</Box>
+<Box margin={4} padding={2}>
+  I have 16px of margin and 8px of padding 🙂
+</Box>
 ```
 
 See more: https://chakra-ui.com/docs/theming/theme#spacing
@@ -251,16 +262,33 @@ There are two syntaxes that Chakra-UI supports for Responsive properties: `Array
 The `Object` notation is relatively self explanatory:
 
 ```jsx
-<Box backgroundColor={{base: 'red.600', sm: 'green.600', md: 'blue.500', lg: 'purple.600', xl: 'teal.700'}}>
-    Resize your browser to see me in different colors 🌈
+<Box
+  backgroundColor={{
+    base: "red.600",
+    sm: "green.600",
+    md: "blue.500",
+    lg: "purple.600",
+    xl: "teal.700",
+  }}
+>
+  Resize your browser to see me in different colors 🌈
 </Box>
 ```
 
-#### Preview 
+#### Preview
+
 <ChakraProvider>
-    <Box backgroundColor={{base: 'red.600', sm: 'green.600', md: 'blue.500', lg: 'purple.600', xl: 'teal.700'}}>
-        Resize your browser to see me in different colors 🌈
-    </Box>
+  <Box
+    backgroundColor={{
+      base: "red.600",
+      sm: "green.600",
+      md: "blue.500",
+      lg: "purple.600",
+      xl: "teal.700",
+    }}
+  >
+    Resize your browser to see me in different colors 🌈
+  </Box>
 </ChakraProvider>
 
 Following a Mobile-First Mental model, we are always setting the `min-width` for each property.
@@ -269,54 +297,98 @@ See more: https://chakra-ui.com/docs/features/responsive-styles
 
 You can now build any layout using these concepts. `<Box>` is Chakra-UI's default `<div>` element, but it does give you many convenience components such as `<Flex>`, `<Grid>`, `<Stack>`, etc. Make sure to familiarize yourself with them to speed up your workflow.
 
-Here is an example of a Responsive Card:
+Here is a component putting it all together:
 
-```
-<Grid
+<ChakraProvider>
+  <Stack spacing={4}>
+    <Grid
       alignItems="center"
       templateColumns={{
         base: "1fr",
-        md: "repeat(2, 1fr)",
-        lg: "repeat(4, 1fr)",
+        lg: "100px repeat(3, 1fr)",
       }}
       gap={4}
     >
       <GridItem>
-        <Flex justifyContent={{ lg: "center" }} alignItems={{ lg: "center" }}>
-          <input
-            name="name"
-          />
-        </Flex>
+        <Avatar name="Patrick Ullrich" />
       </GridItem>
-
       <GridItem>
-        <Flex
-          flexDirection={{ base: "row", lg: "column" }}
-          justifyContent="space-between"
-        >
-          <Text
-            fontSize="sm"
-            mt={{ base: 0, lg: 2 }}
-            mr={{ base: 2, lg: 0 }}
-          >
-            Start Date
+        <Stack>
+          <Text fontSize="xl" mt={{ base: 0, lg: 2 }} mr={{ base: 2, lg: 0 }}>
+            Patrick Ullrich
           </Text>
-          <Text fontSize="sm">
-            End Date
-          </Text>
-        </Flex>
+          <HStack>
+            <Tag colorScheme="red">Software</Tag>
+            <Tag colorScheme="blue">ReactJS</Tag>
+            <Tag colorScheme="purple">JavaScript</Tag>
+          </HStack>
+        </Stack>
       </GridItem>
       <GridItem>
-        <Wrap as="ul" data-testid="display-skills" shouldWrapChildren>
-          {formData.skills.map(({ name }) => (
-            <Box as="li">
-              {name}
-            </Box>
-          ))}
-        </Wrap>
+        <Text fontSize="sm" noOfLines={3}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
+          vitae varius nisl, venenatis rhoncus lectus. Nunc ut sagittis nisl.
+          Nullam finibus aliquet magna, sed tempor dui pretium in. Phasellus
+          vulputate est eget ipsum facilisis blandit. Sed lectus dolor, iaculis
+          vel commodo nec, cursus ac sapien. Proin felis odio, egestas vitae
+          mauris vestibulum, condimentum malesuada tortor. Cras fermentum ex sit
+          amet nunc sollicitudin facilisis. Phasellus condimentum convallis enim
+          nec fringilla. Morbi consequat felis ut mauris blandit scelerisque.
+        </Text>
       </GridItem>
       <GridItem>
-        <Text>Add Skills</Text>
+        <HStack>
+          <Button variant="outline">Edit</Button>
+          <Button variant="solid">Say Hello 👋</Button>
+        </HStack>
       </GridItem>
     </Grid>
+  </Stack>
+</ChakraProvider>
+
+```
+ <Stack spacing={4}>
+    <Grid
+      alignItems="center"
+      templateColumns={{
+        base: "1fr",
+        lg: "100px repeat(3, 1fr)",
+      }}
+      gap={4}
+    >
+      <GridItem>
+        <Avatar name="Patrick Ullrich" />
+      </GridItem>
+      <GridItem>
+        <Stack>
+          <Text fontSize="sm" mt={{ base: 0, lg: 2 }} mr={{ base: 2, lg: 0 }}>
+            Patrick Ullrich
+          </Text>
+          <HStack>
+            <Tag colorScheme="red">Software</Tag>
+            <Tag colorScheme="blue">ReactJS</Tag>
+            <Tag colorScheme="purple">JavaScript</Tag>
+          </HStack>
+        </Stack>
+      </GridItem>
+      <GridItem>
+        <Text noOfLines={3}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
+          vitae varius nisl, venenatis rhoncus lectus. Nunc ut sagittis nisl.
+          Nullam finibus aliquet magna, sed tempor dui pretium in. Phasellus
+          vulputate est eget ipsum facilisis blandit. Sed lectus dolor, iaculis
+          vel commodo nec, cursus ac sapien. Proin felis odio, egestas vitae
+          mauris vestibulum, condimentum malesuada tortor. Cras fermentum ex sit
+          amet nunc sollicitudin facilisis. Phasellus condimentum convallis enim
+          nec fringilla. Morbi consequat felis ut mauris blandit scelerisque.
+        </Text>
+      </GridItem>
+      <GridItem>
+        <HStack>
+          <Button variant="outline">Edit</Button>
+          <Button variant="solid">Say Hello 👋</Button>
+        </HStack>
+      </GridItem>
+    </Grid>
+  </Stack>
 ```
