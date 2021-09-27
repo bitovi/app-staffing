@@ -11,11 +11,12 @@ import {
 import { Avatar } from "@chakra-ui/avatar";
 import { Tag } from "@chakra-ui/tag";
 import { Button } from "@chakra-ui/button";
-import { Alert,
+import {
+  Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  ChakraProvider
+  ChakraProvider,
 } from "@chakra-ui/react";
 
 <Meta title="Design System" />
@@ -57,7 +58,6 @@ type Props = TagProps & {
 };
 
 export const Tag = (props: Props) => <ChakraTag {...props} />;
-
 ```
 
 ```jsx
@@ -175,8 +175,12 @@ You can refer to many properties in the theme by using dot notation. For example
   <Alert status="warning" borderRadius="md">
     <AlertIcon />
     <Box flexDirection="column">
-    <AlertTitle>Working with Combined Properties</AlertTitle>
-    <AlertDescription fontSize="sm">Be careful when you use combined properties such as `border` instead of `borderColor`. Using `border: 1px solid red.500` will not work. Use `borderColor: red.500` instead.</AlertDescription>
+      <AlertTitle>Working with Combined Properties</AlertTitle>
+      <AlertDescription fontSize="sm">
+        Be careful when you use combined properties such as `border` instead of
+        `borderColor`. Using `border: 1px solid red.500` will not work. Use
+        `borderColor: red.500` instead.
+      </AlertDescription>
     </Box>
   </Alert>
 </ChakraProvider>
@@ -191,7 +195,7 @@ Any pseudo class like `:hover` can be referenced to by replacing `:` with an `_`
 
 #### Generate Typings
 
-There's no way for TypeScript to automatically learn about variants we create.  There is, however, a generator script that automates the process for us.  To let Typescript know that we modified Variants, we can run `chakra-cli tokens <PATH/TO/THEME/FILE>` to generate the typings. As a convenience we added following scripts to the package.json:
+There's no way for TypeScript to automatically learn about variants we create. There is, however, a generator script that automates the process for us. To let Typescript know that we modified Variants, we can run `chakra-cli tokens <PATH/TO/THEME/FILE>` to generate the typings. As a convenience we added following scripts to the package.json:
 
 ```
 "gen:theme-typings": "chakra-cli tokens ./src/theme/index.ts"
