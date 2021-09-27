@@ -72,10 +72,10 @@ export default function EmployeeCard<EmployeeType extends Employee>({
         <Flex justifyContent={{ lg: "center" }} alignItems={{ lg: "center" }}>
           <input
             name="name"
+            aria-label="employee-name"
             className={styles.name}
             value={formData.name}
             onChange={updateField}
-            data-testid="name"
           />
         </Flex>
       </GridItem>
