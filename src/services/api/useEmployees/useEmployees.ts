@@ -12,6 +12,7 @@ interface EmployeeActions {
     employeeId: string,
     employee: Partial<Employee>,
   ) => Promise<void>;
+  deleteEmployee: (employeeId: string) => Promise<void>;
   getEmployeesWithSkill: (skill: Skill) => Employee[];
 }
 
@@ -25,6 +26,7 @@ export default function useEmployees(
     isLoading,
     useAdd,
     useUpdate,
+    useDelete,
   } = useRest<Employee>("/api/v1/employees", queryParams);
 
   const getEmployeesWithSkill = useCallback(
@@ -47,5 +49,6 @@ export default function useEmployees(
     addEmployee: useAdd,
     updateEmployee: useUpdate,
     getEmployeesWithSkill,
+    deleteEmployee: useDelete,
   };
 }

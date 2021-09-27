@@ -5,6 +5,10 @@ ignores:
   - "@testing-library/*"
   - "@typescript-eslint/*"
   - "@storybook/*"
+  - "@chakra-ui/*"
+  - "@emotion/*"
+  - "@snek-at/storybook-addon-chakra-ui"
+  - framer-motion
   - eslint-*
   - babel-eslint
   - node-sass

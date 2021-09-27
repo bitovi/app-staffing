@@ -12,6 +12,7 @@ interface RestActions<T> extends APIResponse<T[]> {
     collectionItemId: string,
     updatedCollectionItem: Partial<T>,
   ) => Promise<void>;
+  useDelete: (collectionItemId: string) => Promise<void>;
 }
 
 function useRest<T extends { id: string }>(
@@ -46,6 +47,7 @@ function useRest<T extends { id: string }>(
             data: [...addResponse.data, newItem],
           };
         },
+        false,
       );
 
       return newId;
@@ -62,20 +64,41 @@ function useRest<T extends { id: string }>(
     async (collectionItemId: string, updatedCollectionItem: Partial<T>) => {
       await mutate(
         `${path}?${param(queryParams)}`,
-        async (updateResponse: { data: T[] }) => {
-          const updatedItem = await fetcher<Promise<T>>(
+        async (cachedData: { data: T[] }) => {
+          const response = await fetcher<{ data: T }>(
             "PUT",
             `${path}/${collectionItemId}`,
             updatedCollectionItem,
           );
 
           return {
-            ...updateResponse,
-            data: updateResponse.data.map((item) =>
-              item.id === updatedItem.id ? updatedItem : item,
+            ...cachedData,
+            data: (cachedData?.data ?? []).map((item) =>
+              item.id === response.data.id ? response.data : item,
             ),
           };
         },
+        false,
+      );
+    },
+    [path, queryParams],
+  );
+
+  const useDelete = useCallback(
+    async (collectionItemId: string) => {
+      await mutate(
+        `${path}?${param(queryParams)}`,
+        async (deleteResponse: { data: T[] }) => {
+          await fetcher("DELETE", `${path}/${collectionItemId}`);
+
+          return {
+            ...deleteResponse,
+            data: deleteResponse.data.filter(
+              (item) => item.id !== collectionItemId,
+            ),
+          };
+        },
+        false,
       );
     },
     [path, queryParams],
@@ -87,6 +110,7 @@ function useRest<T extends { id: string }>(
     isLoading: !response && !error,
     useAdd,
     useUpdate,
+    useDelete,
   };
 }
 

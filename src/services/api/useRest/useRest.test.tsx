@@ -66,6 +66,16 @@ describe("useRest", () => {
     );
   });
 
+  it("deletes", async () => {
+    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
+
+    await act(() => result.current.useDelete(employees[0].id));
+
+    expect(result.current.data?.find(({ id }) => id === employees[0].id)).toBe(
+      undefined,
+    );
+  });
+
   it("paginates", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useRest<Employee>("/api/v1/employees", {
