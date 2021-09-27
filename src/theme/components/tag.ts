@@ -1,4 +1,3 @@
-
 import { StyleConfig } from "@chakra-ui/theme-tools";
 
 export const tag = {
