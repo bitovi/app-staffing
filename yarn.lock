@@ -13879,6 +13879,11 @@
   "resolved" "https://registry.npmjs.org/ramda/-/ramda-0.21.0.tgz"
   "version" "0.21.0"
 
+"ramda@^0.26.1":
+  "integrity" "sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ=="
+  "resolved" "https://registry.npmjs.org/ramda/-/ramda-0.26.1.tgz"
+  "version" "0.26.1"
+
 "randombytes@^2.0.0", "randombytes@^2.0.1", "randombytes@^2.0.5", "randombytes@^2.1.0":
   "integrity" "sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ=="
   "resolved" "https://registry.npmjs.org/randombytes/-/randombytes-2.1.0.tgz"
@@ -16367,6 +16372,13 @@
   "integrity" "sha512-3IVX4nI6B5cc31/GFFE+i8ey/N2eA0CZDbo6n0yrz0zDX8ZJ8djmU1p+XRz7G3is0F3bB3pu2pAroFdAWQKU3w=="
   "resolved" "https://registry.npmjs.org/ts-essentials/-/ts-essentials-2.0.12.tgz"
   "version" "2.0.12"
+
+"ts-json-api@^1.1.2":
+  "integrity" "sha512-phWIjwShoziMH6bzIfMhRA5uRm779CvkNSadkpiWJOEqR/VvZT7aDhYIBypmIkwAUAWyax0aGTGeyWMM6zDYbw=="
+  "resolved" "https://registry.npmjs.org/ts-json-api/-/ts-json-api-1.1.2.tgz"
+  "version" "1.1.2"
+  dependencies:
+    "ramda" "^0.26.1"
 
 "ts-node@>=9.0.0", "ts-node@9.1.1":
   "integrity" "sha512-hPlt7ZACERQGf03M253ytLY3dHbGNGrAq9qIHWUY9XHYl1z7wYngSr3OQ5xmui8o2AaxsONxIzjafLUiWBo1Fg=="
