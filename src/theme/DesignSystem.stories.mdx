@@ -11,7 +11,12 @@ import {
 import { Avatar } from "@chakra-ui/avatar";
 import { Tag } from "@chakra-ui/tag";
 import { Button } from "@chakra-ui/button";
-import { ChakraProvider } from "@chakra-ui/react";
+import { Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  ChakraProvider
+} from "@chakra-ui/react";
 
 <Meta title="Design System" />
 
@@ -19,29 +24,29 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 [Official Documentation](https://chakra-ui.com/)
 
-The official document for Chakra UI is very complete, if there are any questions, definitely refer back to it. However, this document will outline some of the most important concepts and how we implement Chakra-UI at Bitovi specifically. After reading this, you should be able to know where to find example components to reference and what links to follow to learn any questions you may have.
+The official documentation for Chakra UI is very complete. If there are any questions, definitely refer to it. However, this document outlines some of the most important concepts and how we implement Chakra-UI at Bitovi, specifically. After reading this, you'll know where to reference example components and what links to follow to answer any questions you may have.
 
 ## Bitovi Design System - Design Principles
 
 ### Abstraction
 
-Bitovis Design Principles align very well with Chakra-UI, but it's important to understand that Chakra-UI is only an implementation detail and we are still abstracting common components away. Keep this in mind as you are creating common components. Ensure that we are able to replace a common component with another library if ever needed to.
+Bitovi's Design Principles align very well with Chakra-UI, but it's important to understand that Chakra-UI is only an implementation detail. We are still abstracting common components away. Keep this in mind as you are creating common components. Ensure that we are able to replace a common component with another library if it's ever needed.
 
 Example Component: `Select`
 
 ### Style Props for Layouts
 
-Leveraging Chakra-UI's [Style Props](https://chakra-ui.com/docs/features/style-props), it is easy to create responsive layouts and prototype components. We try to minimize this functionality for common components, where we rather use the theme object, but encourage to use it to build out your Layout. A list of all Layout components in Chakra-UI can be found in the [Documentation](https://chakra-ui.com/docs) under the `Layout` section.
+Leveraging Chakra-UI's [Style Props](https://chakra-ui.com/docs/features/style-props), it is easy to create responsive layouts and prototype components. We try to minimize this functionality for common components, where we prefer to use the theme object, but encourage to use it to build out your Layout. A list of all Layout components in Chakra-UI can be found in the [Documentation](https://chakra-ui.com/docs) under the `Layout` section.
 e.g. `Box`, `Flex`, `Grid`, `Stack`
 
 ### Accessibility
 
-Accessibility should always be considered when creating your component. Chakra-UI components all are built with a11y in mind and will throw errors if you are missing any required props. An example is the `<IconButton />` that will require adding `aria-label` to the component. By Default all Chakra-UI components have keyboard navigation, focus management, and correct `aria-*` attributes.
+Accessibility should always be considered when creating your component. Chakra-UI components are all built with a11y in mind and will throw errors if you are missing any required props. An example is the `<IconButton />` which will require adding the `aria-label` prop. By default, all Chakra-UI components have keyboard navigation, focus management, and correct `aria-*` attributes.
 
 ### Component Props
 
 Ensure prop names are indicative of what they do. Boolean props should be named using auxiliary verbs such as `has` or `is`. Exceptions can be made for HTML5 props. e.g. use `disabled` instead of `isDisabled`.
-Only expose props that are needed, even if the underlying library supports more. This will lead to a healthy abstraction layer allowing us to seemingless replace the underlying library.
+Only expose props that are needed, even if the underlying library supports more. This will lead to a healthy abstraction layer allowing us to seamlessly replace the underlying library.
 
 ```jsx
 // ❌ This will make replacing the Chakra Tag component hard
@@ -53,6 +58,9 @@ type Props = TagProps & {
 
 export const Tag = (props: Props) => <ChakraTag {...props} />;
 
+```
+
+```jsx
 // ✅  Full control of what the props are
 import { Tag as ChakraTag, TagProps } from "@chakra-ui/tag";
 type Props = {
@@ -72,15 +80,15 @@ export const Tag = ({ children, variant, customProp }: Props) => (
 
 ## Chakra-UI Fundamentals
 
-After reading Bitovi's Design Principles, it be helpful to review Chakra-UI's [Design Principles](https://chakra-ui.com/docs/principles) and how it [compares](https://chakra-ui.com/docs/comparison) to some other UI Frameworks.
+After reading [Bitovi's Design Principles](#bitovi-design-system---design-principles), it is helpful to review [Chakra-UI's Design Principles](https://chakra-ui.com/docs/principles) and how they [compare](https://chakra-ui.com/docs/comparison) to other UI Frameworks.
 
 ## Build a Component
 
-First let's check out what a common Component would look like. If you are familiar with the [Atomic Design Methodology](https://xd.adobe.com/ideas/process/ui-design/atomic-design-principles-methodology-101/) you can think of these as your `Atoms` and `Molecules` - I will refer to them as `Single Part` and `Multi Part` component for the next two examples. It should get more clear as we are looking at the examples.
+First let's check out what a common component would look like. Using language from the [Atomic Design Methodology](https://xd.adobe.com/ideas/process/ui-design/atomic-design-principles-methodology-101/), think of components as your `Atoms` and `Molecules` - We will call them `Single Part` and `Multi Part` in the next two examples.
 
 ### Button - Single Part Component
 
-First start with the actual component. All Markup and Logic will go into here. There are no Layout concerns in the component. Properties like `margin` should be handled by the Layout not the component itself.
+First, start with the actual component. All Markup and Logic will go here. Notice that there are no Layout concerns in the component. Properties like `margin` are handled externally by the Layout, not inside the component.
 
 ```jsx
 // /src/components/Button/Button.tsx
@@ -117,7 +125,7 @@ export function Button({
 }
 ```
 
-You probably noticed the lack of styling. This is because we will handle the actual styling of the component through a theme file.
+Notice the lack of styling in the above example. We will style the component by creating a theme file:
 
 ```jsx
 // /src/theme/components/button.ts
@@ -155,15 +163,23 @@ Let's highlight some of the most important takeaways from this example:
 
 #### Style Config
 
-Every theme component is based on `baseStyle`, `sizes`, and `variants`. Inheritance follows the same direction, meaning `sizes` takes precedence over `variants` and `variants` takes precedence over `sizes`. There is also an optional `defaultProps` that can be used to set default values for the component.
+Every component theme is configured using `baseStyle`, `sizes`, and `variants`, in that respective order. So `baseStyle` takes precedence over `variants`, and `variants` takes precedence over `sizes`. There is also an optional `defaultProps` property for setting default values for the component.
 
-This theme object is then added to the `theme` using [`extendTheme({})`](https://chakra-ui.com/docs/theming/customize-theme), which itself is added to the `<ThemeProivder>`
+This theme object is then added to the `theme` using [`extendTheme({})`](https://chakra-ui.com/docs/theming/customize-theme), which Chakra-UI adds internally to the `<ThemeProvider>`.
 
 #### Tokens and CSS Variables
 
-You can refer to many properties in the theme by using the dot notation. For example, for any color based properties, simply refer to `color.shade`. e.g. `backgroundColor: 'red.500'`. This is also true for things such as font sizes, fontWeights, etc. For a list of properties in the `theme` check out the [`Default Theme`](https://chakra-ui.com/docs/theming/theme).
+You can refer to many properties in the theme by using dot notation. For example, for any color-based property, simply refer to `color.shade`. e.g. `backgroundColor: 'red.500'`. This is also true for things such as `fontSize`, `fontWeight`, etc. For a list of available `theme` properties, check out the [`Default Theme`](https://chakra-ui.com/docs/theming/theme).
 
-> ⚠️ Be careful when you use combined properties such as `border` instead of `borderColor`. Using `border: 1px solid red.500` will not work. Use `borderColor: red.500` instead.
+<ChakraProvider>
+  <Alert status="warning" borderRadius="md">
+    <AlertIcon />
+    <Box flexDirection="column">
+    <AlertTitle>Working with Combined Properties</AlertTitle>
+    <AlertDescription fontSize="sm">Be careful when you use combined properties such as `border` instead of `borderColor`. Using `border: 1px solid red.500` will not work. Use `borderColor: red.500` instead.</AlertDescription>
+    </Box>
+  </Alert>
+</ChakraProvider>
 
 Fun fact: Tokens are being converted to CSS variables. This means if you ever need to refer to it from a css file you can do so using `var(--chakra-colors-gray-100)`.
 
@@ -171,11 +187,11 @@ See more: https://chakra-ui.com/docs/features/css-variables
 
 #### Pseudo-Classes
 
-Any pseudo class like `:hover` can be referenced to by using an `_` instead of the `:`. e.g. `_hover`.
+Any pseudo class like `:hover` can be referenced to by replacing `:` with an `_`. e.g. `_hover`.
 
 #### Generate Typings
 
-To let the Typescript know that we added a new Variant that did not exist before, we can run `chakra-cli tokens <PATH/TO/THEME/FILE>` to generate the typings. As a convenience we added following scripts to the package.json:
+There's no way for TypeScript to automatically learn about variants we create.  There is, however, a generator script that automates the process for us.  To let Typescript know that we modified Variants, we can run `chakra-cli tokens <PATH/TO/THEME/FILE>` to generate the typings. As a convenience we added following scripts to the package.json:
 
 ```
 "gen:theme-typings": "chakra-cli tokens ./src/theme/index.ts"
@@ -186,8 +202,8 @@ See more: https://chakra-ui.com/docs/theming/advanced#theme-typings
 
 ### Accordion - Multi Part Component
 
-Multi part components are being styled the same way as single part components are - with one exception. Styles can have `parts`; this is a sublevel within the previously mentioned `baseStyle` and `sizes` and `variants` properties.
-Let's take Chakra-UI's [Accordion](https://chakra-ui.com/docs/disclosure/accordion) as an example. When clicking on `View Theme source` and you scroll to the bottom you will find:
+Multi part components are styled the same as single part components - with one exception. Styles can have `parts`; a sublevel within the previously-mentioned `baseStyle`, `sizes`, and `variants` properties.
+Let's see an official Chakra-UI example. If you open the [Accordion docs](https://chakra-ui.com/docs/disclosure/accordion), click on `View Theme source`, and scroll to the bottom, you will find the named parts of the component, in this case `container`, `button`, `panel`, and `icon`:
 
 ```jsx
 const baseStyle: PartsStyleObject<typeof parts> = {
@@ -200,7 +216,7 @@ const baseStyle: PartsStyleObject<typeof parts> = {
 
 [GitHub Source](https://github.com/chakra-ui/chakra-ui/blob/4e2d7b5899467a74df81f2ed601424fd726980e7/packages/theme/src/components/accordion.ts#L43)
 
-This allows us to style each `part` of the component directly in our theme file.
+This allows us to style each `part` of the component directly in our theme file:
 
 ```jsx
 // /src/theme/components/accordion.ts
