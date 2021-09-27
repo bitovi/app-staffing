@@ -165,7 +165,7 @@ Let's highlight some of the most important takeaways from this example:
 
 Every component theme is configured using `baseStyle`, `sizes`, and `variants`, in that respective order. So `baseStyle` takes precedence over `variants`, and `variants` takes precedence over `sizes`. There is also an optional `defaultProps` property for setting default values for the component.
 
-This theme object is then added to the `theme` using [`extendTheme({})`](https://chakra-ui.com/docs/theming/customize-theme), which itself is added to the `<ThemeProvider>`  <br/>**Where does this happen?**
+This theme object is then added to the `theme` using [`extendTheme({})`](https://chakra-ui.com/docs/theming/customize-theme), which Chakra-UI adds internally to the `<ThemeProvider>`.
 
 #### Tokens and CSS Variables
 
