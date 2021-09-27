@@ -11,9 +11,11 @@ import { setupServer } from "msw/node";
 import mocks from "./services/mocks";
 import { cache } from "swr";
 const server = setupServer(...mocks);
+beforeEach(() => {
+  cache.clear();
+});
 beforeAll(() => server.listen());
 afterEach(() => {
-  cache.clear();
   server.resetHandlers();
 });
 afterAll(() => {
