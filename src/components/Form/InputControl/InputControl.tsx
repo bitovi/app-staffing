@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { InputProps } from "@chakra-ui/input";
 
 export type InputControlProps = InputProps & {
@@ -6,6 +5,6 @@ export type InputControlProps = InputProps & {
   inputRightElement?: React.ReactNode;
 };
 
-export const InputControl = (props: InputControlProps) => {
+export const InputControl = (props: InputControlProps): JSX.Element => {
   return <div></div>;
 };

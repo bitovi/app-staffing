@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 import { StyleConfig } from "@chakra-ui/theme-tools";
 
 export const button = {

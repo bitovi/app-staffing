@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Stack, StackDivider } from "@chakra-ui/layout";
 import type { Employee } from "../../../../services/api";
 
