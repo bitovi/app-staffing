@@ -1,9 +1,10 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { act } from "@testing-library/react-hooks";
 
 import useProjects from "./useProjects";
 import { projects } from "../projects/fixtures";
 import { NewProject } from "../projects";
 import { projectStoreManager } from "../projects/mocks";
+import { renderHook } from "../../../testUtils";
 
 describe("useProjects", () => {
   beforeAll(async () => {
@@ -24,13 +25,15 @@ describe("useProjects", () => {
   });
 
   it("adds a project", async () => {
-    const { result } = renderHook(() => useProjects());
+    const { result, waitForNextUpdate } = renderHook(() => useProjects());
 
     const newProject: NewProject = {
       name: "New Test Project",
       description: "description",
       roles: [],
     };
+
+    await waitForNextUpdate();
 
     let id = "";
     await act(async () => {
@@ -45,7 +48,7 @@ describe("useProjects", () => {
   });
 
   it("updates a project", async () => {
-    const { result } = renderHook(() => useProjects());
+    const { result, waitForNextUpdate } = renderHook(() => useProjects());
 
     const editedProject = {
       ...projects[0],
@@ -53,6 +56,8 @@ describe("useProjects", () => {
       name: "Edited Project",
       roles: [],
     };
+
+    await waitForNextUpdate();
 
     await act(() =>
       result.current.updateProject(editedProject.id, editedProject),

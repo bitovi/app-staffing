@@ -1,13 +1,10 @@
-import type { Employee, SkillName } from "../../../../services/api";
-
-import React, { useEffect, useState } from "react";
+import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
 import { isEqual } from "lodash";
-
-import { skillList } from "../../../../services/api";
+import React, { useEffect, useState } from "react";
 import { Select } from "../../../../components/Select";
-import { Button } from "../../../../components/Layout/components/Button";
-
-import { ReactComponent as XIcon } from "./assets/X.svg";
+import { Tag, TagCloseButton } from "../../../../components/Tag";
+import type { Employee, SkillName } from "../../../../services/api";
+import { skillList } from "../../../../services/api";
 import styles from "./EmployeeCard.module.scss";
 
 function useTimeout(callback: () => void, delay: number | null) {
@@ -75,59 +72,71 @@ export default function EmployeeCard<EmployeeType extends Employee>({
   };
 
   return (
-    <div className={styles.wrapper} onFocus={handleFocus} onBlur={handleBlur}>
-      <div className={styles.details}>
-        <input
-          name="name"
-          className={styles.name}
-          value={formData.name}
-          onChange={updateField}
-          data-testid="name"
-        />
-      </div>
-      <div className={styles.details}>
-        <div role="button" className={styles.date} tabIndex={-1}>
-          <label>
+    <Grid
+      alignItems="center"
+      templateColumns={{
+        base: "1fr",
+        md: "repeat(2, 1fr)",
+        lg: "repeat(4, 1fr)",
+      }}
+      gap={4}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    >
+      <GridItem>
+        <Flex justifyContent={{ lg: "center" }} alignItems={{ lg: "center" }}>
+          <input
+            name="name"
+            className={styles.name}
+            value={formData.name}
+            onChange={updateField}
+            data-testid="name"
+          />
+        </Flex>
+      </GridItem>
+
+      <GridItem>
+        <Flex
+          flexDirection={{ base: "row", lg: "column" }}
+          justifyContent="space-between"
+        >
+          <Text
+            fontSize="sm"
+            as="label"
+            mt={{ base: 0, lg: 2 }}
+            mr={{ base: 2, lg: 0 }}
+          >
             Start Date
             <input
               name="startDate"
               value={formData.startDate}
               onChange={updateField}
             />
-          </label>
-        </div>
-        <div role="button" className={styles.date} tabIndex={-1}>
-          <label>
+          </Text>
+          <Text fontSize="sm" as="label">
             End Date
             <input
               name="endDate"
               value={formData.endDate}
               onChange={updateField}
             />
-          </label>
-        </div>
-      </div>
-      <div className={styles.skills}>
-        <span className={styles.label}>Skills</span>
-        <ul data-testid="display-skills">
+          </Text>
+        </Flex>
+      </GridItem>
+      <GridItem>
+        <Wrap as="ul" data-testid="display-skills" shouldWrapChildren>
           {formData.skills.map(({ name }) => (
-            <li key={name} className={styles.skill}>
+            <Tag variant="primary" key={name}>
               {name}
-              <Button
-                className={styles.removeSkillButton}
+              <TagCloseButton
                 onClick={() => handleRemoveSkill(name)}
-                onKeyDown={() => handleRemoveSkill(name)}
-                tabIndex={-1}
-                variant="link"
                 data-testid="remove-skill"
-              >
-                <XIcon width="0.75em" height="0.75em" />
-              </Button>
-            </li>
+              />
+            </Tag>
           ))}
-        </ul>
-      </div>
-      <div className={styles.controls}>
+        </Wrap>
+      </GridItem>
+      <GridItem>
         <Select
           label="Add skills"
           name="addSkills"
@@ -143,7 +152,7 @@ export default function EmployeeCard<EmployeeType extends Employee>({
             )
             .map((skill) => ({ label: skill, value: skill }))}
         />
-      </div>
-    </div>
+      </GridItem>
+    </Grid>
   );
 }

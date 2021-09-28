@@ -1,9 +1,9 @@
-import { renderHook, act } from "@testing-library/react-hooks";
-
-import useEmployees from "./useEmployees";
+import { act } from "@testing-library/react-hooks";
+import { renderHook } from "../../../testUtils";
 import { employees } from "../employees/fixtures";
-import { skillList } from "../shared";
 import { employeeStoreManager } from "../employees/mocks";
+import { skillList } from "../shared";
+import useEmployees from "./useEmployees";
 
 const [react] = skillList;
 
@@ -18,15 +18,17 @@ describe("useEmployees", () => {
 
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useEmployees());
-    expect(result.current.employees).toBe(undefined);
 
     await waitForNextUpdate();
 
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.employees).toEqual(employees);
   });
 
   it("adds an employee", async () => {
-    const { result } = renderHook(() => useEmployees());
+    const { result, waitForNextUpdate } = renderHook(() => useEmployees());
+
+    await waitForNextUpdate();
 
     const employee = {
       name: "test",
@@ -48,7 +50,9 @@ describe("useEmployees", () => {
   });
 
   it("update an employee", async () => {
-    const { result } = renderHook(() => useEmployees());
+    const { result, waitForNextUpdate } = renderHook(() => useEmployees());
+
+    await waitForNextUpdate();
 
     const employee = {
       ...employees[0],
@@ -58,12 +62,14 @@ describe("useEmployees", () => {
     await act(() => result.current.updateEmployee(employee.id, employee));
 
     expect(
-      result.current.employees?.find(({ id }) => id === employee.id),
+      result.current.employees?.find(({ id }: any) => id === employee.id),
     ).toEqual(employee);
   });
 
   it("delete an employee", async () => {
-    const { result } = renderHook(() => useEmployees());
+    const { result, waitForNextUpdate } = renderHook(() => useEmployees());
+
+    await waitForNextUpdate();
 
     await act(() => result.current.deleteEmployee(employees[0].id));
 
