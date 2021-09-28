@@ -32,7 +32,7 @@ describe("Components/Layout", () => {
           onView={(p) => null}
           onAddNew={onClick}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(getByText(/Add Project/i));
@@ -47,7 +47,7 @@ describe("Components/Layout", () => {
           onView={(p) => null}
           onAddNew={() => null}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const projectCards = await findAllByText(/Project:/i);
