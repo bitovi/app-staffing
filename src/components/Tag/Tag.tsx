@@ -3,7 +3,7 @@ import { Tag as ChakraTag } from "@chakra-ui/tag";
 type IProps = {
   tagRightIcon?: React.ReactNode;
   tagLeftIcon?: React.ReactNode;
-  children: JSX.Element;
+  children: React.ReactNode;
   variant: "primary";
 };
 
