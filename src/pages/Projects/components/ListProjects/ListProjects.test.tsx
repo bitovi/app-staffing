@@ -23,7 +23,7 @@ describe("Components/Layout", () => {
   });
 
   it("calls 'onAddNew' on button click", () => {
-    const onClick = spy(() => {});
+    const onClick = spy();
 
     const { getByText } = render(
       <MemoryRouter>
