@@ -22,8 +22,11 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const container = screen.getByText(/Start Date/i);
-    expect(container.tagName).toBe("LABEL");
+    const startDate = screen.getByText(/Start Date/i);
+    expect(startDate.tagName).toBe("LABEL");
+
+    const endDate = screen.getByText(/End Date/i);
+    expect(endDate.tagName).toBe("LABEL");
   });
 
   it("update a field", () => {
@@ -37,7 +40,7 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const container = screen.getByTestId("name");
+    const container = screen.getByLabelText("employee-name");
     userEvent.type(container, "2");
 
     expect(container).toHaveValue(employee.name + "2");

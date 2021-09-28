@@ -3,31 +3,11 @@ import { isEqual } from "lodash";
 import React, { useEffect, useState } from "react";
 import { Select } from "../../../../components/Select";
 import { Tag, TagCloseButton } from "../../../../components/Tag";
+import usePrevious from "../../../../hooks/usePrevious";
 import type { Employee, SkillName } from "../../../../services/api";
 import { skillList } from "../../../../services/api";
 import styles from "./EmployeeCard.module.scss";
-
-function useTimeout(callback: () => void, delay: number | null) {
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const savedCallback = React.useRef(callback);
-
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    const tick = () => savedCallback.current();
-    if (typeof delay === "number") {
-      timeoutRef.current = setTimeout(tick, delay);
-
-      return () => {
-        timeoutRef.current && window.clearTimeout(timeoutRef.current);
-      };
-    }
-  }, [delay]);
-
-  return timeoutRef;
-}
+import { useDebounce } from "react-use";
 
 export default function EmployeeCard<EmployeeType extends Employee>({
   employee,
@@ -37,15 +17,20 @@ export default function EmployeeCard<EmployeeType extends Employee>({
   onSave: (employee: EmployeeType) => void;
 }): JSX.Element {
   const [formData, setFormData] = useState<EmployeeType>(employee);
-  const [hasFocus, setHasFocus] = useState<boolean>(false);
+  const [, setHasFocus] = useState<boolean>(false);
   const handleFocus = () => setHasFocus(true);
   const handleBlur = () => setHasFocus(false);
 
-  useTimeout(
+  const prevFormData = usePrevious(formData);
+
+  useDebounce(
     () => {
-      !isEqual(employee, formData) && onSave(formData);
+      if (prevFormData && !isEqual(formData, prevFormData)) {
+        onSave(formData);
+      }
     },
-    hasFocus ? null : 300,
+    500,
+    [formData, prevFormData, onSave],
   );
 
   useEffect(() => {
@@ -87,10 +72,10 @@ export default function EmployeeCard<EmployeeType extends Employee>({
         <Flex justifyContent={{ lg: "center" }} alignItems={{ lg: "center" }}>
           <input
             name="name"
+            aria-label="employee-name"
             className={styles.name}
             value={formData.name}
             onChange={updateField}
-            data-testid="name"
           />
         </Flex>
       </GridItem>
