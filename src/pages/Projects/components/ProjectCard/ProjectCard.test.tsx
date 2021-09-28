@@ -17,10 +17,10 @@ describe("Components/Layout", () => {
 
     const projectContainer = screen.getByText(/Project:/i);
     expect(projectContainer).to.have.tagName("div");
-    
+
     const projectName = screen.getByText(project.name);
     expect(projectName).to.have.tagName("span");
-    
+
     const viewProject = screen.getByText(/View Project/i);
     expect(viewProject).to.have.tagName("button");
   });
