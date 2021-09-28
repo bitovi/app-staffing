@@ -111,7 +111,7 @@ export default function EmployeeCard<EmployeeType extends Employee>({
       <GridItem>
         <Wrap as="ul" data-testid="display-skills" shouldWrapChildren>
           {formData.skills.map(({ name }) => (
-            <Tag key={name}>
+            <Tag variant="primary" key={name}>
               {name}
               <TagCloseButton
                 onClick={() => handleRemoveSkill(name)}
