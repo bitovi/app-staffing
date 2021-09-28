@@ -1,18 +1,20 @@
-import { Tag as ChakraTag, TagProps } from "@chakra-ui/tag";
+import { Tag as ChakraTag } from "@chakra-ui/tag";
 
-type IProps = TagProps & {
+type IProps = {
   tagRightIcon?: React.ReactNode;
   tagLeftIcon?: React.ReactNode;
+  children: React.ReactNode;
+  variant: "primary";
 };
 
 export const Tag = ({
   children,
   tagRightIcon,
   tagLeftIcon,
-  ...rest
+  variant,
 }: IProps): JSX.Element => {
   return (
-    <ChakraTag variant="primary" {...rest}>
+    <ChakraTag variant={variant}>
       {tagLeftIcon}
       {children}
       {tagRightIcon}

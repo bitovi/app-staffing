@@ -64,7 +64,7 @@ export const Tag = (props: Props) => <ChakraTag {...props} />;
 // ✅  Full control of what the props are
 import { Tag as ChakraTag, TagProps } from "@chakra-ui/tag";
 type Props = {
-  children: JSX.Element,
+  children: React.ReactNode;,
   variant: "solid" | "outline" | "subtle",
   customProp: string,
 };
