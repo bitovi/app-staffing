@@ -3,8 +3,8 @@ import { Skill } from "../shared";
 export interface Employee {
   id: string;
   name: string;
-  startDate: string;
-  endDate?: string;
+  startDate: Date;
+  endDate?: Date;
   skills: Skill[];
 }
 
