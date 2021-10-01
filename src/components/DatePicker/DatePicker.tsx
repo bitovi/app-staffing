@@ -7,7 +7,7 @@ type IProps = {
   label: string
   name?: string;
   onChange(evt: React.FormEvent<HTMLInputElement>): void,
-  selectedDate?: Date
+  selectedDate?: Date | string
 }
 
 export const DatePicker = ({ children, onChange, selectedDate, name, label, ...props }: IProps): JSX.Element => {
@@ -19,7 +19,6 @@ export const DatePicker = ({ children, onChange, selectedDate, name, label, ...p
     <ChakraInput
       aria-label={label}
       name={name}
-      date={new Date()}
       value={formattedDate}
       onChange={onChange}
       type="date"
