@@ -18,7 +18,7 @@ export function makeEmployee(employee?: Partial<Employee>): Employee {
   return {
     id: `${++id}`,
     name: faker.name.findName(),
-    startDate: startDate.toISOString(),
+    startDate: startDate,
     skills,
 
     ...employee,

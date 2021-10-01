@@ -24,8 +24,8 @@ export default function Employees(): JSX.Element {
   const handleAddEmployee = async () => {
     await addEmployee({
       name: "",
-      startDate: new Date().toLocaleString("en-US").split(",")[0],
-      endDate: "",
+      startDate: new Date(),
+      endDate: undefined,
       skills: [],
     }); // @TODO: add a loading spinner to save button
   };
