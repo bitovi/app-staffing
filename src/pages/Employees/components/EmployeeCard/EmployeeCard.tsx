@@ -8,11 +8,12 @@ import type { Employee, SkillName } from "../../../../services/api";
 import { skillList } from "../../../../services/api";
 import styles from "./EmployeeCard.module.scss";
 import { useDebounce } from "react-use";
+import { DatePicker } from "../../../../components/DatePicker";
 
 export default function EmployeeCard<EmployeeType extends Employee>({
-  employee,
-  onSave,
-}: {
+                                                                      employee,
+                                                                      onSave,
+                                                                    }: {
   employee: EmployeeType;
   onSave: (employee: EmployeeType) => void;
 }): JSX.Element {
@@ -92,19 +93,22 @@ export default function EmployeeCard<EmployeeType extends Employee>({
             mr={{ base: 2, lg: 0 }}
           >
             Start Date
-            <input
-              name="startDate"
-              value={formData.startDate}
-              onChange={updateField}
-            />
+            <DatePicker data-testid="start-date"
+                        name="startDate"
+                        label="start date"
+                        selectedDate={formData.startDate}
+                        onChange={updateField} />
+
           </Text>
           <Text fontSize="sm" as="label">
             End Date
-            <input
-              name="endDate"
-              value={formData.endDate}
-              onChange={updateField}
+            <DatePicker data-testid="end-date"
+                        name="endDate"
+                        label="end date"
+                        selectedDate={formData.endDate}
+                        onChange={updateField}
             />
+
           </Text>
         </Flex>
       </GridItem>
