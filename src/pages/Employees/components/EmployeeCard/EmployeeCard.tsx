@@ -1,51 +1,35 @@
 import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
-import { isEqual } from "lodash";
-import React, { useEffect, useState } from "react";
-import { Select } from "../../../../components/Select";
+import React from "react";
 import { Tag, TagCloseButton } from "../../../../components/Tag";
-import usePrevious from "../../../../hooks/usePrevious";
+import useAutoSaveForm from "../../../../hooks/useAutoSaveForm";
 import type { Employee, SkillName } from "../../../../services/api";
 import { skillList } from "../../../../services/api";
+import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
-import { useDebounce } from "react-use";
 import { DatePicker } from "../../../../components/DatePicker";
 
-export default function EmployeeCard<EmployeeType extends Employee>({
-                                                                      employee,
-                                                                      onSave,
-                                                                    }: {
-  employee: EmployeeType;
-  onSave: (employee: EmployeeType) => void;
-}): JSX.Element {
-  const [formData, setFormData] = useState<EmployeeType>(employee);
-  const [, setHasFocus] = useState<boolean>(false);
-  const handleFocus = () => setHasFocus(true);
-  const handleBlur = () => setHasFocus(false);
+interface IProps {
+  employee: Employee;
+  onSave: (employee: Employee) => void;
+}
 
-  const prevFormData = usePrevious(formData);
+export default function EmployeeCard({
+  employee,
+  onSave,
+}: IProps): JSX.Element {
+  const [formData, setFormData] = useAutoSaveForm<Employee>({
+    initialFormData: employee,
+    onSave,
+  });
 
-  useDebounce(
-    () => {
-      if (prevFormData && !isEqual(formData, prevFormData)) {
-        onSave(formData);
-      }
-    },
-    500,
-    [formData, prevFormData, onSave],
-  );
-
-  useEffect(() => {
-    setFormData(employee);
-  }, [employee]);
-
-  const handleAddSkill = (skillName: SkillName) => {
+  const onAddSkill = (skillName: SkillName) => {
     setFormData({
       ...formData,
       skills: [...formData.skills, { name: skillName }],
     });
   };
 
-  const handleRemoveSkill = (skillName: string) => {
+  const onRemoveSkill = (skillName: string) => {
     setFormData({
       ...formData,
       skills: formData.skills.filter((x) => x.name != skillName),
@@ -66,8 +50,6 @@ export default function EmployeeCard<EmployeeType extends Employee>({
         lg: "repeat(4, 1fr)",
       }}
       gap={4}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
     >
       <GridItem>
         <Flex justifyContent={{ lg: "center" }} alignItems={{ lg: "center" }}>
@@ -118,7 +100,7 @@ export default function EmployeeCard<EmployeeType extends Employee>({
             <Tag variant="primary" key={name}>
               {name}
               <TagCloseButton
-                onClick={() => handleRemoveSkill(name)}
+                onClick={() => onRemoveSkill(name)}
                 data-testid="remove-skill"
               />
             </Tag>
@@ -126,20 +108,10 @@ export default function EmployeeCard<EmployeeType extends Employee>({
         </Wrap>
       </GridItem>
       <GridItem>
-        <Select
-          label="Add skills"
-          name="addSkills"
-          value=" "
-          onChange={handleAddSkill}
-          onFocus={handleFocus} // react-select will prevent the event from bubbling if this isn't set
-          options={skillList
-            .filter(
-              (skill) =>
-                !formData.skills.some(
-                  (activeSkill) => activeSkill.name === skill,
-                ),
-            )
-            .map((skill) => ({ label: skill, value: skill }))}
+        <EmployeeSkillSelect
+          selectedSkills={formData.skills}
+          allSkills={[...skillList]}
+          onAddSkill={onAddSkill}
         />
       </GridItem>
     </Grid>
