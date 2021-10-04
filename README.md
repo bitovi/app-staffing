@@ -127,6 +127,15 @@ Run `npm run test` to run test scripts.
 
 In the project directory, you can run:
 
+### `docker-compose up`
+Runs the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+For more information, see [Dockerfile](./Dockerfile) and [docker-compose.yml](./docker-compose.yaml)
+
 ### `npm run dev`
 
 Runs the app in the development mode.\
