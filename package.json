@@ -89,6 +89,7 @@
   "devDependencies": {
     "@hmudesign/eslint-config": "^2.0.2",
     "@storybook/addon-actions": "^6.3.7",
+    "@storybook/addon-docs": "^6.3.9",
     "@storybook/addon-essentials": "^6.3.7",
     "@storybook/addon-links": "^6.3.7",
     "@storybook/node-logger": "^6.3.7",
