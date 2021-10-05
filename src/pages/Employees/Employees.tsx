@@ -1,6 +1,6 @@
 import type { Employee } from "../../services/api";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useEmployees } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
@@ -14,9 +14,12 @@ export default function Employees(): JSX.Element {
 
   const [filterValue, setFilterValue] = useState<string>();
 
-  const handleEditSave = async (id: string, employee: Employee) => {
-    employee.name && (await updateEmployee(id, employee)); // @TODO: add a loading spinner to save button
-  };
+  const handleEditSave = useCallback(
+    async (id: string, employee: Employee) => {
+      employee.name && (await updateEmployee(id, employee)); // @TODO: add a loading spinner to save button
+    },
+    [updateEmployee],
+  );
 
   const handleAddEmployee = async () => {
     await addEmployee({
