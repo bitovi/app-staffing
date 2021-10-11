@@ -1,10 +1,10 @@
-import moment, { Moment } from "moment";
+import moment from "moment";
 
 export type ColumnHeading = {
   startDate: Date,
   endDate: Date,
   columnType: ColumnType
-  title: String,
+  title: string,
 }
 
 export enum ColumnType {
@@ -38,10 +38,10 @@ moment.updateLocale("en", {
  * * Always show at least one full quarter that is not broken down. If the last quarter being display breaks into the next year, then show the entire year broken down into months.
  * * Always show at least 6 months total. Additional quarters may be needed to complete the display.
  */
-export function getTimeColumns(date: Date) {
+export function getTimeColumns(date: Date): ColumnHeading[] {
 
   const columnHeadings: ColumnHeading[] = [];
-  const currentDateMoment = moment(date);
+  const currentDateMoment = moment(date)
 
   //  Collect weeks.
   const weekStart = moment(currentDateMoment).startOf("week");
