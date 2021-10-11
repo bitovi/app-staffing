@@ -6,14 +6,12 @@ import { getTimescaleData, TimescaleData, TimescaleType } from "../../../../serv
 import moment from "moment";
 
 
-type IProps = {
+interface IProps {
   reportDate: Date
 }
 
 
-function ReportTable({
-                       reportDate,
-                     }: IProps): JSX.Element {
+export function ReportTable({ reportDate }: IProps): JSX.Element {
 
 
   const timescales: TimescaleData[] = getTimescaleData(reportDate);
