@@ -1,0 +1,21 @@
+
+.reportTable {
+
+}
+
+
+.reportTableHeading {
+  font-family: open-sans, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 16px;
+  /* identical to box height, or 133% */
+
+  display: flex;
+  align-items: center;
+  text-align: right;
+  align-self: start;
+
+  color: #3D3D3D;
+}
