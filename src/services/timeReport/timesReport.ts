@@ -1,13 +1,12 @@
 import moment from "moment";
 
-export type ColumnHeading = {
+export type TimescaleData = {
   startDate: Date,
   endDate: Date,
-  columnType: ColumnType
-  title: string,
+  type: TimescaleType
 }
 
-export enum ColumnType {
+export enum TimescaleType {
   week,
   month,
   quarter
@@ -38,9 +37,9 @@ moment.updateLocale("en", {
  * * Always show at least one full quarter that is not broken down. If the last quarter being display breaks into the next year, then show the entire year broken down into months.
  * * Always show at least 6 months total. Additional quarters may be needed to complete the display.
  */
-export function getTimeColumns(date: Date): ColumnHeading[] {
+export function getTimescaleData(date: Date): TimescaleData[] {
 
-  const columnHeadings: ColumnHeading[] = [];
+  const timescales: TimescaleData[] = [];
   const currentDateMoment = moment(date)
 
   //  Get week Data.
@@ -55,13 +54,12 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
     // loop until we satisfy rule for weeks. ie. we should show at least `3` weeks.
     // However if we go into a month we should should 3 weeks for that month.
 
-    const columnHeading: ColumnHeading = {
+    const columnHeading: TimescaleData = {
       startDate: weekStart.toDate(),
       endDate: weekEnd.toDate(),
-      columnType: ColumnType.week,
-      title: weekStart.format("MMM Do"),
+      type: TimescaleType.week,
     };
-    columnHeadings.push(columnHeading);
+    timescales.push(columnHeading);
 
 
     // if week falls into next month then reset `weekForMonth` count.
@@ -84,13 +82,12 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
   let monthsForQuarter = MIN_MONTH_FOR_QUARTER;
   let currentQuarter = month.quarter();
   while (monthsForQuarter > 0) {
-    const columnHeading: ColumnHeading = {
+    const timescale: TimescaleData = {
       startDate: month.toDate(),
       endDate: moment(month).endOf("month").toDate(),
-      columnType: ColumnType.month,
-      title: month.format("MMM YYYY"),
+      type: TimescaleType.month,
     };
-    columnHeadings.push(columnHeading);
+    timescales.push(timescale);
 
     const isNewQuarter = currentQuarter !== month.quarter();
     if (isNewQuarter) {
@@ -109,13 +106,12 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
   let numQuarters = MIN_QUARTERS;
   while (numQuarters > 0) {
     // Get Quarter Data; show the new quarter data.
-    const columnHeading: ColumnHeading = {
+    const columnHeading: TimescaleData = {
       startDate: quarterStart.toDate(),
       endDate: quarterEnd.endOf("month").toDate(),
-      columnType: ColumnType.quarter,
-      title: ` Q${quarterStart.quarter()} ${quarterStart.format("YYYY")}`,
+      type: TimescaleType.quarter,
     };
-    columnHeadings.push(columnHeading);
+    timescales.push(columnHeading);
 
 
     quarterStart.add(1, "quarter");
@@ -124,5 +120,5 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
   }
 
 
-  return columnHeadings;
+  return timescales;
 }
