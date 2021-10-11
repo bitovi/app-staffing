@@ -43,13 +43,12 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
   const columnHeadings: ColumnHeading[] = [];
   const currentDateMoment = moment(date)
 
-  //  Collect weeks.
+  //  Get week Data.
   const weekStart = moment(currentDateMoment).startOf("week");
   const midWeek = moment(currentDateMoment).weekday(2);
   const weekEnd = moment(currentDateMoment).endOf("week");
 
   let weeksForMonth = MIN_WEEKS_FOR_MONTH;
-
   let currentMonth = midWeek.month(); // NB: the month is determined by which ever month midweek falls
   // always show three weeks in a months;
   while (weeksForMonth > 0) {
@@ -60,14 +59,11 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
       startDate: weekStart.toDate(),
       endDate: weekEnd.toDate(),
       columnType: ColumnType.week,
-      title: weekStart.format("MMM/D"),
+      title: weekStart.format("MMM Do"),
     };
     columnHeadings.push(columnHeading);
 
-    //  go to next week
-    weekStart.add(1, "week");
-    weekEnd.add(1, "week");
-    midWeek.add(1, "week");
+
     // if week falls into next month then reset `weekForMonth` count.
     const isNewMonth = currentMonth !== midWeek.month();
     if (isNewMonth) {
@@ -75,9 +71,13 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
       currentMonth = midWeek.month(); // set to current month;
     }
 
+    //  go to next week
+    weekStart.add(1, "week");
+    weekEnd.add(1, "week");
+    midWeek.add(1, "week");
+
     weeksForMonth--;
   }
-
 
   // Get months Data
   const month = moment(weekStart).startOf("month").add(1, "month");
@@ -88,7 +88,7 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
       startDate: month.toDate(),
       endDate: moment(month).endOf("month").toDate(),
       columnType: ColumnType.month,
-      title: month.format("MMM/YY"),
+      title: month.format("MMM YYYY"),
     };
     columnHeadings.push(columnHeading);
 
@@ -104,9 +104,8 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
   }
 
   // Get Quarter Data
-
-  const quarterStart = moment().quarter(currentQuarter + 1);
-  const quarterEnd = moment().quarter(currentQuarter + 1).add(3, "month").endOf("month");
+  const quarterStart = moment(month).quarter(currentQuarter + 1);
+  const quarterEnd = moment(month).quarter(currentQuarter + 1).add(3, "month").endOf("month");
   let numQuarters = MIN_QUARTERS;
   while (numQuarters > 0) {
     // Get Quarter Data; show the new quarter data.
@@ -114,7 +113,7 @@ export function getTimeColumns(date: Date): ColumnHeading[] {
       startDate: quarterStart.toDate(),
       endDate: quarterEnd.endOf("month").toDate(),
       columnType: ColumnType.quarter,
-      title: ` Q${quarterStart.quarter()} - ${quarterStart.format("YYYY")}`,
+      title: ` Q${quarterStart.quarter()} ${quarterStart.format("YYYY")}`,
     };
     columnHeadings.push(columnHeading);
 
