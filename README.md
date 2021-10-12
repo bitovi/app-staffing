@@ -16,6 +16,7 @@
 - [Storybook](https://bitovi.github.io/app-staffing/storybook/)
 - [Project WIKI](https://github.com/bitovi/app-staffing/wiki)
 - [Project Board](https://github.com/bitovi/app-staffing/projects)
+- [Definition of done](https://github.com/bitovi/app-staffing/wiki/Definition-of-Done)
 
 ## 🏗 Build Status
 
@@ -31,11 +32,14 @@ Tech Stack/Libraries
 - [swr](https://swr.vercel.app/docs/getting-started)
 - [StoryBook](https://storybook.js.org/docs/react/get-started/introduction)
 - [Typescript](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html)
+- [ChakraUI](https://chakra-ui.com/docs/getting-started)
 
 Dependencies
 
 - [API]()
-- []
+
+
+[comment]: <> (- [])
 
 
 ## 🔧 Project Setup
@@ -49,7 +53,7 @@ Follow these steps for setting up this project on ur local machine.
 
 ## 📜 Documentation
 
-Components are documented using storybook.
+Components are documented using [storybook](https://storybook.js.org/docs/react/writing-stories/introduction).
 
 ```tsx
 /** 
@@ -100,7 +104,7 @@ Pinned.args = {
 
 ### Guidelines
 
-*TBD: link to other readme that further explain coding styles.*
+- [ChakraUI Guidelines](https://bitovi.github.io/app-staffing/storybook/?path=/story/design-system--page)
 
 ## 🚀 Deployment
 
