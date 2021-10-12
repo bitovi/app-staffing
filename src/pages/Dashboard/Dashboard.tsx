@@ -1,21 +1,23 @@
 import ReportTable from "./components/ReportTable";
-import styles from './Dashboard.module.scss'
+import { Flex } from "@chakra-ui/layout";
+import { Heading } from "@chakra-ui/react";
 
 export default function Dashboard(): JSX.Element {
-
 
   const reportDate = new Date();
 
   return (
-    <div className={styles.dashboard}>
+    <Flex flexDirection="column" py={20} px={14}>
 
-      <div className={styles.dashboardTitle}>
-        Bitovi Staff Management
-      </div>
+      <Flex alignItems="center" marginBottom={10}>
+        <Heading size="2xl">
+          Bitovi Staff Management
+        </Heading>
+      </Flex>
 
 
-      <ReportTable reportDate={reportDate}/>
+      <ReportTable reportDate={reportDate} />
 
-    </div>
+    </Flex>
   );
 }
