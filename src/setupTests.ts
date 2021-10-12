@@ -2,8 +2,10 @@
 
 import chai from "chai";
 import chaiDom from "chai-dom";
+import chaiSpies from "chai-spies";
 
 chai.use(chaiDom);
+chai.use(chaiSpies);
 
 import "@testing-library/jest-dom";
 
