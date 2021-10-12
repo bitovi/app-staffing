@@ -21,8 +21,6 @@ describe("time report time scale logic", () => {
   it("return at least 2 weeks in month", () => {
     const columns = getTimescaleData(THIRD_WEEK_IN_JAN);
 
-    console.log(columns);
-
     expect(columns[2].startDate.getMonth()).toBe(1);
     expect(columns[2].startDate.getDate()).toBe(1);
 
@@ -35,8 +33,6 @@ describe("time report time scale logic", () => {
   it("return 2 months", () => {
     const columns = getTimescaleData(JAN_FOURTH);
 
-    console.log(columns);
-
     expect(columns[3].startDate.getMonth()).toBe(1);
     expect(columns[3].type).toBe(TimescaleType.month);
     expect(columns[4].startDate.getMonth()).toBe(2);
@@ -47,11 +43,7 @@ describe("time report time scale logic", () => {
   it("return next quarter following months", () => {
     const columns = getTimescaleData(JAN_FOURTH);
 
-    console.log(columns);
-
     expect(columns[5].startDate.getMonth()).toBe(3);
     expect(columns[5].type).toBe(TimescaleType.quarter);
   });
-
-
 });
