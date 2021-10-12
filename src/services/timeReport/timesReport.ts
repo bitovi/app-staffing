@@ -1,4 +1,14 @@
-import moment from "moment";
+import {
+  startOfWeek,
+  lastDayOfWeek,
+  setDay,
+  getMonth,
+  add,
+  startOfMonth,
+  getQuarter,
+  endOfMonth,
+  addQuarters, endOfQuarter, setQuarter,
+} from "date-fns";
 
 export type TimescaleData = {
   startDate: Date,
@@ -18,14 +28,6 @@ const MIN_MONTH_FOR_QUARTER = 2; // min amount of months to show for quarter.
 const MIN_QUARTERS = 2; // min amount of quarters
 
 
-moment.updateLocale("en", {
-  week: {
-    dow: 1, // sets the first day of the week to be monday.
-    doy: 7,  // set the weeks to contain seven days
-  },
-});
-
-
 /**
  * Gets the column heading for the
  *
@@ -40,82 +42,81 @@ moment.updateLocale("en", {
 export function getTimescaleData(date: Date): TimescaleData[] {
 
   const timescales: TimescaleData[] = [];
-  const currentDateMoment = moment(date)
 
   //  Get week Data.
-  const weekStart = moment(currentDateMoment).startOf("week");
-  const midWeek = moment(currentDateMoment).weekday(2);
-  const weekEnd = moment(currentDateMoment).endOf("week");
+  let weekStart = startOfWeek(date, { weekStartsOn: 1 });
+  let midWeek = setDay(date, 2, { weekStartsOn: 1 });
+  let weekEnd = lastDayOfWeek(date, { weekStartsOn: 1 });
 
   let weeksForMonth = MIN_WEEKS_FOR_MONTH;
-  let currentMonth = midWeek.month(); // NB: the month is determined by which ever month midweek falls
+  let currentMonth = getMonth(midWeek); // NB: the month is determined by which ever month midweek falls
   // always show three weeks in a months;
   while (weeksForMonth > 0) {
     // loop until we satisfy rule for weeks. ie. we should show at least `3` weeks.
     // However if we go into a month we should should 3 weeks for that month.
 
     const columnHeading: TimescaleData = {
-      startDate: weekStart.toDate(),
-      endDate: weekEnd.toDate(),
+      startDate: weekStart,
+      endDate: weekEnd,
       type: TimescaleType.week,
     };
     timescales.push(columnHeading);
 
 
     // if week falls into next month then reset `weekForMonth` count.
-    const isNewMonth = currentMonth !== midWeek.month();
+    const isNewMonth = currentMonth !== getMonth(midWeek);
     if (isNewMonth) {
       weeksForMonth = MIN_WEEKS_FOR_MONTH;
-      currentMonth = midWeek.month(); // set to current month;
+      currentMonth = getMonth(midWeek); // set to current month;
     }
 
     //  go to next week
-    weekStart.add(1, "week");
-    weekEnd.add(1, "week");
-    midWeek.add(1, "week");
+    weekStart = add(weekStart, { weeks: 1 });
+    weekEnd = add(weekEnd, { weeks: 1 });
+    midWeek = add(midWeek, { weeks: 1 });
 
     weeksForMonth--;
   }
 
   // Get months Data
-  const month = moment(weekStart).startOf("month").add(1, "month");
+  let month = add(startOfMonth(weekStart), { months: 1 });
   let monthsForQuarter = MIN_MONTH_FOR_QUARTER;
-  let currentQuarter = month.quarter();
+  let currentQuarter = getQuarter(month);
   while (monthsForQuarter > 0) {
     const timescale: TimescaleData = {
-      startDate: month.toDate(),
-      endDate: moment(month).endOf("month").toDate(),
+      startDate: month,
+      endDate: endOfMonth(month),
       type: TimescaleType.month,
     };
     timescales.push(timescale);
 
-    const isNewQuarter = currentQuarter !== month.quarter();
+    const isNewQuarter = currentQuarter !== getQuarter(month);
     if (isNewQuarter) {
       // if the quarter changes then show all the months that quarter.
       monthsForQuarter = 3;
-      currentQuarter = month.quarter();
+      currentQuarter = getQuarter(month);
     }
 
-    month.add(1, "month").startOf("month");
+    month = startOfMonth(add(month, { months: 1 })) ;
     monthsForQuarter--;
   }
 
   // Get Quarter Data
-  const quarterStart = moment(month).quarter(currentQuarter + 1);
-  const quarterEnd = moment(month).quarter(currentQuarter + 1).add(3, "month").endOf("month");
+  let quarterStart = setQuarter(month, currentQuarter + 1);
+  let quarterEnd = endOfQuarter(quarterStart);
   let numQuarters = MIN_QUARTERS;
   while (numQuarters > 0) {
     // Get Quarter Data; show the new quarter data.
     const columnHeading: TimescaleData = {
-      startDate: quarterStart.toDate(),
-      endDate: quarterEnd.endOf("month").toDate(),
+      startDate: quarterStart,
+      endDate: quarterEnd,
       type: TimescaleType.quarter,
     };
     timescales.push(columnHeading);
 
 
-    quarterStart.add(1, "quarter");
-    quarterEnd.add(1, "quarter");
+    quarterStart = addQuarters(quarterStart, 1);
+    quarterEnd = addQuarters(quarterEnd, 1);
     numQuarters--;
   }
 
