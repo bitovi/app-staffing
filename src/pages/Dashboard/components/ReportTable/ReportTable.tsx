@@ -3,7 +3,7 @@ import { Flex } from "@chakra-ui/layout";
 import styles from "./ReportTable.module.scss";
 import { Spacer, Square } from "@chakra-ui/react";
 import { getTimescaleData, TimescaleData, TimescaleType } from "../../../../services/timeReport/timesReport";
-import moment from "moment";
+import { format } from "date-fns";
 
 
 interface IProps {
@@ -18,13 +18,13 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
   const columnHeading: string[] = timescales.map(item => {
     switch (item.type) {
       case TimescaleType.week:
-        return moment(item.startDate).format("MMM Do");
+        return format(item.startDate, "MMM do");
       case TimescaleType.month:
-        return moment(item.startDate).format("MMM YYYY");
+        return format(item.startDate, "MMM yyyy");
       case TimescaleType.quarter:
-        return `Q${moment(item.startDate).format("Q YYYY")}`
+        return `Q${format(item.startDate, "Q yyyy")}`
       default:
-        return moment(item.startDate).format("MMM Do");
+        return format(item.startDate ,"MMM do");
     }
   });
 
