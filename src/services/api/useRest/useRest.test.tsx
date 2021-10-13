@@ -37,8 +37,8 @@ describe("useRest", () => {
 
     const employee = {
       name: "test",
-      startDate: "01/01/2021",
-      endDate: "01/01/2022",
+      startDate: new Date(2021, 0, 1),
+      endDate: new Date(2022, 0, 1),
       skills: [{ name: react }],
     };
 
