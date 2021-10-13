@@ -4,16 +4,24 @@ import { format } from "date-fns";
 
 type IProps = {
   children?: React.ReactNode;
-  label: string
+  label: string;
   name?: string;
-  onChange(date: Date): void,
-  selectedDate?: Date
-}
+  onChange(date: Date): void;
+  selectedDate?: Date;
+};
 
-export const DatePicker = ({ children, onChange, selectedDate, name, label, ...props }: IProps): JSX.Element => {
-
+export const DatePicker = ({
+  children,
+  onChange,
+  selectedDate,
+  name,
+  label,
+  ...props
+}: IProps): JSX.Element => {
   // format date
-  const formattedDate = selectedDate ? format(new Date(selectedDate), "yyyy-MM-dd") : "";
+  const formattedDate = selectedDate
+    ? format(new Date(selectedDate), "yyyy-MM-dd")
+    : "";
 
   const handleChange = (evt: any) => {
     const dateString: string = evt.target.value;

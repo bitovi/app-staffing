@@ -90,15 +90,10 @@ describe("Components/Layout", () => {
     const onSave = jest.fn();
     render(
       <MemoryRouter>
-        <EmployeeCard
-          key={employee.id}
-          employee={employee}
-          onSave={onSave}
-        />
+        <EmployeeCard key={employee.id} employee={employee} onSave={onSave} />
       </MemoryRouter>,
     );
     const container = screen.getByLabelText("start date");
-
 
     userEvent.click(container);
     fireEvent.change(container, { target: { value: "2021-10-25" } });

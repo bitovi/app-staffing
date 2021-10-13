@@ -23,7 +23,7 @@ export default function RoleDate({
           onBlur={(e) => {
             onChange({
               ...estimatedDate,
-              date: new Date(e.target.value)
+              date: new Date(e.target.value),
             });
           }}
         />

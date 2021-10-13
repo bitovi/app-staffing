@@ -43,7 +43,7 @@ export default function EmployeeCard({
 
   const onDateFieldUpdate = (fieldName: string) => (dateValue: Date) => {
     setFormData({ ...formData, [fieldName]: dateValue });
-  }
+  };
 
   return (
     <Grid
@@ -79,22 +79,23 @@ export default function EmployeeCard({
             mr={{ base: 2, lg: 0 }}
           >
             Start Date
-            <DatePicker data-testid="start-date"
-                        name="startDate"
-                        label="start date"
-                        selectedDate={formData.startDate}
-                        onChange={onDateFieldUpdate('startDate')} />
-
+            <DatePicker
+              data-testid="start-date"
+              name="startDate"
+              label="start date"
+              selectedDate={formData.startDate}
+              onChange={onDateFieldUpdate("startDate")}
+            />
           </Text>
           <Text fontSize="sm" as="label">
             End Date
-            <DatePicker data-testid="end-date"
-                        name="endDate"
-                        label="end date"
-                        selectedDate={formData.endDate}
-                        onChange={onDateFieldUpdate('endDate')}
+            <DatePicker
+              data-testid="end-date"
+              name="endDate"
+              label="end date"
+              selectedDate={formData.endDate}
+              onChange={onDateFieldUpdate("endDate")}
             />
-
           </Text>
         </Flex>
       </GridItem>
