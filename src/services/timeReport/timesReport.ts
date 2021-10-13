@@ -7,26 +7,26 @@ import {
   startOfMonth,
   getQuarter,
   endOfMonth,
-  addQuarters, endOfQuarter, setQuarter,
+  addQuarters,
+  endOfQuarter,
+  setQuarter,
 } from "date-fns";
 
 export type TimescaleData = {
-  startDate: Date,
-  endDate: Date,
-  type: TimescaleType
-}
+  startDate: Date;
+  endDate: Date;
+  type: TimescaleType;
+};
 
 export enum TimescaleType {
   week,
   month,
-  quarter
+  quarter,
 }
-
 
 const MIN_WEEKS_FOR_MONTH = 3; // min amount of weeks to show for a month.
 const MIN_MONTH_FOR_QUARTER = 2; // min amount of months to show for quarter.
 const MIN_QUARTERS = 2; // min amount of quarters
-
 
 /**
  * Gets the column heading for the
@@ -40,7 +40,6 @@ const MIN_QUARTERS = 2; // min amount of quarters
  * * Always show at least 6 months total. Additional quarters may be needed to complete the display.
  */
 export function getTimescaleData(date: Date): TimescaleData[] {
-
   const timescales: TimescaleData[] = [];
 
   //  Get week Data.
@@ -61,7 +60,6 @@ export function getTimescaleData(date: Date): TimescaleData[] {
       type: TimescaleType.week,
     };
     timescales.push(columnHeading);
-
 
     // if week falls into next month then reset `weekForMonth` count.
     const isNewMonth = currentMonth !== getMonth(midWeek);
@@ -97,7 +95,7 @@ export function getTimescaleData(date: Date): TimescaleData[] {
       currentQuarter = getQuarter(month);
     }
 
-    month = startOfMonth(add(month, { months: 1 })) ;
+    month = startOfMonth(add(month, { months: 1 }));
     monthsForQuarter--;
   }
 
@@ -114,12 +112,10 @@ export function getTimescaleData(date: Date): TimescaleData[] {
     };
     timescales.push(columnHeading);
 
-
     quarterStart = addQuarters(quarterStart, 1);
     quarterEnd = addQuarters(quarterEnd, 1);
     numQuarters--;
   }
-
 
   return timescales;
 }

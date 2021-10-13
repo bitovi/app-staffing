@@ -1,8 +1,6 @@
 import { TimescaleType, getTimescaleData } from "./timesReport";
 
 describe("time report time scale logic", () => {
-
-
   const JAN_FOURTH_2021 = new Date(2021, 0, 4);
   it("returns first three weeks in Jan", () => {
     const columns = getTimescaleData(JAN_FOURTH_2021);
@@ -28,7 +26,6 @@ describe("time report time scale logic", () => {
     expect(columns[3].startDate.getDate()).toBe(8);
   });
 
-
   it("return 2 months", () => {
     const columns = getTimescaleData(JAN_FOURTH_2021);
 
@@ -38,11 +35,10 @@ describe("time report time scale logic", () => {
     expect(columns[4].type).toBe(TimescaleType.month);
   });
 
-
   it("return next quarter following months", () => {
     const columns = getTimescaleData(JAN_FOURTH_2021);
 
-    console.log('columns', columns)
+    console.log("columns", columns);
 
     expect(columns[5].startDate.getMonth()).toBe(3);
     expect(columns[5].type).toBe(TimescaleType.quarter);
