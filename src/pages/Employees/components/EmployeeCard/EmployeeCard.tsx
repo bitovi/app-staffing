@@ -41,6 +41,10 @@ export default function EmployeeCard({
     setFormData({ ...formData, [name]: value });
   };
 
+  const onDateFieldUpdate = (fieldName: string) => (dateValue: Date) => {
+    setFormData({ ...formData, [fieldName]: dateValue });
+  }
+
   return (
     <Grid
       alignItems="center"
@@ -79,7 +83,7 @@ export default function EmployeeCard({
                         name="startDate"
                         label="start date"
                         selectedDate={formData.startDate}
-                        onChange={updateField} />
+                        onChange={onDateFieldUpdate('startDate')} />
 
           </Text>
           <Text fontSize="sm" as="label">
@@ -88,7 +92,7 @@ export default function EmployeeCard({
                         name="endDate"
                         label="end date"
                         selectedDate={formData.endDate}
-                        onChange={updateField}
+                        onChange={onDateFieldUpdate('endDate')}
             />
 
           </Text>

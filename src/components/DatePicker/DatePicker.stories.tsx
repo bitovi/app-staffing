@@ -9,10 +9,10 @@ export default {
 } as ComponentMeta<typeof DatePicker>
 
 export const Basic: ComponentStory<typeof DatePicker> = () => {
-  const [currentValue, setCurrentValue] = useState<string>();
+  const [currentValue, setCurrentValue] = useState<Date>();
 
-  const handleChange = (evt: React.FormEvent<HTMLInputElement>) => {
-    setCurrentValue(evt.currentTarget.value)
+  const handleChange = (date: Date) => {
+    setCurrentValue(date)
   }
 
   return (
