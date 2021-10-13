@@ -1,10 +1,11 @@
 import { extendTheme } from "@chakra-ui/react";
 import { button } from "./components/button";
 import { tag } from "./components/tag";
-import { fonts } from "./fonts";
+import { fonts, textStyles } from "./fonts";
 
 const theme = extendTheme({
   fonts,
+  textStyles,
   components: {
     Button: button,
     Tag: tag,

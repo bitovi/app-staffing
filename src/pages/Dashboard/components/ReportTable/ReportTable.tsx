@@ -1,13 +1,12 @@
 import React from "react";
 import { Flex } from "@chakra-ui/layout";
-import styles from "./ReportTable.module.scss";
-import { Spacer, Square } from "@chakra-ui/react";
+import { Spacer, Square, Text } from "@chakra-ui/react";
 import { getTimescaleData, TimescaleData, TimescaleType } from "../../../../services/timeReport/timesReport";
 import { format } from "date-fns";
 
 
 interface IProps {
-  reportDate: Date
+  reportDate: Date;
 }
 
 
@@ -22,19 +21,20 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
       case TimescaleType.month:
         return format(item.startDate, "MMM yyyy");
       case TimescaleType.quarter:
-        return `Q${format(item.startDate, "Q yyyy")}`
+        return `Q${format(item.startDate, "Q yyyy")}`;
       default:
-        return format(item.startDate ,"MMM do");
+        return format(item.startDate, "MMM do");
     }
   });
 
 
   return (
-
     <Flex flex={1}>
 
-      <Square flex={2} className={styles.reportTableHeading} justifyContent={"start"}>
-        Departments
+      <Square flex={2} justifyContent={"start"}>
+        <Text textStyle="tableHead">
+          Departments
+        </Text>
       </Square>
 
       <Spacer />
@@ -42,16 +42,16 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
       {/* Table Heading */}
       {
         columnHeading.map((item, index) => {
-          return <Square flex={1} key={index} className={styles.reportTableHeading} justifyContent={"start"}>
-            {item}
+          return <Square flex={1} key={index} justifyContent={"start"}>
+            <Text textStyle="tableHead">
+              {item}
+            </Text>
           </Square>;
         })
       }
 
 
     </Flex>
-
-
   );
 }
 

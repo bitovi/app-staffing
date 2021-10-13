@@ -1,6 +1,6 @@
 import ReportTable from "./components/ReportTable";
 import { Flex } from "@chakra-ui/layout";
-import { Heading } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 
 export default function Dashboard(): JSX.Element {
 
@@ -10,9 +10,9 @@ export default function Dashboard(): JSX.Element {
     <Flex flexDirection="column" py={20} px={14}>
 
       <Flex alignItems="center" marginBottom={10}>
-        <Heading size="2xl">
+        <Text textStyle="h1">
           Bitovi Staff Management
-        </Heading>
+        </Text>
       </Flex>
 
 
