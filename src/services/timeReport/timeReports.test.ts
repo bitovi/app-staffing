@@ -38,8 +38,6 @@ describe("time report time scale logic", () => {
   it("return next quarter following months", () => {
     const columns = getTimescaleData(JAN_FOURTH_2021);
 
-    console.log("columns", columns);
-
     expect(columns[5].startDate.getMonth()).toBe(3);
     expect(columns[5].type).toBe(TimescaleType.quarter);
   });
