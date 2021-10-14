@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Flex } from "@chakra-ui/layout";
 import { Spacer, Square, Text } from "@chakra-ui/react";
 import {
@@ -13,7 +13,11 @@ interface IProps {
 }
 
 export function ReportTable({ reportDate }: IProps): JSX.Element {
-  const timescales: TimescaleData[] = getTimescaleData(reportDate);
+  const timescales: TimescaleData[] = useMemo(
+    () => getTimescaleData(reportDate),
+    [reportDate],
+  );
+
   const columnHeading: string[] = timescales.map((item) => {
     switch (item.type) {
       case TimescaleType.week:
