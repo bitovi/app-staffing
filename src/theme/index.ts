@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 import { button } from "./components/button";
 import { tag } from "./components/tag";
+import { heading } from "./components/heading";
 import { fonts, textStyles } from "./fonts";
 
 const theme = extendTheme({
@@ -9,6 +10,7 @@ const theme = extendTheme({
   components: {
     Button: button,
     Tag: tag,
+    Heading: heading,
   },
 });
 
