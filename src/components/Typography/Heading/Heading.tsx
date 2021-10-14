@@ -5,7 +5,7 @@ interface HeadingProps {
   "data-testid"?: string;
   className?: string;
   children: ReactNode;
-  variant?: "h1" | "h2" | "md";
+  variant?: "h1" | "h2";
 }
 
 export function Heading({
