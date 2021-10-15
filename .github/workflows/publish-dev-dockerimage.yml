@@ -1,0 +1,24 @@
+name: Publish Docker-Image
+
+on:
+  push:
+    branches: [ aws-image-deployment ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish Docker Image
+      env:
+        AWS_ACCOUNT_NO: 832297766686
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        AWS_DEFAULT_REGION: us-west-2
+        IMAGE_NAME: internal-staffing-image
+      run: |
+        echo "running _scripts/deploy/publish.sh"
+        ./_scripts/deploy/publish.sh
