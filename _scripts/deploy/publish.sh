@@ -20,7 +20,7 @@ elif [[ -z "$REGISTRY_AUTHENTICATION" ]]; then
   echo "check the REGISTRY_AUTHENTICATION Variable"
   exit 1 
 else
-  echo "All Variables defined and ready to publish the image"
+  echo "Variables defined and ready to publish the image"
 fi
 
  #building the docker image
