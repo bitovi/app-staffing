@@ -3,10 +3,10 @@ import classnames from "classnames";
 
 import styles from "./Row.module.scss";
 
-type Row = {
+interface RowProps {
   className?: string;
   children?: ReactNode | ReactNode[];
-};
+}
 
 /**
  * To be used as part of a Table.
@@ -16,6 +16,6 @@ type Row = {
  * Header and Rows of the same Table should contain the same number of Cell components.
  *
  */
-export default function Row({ className, children }: Row): JSX.Element {
+export default function Row({ className, children }: RowProps): JSX.Element {
   return <div className={classnames(styles.row, className)}>{children}</div>;
 }

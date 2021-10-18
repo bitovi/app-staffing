@@ -2,7 +2,7 @@ import { useState } from "react";
 import Select from "../../../../../../components/Select";
 import { Skill, SkillName } from "../../../../../../services/api";
 
-interface IProps {
+interface EmployeeSkillSelectProps {
   selectedSkills: Skill[];
   allSkills: SkillName[];
   onAddSkill: (skill: SkillName) => void;
@@ -12,7 +12,7 @@ export const EmployeeSkillSelect = ({
   selectedSkills,
   allSkills,
   onAddSkill,
-}: IProps): JSX.Element => {
+}: EmployeeSkillSelectProps): JSX.Element => {
   // This value is being used to re-render react-select
   // not actually to keep track of the value
   const [skillValue, setSkillValue] = useState<string>();

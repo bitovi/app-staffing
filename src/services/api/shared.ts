@@ -8,12 +8,12 @@ export interface ResponseStatus {
   error?: Error;
 }
 
-export type QueriableList<T> = {
+export interface QueriableList<T> {
   filter?: Filter<T>;
   sort?: string;
   page?: number;
   count?: number;
-};
+}
 
 export const skillList = [
   "React",

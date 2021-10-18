@@ -3,11 +3,11 @@ import classnames from "classnames";
 
 import styles from "./Cell.module.scss";
 
-type Cell = {
+interface CellProps {
   className?: string;
   children?: ReactNode;
   align?: "left" | "center" | "right";
-};
+}
 
 /**
  * To be used as part of a Table.
@@ -20,7 +20,7 @@ export default function Cell({
   align = "left",
   className,
   children,
-}: Cell): JSX.Element {
+}: CellProps): JSX.Element {
   return (
     <div
       className={classnames(

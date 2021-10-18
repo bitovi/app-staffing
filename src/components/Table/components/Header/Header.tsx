@@ -3,10 +3,10 @@ import classnames from "classnames";
 
 import styles from "./Header.module.scss";
 
-type Header = {
+interface HeaderProps {
   className?: string;
   children?: ReactNode | ReactNode[];
-};
+}
 
 /**
  * To be used as part of a Table.
@@ -17,6 +17,9 @@ type Header = {
  * Header and Rows of the same Table should contain the same number of Cell components.
  *
  */
-export default function Header({ className, children }: Header): JSX.Element {
+export default function Header({
+  className,
+  children,
+}: HeaderProps): JSX.Element {
   return <div className={classnames(styles.header, className)}>{children}</div>;
 }

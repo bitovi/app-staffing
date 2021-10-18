@@ -1,8 +1,8 @@
-export type MockResponse<D = undefined, M = undefined> = {
+export interface MockResponse<D = undefined, M = undefined> {
   data?: D;
   metadata?: M;
   error?: string;
-};
+}
 
 class DateStringSet {
   constructor(public value: string) {

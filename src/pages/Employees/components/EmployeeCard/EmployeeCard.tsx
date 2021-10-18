@@ -7,7 +7,7 @@ import { skillList } from "../../../../services/api";
 import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
 
-interface IProps {
+interface EmployeeCardProps {
   employee: Employee;
   onSave: (employee: Employee) => void;
 }
@@ -15,7 +15,7 @@ interface IProps {
 export default function EmployeeCard({
   employee,
   onSave,
-}: IProps): JSX.Element {
+}: EmployeeCardProps): JSX.Element {
   const [formData, setFormData] = useAutoSaveForm<Employee>({
     initialFormData: employee,
     onSave,
