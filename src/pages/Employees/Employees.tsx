@@ -7,7 +7,7 @@ import EmployeeTable from "./components/EmployeeTable";
 
 import styles from "./Employees.module.scss";
 
-import { Button } from "../../components/Layout/components/Button";
+import Button from "../../components/Button";
 
 export default function Employees(): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();

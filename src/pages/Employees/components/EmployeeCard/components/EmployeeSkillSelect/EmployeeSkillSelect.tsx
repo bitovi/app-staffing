@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Select } from "../../../../../../components/Select";
+import Select from "../../../../../../components/Select";
 import { Skill, SkillName } from "../../../../../../services/api";
 
 interface IProps {

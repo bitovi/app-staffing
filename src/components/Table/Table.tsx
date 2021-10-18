@@ -14,7 +14,7 @@ interface TableProps {
  * Should contain Header and Row components as top-level children.
  *
  */
-export function Table(props: TableProps): JSX.Element {
+export default function Table(props: TableProps): JSX.Element {
   return (
     <div className={classnames(styles.table, props.className)}>
       {props.children}

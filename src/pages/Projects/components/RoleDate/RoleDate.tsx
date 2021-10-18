@@ -1,4 +1,4 @@
-import { Select } from "../../../../components/Select";
+import Select from "../../../../components/Select";
 import type { EstimatedDate } from "../../../../services/api";
 
 import styles from "./RoleDate.module.scss";

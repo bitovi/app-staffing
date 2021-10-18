@@ -13,7 +13,7 @@ interface ButtonProps {
   onClick(): void;
 }
 
-export function Button({
+export default function Button({
   children,
   className,
   disabled,

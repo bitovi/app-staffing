@@ -1,7 +1,7 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { useState } from "react";
 
-import { Select } from "./Select";
+import Select from "./Select";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },

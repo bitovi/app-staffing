@@ -16,7 +16,7 @@ type Cell = {
  * Can contain plain text or a component.
  *
  */
-export function Cell({
+export default function Cell({
   align = "left",
   className,
   children,

@@ -1,4 +1,4 @@
-import { Button } from "../../../../components/Layout/components/Button";
+import Button from "../../../../components/Button";
 import { Project } from "../../../../services/api";
 import ProjectCard from "../ProjectCard";
 import styles from "./ListProjects.module.scss";
