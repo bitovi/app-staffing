@@ -25,6 +25,7 @@ fi
 
  #building the docker image
  docker build -t ${IMAGE_NAME} .
+ echo $github_ref
 
 
 if [[ BRANCH_NAME == 'main' ]]; then
@@ -34,6 +35,7 @@ if [[ BRANCH_NAME == 'main' ]]; then
   docker push ${REGISTRY_URL}:${IMAGE_TAG}
 else
   echo $REGISTRY_AUTHENTICATION
+  echo ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
   docker tag ${IMAGE_NAME}  ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
   docker push  ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
 fi
