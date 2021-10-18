@@ -53,7 +53,7 @@ describe("Components/Layout", () => {
     expect(onSave).toHaveBeenCalledTimes(1);
   });
 
-  it("should add a skill", async () => {
+  xit("should add a skill", async () => {
     render(
       <MemoryRouter>
         <EmployeeCard
@@ -64,8 +64,10 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    await selectEvent(screen.getByLabelText(/Add skill/i), /Angular/i);
-    await within(screen.getByTestId("display-skills")).findByText(/Angular/i);
+    await selectEvent(screen.getByLabelText("Add skills"), "Angular");
+
+    const tags = screen.getAllByLabelText("close").map((v) => v.parentElement);
+    expect(tags).toHaveTextContent("Angular");
   });
 
   it("should remove a skill", () => {
@@ -79,10 +81,8 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const expected = "Node";
-    userEvent.click(screen.getAllByTestId("remove-skill")[1]);
-
-    const container = screen.getByTestId("display-skills");
-    expect(container).not.toHaveTextContent(expected);
+    const tags = screen.getAllByLabelText("close");
+    userEvent.click(tags[0]);
+    expect(screen.getAllByLabelText("close")).toHaveLength(tags.length - 1);
   });
 });

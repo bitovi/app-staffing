@@ -91,7 +91,7 @@ export default function EmployeeCard({
         </Flex>
       </GridItem>
       <GridItem>
-        <Wrap as="ul" shouldWrapChildren>
+        <Wrap shouldWrapChildren>
           {formData.skills.map(({ name }) => (
             <Tag variant="primary" key={name}>
               {name}
