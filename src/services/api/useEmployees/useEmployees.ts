@@ -24,9 +24,9 @@ export default function useEmployees(
     data: employees,
     error,
     isLoading,
-    useAdd,
-    useUpdate,
-    useDelete,
+    handleAdd,
+    handleUpdate,
+    handleDelete,
   } = useRest<Employee>("/api/v1/employees", queryParams);
 
   const getEmployeesWithSkill = useCallback(
@@ -46,9 +46,9 @@ export default function useEmployees(
     employees,
     isLoading,
     error,
-    addEmployee: useAdd,
-    updateEmployee: useUpdate,
+    addEmployee: handleAdd,
+    updateEmployee: handleUpdate,
     getEmployeesWithSkill,
-    deleteEmployee: useDelete,
+    deleteEmployee: handleDelete,
   };
 }

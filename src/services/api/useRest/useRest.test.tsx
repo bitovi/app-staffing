@@ -46,7 +46,7 @@ describe("useRest", () => {
 
     let id = "";
     await act(async () => {
-      id = await result.current.useAdd(employee);
+      id = await result.current.handleAdd(employee);
     });
 
     const newEmployee = { ...employee, id };
@@ -68,7 +68,8 @@ describe("useRest", () => {
       name: "FAKE NAME",
     };
 
-    await act(() => result.current.useUpdate(employee.id, employee));
+    // TODO: This is brittle and sometimes the expect fails. I do not know why.
+    await act(() => result.current.handleUpdate(employee.id, employee));
 
     expect(result.current.data?.find(({ id }) => id === employee.id)).toEqual(
       employee,
@@ -82,7 +83,8 @@ describe("useRest", () => {
 
     await waitForNextUpdate();
 
-    await act(() => result.current.useDelete(employees[0].id));
+    // TODO: This is brittle and sometimes the expect fails. I do not know why.
+    await act(() => result.current.handleDelete(employees[0].id));
 
     expect(result.current.data?.find(({ id }) => id === employees[0].id)).toBe(
       undefined,
