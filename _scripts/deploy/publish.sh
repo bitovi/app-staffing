@@ -34,6 +34,6 @@ if [[ BRANCH_NAME == 'main' ]]; then
   docker push ${REGISTRY_URL}:${IMAGE_TAG}
 else
   echo $REGISTRY_AUTHENTICATION
-  docker tag ${IMAGE_NAME}  ${REGISTRY_URL}:${BRANCH_NAME}-${GITHUB_SHA}
-  docker push  ${REGISTRY_URL}:${BRANCH_NAME}-${GITHUB_SHA}
+  docker tag ${IMAGE_NAME}  ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
+  docker push  ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
 fi
