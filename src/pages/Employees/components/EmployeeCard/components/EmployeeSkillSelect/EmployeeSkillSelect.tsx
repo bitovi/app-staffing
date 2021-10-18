@@ -12,7 +12,7 @@ export const EmployeeSkillSelect = ({
   selectedSkills,
   allSkills,
   onAddSkill,
-}: IProps) => {
+}: IProps): JSX.Element => {
   // This value is being used to re-render react-select
   // not actually to keep track of the value
   const [skillValue, setSkillValue] = useState<string>();

@@ -17,14 +17,14 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Depcheck
-        run: npm run depcheck
+      - name: Typecheck
+        run: npm run typecheck
       - name: ESLint
         run: npm run eslint
       - name: Prettier
         run: npm run prettier
-      - name: Typecheck
-        run: npm run typecheck
+      - name: Depcheck
+        run: npm run depcheck
 
       - name: Test
         run: npm run test:ci

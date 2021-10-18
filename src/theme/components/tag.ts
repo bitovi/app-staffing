@@ -1,6 +1,6 @@
 import { StyleConfig } from "@chakra-ui/theme-tools";
 
-export const tag = {
+const tag: StyleConfig = {
   baseStyle: {
     container: {
       backgroundColor: "gray.200",
@@ -13,4 +13,6 @@ export const tag = {
   },
   variants: {},
   sizes: {},
-} as StyleConfig;
+};
+
+export default tag;

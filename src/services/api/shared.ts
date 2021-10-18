@@ -32,7 +32,7 @@ export interface Skill {
 export function fetcher<T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   url: string,
-  body?: Record<string, any>,
+  body?: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
 ): Promise<T> {
   return fetch(url, {
     method,
