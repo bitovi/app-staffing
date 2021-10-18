@@ -1,11 +1,12 @@
 import type { Employee } from "..";
 
-import { renderHook, act } from "@testing-library/react-hooks";
+import { act } from "@testing-library/react-hooks";
 
 import useRest from "./useRest";
 import { employees } from "../employees/fixtures";
 import { skillList } from "../shared";
 import { employeeStoreManager } from "../employees/mocks";
+import { renderHook } from "../../../testUtils";
 
 const [react] = skillList;
 
@@ -30,7 +31,9 @@ describe("useRest", () => {
   });
 
   it("adds", async () => {
-    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useRest<Employee>("/api/v1/employees"),
+    );
 
     const employee = {
       name: "test",
@@ -38,6 +41,8 @@ describe("useRest", () => {
       endDate: "01/01/2022",
       skills: [{ name: react }],
     };
+
+    await waitForNextUpdate();
 
     let id = "";
     await act(async () => {
@@ -52,7 +57,11 @@ describe("useRest", () => {
   });
 
   it("updates", async () => {
-    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useRest<Employee>("/api/v1/employees"),
+    );
+
+    await waitForNextUpdate();
 
     const employee = {
       ...employees[0],
@@ -67,7 +76,11 @@ describe("useRest", () => {
   });
 
   it("deletes", async () => {
-    const { result } = renderHook(() => useRest<Employee>("/api/v1/employees"));
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useRest<Employee>("/api/v1/employees"),
+    );
+
+    await waitForNextUpdate();
 
     await act(() => result.current.useDelete(employees[0].id));
 

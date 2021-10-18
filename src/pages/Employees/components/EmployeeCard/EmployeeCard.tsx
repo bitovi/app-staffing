@@ -1,68 +1,34 @@
+import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
+import React from "react";
+import { Tag, TagCloseButton } from "../../../../components/Tag";
+import useAutoSaveForm from "../../../../hooks/useAutoSaveForm";
 import type { Employee, SkillName } from "../../../../services/api";
-
-import React, { useEffect, useState } from "react";
-import { isEqual } from "lodash";
-
 import { skillList } from "../../../../services/api";
-import { Select } from "../../../../components/Select";
-import { Button } from "../../../../components/Layout/components/Button";
-
-import { ReactComponent as XIcon } from "./assets/X.svg";
+import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
 
-function useTimeout(callback: () => void, delay: number | null) {
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const savedCallback = React.useRef(callback);
-
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    const tick = () => savedCallback.current();
-    if (typeof delay === "number") {
-      timeoutRef.current = setTimeout(tick, delay);
-
-      return () => {
-        timeoutRef.current && window.clearTimeout(timeoutRef.current);
-      };
-    }
-  }, [delay]);
-
-  return timeoutRef;
+interface IProps {
+  employee: Employee;
+  onSave: (employee: Employee) => void;
 }
 
-export default function EmployeeCard<EmployeeType extends Employee>({
+export default function EmployeeCard({
   employee,
   onSave,
-}: {
-  employee: EmployeeType;
-  onSave: (employee: EmployeeType) => void;
-}): JSX.Element {
-  const [formData, setFormData] = useState<EmployeeType>(employee);
-  const [hasFocus, setHasFocus] = useState<boolean>(false);
-  const handleFocus = () => setHasFocus(true);
-  const handleBlur = () => setHasFocus(false);
+}: IProps): JSX.Element {
+  const [formData, setFormData] = useAutoSaveForm<Employee>({
+    initialFormData: employee,
+    onSave,
+  });
 
-  useTimeout(
-    () => {
-      !isEqual(employee, formData) && onSave(formData);
-    },
-    hasFocus ? null : 300,
-  );
-
-  useEffect(() => {
-    setFormData(employee);
-  }, [employee]);
-
-  const handleAddSkill = (skillName: SkillName) => {
+  const onAddSkill = (skillName: SkillName) => {
     setFormData({
       ...formData,
       skills: [...formData.skills, { name: skillName }],
     });
   };
 
-  const handleRemoveSkill = (skillName: string) => {
+  const onRemoveSkill = (skillName: string) => {
     setFormData({
       ...formData,
       skills: formData.skills.filter((x) => x.name != skillName),
@@ -75,75 +41,75 @@ export default function EmployeeCard<EmployeeType extends Employee>({
   };
 
   return (
-    <div className={styles.wrapper} onFocus={handleFocus} onBlur={handleBlur}>
-      <div className={styles.details}>
-        <input
-          name="name"
-          className={styles.name}
-          value={formData.name}
-          onChange={updateField}
-          data-testid="name"
-        />
-      </div>
-      <div className={styles.details}>
-        <div role="button" className={styles.date} tabIndex={-1}>
-          <label>
+    <Grid
+      alignItems="center"
+      templateColumns={{
+        base: "1fr",
+        md: "repeat(2, 1fr)",
+        lg: "repeat(4, 1fr)",
+      }}
+      gap={4}
+    >
+      <GridItem>
+        <Flex justifyContent={{ lg: "center" }} alignItems={{ lg: "center" }}>
+          <input
+            name="name"
+            aria-label="employee-name"
+            className={styles.name}
+            value={formData.name}
+            onChange={updateField}
+          />
+        </Flex>
+      </GridItem>
+
+      <GridItem>
+        <Flex
+          flexDirection={{ base: "row", lg: "column" }}
+          justifyContent="space-between"
+        >
+          <Text
+            fontSize="sm"
+            as="label"
+            mt={{ base: 0, lg: 2 }}
+            mr={{ base: 2, lg: 0 }}
+          >
             Start Date
             <input
               name="startDate"
               value={formData.startDate}
               onChange={updateField}
             />
-          </label>
-        </div>
-        <div role="button" className={styles.date} tabIndex={-1}>
-          <label>
+          </Text>
+          <Text fontSize="sm" as="label">
             End Date
             <input
               name="endDate"
               value={formData.endDate}
               onChange={updateField}
             />
-          </label>
-        </div>
-      </div>
-      <div className={styles.skills}>
-        <span className={styles.label}>Skills</span>
-        <ul data-testid="display-skills">
+          </Text>
+        </Flex>
+      </GridItem>
+      <GridItem>
+        <Wrap as="ul" data-testid="display-skills" shouldWrapChildren>
           {formData.skills.map(({ name }) => (
-            <li key={name} className={styles.skill}>
+            <Tag variant="primary" key={name}>
               {name}
-              <Button
-                className={styles.removeSkillButton}
-                onClick={() => handleRemoveSkill(name)}
-                onKeyDown={() => handleRemoveSkill(name)}
-                tabIndex={-1}
-                variant="link"
+              <TagCloseButton
+                onClick={() => onRemoveSkill(name)}
                 data-testid="remove-skill"
-              >
-                <XIcon width="0.75em" height="0.75em" />
-              </Button>
-            </li>
+              />
+            </Tag>
           ))}
-        </ul>
-      </div>
-      <div className={styles.controls}>
-        <Select
-          label="Add skills"
-          name="addSkills"
-          value=" "
-          onChange={handleAddSkill}
-          onFocus={handleFocus} // react-select will prevent the event from bubbling if this isn't set
-          options={skillList
-            .filter(
-              (skill) =>
-                !formData.skills.some(
-                  (activeSkill) => activeSkill.name === skill,
-                ),
-            )
-            .map((skill) => ({ label: skill, value: skill }))}
+        </Wrap>
+      </GridItem>
+      <GridItem>
+        <EmployeeSkillSelect
+          selectedSkills={formData.skills}
+          allSkills={[...skillList]}
+          onAddSkill={onAddSkill}
         />
-      </div>
-    </div>
+      </GridItem>
+    </Grid>
   );
 }

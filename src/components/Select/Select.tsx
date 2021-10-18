@@ -16,6 +16,7 @@ interface SelectProps {
   onChange(value?: string): void;
   onBlur?(): void;
   onFocus?(): void;
+  placeholder?: string;
 }
 
 export function Select({
@@ -28,6 +29,7 @@ export function Select({
   onChange,
   onBlur,
   onFocus,
+  placeholder = "Select...",
 }: SelectProps): JSX.Element {
   const activeOption = options.find((option) => option.value === value);
 
@@ -44,6 +46,7 @@ export function Select({
         onBlur={onBlur}
         onChange={(option) => onChange(option?.value ?? undefined)}
         onFocus={onFocus}
+        placeholder={placeholder}
       />
     </label>
   );

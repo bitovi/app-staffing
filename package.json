@@ -16,13 +16,16 @@
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook -s public -o build/storybook",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "gen:theme-typings": "chakra-cli tokens ./src/theme/index.ts",
+    "postinstall": "npm run gen:theme-typings"
   },
   "eslintConfig": {
     "root": true,
     "extends": "@hmudesign",
     "rules": {
-      "jsx-a11y/no-onchange": "off"
+      "jsx-a11y/no-onchange": "off",
+      "import/no-extraneous-dependencies": "off"
     },
     "overrides": [
       {
@@ -31,6 +34,14 @@
         ],
         "rules": {
           "import/no-anonymous-default-export": "off"
+        }
+      },
+      {
+        "files": [
+          "*.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/explicit-module-boundary-types": "error"
         }
       }
     ]
@@ -70,12 +81,17 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/icons": "^1.0.15",
+    "@chakra-ui/react": "^1.6.8",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
     "can-deparam": "^1.2.3",
     "can-local-store": "^1.0.1",
     "can-param": "^1.1.3",
     "can-query-logic": "^1.2.3",
     "classnames": "^2.3.1",
     "faker": "^5.5.3",
+    "framer-motion": "^4",
     "lodash": "^4.17.21",
     "msw": "^0.34.0",
     "node-sass": "^6.0.1",
@@ -83,11 +99,15 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
     "react-select": "^4.3.1",
+    "react-use": "^17.3.1",
     "swr": "^0.5.6"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^1.5.0",
     "@hmudesign/eslint-config": "^2.0.2",
+    "@snek-at/storybook-addon-chakra-ui": "^1.0.0-beta.1",
     "@storybook/addon-actions": "^6.3.7",
+    "@storybook/addon-docs": "^6.3.9",
     "@storybook/addon-essentials": "^6.3.7",
     "@storybook/addon-links": "^6.3.7",
     "@storybook/node-logger": "^6.3.7",
@@ -100,6 +120,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@types/chai": "^4.2.21",
     "@types/chai-dom": "0.0.10",
+    "@types/chai-spies": "^1.0.3",
     "@types/faker": "^5.5.8",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
@@ -111,6 +132,7 @@
     "@types/react-select": "^4.0.17",
     "chai": "^4.3.4",
     "chai-dom": "^1.9.0",
+    "chai-spies": "^1.0.0",
     "depcheck": "^1.4.2",
     "prettier": "^2.3.2",
     "react-scripts": "4.0.3",

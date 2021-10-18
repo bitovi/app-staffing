@@ -64,20 +64,21 @@ function useRest<T extends { id: string }>(
     async (collectionItemId: string, updatedCollectionItem: Partial<T>) => {
       await mutate(
         `${path}?${param(queryParams)}`,
-        async (updateResponse: { data: T[] }) => {
-          const updatedItem = await fetcher<Promise<T>>(
+        async (cachedData: { data: T[] }) => {
+          const response = await fetcher<{ data: T }>(
             "PUT",
             `${path}/${collectionItemId}`,
             updatedCollectionItem,
           );
 
           return {
-            ...updateResponse,
-            data: updateResponse.data.map((item) =>
-              item.id === updatedItem.id ? updatedItem : item,
+            ...cachedData,
+            data: (cachedData?.data ?? []).map((item) =>
+              item.id === response.data.id ? response.data : item,
             ),
           };
         },
+        false,
       );
     },
     [path, queryParams],
@@ -97,6 +98,7 @@ function useRest<T extends { id: string }>(
             ),
           };
         },
+        false,
       );
     },
     [path, queryParams],

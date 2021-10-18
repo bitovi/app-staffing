@@ -7,8 +7,11 @@ import userEvent from "@testing-library/user-event";
 import { Employee } from "../../../../services/api";
 import { employees } from "../../../../services/api/employees/fixtures";
 import EmployeeCard from "./EmployeeCard";
+import { act } from "react-dom/test-utils";
 
 const employee: Employee = employees[0];
+
+jest.useFakeTimers("modern");
 
 describe("Components/Layout", () => {
   it("works", () => {
@@ -22,25 +25,32 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const container = screen.getByText(/Start Date/i);
-    expect(container.tagName).toBe("LABEL");
+    const startDate = screen.getByText(/Start Date/i);
+    expect(startDate.tagName).toBe("LABEL");
+
+    const endDate = screen.getByText(/End Date/i);
+    expect(endDate.tagName).toBe("LABEL");
   });
 
-  it("update a field", () => {
+  it("call onSave after 500ms debounce", async () => {
+    const onSave = jest.fn();
     render(
       <MemoryRouter>
-        <EmployeeCard
-          key={employee.id}
-          employee={employee}
-          onSave={() => null}
-        />
+        <EmployeeCard key={employee.id} employee={employee} onSave={onSave} />
       </MemoryRouter>,
     );
 
-    const container = screen.getByTestId("name");
+    const container = screen.getByLabelText("employee-name");
     userEvent.type(container, "2");
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
+    userEvent.type(container, "5");
 
-    expect(container).toHaveValue(employee.name + "2");
+    await act(async () => {
+      jest.advanceTimersByTime(500);
+    });
+    expect(onSave).toHaveBeenCalledTimes(1);
   });
 
   it("should add a skill", async () => {
