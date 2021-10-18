@@ -33,12 +33,10 @@ if [[ BRANCH_NAME == 'main' ]]; then
   IMAGE_TAG="latest"
   echo $REGISTRY_AUTHENTICATION
   docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
-  echo ${REGISTRY_URL}:${BRANCH_NAME}${IMAGE_TAG}
   docker push ${REGISTRY_URL}:${IMAGE_TAG}
 else
   echo $REGISTRY_AUTHENTICATION
   echo ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
-  docker tag ${IMAGE_NAME}  ${REGISTRY_URL}:${GITHUB_SHA}
-  echo ${REGISTRY_URL}:${GITHUB_SHA}
-  docker push  ${REGISTRY_URL}:${GITHUB_SHA}
+  docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
+  docker push  ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
 fi
