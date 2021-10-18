@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
 import { MemoryRouter } from "react-router-dom";
