@@ -6,22 +6,29 @@ export default {
   component: Tag,
 } as ComponentMeta<typeof Tag>;
 
-export const Basic: ComponentStory<typeof Tag> = (args) => <Tag {...args} />;
+export const Basic: ComponentStory<typeof Tag> = ({ ...props }) => (
+  <Tag {...props} />
+);
 
 Basic.args = {
   children: "Tag",
 };
 
-export const WithIcon: ComponentStory<typeof Tag> = (args) => <Tag {...args} />;
+export const WithIcon: ComponentStory<typeof Tag> = ({ ...props }) => (
+  <Tag {...props} />
+);
 
 WithIcon.args = {
   children: "React",
   tagRightIcon: <TagRightIcon>+</TagRightIcon>,
 };
 
-export const WithClose: ComponentStory<typeof Tag> = (args) => (
-  <Tag {...args}>
-    {args.children}
+export const WithClose: ComponentStory<typeof Tag> = ({
+  children,
+  ...props
+}) => (
+  <Tag {...props}>
+    {children}
     <TagCloseButton />
   </Tag>
 );

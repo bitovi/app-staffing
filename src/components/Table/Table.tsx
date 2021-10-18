@@ -14,10 +14,14 @@ interface TableProps {
  * Should contain Header and Row components as top-level children.
  *
  */
-export default function Table(props: TableProps): JSX.Element {
+export default function Table({
+  className,
+  children,
+  ...props
+}: TableProps): JSX.Element {
   return (
-    <div className={classnames(styles.table, props.className)}>
-      {props.children}
+    <div {...props} className={classnames(styles.table, className)}>
+      {children}
     </div>
   );
 }

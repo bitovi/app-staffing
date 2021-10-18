@@ -110,10 +110,11 @@ export default function Button({
   tabIndex,
   variant = "primary",
   onClick,
-  ...restOfProps
+  ...props
 }: ButtonProps): JSX.Element {
   return (
     <ChakraButton
+      {...props}
       variant={variant}
       disabled={disabled}
       tabIndex={tabIndex}

@@ -59,7 +59,7 @@ export default function Employees(): JSX.Element {
           Add Team Member +
         </Button>
       </div>
-      {!employees && <div className={styles.noResults}>LOADING ...</div>}
+      {!employees && <div className={styles.noResults}>LOADING...</div>}
       {employees && employees.length === 0 && (
         <div className={styles.noResults}>NO DATA FOUND!</div>
       )}

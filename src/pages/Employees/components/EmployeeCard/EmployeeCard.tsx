@@ -91,14 +91,11 @@ export default function EmployeeCard({
         </Flex>
       </GridItem>
       <GridItem>
-        <Wrap as="ul" data-testid="display-skills" shouldWrapChildren>
+        <Wrap as="ul" shouldWrapChildren>
           {formData.skills.map(({ name }) => (
             <Tag variant="primary" key={name}>
               {name}
-              <TagCloseButton
-                onClick={() => onRemoveSkill(name)}
-                data-testid="remove-skill"
-              />
+              <TagCloseButton onClick={() => onRemoveSkill(name)} />
             </Tag>
           ))}
         </Wrap>
