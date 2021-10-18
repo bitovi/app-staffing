@@ -11,7 +11,7 @@
     "eslint": "eslint src",
     "prettier": "prettier --check src",
     "depcheck": "depcheck .",
-    "clean": "rm -rf build",
+    "clean": "rm -rf build coverage",
     "dev": "react-scripts start",
     "test": "react-scripts test",
     "test:ci": "CI=true react-scripts test --coverage",

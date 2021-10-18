@@ -53,7 +53,7 @@ describe("Components/Layout", () => {
     expect(onSave).toHaveBeenCalledTimes(1);
   });
 
-  xit("should add a skill", async () => {
+  it("should add a skill", async () => {
     render(
       <MemoryRouter>
         <EmployeeCard
@@ -64,10 +64,13 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    await selectEvent(screen.getByLabelText("Add skills"), "Angular");
+    await selectEvent(screen.getByLabelText(/Add skills/), "Angular");
 
-    const tags = screen.getAllByLabelText("close").map((v) => v.parentElement);
-    expect(tags).toHaveTextContent("Angular");
+    const tags = screen
+      .getAllByLabelText("close")
+      .map((v) => v.parentElement?.textContent);
+
+    expect(tags).toContain("Angular");
   });
 
   it("should remove a skill", () => {
