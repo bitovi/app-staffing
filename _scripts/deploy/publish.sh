@@ -10,7 +10,7 @@ if [[ -z "$AWS_ACCOUNT_NO" ]]; then
   echo "check the AWS_ACCOUNT_NO Variable"
   exit 1
 elif [[ -z "$BRANCH_NAME" ]]; then
-  echo "check the AWS_ACCOUNT_NO Variable"
+  echo "check the BRANCH_NAME Variable"
   exit 1 
 elif [[ -z "$REGISTRY_URL" ]]; then
   echo "check the REGISTRY_URL Variable"
