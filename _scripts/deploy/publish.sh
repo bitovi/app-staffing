@@ -10,7 +10,8 @@ if [[ -z "$AWS_ACCOUNT_NO" ]]; then
   echo "check the AWS_ACCOUNT_NO Variable"
   exit 1
 elif [[ -z "$BRANCH_NAME" ]]; then
-  echo "check the BRANCH_NAME Variable"
+  echo "check the BRANCH_NAME
+   Variable"
   exit 1 
 elif [[ -z "$REGISTRY_URL" ]]; then
   echo "check the REGISTRY_URL Variable"
@@ -22,16 +23,17 @@ else
   echo "All Variables defined and ready to publish the image"
 fi
 
+ #building the docker image
+ docker build -t ${IMAGE_NAME} .
+
 
 if [[ BRANCH_NAME == 'main' ]]; then
   IMAGE_TAG="latest"
   echo $REGISTRY_AUTHENTICATION
-  docker build -t ${IMAGE_NAME} .
   docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
   docker push ${REGISTRY_URL}:${IMAGE_TAG}
 else
   echo $REGISTRY_AUTHENTICATION
-  docker build -t ${IMAGE_NAME} .
   docker tag ${IMAGE_NAME}  ${REGISTRY_URL}:${BRANCH_NAME}-${GITHUB_SHA}
   docker push  ${REGISTRY_URL}:${BRANCH_NAME}-${GITHUB_SHA}
 fi
