@@ -126,3 +126,24 @@ export function getTimescaleData(date: Date): TimescaleData[] {
 
   return timescales;
 }
+
+/**
+ * Returns date of the first week for the given month.
+ * NB: a week belongs to a month if midweek(Wednesday) falls in month.
+ * eg. first week for May 2018 would start April 30 2018.
+ *
+ * @param date - date value for month.
+ */
+export function getStartOfMonth(date: Date): Date {
+  date = startOfMonth(date);
+
+  let midWeek = setDay(date, 3, { weekStartsOn: 1 });
+
+  // check if check if Wednesday falls in current month.
+  if (getMonth(midWeek) === getMonth(date)) {
+    return startOfWeek(date, { weekStartsOn: 1 });
+  } else {
+    // return second week.
+    return startOfWeek(add(date, { weeks: 1 }), { weekStartsOn: 1 });
+  }
+}

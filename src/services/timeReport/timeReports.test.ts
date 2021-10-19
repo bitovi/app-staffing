@@ -1,4 +1,8 @@
-import { TimescaleType, getTimescaleData } from "./timesReport";
+import {
+  TimescaleType,
+  getTimescaleData,
+  getStartOfMonth,
+} from "./timesReport";
 
 describe("time report time scale logic", () => {
   const JAN_FOURTH_2021 = new Date(2021, 0, 4);
@@ -170,5 +174,17 @@ describe("time report time scale logic", () => {
     expect(timescaleData[10].startDate.toISOString()).toBe(
       "2018-10-01T05:00:00.000Z",
     );
+  });
+});
+
+describe("getStartOfMonth", () => {
+  it("should return correct start dates", function () {
+    const MONTH_OF_MAY = new Date(2018, 4);
+    const firstWeekOfMay = getStartOfMonth(MONTH_OF_MAY);
+    expect(firstWeekOfMay.toISOString()).toBe("2018-04-30T05:00:00.000Z");
+
+    const MONTH_OF_JUNE = new Date(2018, 5);
+    const firstWeekOfJune = getStartOfMonth(MONTH_OF_JUNE);
+    expect(firstWeekOfJune.toISOString()).toBe("2018-06-04T05:00:00.000Z");
   });
 });
