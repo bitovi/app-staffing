@@ -35,8 +35,8 @@ export function makeRole(role?: Partial<Role>): Role {
     .arrayElements(employees, faker.datatype.number(2) + 1)
     .map((employee) => ({
       employee,
-      startDate: faker.date.past().toISOString(),
-      endDate: faker.date.future().toISOString(),
+      startDate: faker.date.past(),
+      endDate: faker.date.future(),
     }));
 
   return {
