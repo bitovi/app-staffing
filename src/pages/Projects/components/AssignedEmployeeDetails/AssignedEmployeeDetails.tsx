@@ -56,9 +56,9 @@ export default function AssignedEmployeeDetails({
         Start Date:
         <input
           type="date"
-          defaultValue={assignedEmployee.assignmentStartDate}
+          defaultValue={assignedEmployee.startDate}
           onChange={({ target }) =>
-            onChange({ ...assignedEmployee, assignmentStartDate: target.value })
+            onChange({ ...assignedEmployee, startDate: target.value })
           }
         />
       </label>

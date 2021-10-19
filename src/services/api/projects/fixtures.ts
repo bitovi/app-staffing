@@ -8,6 +8,17 @@ import { employees } from "../employees/fixtures";
 
 faker.seed(0);
 
+let projectId = 1000;
+export function makeProject(project?: Partial<Project>): Project {
+  return {
+    id: `${++projectId}`,
+    name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,
+    description: faker.lorem.sentences(4),
+    roles: [makeRole(), makeRole(), makeRole()],
+    ...project,
+  };
+}
+
 let roleId = 100;
 export function makeRole(role?: Partial<Role>): Role {
   const startDate = {
@@ -24,8 +35,8 @@ export function makeRole(role?: Partial<Role>): Role {
     .arrayElements(employees, faker.datatype.number(2) + 1)
     .map((employee) => ({
       ...employee,
-      assignmentStartDate: faker.date.past().toISOString(),
-      assignmentEndDate: faker.date.future().toISOString(),
+      startDate: faker.date.past().toISOString(),
+      endDate: faker.date.future().toISOString(),
     }));
 
   return {
@@ -36,17 +47,6 @@ export function makeRole(role?: Partial<Role>): Role {
     employees: assignedEmployees,
 
     ...role,
-  };
-}
-
-let projectId = 1000;
-export function makeProject(project?: Partial<Project>): Project {
-  return {
-    id: `${++projectId}`,
-    name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,
-    description: faker.lorem.sentences(4),
-    roles: [makeRole(), makeRole(), makeRole()],
-    ...project,
   };
 }
 

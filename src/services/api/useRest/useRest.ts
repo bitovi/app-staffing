@@ -1,7 +1,7 @@
 import type { APIResponse, QueriableList } from "../shared";
 
 import { useCallback } from "react";
-import useSWR, { mutate } from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
 
 import { fetcher } from "../shared";
@@ -19,11 +19,10 @@ function useRest<T extends { id: string }>(
   path: string,
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
+  const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     `${path}?${param(queryParams)}`,
-    (url) => {
-      return fetcher("GET", url);
-    },
+    (url) => fetcher("GET", url),
   );
 
   const handleAdd = useCallback<
@@ -52,7 +51,7 @@ function useRest<T extends { id: string }>(
 
       return newId;
     },
-    [path, queryParams],
+    [path, queryParams, mutate],
   );
 
   const handleUpdate = useCallback<
@@ -81,7 +80,7 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams],
+    [path, queryParams, mutate],
   );
 
   const handleDelete = useCallback(
@@ -101,7 +100,7 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams],
+    [path, queryParams, mutate],
   );
 
   return {

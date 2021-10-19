@@ -1,14 +1,16 @@
 import type { Employee } from "..";
 
-import { act } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
+import { SWRConfig } from "swr";
 
 import useRest from "./useRest";
-import { employees } from "../employees/fixtures";
-import { skillList } from "../shared";
-import { employeeStoreManager } from "../employees/mocks";
-import { renderHook } from "../../../testUtils";
 
-const [react] = skillList;
+import { employeeStoreManager } from "../employees/mocks";
+import { employees } from "../employees/fixtures";
+
+export const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
+);
 
 describe("useRest", () => {
   beforeEach(async () => {
@@ -20,29 +22,34 @@ describe("useRest", () => {
   });
 
   it("works", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees"),
+    const { result, waitForNextUpdate } = renderHook(
+      () => useRest<Employee>("/api/v1/employees"),
+      { wrapper },
     );
+
+    expect(result.current.isLoading).toBe(true);
     expect(result.current.data).toBe(undefined);
 
     await waitForNextUpdate();
 
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toEqual(employees);
   });
 
   it("adds", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees"),
+    const { result, waitForNextUpdate } = renderHook(
+      () => useRest<Employee>("/api/v1/employees"),
+      { wrapper },
     );
+
+    await waitForNextUpdate();
 
     const employee = {
       name: "test",
       startDate: "01/01/2021",
       endDate: "01/01/2022",
-      skills: [{ name: react }],
+      skills: [{ name: "React" as const }],
     };
-
-    await waitForNextUpdate();
 
     let id = "";
     await act(async () => {
@@ -57,8 +64,9 @@ describe("useRest", () => {
   });
 
   it("updates", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees"),
+    const { result, waitForNextUpdate } = renderHook(
+      () => useRest<Employee>("/api/v1/employees"),
+      { wrapper },
     );
 
     await waitForNextUpdate();
@@ -68,7 +76,6 @@ describe("useRest", () => {
       name: "FAKE NAME",
     };
 
-    // TODO: This is brittle and sometimes the expect fails. I do not know why.
     await act(() => result.current.handleUpdate(employee.id, employee));
 
     expect(result.current.data?.find(({ id }) => id === employee.id)).toEqual(
@@ -77,13 +84,13 @@ describe("useRest", () => {
   });
 
   it("deletes", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees"),
+    const { result, waitForNextUpdate } = renderHook(
+      () => useRest<Employee>("/api/v1/employees"),
+      { wrapper },
     );
 
     await waitForNextUpdate();
 
-    // TODO: This is brittle and sometimes the expect fails. I do not know why.
     await act(() => result.current.handleDelete(employees[0].id));
 
     expect(result.current.data?.find(({ id }) => id === employees[0].id)).toBe(
@@ -92,11 +99,13 @@ describe("useRest", () => {
   });
 
   it("paginates", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees", {
-        count: 1,
-        page: 2,
-      }),
+    const { result, waitForNextUpdate } = renderHook(
+      () =>
+        useRest<Employee>("/api/v1/employees", {
+          count: 1,
+          page: 2,
+        }),
+      { wrapper },
     );
 
     await waitForNextUpdate();
@@ -106,10 +115,12 @@ describe("useRest", () => {
   });
 
   it("filters", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees", {
-        filter: { name: employees[1].name },
-      }),
+    const { result, waitForNextUpdate } = renderHook(
+      () =>
+        useRest<Employee>("/api/v1/employees", {
+          filter: { name: employees[1].name },
+        }),
+      { wrapper },
     );
 
     await waitForNextUpdate();
@@ -119,27 +130,31 @@ describe("useRest", () => {
   });
 
   it("sorts", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees", {
-        sort: "name",
-      }),
+    const { result, waitForNextUpdate } = renderHook(
+      () =>
+        useRest<Employee>("/api/v1/employees", {
+          sort: "name",
+        }),
+      { wrapper },
     );
 
     await waitForNextUpdate();
 
     expect(result.current.data).toEqual(
-      employees.sort((a, b) => (a.name < b.name ? -1 : 1)),
+      employees.slice().sort((a, b) => (a.name < b.name ? -1 : 1)),
     );
   });
 
   it("filters, sorts, and paginates", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRest<Employee>("/api/v1/employees", {
-        filter: { id: { $lte: "3" } },
-        page: 1,
-        count: 2,
-        sort: "name",
-      }),
+    const { result, waitForNextUpdate } = renderHook(
+      () =>
+        useRest<Employee>("/api/v1/employees", {
+          filter: { id: { $lte: "3" } },
+          page: 1,
+          count: 2,
+          sort: "name",
+        }),
+      { wrapper },
     );
 
     await waitForNextUpdate();
@@ -149,13 +164,8 @@ describe("useRest", () => {
       expect(id < "3").toBeTruthy();
     });
 
-    const firstEmployeeName = result.current.data?.[0].name;
-    const secondEmployeeName = result.current.data?.[1].name;
-
-    if (!firstEmployeeName || !secondEmployeeName) {
-      fail("employee names should have values");
-    }
-
+    const firstEmployeeName = result.current.data?.[0].name as string;
+    const secondEmployeeName = result.current.data?.[1].name as string;
     expect(firstEmployeeName < secondEmployeeName).toBeTruthy();
   });
 });

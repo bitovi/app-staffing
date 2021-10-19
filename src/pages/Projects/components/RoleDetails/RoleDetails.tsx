@@ -24,7 +24,7 @@ export default function RoleDetails({
   editRole: (role: Role) => void;
   deleteRole: (role: Role) => void;
 }): JSX.Element {
-  const { employees, getEmployeesWithSkill } = useEmployees();
+  const { employees } = useEmployees();
 
   const createUnassignedEmployee = (): AssignedEmployee => {
     return {
@@ -39,17 +39,20 @@ export default function RoleDetails({
   const createEmployeeChoices = (
     assignedEmployee: AssignedEmployee,
   ): Employee[] => {
-    const { assignmentStartDate, assignmnetEndDate, ...employee } =
-      assignedEmployee;
+    const { startDate, assignmnetEndDate, ...employee } = assignedEmployee;
 
     // This list consists of the current assigned employees and any other
     // employee which has the skill but isn't already assigned
     return [
       employee,
-      ...getEmployeesWithSkill(role.skill).filter(
-        (possibleEmployee) =>
-          !role.employees.map(({ id }) => id).includes(possibleEmployee.id),
-      ),
+      ...(employees || [])
+        .filter(({ skills }) =>
+          skills.map(({ name }) => name).includes(role.skill.name),
+        )
+        .filter(
+          (employee) =>
+            !role.employees.map(({ id }) => id).includes(employee.id),
+        ),
     ];
   };
 
