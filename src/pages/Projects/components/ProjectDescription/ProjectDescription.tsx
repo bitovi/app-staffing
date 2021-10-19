@@ -1,7 +1,5 @@
 import type { Project } from "../../../../services/api";
 
-import React from "react";
-
 import styles from "./ProjectDescription.module.scss";
 
 export default function ProjectDescription({

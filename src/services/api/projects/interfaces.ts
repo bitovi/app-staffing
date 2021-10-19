@@ -10,7 +10,7 @@ export interface Role {
 }
 
 export interface EstimatedDate {
-  date: string;
+  date?: Date;
   confidence: string;
 }
 

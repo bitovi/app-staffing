@@ -21,6 +21,7 @@ describe("Components/Table", () => {
         </Row>
       </Table>,
     );
+
     // Can render headers
     expect(screen.getByText("Header 1")).toBeInTheDocument();
     // Can render cells

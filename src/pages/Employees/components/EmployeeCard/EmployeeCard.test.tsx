@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
 import { MemoryRouter } from "react-router-dom";
@@ -87,5 +87,25 @@ describe("Components/Layout", () => {
     const tags = screen.getAllByLabelText("close");
     userEvent.click(tags[0]);
     expect(screen.getAllByLabelText("close")).toHaveLength(tags.length - 1);
+  });
+
+  it("should allow date to be entered", async () => {
+    const onSave = jest.fn();
+    render(
+      <MemoryRouter>
+        <EmployeeCard key={employee.id} employee={employee} onSave={onSave} />
+      </MemoryRouter>,
+    );
+    const container = screen.getByLabelText("start date");
+
+    userEvent.click(container);
+    fireEvent.change(container, { target: { value: "2021-10-25" } });
+
+    await act(async () => {
+      jest.advanceTimersByTime(500);
+    });
+
+    expect(onSave).toHaveBeenCalledTimes(1);
+    expect(screen.getByDisplayValue("2021-10-25")).toBeInTheDocument();
   });
 });
