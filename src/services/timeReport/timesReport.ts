@@ -11,7 +11,7 @@ import {
   endOfQuarter,
   setQuarter,
   getWeeksInMonth,
-  getWeekOfMonth,
+  getWeekOfMonth, sub,
 } from "date-fns";
 
 export type TimescaleData = {
@@ -136,7 +136,6 @@ export function getTimescaleData(date: Date): TimescaleData[] {
  */
 export function getStartOfMonth(date: Date): Date {
   date = startOfMonth(date);
-
   let midWeek = setDay(date, 3, { weekStartsOn: 1 });
 
   // check if check if Wednesday falls in current month.
@@ -145,5 +144,23 @@ export function getStartOfMonth(date: Date): Date {
   } else {
     // return second week.
     return startOfWeek(add(date, { weeks: 1 }), { weekStartsOn: 1 });
+  }
+}
+
+/**
+ * Returns date of the first week for the given month.
+ * NB: a week belongs to a month if midweek(Wednesday) falls in month.
+ * @param date
+ */
+export function getEndOfMonth(date: Date) {
+  date = endOfMonth(date);
+  let midWeek = setDay(date, 3, { weekStartsOn: 1 });
+
+  // check if check if Wednesday falls in current month.
+  if (getMonth(midWeek) === getMonth(date)) {
+    return startOfWeek(date, { weekStartsOn: 1 });
+  } else {
+    // return second week.
+    return startOfWeek(sub(date, { weeks: 1 }), { weekStartsOn: 1 });
   }
 }

@@ -1,7 +1,7 @@
 import {
   TimescaleType,
   getTimescaleData,
-  getStartOfMonth,
+  getStartOfMonth, getEndOfMonth,
 } from "./timesReport";
 
 describe("time report time scale logic", () => {
@@ -126,8 +126,6 @@ describe("time report time scale logic", () => {
   it("should return maximum(12) timescale data", function () {
     const timescaleData = getTimescaleData(JAN_22_2018);
 
-    console.log(" ", timescaleData);
-
     expect(timescaleData.length).toBe(12);
 
     // First Week
@@ -183,8 +181,28 @@ describe("getStartOfMonth", () => {
     const firstWeekOfMay = getStartOfMonth(MONTH_OF_MAY);
     expect(firstWeekOfMay.toISOString()).toBe("2018-04-30T05:00:00.000Z");
 
+    const MONTH_OF_JAN = new Date(2018, 0);
+    const firstWeekOfJan = getStartOfMonth(MONTH_OF_MAY);
+    expect(firstWeekOfJan.toISOString()).toBe("2018-01-01T05:00:00.000Z");
+
     const MONTH_OF_JUNE = new Date(2018, 5);
     const firstWeekOfJune = getStartOfMonth(MONTH_OF_JUNE);
     expect(firstWeekOfJune.toISOString()).toBe("2018-06-04T05:00:00.000Z");
   });
 });
+
+
+describe("getEndOfMonth", () => {
+  it("should return correct end date", function() {
+
+    const MONTH_OF_MAY = new Date(2018, 4);
+    const firstWeekOfMay = getEndOfMonth(MONTH_OF_MAY);
+    expect(firstWeekOfMay.toISOString()).toBe("2018-05-28T05:00:00.000Z");
+
+
+    const MONTH_OF_DEC = new Date(2018, 11);
+    const firstWeekOfDec = getEndOfMonth(MONTH_OF_DEC);
+    expect(firstWeekOfDec.toISOString()).toBe("2018-12-24T05:00:00.000Z");
+
+  });
+})
