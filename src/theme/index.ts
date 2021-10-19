@@ -6,8 +6,6 @@ import Heading from "./components/heading";
 import { fonts, textStyles } from "./fonts";
 import DatePicker from "./components/date-picker";
 
-
-
 const theme = extendTheme({
   fonts,
   textStyles,
