@@ -1,7 +1,9 @@
 import {
   TimescaleType,
   getTimescaleData,
-  getStartOfMonth, getEndOfMonth,
+  getStartOfMonth,
+  getEndOfMonth,
+  getMonthForWeek,
 } from "./timesReport";
 
 describe("time report time scale logic", () => {
@@ -125,6 +127,7 @@ describe("time report time scale logic", () => {
   const JAN_22_2018 = new Date(2018, 0, 22);
   it("should return maximum(12) timescale data", function () {
     const timescaleData = getTimescaleData(JAN_22_2018);
+    console.log(" ", timescaleData);
 
     expect(timescaleData.length).toBe(12);
 
@@ -144,32 +147,36 @@ describe("time report time scale logic", () => {
     expect(timescaleData[3].startDate.toISOString()).toBe(
       "2018-02-12T05:00:00.000Z",
     );
-    // First Week
+    // Fifth Week
     expect(timescaleData[4].startDate.toISOString()).toBe(
+      "2018-02-19T05:00:00.000Z",
+    );
+    // Fifth Week
+    expect(timescaleData[5].startDate.toISOString()).toBe(
       "2018-02-26T05:00:00.000Z",
     );
-    // First Week
-    expect(timescaleData[5].startDate.toISOString()).toBe(
+    // Next Month
+    expect(timescaleData[6].startDate.toISOString()).toBe(
       "2018-03-05T05:00:00.000Z",
     );
-    // First Week
-    expect(timescaleData[6].startDate.toISOString()).toBe(
+    // Second Month
+    expect(timescaleData[7].startDate.toISOString()).toBe(
       "2018-04-02T05:00:00.000Z",
     );
-    // First Week
-    expect(timescaleData[7].startDate.toISOString()).toBe(
+    // Third Month
+    expect(timescaleData[8].startDate.toISOString()).toBe(
       "2018-04-30T05:00:00.000Z",
     );
-    // First Week
-    expect(timescaleData[8].startDate.toISOString()).toBe(
+    // Fourth Month
+    expect(timescaleData[9].startDate.toISOString()).toBe(
       "2018-06-04T05:00:00.000Z",
     );
-    // First Week
-    expect(timescaleData[9].startDate.toISOString()).toBe(
+    // Next Quarter
+    expect(timescaleData[10].startDate.toISOString()).toBe(
       "2018-07-02T05:00:00.000Z",
     );
-    // First Week
-    expect(timescaleData[10].startDate.toISOString()).toBe(
+    // Second Quarter
+    expect(timescaleData[11].startDate.toISOString()).toBe(
       "2018-10-01T05:00:00.000Z",
     );
   });
@@ -191,18 +198,26 @@ describe("getStartOfMonth", () => {
   });
 });
 
-
 describe("getEndOfMonth", () => {
-  it("should return correct end date", function() {
-
+  it("should return correct end dates", function () {
     const MONTH_OF_MAY = new Date(2018, 4);
     const firstWeekOfMay = getEndOfMonth(MONTH_OF_MAY);
     expect(firstWeekOfMay.toISOString()).toBe("2018-05-28T05:00:00.000Z");
 
-
     const MONTH_OF_DEC = new Date(2018, 11);
     const firstWeekOfDec = getEndOfMonth(MONTH_OF_DEC);
     expect(firstWeekOfDec.toISOString()).toBe("2018-12-24T05:00:00.000Z");
-
   });
-})
+});
+
+describe("get month", () => {
+  it("should return correct months", function () {
+    const APRIL_30_2018 = new Date(2018, 3, 30);
+    const month1 = getMonthForWeek(APRIL_30_2018);
+    expect(month1).toBe(4);
+
+    const APRIL_16_2018 = new Date(2018, 3, 16);
+    const month2 = getMonthForWeek(APRIL_16_2018);
+    expect(month2).toBe(3);
+  });
+});

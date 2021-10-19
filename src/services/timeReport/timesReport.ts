@@ -11,7 +11,8 @@ import {
   endOfQuarter,
   setQuarter,
   getWeeksInMonth,
-  getWeekOfMonth, sub,
+  getWeekOfMonth,
+  sub,
 } from "date-fns";
 
 export type TimescaleData = {
@@ -89,8 +90,8 @@ export function getTimescaleData(date: Date): TimescaleData[] {
   let currentQuarter = getQuarter(month);
   while (monthsForQuarter > 0) {
     const timescale: TimescaleData = {
-      startDate: month,
-      endDate: endOfMonth(month),
+      startDate: getStartOfMonth(month),
+      endDate: getEndOfMonth(month),
       type: TimescaleType.month,
     };
     timescales.push(timescale);
@@ -113,8 +114,8 @@ export function getTimescaleData(date: Date): TimescaleData[] {
   while (numQuarters > 0) {
     // Get Quarter Data; show the new quarter data.
     const columnHeading: TimescaleData = {
-      startDate: quarterStart,
-      endDate: quarterEnd,
+      startDate: getStartOfMonth(quarterStart),
+      endDate: getEndOfMonth(quarterEnd),
       type: TimescaleType.quarter,
     };
     timescales.push(columnHeading);
@@ -163,4 +164,14 @@ export function getEndOfMonth(date: Date) {
     // return second week.
     return startOfWeek(sub(date, { weeks: 1 }), { weekStartsOn: 1 });
   }
+}
+
+/**
+ * Returns the month that the week belongs to
+ * NB: the week belongs to which ever month the Wednesday begins.
+ * @param date
+ */
+export function getMonthForWeek(date: Date): number {
+  const midWeek = setDay(date, 3, { weekStartsOn: 1 });
+  return getMonth(midWeek);
 }
