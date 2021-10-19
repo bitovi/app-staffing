@@ -35,24 +35,6 @@
   width: calc(100% - 60px);
 }
 
-.noResults {
-  width: 100%;
-  text-align: center;
-  min-height: 30px;
-  color: #777;
-  padding: 82px 30px 153px;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.noResultsIcon {
-  height: 100px;
-  width: 100px;
-}
-
 // TODO: Put these in their own component when used
 .filterTagWrapper {
   padding: 5px;

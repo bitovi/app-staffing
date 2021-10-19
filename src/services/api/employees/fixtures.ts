@@ -25,9 +25,9 @@ export function makeEmployee(employee?: Partial<Employee>): Employee {
 }
 
 export const employees: Employee[] = [
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
+  // makeEmployee(),
+  // makeEmployee(),
+  // makeEmployee(),
+  // makeEmployee(),
+  // makeEmployee(),
 ];
