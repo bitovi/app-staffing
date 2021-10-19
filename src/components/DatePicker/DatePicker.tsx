@@ -2,7 +2,7 @@ import React from "react";
 import { Input as ChakraInput } from "@chakra-ui/input";
 import { format } from "date-fns";
 
-type IProps = {
+type DatePickerProps = {
   children?: React.ReactNode;
   label: string;
   name?: string;
@@ -17,8 +17,7 @@ export const DatePicker = ({
   name,
   label,
   ...props
-}: IProps): JSX.Element => {
-  // format date
+}: DatePickerProps): JSX.Element => {
   const formattedDate = selectedDate
     ? format(new Date(selectedDate), "yyyy-MM-dd")
     : "";
@@ -38,6 +37,7 @@ export const DatePicker = ({
 
   return (
     <ChakraInput
+      {...props}
       aria-label={label}
       name={name}
       value={formattedDate}

@@ -25,7 +25,6 @@ export default function Employees(): JSX.Element {
     await addEmployee({
       name: "",
       startDate: new Date(),
-      endDate: undefined,
       skills: [],
     }); // @TODO: add a loading spinner to save button
   };
