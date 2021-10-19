@@ -31,7 +31,7 @@ export default function AssignedEmployeeDetails({
       return;
     }
 
-    changeEmployee(assignedEmployee.id, {
+    changeEmployee(assignedEmployee.employee.id, {
       ...assignedEmployee,
       ...newEmployee,
     });
@@ -44,7 +44,7 @@ export default function AssignedEmployeeDetails({
           className={styles.employee}
           label=""
           name="assignedEmployee"
-          value={assignedEmployee.name}
+          value={assignedEmployee.employee.name}
           onChange={(value) => updateEmployee(value || "")}
           options={possibleOtherEmployees.map(({ name }) => ({
             label: name,
@@ -66,9 +66,9 @@ export default function AssignedEmployeeDetails({
         End Date:
         <input
           type="date"
-          defaultValue={assignedEmployee.assignmnetEndDate}
+          defaultValue={assignedEmployee.endDate}
           onChange={({ target }) =>
-            onChange({ ...assignedEmployee, assignmnetEndDate: target.value })
+            onChange({ ...assignedEmployee, endDate: target.value })
           }
         />
       </label>

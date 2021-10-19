@@ -44,7 +44,7 @@ describe("Pages/Projects/components/RoleDetails", () => {
 
     await waitFor(() => {
       expect(
-        screen.queryByText(role.employees[0].name || "Error"),
+        screen.queryByText(role.employees[0].employee.name || "Error"),
       ).toBeVisible();
     });
 

@@ -28,37 +28,41 @@ export default function RoleDetails({
 
   const createUnassignedEmployee = (): AssignedEmployee => {
     return {
-      id: Math.floor(Math.random() * 1000).toString(),
-      name: "unassigned",
-      startDate: "",
-      endDate: "",
-      skills: [],
+      employee: {
+        id: Math.floor(Math.random() * 1000).toString(),
+        name: "unassigned",
+        startDate: "",
+        endDate: "",
+        skills: [],
+      },
     };
   };
 
   const createEmployeeChoices = (
     assignedEmployee: AssignedEmployee,
   ): Employee[] => {
-    const { startDate, assignmnetEndDate, ...employee } = assignedEmployee;
-
     // This list consists of the current assigned employees and any other
     // employee which has the skill but isn't already assigned
     return [
-      employee,
+      assignedEmployee.employee,
       ...(employees || [])
         .filter(({ skills }) =>
           skills.map(({ name }) => name).includes(role.skill.name),
         )
         .filter(
           (employee) =>
-            !role.employees.map(({ id }) => id).includes(employee.id),
+            !role.employees
+              .map(({ employee: { id } }) => id)
+              .includes(employee.id),
         ),
     ];
   };
 
   const editAssignedEmployee = (assignedEmployee: AssignedEmployee) => {
     const employees = cloneDeep(role.employees);
-    const index = employees.findIndex(({ id }) => id === assignedEmployee.id);
+    const index = employees.findIndex(
+      ({ employee: { id } }) => id === assignedEmployee.employee.id,
+    );
 
     employees[index] = assignedEmployee;
 
@@ -73,7 +77,9 @@ export default function RoleDetails({
     newAssignedEmployee: AssignedEmployee,
   ) => {
     const employees = cloneDeep(role.employees);
-    const index = employees.findIndex(({ id }) => id === previousId);
+    const index = employees.findIndex(
+      ({ employee: { id } }) => id === previousId,
+    );
 
     employees[index] = newAssignedEmployee;
 
@@ -114,7 +120,7 @@ export default function RoleDetails({
         {employees &&
           role.employees.map((assignedEmployee, index) => (
             <AssignedEmployeeDetails
-              key={assignedEmployee.id + role.id + index}
+              key={assignedEmployee.employee.id + role.id + index}
               assignedEmployee={assignedEmployee}
               onChange={editAssignedEmployee}
               changeEmployee={changeAssignedEmployee}

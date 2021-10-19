@@ -10,7 +10,8 @@ export interface Employee {
 
 export type NewEmployee = Omit<Employee, "id">;
 
-export interface AssignedEmployee extends Employee {
+export interface AssignedEmployee {
+  employee: Employee;
   startDate?: string;
-  assignmnetEndDate?: string;
+  endDate?: string;
 }

@@ -34,7 +34,7 @@ export function makeRole(role?: Partial<Role>): Role {
   const assignedEmployees: AssignedEmployee[] = faker.random
     .arrayElements(employees, faker.datatype.number(2) + 1)
     .map((employee) => ({
-      ...employee,
+      employee,
       startDate: faker.date.past().toISOString(),
       endDate: faker.date.future().toISOString(),
     }));
