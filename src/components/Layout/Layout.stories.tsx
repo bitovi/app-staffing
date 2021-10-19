@@ -9,9 +9,9 @@ export default {
   component: Layout,
 } as ComponentMeta<typeof Layout>;
 
-export const Basic: ComponentStory<typeof Layout> = (args) => (
+export const Basic: ComponentStory<typeof Layout> = ({ ...props }) => (
   <MemoryRouter>
-    <Layout {...args} />
+    <Layout {...props} />
   </MemoryRouter>
 );
 

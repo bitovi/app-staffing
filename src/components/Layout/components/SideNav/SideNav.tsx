@@ -26,6 +26,7 @@ export default function SideNav(): JSX.Element {
       icon: projectIcon,
     },
   ];
+
   return (
     <div className={styles.wrapper}>
       <img src={BitoviLogo} alt="Bitovi" className={styles.image} />

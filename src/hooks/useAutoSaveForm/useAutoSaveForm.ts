@@ -2,20 +2,18 @@ import { isEqual } from "lodash";
 import { useEffect, useState } from "react";
 import { useDebounce, usePrevious } from "react-use";
 
-interface IProps<T> {
-  initialFormData: T;
-  onSave: (formData: T) => void;
-  autoSaveDebounceDelay?: number;
-}
-
 /*
   This hook is used to auto save form data after a short delay.
 */
-export default function <T>({
+export default function useAutoSaveForm<T>({
   initialFormData,
   onSave,
   autoSaveDebounceDelay = 500,
-}: IProps<T>): [formData: T, setFormData: (formData: T) => void] {
+}: {
+  initialFormData: T;
+  onSave: (formData: T) => void;
+  autoSaveDebounceDelay?: number;
+}): [formData: T, setFormData: (formData: T) => void] {
   const [formData, setFormData] = useState<T>(initialFormData);
   const prevFormData = usePrevious(formData);
 

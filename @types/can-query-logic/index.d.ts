@@ -1,7 +1,7 @@
 declare module "can-query-logic" {
   type BaseT = Record<string, any>;
 
-  type PropertyFilter<T> = {
+  interface PropertyFilter<T> {
     $eq?: T;
     $ne?: T;
     $in?: T[];
@@ -13,7 +13,7 @@ declare module "can-query-logic" {
     $all?: T;
     $not?: T;
     $and?: T;
-  };
+  }
 
   export type Filter<T extends BaseT> = {
     [key in keyof T]?: T[key] | Array<T[key]> | PropertyFilter<T[key]>;

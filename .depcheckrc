@@ -1,14 +1,14 @@
 ignore-dirs:
   - /build
 ignores:
-  - "@types/*"
-  - "@testing-library/*"
-  - "@typescript-eslint/*"
-  - "@storybook/*"
   - "@chakra-ui/*"
   - "@emotion/*"
   - "@snek-at/storybook-addon-chakra-ui"
-  - framer-motion
-  - eslint-*
+  - "@storybook/*"
+  - "@testing-library/*"
+  - "@types/*"
+  - "@typescript-eslint/*"
   - babel-eslint
+  - eslint-*
   - node-sass
+  - framer-motion

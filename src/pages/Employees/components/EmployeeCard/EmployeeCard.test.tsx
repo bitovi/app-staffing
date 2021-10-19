@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
 import { MemoryRouter } from "react-router-dom";
@@ -64,8 +64,13 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    await selectEvent(screen.getByLabelText(/Add skill/i), /Angular/i);
-    await within(screen.getByTestId("display-skills")).findByText(/Angular/i);
+    await selectEvent(screen.getByLabelText(/Add skills/), "Angular");
+
+    const tags = screen
+      .getAllByLabelText("close")
+      .map((v) => v.parentElement?.textContent);
+
+    expect(tags).toContain("Angular");
   });
 
   it("should remove a skill", () => {
@@ -79,11 +84,9 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const expected = "Node";
-    userEvent.click(screen.getAllByTestId("remove-skill")[1]);
-
-    const container = screen.getByTestId("display-skills");
-    expect(container).not.toHaveTextContent(expected);
+    const tags = screen.getAllByLabelText("close");
+    userEvent.click(tags[0]);
+    expect(screen.getAllByLabelText("close")).toHaveLength(tags.length - 1);
   });
 
   it("should allow date to be entered", async () => {

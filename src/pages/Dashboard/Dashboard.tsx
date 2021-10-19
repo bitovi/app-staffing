@@ -1,4 +1,4 @@
-import { Cell, Header, Row, Table } from "../../components/Table";
+import Table, { Cell, Header, Row } from "../../components/Table";
 
 export default function Dashboard(): JSX.Element {
   return (

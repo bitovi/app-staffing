@@ -1,7 +1,9 @@
 import { StyleConfig } from "@chakra-ui/theme-tools";
 
-export const datePicker = {
+const datePicker: StyleConfig = {
   baseStyle: {
     backgroundColor: "white.500",
   },
-} as StyleConfig;
+};
+
+export default datePicker;

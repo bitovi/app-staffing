@@ -7,7 +7,7 @@ import { skillList } from "../shared";
 
 faker.seed(0);
 
-let id = 0;
+let employeeId = 0;
 export function makeEmployee(employee?: Partial<Employee>): Employee {
   const startDate = faker.date.past();
 
@@ -16,11 +16,10 @@ export function makeEmployee(employee?: Partial<Employee>): Employee {
     .map((name) => ({ name }));
 
   return {
-    id: `${++id}`,
+    id: `${++employeeId}`,
     name: faker.name.findName(),
     startDate: startDate,
     skills,
-
     ...employee,
   };
 }

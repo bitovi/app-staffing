@@ -8,7 +8,7 @@ import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
 import { DatePicker } from "../../../../components/DatePicker";
 
-interface IProps {
+interface EmployeeCardProps {
   employee: Employee;
   onSave: (employee: Employee) => void;
 }
@@ -16,7 +16,7 @@ interface IProps {
 export default function EmployeeCard({
   employee,
   onSave,
-}: IProps): JSX.Element {
+}: EmployeeCardProps): JSX.Element {
   const [formData, setFormData] = useAutoSaveForm<Employee>({
     initialFormData: employee,
     onSave,
@@ -100,14 +100,11 @@ export default function EmployeeCard({
         </Flex>
       </GridItem>
       <GridItem>
-        <Wrap as="ul" data-testid="display-skills" shouldWrapChildren>
+        <Wrap shouldWrapChildren>
           {formData.skills.map(({ name }) => (
             <Tag variant="primary" key={name}>
               {name}
-              <TagCloseButton
-                onClick={() => onRemoveSkill(name)}
-                data-testid="remove-skill"
-              />
+              <TagCloseButton onClick={() => onRemoveSkill(name)} />
             </Tag>
           ))}
         </Wrap>
