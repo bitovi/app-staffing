@@ -66,18 +66,18 @@ describe("time report time scale logic", () => {
 
     // month which breaks into second quarter.
     expect(timescaleData[4].startDate.toISOString()).toBe(
-      "2021-04-01T05:00:00.000Z",
+      "2021-04-05T05:00:00.000Z",
     );
     expect(timescaleData[4].type).toBe(TimescaleType.month);
 
     // broken down quarter
     expect(timescaleData[5].startDate.toISOString()).toBe(
-      "2021-05-01T05:00:00.000Z",
+      "2021-05-03T05:00:00.000Z",
     );
     expect(timescaleData[5].type).toBe(TimescaleType.month);
 
     expect(timescaleData[6].startDate.toISOString()).toBe(
-      "2021-06-01T05:00:00.000Z",
+      "2021-05-31T05:00:00.000Z",
     );
     expect(timescaleData[5].type).toBe(TimescaleType.month);
   });
@@ -92,7 +92,7 @@ describe("time report time scale logic", () => {
 
     expect(timescaleData[5].type).toBe(TimescaleType.quarter);
     expect(timescaleData[5].startDate.toISOString()).toBe(
-      "2021-04-01T05:00:00.000Z",
+      "2021-04-05T05:00:00.000Z",
     );
   });
 
@@ -111,23 +111,22 @@ describe("time report time scale logic", () => {
       "2018-01-29T05:00:00.000Z",
     );
     expect(timescaleData[3].startDate.toISOString()).toBe(
-      "2018-02-01T05:00:00.000Z",
+      "2018-02-05T05:00:00.000Z",
     );
     expect(timescaleData[4].startDate.toISOString()).toBe(
-      "2018-03-01T05:00:00.000Z",
+      "2018-03-05T05:00:00.000Z",
     );
     expect(timescaleData[5].startDate.toISOString()).toBe(
-      "2018-04-01T05:00:00.000Z",
+      "2018-04-02T05:00:00.000Z",
     );
     expect(timescaleData[6].startDate.toISOString()).toBe(
-      "2018-07-01T05:00:00.000Z",
+      "2018-07-02T05:00:00.000Z",
     );
   });
 
   const JAN_22_2018 = new Date(2018, 0, 22);
   it("should return maximum(12) timescale data", function () {
     const timescaleData = getTimescaleData(JAN_22_2018);
-    console.log(" ", timescaleData);
 
     expect(timescaleData.length).toBe(12);
 
@@ -189,7 +188,7 @@ describe("getStartOfMonth", () => {
     expect(firstWeekOfMay.toISOString()).toBe("2018-04-30T05:00:00.000Z");
 
     const MONTH_OF_JAN = new Date(2018, 0);
-    const firstWeekOfJan = getStartOfMonth(MONTH_OF_MAY);
+    const firstWeekOfJan = getStartOfMonth(MONTH_OF_JAN);
     expect(firstWeekOfJan.toISOString()).toBe("2018-01-01T05:00:00.000Z");
 
     const MONTH_OF_JUNE = new Date(2018, 5);
