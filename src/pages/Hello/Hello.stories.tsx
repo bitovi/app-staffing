@@ -7,8 +7,8 @@ export default {
   component: Hello,
 } as ComponentMeta<typeof Hello>;
 
-export const Basic: ComponentStory<typeof Hello> = (args) => (
-  <Hello {...args} />
+export const Basic: ComponentStory<typeof Hello> = ({ ...props }) => (
+  <Hello {...props} />
 );
 
 Basic.args = {

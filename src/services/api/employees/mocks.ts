@@ -12,18 +12,18 @@ const queryLogic = new QueryLogic<Employee>({
     name: "string",
     startDate: DateString,
     endDate: DateString,
-    // skills: {
-    //   type: "list",
-    //   values: {
-    //     keys: {
-    //       id: "string",
-    //       name: "string",
-    //     },
-    //   },
-    //   keys: {
-    //     count: "number",
-    //   },
-    // },
+    skills: {
+      type: "list",
+      values: {
+        keys: {
+          id: "string",
+          name: "string",
+        },
+      },
+      keys: {
+        count: "number",
+      },
+    },
   },
 });
 

@@ -19,7 +19,7 @@ interface SelectProps {
   placeholder?: string;
 }
 
-export function Select({
+export default function Select({
   className,
   disabled,
   name,

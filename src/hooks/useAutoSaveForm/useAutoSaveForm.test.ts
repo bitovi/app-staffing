@@ -1,6 +1,5 @@
-import { act } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import useAutoSaveForm from ".";
-import { renderHook } from "../../testUtils";
 
 const onSave = jest.fn();
 

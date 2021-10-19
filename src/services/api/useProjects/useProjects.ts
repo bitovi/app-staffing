@@ -20,15 +20,15 @@ export default function useProjects(
     data: projects,
     error,
     isLoading,
-    useAdd,
-    useUpdate,
+    handleAdd,
+    handleUpdate,
   } = useRest<Project>("/api/v1/projects", queryParams);
 
   return {
     projects,
     isLoading,
     error,
-    addProject: useAdd,
-    updateProject: useUpdate,
+    addProject: handleAdd,
+    updateProject: handleUpdate,
   };
 }

@@ -1,6 +1,6 @@
 import { StyleConfig } from "@chakra-ui/theme-tools";
 
-export const button = {
+const button: StyleConfig = {
   baseStyle: {
     px: 4,
     py: 2,
@@ -24,4 +24,6 @@ export const button = {
       fontSize: "sm",
     },
   },
-} as StyleConfig;
+};
+
+export default button;
