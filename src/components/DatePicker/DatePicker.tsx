@@ -21,7 +21,7 @@ export const DatePicker = ({
     ? format(new Date(selectedDate), "yyyy-MM-dd")
     : "";
 
-  const handleChange = (evt: any) => {
+  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const dateString: string = evt.target.value;
     const dateValues = dateString.split("-");
 

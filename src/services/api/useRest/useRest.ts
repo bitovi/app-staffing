@@ -18,6 +18,7 @@ interface RestActions<T> extends APIResponse<T[]> {
 function useRest<T extends { id: string }>(
   path: string,
   queryParams?: QueriableList<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapItem: (input: any) => T = identity,
 ): RestActions<T> {
   const { mutate } = useSWRConfig();
