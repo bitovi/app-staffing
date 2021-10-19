@@ -10,6 +10,8 @@ import {
   addQuarters,
   endOfQuarter,
   setQuarter,
+  getWeeksInMonth,
+  getWeekOfMonth,
 } from "date-fns";
 
 export type TimescaleData = {
@@ -64,14 +66,19 @@ export function getTimescaleData(date: Date): TimescaleData[] {
     // if week falls into next month then reset `weekForMonth` count.
     const isNewMonth = currentMonth !== getMonth(midWeek);
     if (isNewMonth) {
-      weeksForMonth = MIN_WEEKS_FOR_MONTH;
+      weeksForMonth =
+        getWeeksInMonth(midWeek, { weekStartsOn: 1 }) -
+        getWeekOfMonth(midWeek, { weekStartsOn: 1 }) +
+        1;
+
       currentMonth = getMonth(midWeek); // set to current month;
     }
-
-    //  go to next week
-    weekStart = add(weekStart, { weeks: 1 });
-    weekEnd = add(weekEnd, { weeks: 1 });
-    midWeek = add(midWeek, { weeks: 1 });
+    if (weeksForMonth > 1) {
+      //  go to next week
+      weekStart = add(weekStart, { weeks: 1 });
+      weekEnd = add(weekEnd, { weeks: 1 });
+      midWeek = add(midWeek, { weeks: 1 });
+    }
 
     weeksForMonth--;
   }
