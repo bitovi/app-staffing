@@ -137,7 +137,7 @@ export function getTimescaleData(date: Date): TimescaleData[] {
  */
 export function getStartOfMonth(date: Date): Date {
   date = startOfMonth(date);
-  let midWeek = setDay(date, 3, { weekStartsOn: 1 });
+  const midWeek = setDay(date, 3, { weekStartsOn: 1 });
 
   // check if check if Wednesday falls in current month.
   if (getMonth(midWeek) === getMonth(date)) {
@@ -155,7 +155,7 @@ export function getStartOfMonth(date: Date): Date {
  */
 export function getEndOfMonth(date: Date) {
   date = endOfMonth(date);
-  let midWeek = setDay(date, 3, { weekStartsOn: 1 });
+  const midWeek = setDay(date, 3, { weekStartsOn: 1 });
 
   // check if check if Wednesday falls in current month.
   if (getMonth(midWeek) === getMonth(date)) {
