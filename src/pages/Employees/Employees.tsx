@@ -7,7 +7,7 @@ import EmployeeTable from "./components/EmployeeTable";
 
 import styles from "./Employees.module.scss";
 
-import { Button } from "../../components/Layout/components/Button";
+import Button from "../../components/Button";
 
 export default function Employees(): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();
@@ -59,7 +59,7 @@ export default function Employees(): JSX.Element {
           Add Team Member +
         </Button>
       </div>
-      {!employees && <div className={styles.noResults}>LOADING ...</div>}
+      {!employees && <div className={styles.noResults}>LOADING...</div>}
       {employees && employees.length === 0 && (
         <div className={styles.noResults}>NO DATA FOUND!</div>
       )}

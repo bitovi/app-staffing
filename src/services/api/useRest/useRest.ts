@@ -1,32 +1,31 @@
 import type { APIResponse, QueriableList } from "../shared";
 
 import { useCallback } from "react";
-import useSWR, { mutate } from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
 
 import { fetcher } from "../shared";
 
 interface RestActions<T> extends APIResponse<T[]> {
-  useAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
-  useUpdate: (
+  handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
+  handleUpdate: (
     collectionItemId: string,
     updatedCollectionItem: Partial<T>,
   ) => Promise<void>;
-  useDelete: (collectionItemId: string) => Promise<void>;
+  handleDelete: (collectionItemId: string) => Promise<void>;
 }
 
 function useRest<T extends { id: string }>(
   path: string,
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
+  const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     `${path}?${param(queryParams)}`,
-    (url) => {
-      return fetcher("GET", url);
-    },
+    (url) => fetcher("GET", url),
   );
 
-  const useAdd = useCallback<
+  const handleAdd = useCallback<
     (newCollectionItem: Omit<T, "id">) => Promise<string>
   >(
     async (newCollectionItem: Omit<T, "id">) => {
@@ -52,10 +51,10 @@ function useRest<T extends { id: string }>(
 
       return newId;
     },
-    [path, queryParams],
+    [path, queryParams, mutate],
   );
 
-  const useUpdate = useCallback<
+  const handleUpdate = useCallback<
     (
       collectionItemId: string,
       updatedCollectionItem: Partial<T>,
@@ -81,10 +80,10 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams],
+    [path, queryParams, mutate],
   );
 
-  const useDelete = useCallback(
+  const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
         `${path}?${param(queryParams)}`,
@@ -101,16 +100,16 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams],
+    [path, queryParams, mutate],
   );
 
   return {
     data: response?.data,
     error,
     isLoading: !response && !error,
-    useAdd,
-    useUpdate,
-    useDelete,
+    handleAdd,
+    handleUpdate,
+    handleDelete,
   };
 }
 

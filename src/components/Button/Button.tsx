@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 // import styles from "./Button.module.scss";
 
 interface ButtonProps {
-  "data-testid"?: string;
   children: ReactNode;
   className?: string;
   disabled?: boolean;
@@ -13,19 +12,19 @@ interface ButtonProps {
   onClick(): void;
 }
 
-export function Button({
+export default function Button({
   children,
   className,
   disabled,
   tabIndex,
   variant = "primary",
   onClick,
-  ...restOfProps
+  ...props
 }: ButtonProps): JSX.Element {
   return (
     <ChakraButton
+      {...props}
       variant={variant}
-      data-testid={restOfProps["data-testid"]}
       disabled={disabled}
       tabIndex={tabIndex}
       onClick={onClick}

@@ -44,15 +44,17 @@ describe("Pages/Projects/components/RoleDetails", () => {
 
     await waitFor(() => {
       expect(
-        screen.queryByText(role.employees[0].name || "Error"),
+        screen.queryByText(role.employees[0].employee.name || "Error"),
       ).toBeVisible();
     });
 
     expect(screen.getByLabelText(/Role/)).toBeDisabled();
 
-    fireEvent.focus(screen.getByTestId("role-start-date"));
-    fireEvent.change(screen.getByTestId("role-start-date"), "01/23/2020");
-    fireEvent.blur(screen.getByTestId("role-start-date"));
+    const input = screen.getByLabelText("Start Date");
+    fireEvent.focus(input);
+    fireEvent.change(input, "01/23/2020");
+    fireEvent.blur(input);
+
     expect(onEditMock).toHaveBeenCalled();
 
     fireEvent.click(await screen.getByText(/Delete/));

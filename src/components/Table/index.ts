@@ -1,4 +1,4 @@
-export { Cell } from "./Cell";
-export { Header } from "./Header";
-export { Row } from "./Row";
-export { Table } from "./Table";
+export { default as Cell } from "./components/Cell";
+export { default as Header } from "./components/Header";
+export { default as Row } from "./components/Row";
+export { default } from "./Table";

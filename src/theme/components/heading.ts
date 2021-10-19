@@ -1,6 +1,6 @@
 import { StyleConfig } from "@chakra-ui/theme-tools";
 
-export const heading = {
+const heading: StyleConfig = {
   sizes: {
     h1: {
       fontWeight: "bold",
@@ -15,4 +15,6 @@ export const heading = {
       fontStyle: "normal",
     },
   },
-} as StyleConfig;
+};
+
+export default heading;

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Flex } from "@chakra-ui/layout";
 import { Spacer, Square, Text } from "@chakra-ui/react";
 import {

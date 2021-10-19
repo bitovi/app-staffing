@@ -1,4 +1,4 @@
-import { Select } from "../../../../components/Select";
+import Select from "../../../../components/Select";
 import type { EstimatedDate } from "../../../../services/api";
 
 import styles from "./RoleDate.module.scss";
@@ -17,7 +17,6 @@ export default function RoleDate({
       <label>
         {title}
         <input
-          data-testid={`role-${title.replace(" ", "-").toLowerCase()}`}
           type="date"
           defaultValue={estimatedDate.date}
           onBlur={(e) => {

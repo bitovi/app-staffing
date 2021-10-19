@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 
 import { skillList } from "../../../../services/api";
 import RoleDetails from "../RoleDetails";
-import { Button } from "../../../../components/Layout/components/Button";
+import Button from "../../../../components/Button";
 
 import styles from "./RoleList.module.scss";
 
