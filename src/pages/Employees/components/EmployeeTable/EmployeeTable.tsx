@@ -22,7 +22,7 @@ export default function EmployeeTable({
   return (
     <>
       {!filteredEmployees && <div className={styles.noResults}>LOADING...</div>}
-      
+
       {filteredEmployees && filteredEmployees.length === 0 && (
         <Box
           width="100%"
@@ -36,21 +36,13 @@ export default function EmployeeTable({
           flexDirection="column"
           alignItems="center"
         >
-
-          <Image
-            height="100px"
-            width="100px"
-            src={FolderWithFileIcon}
-            alt=""
-          />
+          <Image height="100px" width="100px" src={FolderWithFileIcon} alt="" />
           {!filterValue
             ? "There are currently no team members."
-            : `NO RESULTS MATCHING: ${filterValue}`
-          }
-          
+            : `NO RESULTS MATCHING: ${filterValue}`}
         </Box>
       )}
-      
+
       {filteredEmployees && filteredEmployees.length > 0 && (
         <Stack spacing={4} divider={<StackDivider borderColor="gray.200" />}>
           {filteredEmployees?.map((employee) => (
