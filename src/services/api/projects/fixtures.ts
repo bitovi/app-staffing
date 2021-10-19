@@ -22,12 +22,12 @@ export function makeProject(project?: Partial<Project>): Project {
 let roleId = 100;
 export function makeRole(role?: Partial<Role>): Role {
   const startDate = {
-    date: faker.date.past().toISOString(),
+    date: faker.date.past(),
     confidence: `${faker.datatype.number({ min: 0, max: 100 })}%`,
   };
 
   const endDate = {
-    date: faker.date.past().toISOString(),
+    date: faker.date.past(),
     confidence: `${faker.datatype.number({ min: 0, max: 100 })}%`,
   };
 
@@ -35,8 +35,8 @@ export function makeRole(role?: Partial<Role>): Role {
     .arrayElements(employees, faker.datatype.number(2) + 1)
     .map((employee) => ({
       employee,
-      startDate: faker.date.past().toISOString(),
-      endDate: faker.date.future().toISOString(),
+      startDate: faker.date.past(),
+      endDate: faker.date.future(),
     }));
 
   return {

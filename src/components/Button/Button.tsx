@@ -1,8 +1,6 @@
 import { Button as ChakraButton } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-// import styles from "./Button.module.scss";
-
 interface ButtonProps {
   children: ReactNode;
   className?: string;

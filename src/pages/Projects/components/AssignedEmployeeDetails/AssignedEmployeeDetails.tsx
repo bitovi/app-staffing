@@ -56,9 +56,12 @@ export default function AssignedEmployeeDetails({
         Start Date:
         <input
           type="date"
-          defaultValue={assignedEmployee.startDate}
-          onChange={({ target }) =>
-            onChange({ ...assignedEmployee, startDate: target.value })
+          defaultValue={assignedEmployee.startDate?.toString()}
+          onChange={(e) =>
+            onChange({
+              ...assignedEmployee,
+              startDate: new Date(e.target.value),
+            })
           }
         />
       </label>
@@ -66,9 +69,9 @@ export default function AssignedEmployeeDetails({
         End Date:
         <input
           type="date"
-          defaultValue={assignedEmployee.endDate}
-          onChange={({ target }) =>
-            onChange({ ...assignedEmployee, endDate: target.value })
+          defaultValue={assignedEmployee.endDate?.toString()}
+          onChange={(e) =>
+            onChange({ ...assignedEmployee, endDate: new Date(e.target.value) })
           }
         />
       </label>

@@ -44,7 +44,7 @@ export default function Select({
         value={activeOption}
         options={options}
         onBlur={onBlur}
-        onChange={(option) => onChange(option?.value ?? undefined)}
+        onChange={(option) => onChange(option?.value)}
         onFocus={onFocus}
         placeholder={placeholder}
       />

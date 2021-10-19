@@ -20,11 +20,11 @@ export default function RoleList({
       id: Math.floor(Math.random() * 1000).toString(),
       skill: { name: "Node" },
       startDate: {
-        date: "",
+        date: undefined,
         confidence: "",
       },
       endDate: {
-        date: "",
+        date: undefined,
         confidence: "",
       },
       employees: [],

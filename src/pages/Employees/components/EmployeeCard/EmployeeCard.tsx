@@ -1,11 +1,11 @@
 import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
-import React from "react";
 import { Tag, TagCloseButton } from "../../../../components/Tag";
 import useAutoSaveForm from "../../../../hooks/useAutoSaveForm";
 import type { Employee, SkillName } from "../../../../services/api";
 import { skillList } from "../../../../services/api";
 import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
+import { DatePicker } from "../../../../components/DatePicker";
 
 interface EmployeeCardProps {
   employee: Employee;
@@ -38,6 +38,10 @@ export default function EmployeeCard({
   const updateField = (evt: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = evt.currentTarget;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const onDateFieldUpdate = (fieldName: string) => (dateValue: Date) => {
+    setFormData({ ...formData, [fieldName]: dateValue });
   };
 
   return (
@@ -74,18 +78,22 @@ export default function EmployeeCard({
             mr={{ base: 2, lg: 0 }}
           >
             Start Date
-            <input
+            <DatePicker
+              data-testid="start-date"
               name="startDate"
-              value={formData.startDate}
-              onChange={updateField}
+              label="start date"
+              selectedDate={formData.startDate}
+              onChange={onDateFieldUpdate("startDate")}
             />
           </Text>
           <Text fontSize="sm" as="label">
             End Date
-            <input
+            <DatePicker
+              data-testid="end-date"
               name="endDate"
-              value={formData.endDate}
-              onChange={updateField}
+              label="end date"
+              selectedDate={formData.endDate}
+              onChange={onDateFieldUpdate("endDate")}
             />
           </Text>
         </Flex>
