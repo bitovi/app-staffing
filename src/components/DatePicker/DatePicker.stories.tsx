@@ -1,5 +1,5 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { DatePicker } from "./DatePicker";
 
 export default {

@@ -1,4 +1,3 @@
-import React from "react";
 import { Input as ChakraInput } from "@chakra-ui/input";
 import { format } from "date-fns";
 
@@ -25,7 +24,6 @@ export const DatePicker = ({
   const handleChange = (evt: any) => {
     const dateString: string = evt.target.value;
     const dateValues = dateString.split("-");
-    console.log("on change", dateString, evt);
 
     const year = parseInt(dateValues[0]);
     const month = parseInt(dateValues[1]) - 1;

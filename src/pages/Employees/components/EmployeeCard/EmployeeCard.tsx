@@ -1,5 +1,4 @@
 import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
-import React from "react";
 import { Tag, TagCloseButton } from "../../../../components/Tag";
 import useAutoSaveForm from "../../../../hooks/useAutoSaveForm";
 import type { Employee, SkillName } from "../../../../services/api";
