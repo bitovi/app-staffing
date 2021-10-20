@@ -1,7 +1,5 @@
-import type { Employee } from "../../services/api";
-
 import { useCallback, useState } from "react";
-
+import type { Employee } from "../../services/api";
 import { useEmployees } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 
@@ -10,7 +8,7 @@ import styles from "./Employees.module.scss";
 import Button from "../../components/Button";
 
 export default function Employees(): JSX.Element {
-  const { employees, addEmployee, updateEmployee } = useEmployees();
+  const { employees, addEmployee, updateEmployee, isLoading } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
 
@@ -48,6 +46,7 @@ export default function Employees(): JSX.Element {
           />
         </div>
       </div>
+
       <div className={styles.row}>
         <Button
           variant="link"
@@ -58,7 +57,9 @@ export default function Employees(): JSX.Element {
           Add Team Member +
         </Button>
       </div>
+
       <EmployeeTable
+        loading={isLoading}
         filterValue={filterValue}
         filteredEmployees={filteredEmployees}
         onEdit={handleEditSave}

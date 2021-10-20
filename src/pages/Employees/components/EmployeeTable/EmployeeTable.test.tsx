@@ -1,13 +1,23 @@
-import { render, screen } from "@testing-library/react";
+import { getByTestId, render, screen } from "@testing-library/react";
 import { employees } from "../../../../services/api/employees/fixtures";
 
 import EmployeeTable from "./EmployeeTable";
 
 describe("Components/Layout", () => {
   it("has a 'loading' state", async () => {
-    render(<EmployeeTable filteredEmployees={undefined} onEdit={() => null} />);
+    const { container } = render(
+      <EmployeeTable
+        loading={false}
+        filteredEmployees={[]}
+        onEdit={() => null}
+      />,
+    );
 
-    expect(screen.getByText(/LOADING.../i));
+    const skeleton = getByTestId(container, "skeleton-loader");
+
+    // await waitFor(() => screen.queryByTestId("skeleton-loader"));
+
+    expect(skeleton).toHaveAttribute("isLoaded", true);
   });
 
   it("has an 'empty' state", async () => {
