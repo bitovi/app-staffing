@@ -24,7 +24,7 @@ echo "Variables defined and ready to publish the image"
 fi
 
 #building the docker image...
-docker build -t ${IMAGE_NAME} .
+docker build -f Dockerfile-dev -t ${IMAGE_NAME} 
 
 
 if [[ BRANCH_NAME == 'main' ]]; then
