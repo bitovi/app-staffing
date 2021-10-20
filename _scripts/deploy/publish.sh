@@ -24,7 +24,7 @@ else
   echo "Variables defined and ready to publish the image"
 fi
 
- #building the docker image
+ #building the docker image...
  docker build -t ${IMAGE_NAME} .
 
 
