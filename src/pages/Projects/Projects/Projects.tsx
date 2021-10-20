@@ -6,9 +6,10 @@ import ListProjects from "../components/ListProjects";
 import { useProjects } from "../../../services/api";
 
 import styles from "./Projects.module.scss";
+import { Skeleton } from "@chakra-ui/react";
 
 export default function Projects(): JSX.Element {
-  const { projects, addProject } = useProjects();
+  const { projects, addProject, isLoading } = useProjects();
   const history = useHistory();
 
   const addNewProject = async () => {
@@ -18,20 +19,23 @@ export default function Projects(): JSX.Element {
       roles: [],
     });
 
-    history.push(`/${newProjectId}`);
+    history.push(`/projects/${newProjectId}`);
   };
 
   const editProject = (project: Project) => {
-    history.push(`/${project.id}`);
+    history.push(`/projects/${project.id}`);
   };
 
   return (
     <div className={styles.wrapper}>
-      <ListProjects
-        onAddNew={addNewProject}
-        onView={editProject}
-        projects={projects}
-      />
+      {isLoading
+        ? <Skeleton height="50px" />
+        : <ListProjects
+            onAddNew={addNewProject}
+            onView={editProject}
+            projects={projects}
+          />
+      }
     </div>
   );
 }
