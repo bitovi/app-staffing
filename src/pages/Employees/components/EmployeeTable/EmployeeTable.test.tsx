@@ -1,4 +1,4 @@
-import { getByTestId, render, screen } from "@testing-library/react";
+import { queryByAttribute, queryByText, render, screen } from "@testing-library/react";
 import { employees } from "../../../../services/api/employees/fixtures";
 
 import EmployeeTable from "./EmployeeTable";
@@ -12,18 +12,11 @@ describe("Components/Layout", () => {
         onEdit={() => null}
       />,
     );
-
-    const skeleton = getByTestId(container, "skeleton-loader");
-
-    // await waitFor(() => screen.queryByTestId("skeleton-loader"));
-
-    expect(skeleton).toHaveAttribute("isLoaded", true);
-  });
-
-  it("has an 'empty' state", async () => {
-    render(<EmployeeTable filteredEmployees={[]} onEdit={() => null} />);
-
-    expect(screen.getByText(/There are currently no team members./i));
+     
+    const errorMessage = queryByText(container, "There are currently no team members.");
+    const skeleton = queryByAttribute('class', container, 'skeleton', {exact: false});
+    expect(errorMessage).toBeTruthy();
+    expect(skeleton).toBeTruthy();
   });
 
   it("shows employees", async () => {

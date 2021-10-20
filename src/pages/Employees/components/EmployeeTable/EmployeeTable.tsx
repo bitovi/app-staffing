@@ -19,7 +19,7 @@ export default function EmployeeTable({
   onEdit,
 }: IEmployeeTable): JSX.Element {
   return (
-    <Skeleton isLoaded={loading} data-testid="skeleton-loader">
+    <Skeleton isLoaded={loading}>
       {filteredEmployees && filteredEmployees.length === 0 && (
         <Box
           width="100%"
