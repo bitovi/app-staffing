@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 
 import ProjectCard from "./ProjectCard";
-import { projects } from "../../../../services/api/projects/fixtures";
+import { projects } from "../../../../shared/services/api/projects/fixtures";
 
 const project = projects[0];
 

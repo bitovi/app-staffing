@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { setupWorker } from "msw";
 import { ChakraProvider } from "@chakra-ui/react";
 
-import mocks from "./services/mocks";
+import mocks from "@staffing/services/mocks";
 
 import App from "./App";
 import theme from "./theme";

@@ -8,6 +8,7 @@ ignores:
   - "@testing-library/*"
   - "@types/*"
   - "@typescript-eslint/*"
+  - "@staffing/*"
   - babel-eslint
   - eslint-*
   - node-sass

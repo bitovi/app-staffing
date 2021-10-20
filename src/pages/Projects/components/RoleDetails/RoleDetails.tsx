@@ -3,13 +3,13 @@ import type {
   Employee,
   Role,
   SkillName,
-} from "../../../../services/api";
+} from "@staffing/services/api";
 
 import { cloneDeep } from "lodash";
 
-import { skillList, useEmployees } from "../../../../services/api";
-import Button from "../../../../components/Button";
-import Select from "../../../../components/Select";
+import { skillList, useEmployees } from "@staffing/services/api";
+import Button from "@staffing/components/Button";
+import Select from "@staffing/components/Select";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
 import RoleDate from "../RoleDate";
 

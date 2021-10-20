@@ -1,5 +1,5 @@
-import Select from "../../../../components/Select";
-import type { EstimatedDate } from "../../../../services/api";
+import Select from "@staffing/components/Select";
+import type { EstimatedDate } from "@staffing/services/api";
 
 import styles from "./RoleDate.module.scss";
 

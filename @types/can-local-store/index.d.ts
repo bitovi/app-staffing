@@ -29,10 +29,10 @@ declare module "can-local-store" {
   };
 
   export interface CanLocalStore<T> {
-    getData(baseId: { id: string }): Promise<?T>;
+    getData(baseId: { id: string }): Promise<T>;
     getListData(query?: Query<T>): Promise<{ data: T[]; count: number }>;
     createData(data: T): Promise<T>;
-    updateData(data: Partial<T> & { id: string }): Promise<?T>;
+    updateData(data: Partial<T> & { id: string }): Promise<T>;
     updateListData(data: T[]): Promise<Array<T>>;
     destroyData(data: T): Promise<T>;
     clear(): Promise<void>;

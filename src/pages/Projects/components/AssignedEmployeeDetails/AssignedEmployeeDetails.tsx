@@ -1,9 +1,9 @@
-import Select from "../../../../components/Select";
+import Select from "@staffing/components/Select";
 import {
   AssignedEmployee,
   Employee,
   useEmployees,
-} from "../../../../services/api";
+} from "@staffing/services/api";
 
 import styles from "./AssignedEmployeeDetails.module.scss";
 

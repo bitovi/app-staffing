@@ -1,13 +1,13 @@
-import type { Employee } from "../../services/api";
+import type { Employee } from "@staffing/services/api";
 
 import { useCallback, useState } from "react";
 
-import { useEmployees } from "../../services/api";
+import { useEmployees } from "@staffing/services/api";
 import EmployeeTable from "./components/EmployeeTable";
 
 import styles from "./Employees.module.scss";
 
-import Button from "../../components/Button";
+import Button from "@staffing/components/Button";
 
 export default function Employees(): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();

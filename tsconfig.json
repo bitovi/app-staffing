@@ -24,7 +24,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,

@@ -8,11 +8,11 @@ import { wrapper } from "../useRest/useRest.test";
 
 describe("useProjects", () => {
   beforeEach(async () => {
-    await projectStoreManager.loadResources();
+    await projectStoreManager.load();
   });
 
   afterEach(async () => {
-    await projectStoreManager.clearResources();
+    await projectStoreManager.clear();
   });
 
   it("works", async () => {

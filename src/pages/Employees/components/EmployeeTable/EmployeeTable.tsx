@@ -1,5 +1,5 @@
 import { Stack, StackDivider } from "@chakra-ui/layout";
-import type { Employee } from "../../../../services/api";
+import type { Employee } from "@staffing/services/api";
 
 import EmployeeCard from "../EmployeeCard";
 

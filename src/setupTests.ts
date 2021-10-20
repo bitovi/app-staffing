@@ -10,7 +10,7 @@ chai.use(chaiDom);
 chai.use(chaiSpies);
 
 import { setupServer } from "msw/node";
-import mocks from "./services/mocks";
+import mocks from "@staffing/services/mocks";
 
 const server = setupServer(...mocks);
 beforeAll(() => server.listen());

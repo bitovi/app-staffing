@@ -1,6 +1,6 @@
-import type { Project } from "../../../../services/api";
+import type { Project } from "@staffing/services/api";
 
-import Button from "../../../../components/Button";
+import Button from "@staffing/components/Button";
 
 import styles from "./ProjectCard.module.scss";
 

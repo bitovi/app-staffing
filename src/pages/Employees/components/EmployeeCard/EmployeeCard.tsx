@@ -1,11 +1,11 @@
 import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
-import { Tag, TagCloseButton } from "../../../../components/Tag";
-import useAutoSaveForm from "../../../../hooks/useAutoSaveForm";
-import type { Employee, SkillName } from "../../../../services/api";
-import { skillList } from "../../../../services/api";
+import { Tag, TagCloseButton } from "@staffing/components/Tag";
+import useAutoSaveForm from "@staffing/hooks/useAutoSaveForm";
+import type { Employee, SkillName } from "@staffing/services/api";
+import { skillList } from "@staffing/services/api";
 import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
-import { DatePicker } from "../../../../components/DatePicker";
+import { DatePicker } from "@staffing/components/DatePicker";
 
 interface EmployeeCardProps {
   employee: Employee;

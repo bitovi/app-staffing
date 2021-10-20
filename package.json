@@ -24,7 +24,17 @@
     "extends": "@hmudesign",
     "rules": {
       "jsx-a11y/no-onchange": "off",
-      "import/no-extraneous-dependencies": "off"
+      "import/no-extraneous-dependencies": "off",
+      "import/no-unresolved": [
+        "error",
+        {
+          "commonjs": true,
+          "caseSensitive": true,
+          "ignore": [
+            "^@staffing"
+          ]
+        }
+      ]
     },
     "overrides": [
       {
@@ -74,8 +84,9 @@
   "dependencies": {
     "@chakra-ui/icons": "^1.0.15",
     "@chakra-ui/react": "^1.6.8",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@react-hookz/web": "^12.0.0",
     "can-deparam": "^1.2.3",
     "can-local-store": "^1.0.1",
     "can-param": "^1.1.3",
@@ -83,15 +94,13 @@
     "classnames": "^2.3.1",
     "date-fns": "^2.25.0",
     "faker": "^5.5.3",
-    "framer-motion": "^4",
+    "framer-motion": "^4.1.17",
     "lodash": "^4.17.21",
-    "msw": "^0.34.0",
     "node-sass": "^6.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
     "react-select": "^4.3.1",
-    "react-use": "^17.3.1",
     "swr": "^1.0.1"
   },
   "devDependencies": {
@@ -111,13 +120,12 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^12.8.3",
     "@types/chai": "^4.2.21",
-    "@types/chai-dom": "0.0.10",
+    "@types/chai-dom": "0.0.11",
     "@types/chai-spies": "^1.0.3",
     "@types/faker": "^5.5.8",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
-    "@types/mocha": "^9.0.0",
-    "@types/node": "^12.20.19",
+    "@types/node": "^14.17.27",
     "@types/react": "^17.0.18",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",
@@ -128,9 +136,10 @@
     "chai-spies": "^1.0.0",
     "depcheck": "^1.4.2",
     "eslint": "^7.32.0",
+    "msw": "^0.35.0",
     "prettier": "^2.3.2",
     "react-select-event": "^5.3.0",
-    "typescript": "^4.3.5",
+    "typescript": "^4.4.4",
     "vite": "^2.6.10",
     "vite-plugin-svgr": "^0.4.0",
     "vite-react-jsx": "^1.1.2"

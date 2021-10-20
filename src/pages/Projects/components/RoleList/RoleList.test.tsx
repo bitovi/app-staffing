@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { expect } from "chai";
 
-import { projects } from "../../../../services/api/projects/fixtures";
+import { projects } from "../../../../shared/services/api/projects/fixtures";
 import RoleList from "./RoleList";
 
 describe("Pages/Projects/components/RoleLists", () => {

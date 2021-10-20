@@ -7,6 +7,4 @@ export default {
   component: Error,
 } as ComponentMeta<typeof Error>;
 
-export const Basic: ComponentStory<typeof Error> = ({ ...props }) => (
-  <Error {...props} />
-);
+export const Basic: ComponentStory<typeof Error> = () => <Error />;

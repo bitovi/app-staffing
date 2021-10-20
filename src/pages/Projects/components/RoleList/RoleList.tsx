@@ -1,10 +1,10 @@
-import type { Role, Project } from "../../../../services/api";
+import type { Role, Project } from "@staffing/services/api";
 
 import { cloneDeep } from "lodash";
 
-import { skillList } from "../../../../services/api";
+import { skillList } from "@staffing/services/api";
 import RoleDetails from "../RoleDetails";
-import Button from "../../../../components/Button";
+import Button from "@staffing/components/Button";
 
 import styles from "./RoleList.module.scss";
 

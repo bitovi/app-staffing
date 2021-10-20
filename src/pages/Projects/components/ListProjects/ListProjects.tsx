@@ -1,5 +1,5 @@
-import Button from "../../../../components/Button";
-import { Project } from "../../../../services/api";
+import Button from "@staffing/components/Button";
+import { Project } from "@staffing/services/api";
 import ProjectCard from "../ProjectCard";
 import styles from "./ListProjects.module.scss";
 

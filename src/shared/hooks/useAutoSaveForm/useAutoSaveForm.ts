@@ -1,6 +1,6 @@
 import { isEqual } from "lodash";
 import { useEffect, useState } from "react";
-import { useDebounce, usePrevious } from "react-use";
+import { useDebouncedEffect, usePrevious } from "@react-hookz/web";
 
 /*
   This hook is used to auto save form data after a short delay.
@@ -18,14 +18,14 @@ export default function useAutoSaveForm<T>({
   const prevFormData = usePrevious(formData);
 
   // Auto save on change of data
-  useDebounce(
+  useDebouncedEffect(
     () => {
       if (prevFormData && !isEqual(formData, prevFormData)) {
         onSave(formData);
       }
     },
-    autoSaveDebounceDelay,
     [formData, prevFormData, onSave],
+    autoSaveDebounceDelay,
   );
 
   useEffect(() => {

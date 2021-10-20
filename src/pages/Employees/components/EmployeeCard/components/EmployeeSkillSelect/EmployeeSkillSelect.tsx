@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Select from "../../../../../../components/Select";
-import { Skill, SkillName } from "../../../../../../services/api";
+import Select from "@staffing/components/Select";
+import { Skill, SkillName } from "@staffing/services/api";
 
 interface EmployeeSkillSelectProps {
   selectedSkills: Skill[];

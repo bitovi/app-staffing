@@ -4,8 +4,8 @@ import { select as selectEvent } from "react-select-event";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
-import { Employee } from "../../../../services/api";
-import { employees } from "../../../../services/api/employees/fixtures";
+import { Employee } from "../../../../shared/services/api";
+import { employees } from "../../../../shared/services/api/employees/fixtures";
 import EmployeeCard from "./EmployeeCard";
 import { act } from "react-dom/test-utils";
 
