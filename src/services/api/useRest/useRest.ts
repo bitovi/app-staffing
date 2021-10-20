@@ -45,7 +45,7 @@ function useRest<T extends { id: string }>(
 
           return {
             ...addResponse,
-            data: [...addResponse.data, mapItem(newItem)],
+            data: [mapItem(newItem), ...addResponse.data],
           };
         },
         false,
