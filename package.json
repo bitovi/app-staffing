@@ -11,13 +11,13 @@
     "eslint": "eslint src",
     "prettier": "prettier --check src",
     "depcheck": "depcheck .",
-    "clean": "rm -rf build coverage",
-    "dev": "react-scripts start",
+    "clean": "rm -rf dist coverage",
+    "dev": "vite",
     "test": "react-scripts test",
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook -s public -o build/storybook",
-    "build": "react-scripts build"
+    "build": "vite build"
   },
   "eslintConfig": {
     "root": true,
@@ -122,13 +122,17 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-select": "^4.0.17",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
     "chai": "^4.3.4",
     "chai-dom": "^1.9.0",
     "chai-spies": "^1.0.0",
     "depcheck": "^1.4.2",
+    "eslint": "^7.32.0",
     "prettier": "^2.3.2",
-    "react-scripts": "4.0.3",
     "react-select-event": "^5.3.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "vite": "^2.6.10",
+    "vite-plugin-svgr": "^0.4.0",
+    "vite-react-jsx": "^1.1.2"
   }
 }

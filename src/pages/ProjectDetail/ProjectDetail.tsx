@@ -1,11 +1,11 @@
-import type { Project } from "../../../services/api";
+import type { Project } from "../../services/api";
 
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ProjectDescription from "../components/ProjectDescription";
-import RoleList from "../components/RoleList";
-import { useProjects } from "../../../services/api";
+import ProjectDescription from "../Projects/components/ProjectDescription";
+import RoleList from "../Projects/components/RoleList";
+import { useProjects } from "../../services/api";
 
 export default function ProjectDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>();

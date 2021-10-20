@@ -3,14 +3,15 @@ import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import Loading from "./pages/Loading";
-import { ProjectRouter } from "./pages/Projects";
+import Error from "./pages/Error";
+import DataLoader from "./services/DataLoader";
 
 import "./App.scss";
 
-const Hello = lazy(() => import("./pages/Hello"));
-const Employees = lazy(() => import("./pages/Employees"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
-const DataLoader = lazy(() => import("./services/DataLoader"));
+const Employees = lazy(() => import("./pages/Employees"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+const Projects = lazy(() => import("./pages/Projects"));
 
 export default function App(): JSX.Element {
   return (
@@ -24,9 +25,14 @@ export default function App(): JSX.Element {
           <Route path="/employees">
             <Employees />
           </Route>
-          <ProjectRouter />
+          <Route path="/projects">
+            <Projects />
+          </Route>
+          <Route path="/projects/:id">
+            <ProjectDetail />
+          </Route>
           <Route>
-            <Hello name="Error" />
+            <Error />
           </Route>
         </Switch>
       </Suspense>
