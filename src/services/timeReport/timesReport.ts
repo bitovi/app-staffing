@@ -153,7 +153,7 @@ export function getStartOfMonth(date: Date): Date {
  * NB: a week belongs to a month if midweek(Wednesday) falls in month.
  * @param date
  */
-export function getEndOfMonth(date: Date) {
+export function getEndOfMonth(date: Date): Date {
   date = endOfMonth(date);
   const midWeek = setDay(date, 3, { weekStartsOn: 1 });
 
