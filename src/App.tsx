@@ -3,7 +3,6 @@ import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import Loading from "./pages/Loading";
-import { ProjectRouter } from "./pages/Projects";
 
 import "./App.scss";
 
@@ -11,6 +10,7 @@ const Hello = lazy(() => import("./pages/Hello"));
 const Employees = lazy(() => import("./pages/Employees"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const DataLoader = lazy(() => import("./services/DataLoader"));
+const ProjectRouter = lazy(() => import("./pages/Projects/Router"));
 
 export default function App(): JSX.Element {
   return (
@@ -24,7 +24,9 @@ export default function App(): JSX.Element {
           <Route path="/employees">
             <Employees />
           </Route>
-          <ProjectRouter />
+          <Route>
+            <ProjectRouter />
+          </Route>
           <Route>
             <Hello name="Error" />
           </Route>
