@@ -15,3 +15,9 @@ export interface AssignedEmployee {
   endDate?: Date;
   employee: Employee;
 }
+
+export interface ServerEmployee
+  extends Omit<Employee, "startDate" | "endDate"> {
+  startDate: string;
+  endDate?: string;
+}

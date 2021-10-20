@@ -4,8 +4,6 @@ import { act, renderHook } from "@testing-library/react-hooks";
 import { SWRConfig } from "swr";
 
 import useRest from "./useRest";
-
-import { mapEmployee } from "../employees";
 import { employeeStoreManager } from "../employees/mocks";
 import { employees } from "../employees/fixtures";
 
@@ -24,7 +22,7 @@ describe("useRest", () => {
 
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () => useRest<Employee>("/api/v1/employees", undefined),
       { wrapper },
     );
 
@@ -39,7 +37,7 @@ describe("useRest", () => {
 
   it("adds", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () => useRest<Employee>("/api/v1/employees", undefined),
       { wrapper },
     );
 
@@ -66,7 +64,7 @@ describe("useRest", () => {
 
   it("updates", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () => useRest<Employee>("/api/v1/employees", undefined),
       { wrapper },
     );
 
@@ -86,7 +84,7 @@ describe("useRest", () => {
 
   it("deletes", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () => useRest<Employee>("/api/v1/employees", undefined),
       { wrapper },
     );
 
@@ -102,14 +100,10 @@ describe("useRest", () => {
   it("paginates", async () => {
     const { result, waitForNextUpdate } = renderHook(
       () =>
-        useRest<Employee>(
-          "/api/v1/employees",
-          {
-            count: 1,
-            page: 2,
-          },
-          mapEmployee,
-        ),
+        useRest<Employee>("/api/v1/employees", {
+          count: 1,
+          page: 2,
+        }),
       { wrapper },
     );
 
@@ -122,13 +116,9 @@ describe("useRest", () => {
   it("filters", async () => {
     const { result, waitForNextUpdate } = renderHook(
       () =>
-        useRest<Employee>(
-          "/api/v1/employees",
-          {
-            filter: { name: employees[1].name },
-          },
-          mapEmployee,
-        ),
+        useRest<Employee>("/api/v1/employees", {
+          filter: { name: employees[1].name },
+        }),
       { wrapper },
     );
 
@@ -141,13 +131,9 @@ describe("useRest", () => {
   it("sorts", async () => {
     const { result, waitForNextUpdate } = renderHook(
       () =>
-        useRest<Employee>(
-          "/api/v1/employees",
-          {
-            sort: "name",
-          },
-          mapEmployee,
-        ),
+        useRest<Employee>("/api/v1/employees", {
+          sort: "name",
+        }),
       { wrapper },
     );
 
@@ -161,16 +147,12 @@ describe("useRest", () => {
   it("filters, sorts, and paginates", async () => {
     const { result, waitForNextUpdate } = renderHook(
       () =>
-        useRest<Employee>(
-          "/api/v1/employees",
-          {
-            filter: { id: { $lte: "3" } },
-            page: 1,
-            count: 2,
-            sort: "name",
-          },
-          mapEmployee,
-        ),
+        useRest<Employee>("/api/v1/employees", {
+          filter: { id: { $lte: "3" } },
+          page: 1,
+          count: 2,
+          sort: "name",
+        }),
       { wrapper },
     );
 

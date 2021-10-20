@@ -1,10 +1,9 @@
-import type { APIResponse, QueriableList } from "../shared";
-
-import { useCallback, useMemo } from "react";
-import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
-
+import { useCallback } from "react";
+import useSWR, { useSWRConfig } from "swr";
+import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
+import deserializeDateMiddleware from "./deserializeDateMiddleware";
 
 interface RestActions<T> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
@@ -18,13 +17,12 @@ interface RestActions<T> extends APIResponse<T[]> {
 function useRest<T extends { id: string }>(
   path: string,
   queryParams?: QueriableList<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mapItem: (input: any) => T = identity,
 ): RestActions<T> {
   const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     `${path}?${param(queryParams)}`,
     (url) => fetcher("GET", url),
+    { use: [deserializeDateMiddleware] },
   );
 
   const handleAdd = useCallback<
@@ -45,7 +43,6 @@ function useRest<T extends { id: string }>(
 
           return {
             ...addResponse,
-            data: [mapItem(newItem), ...addResponse.data],
           };
         },
         false,
@@ -53,7 +50,7 @@ function useRest<T extends { id: string }>(
 
       return newId;
     },
-    [path, queryParams, mutate, mapItem],
+    [path, queryParams, mutate],
   );
 
   const handleUpdate = useCallback<
@@ -75,14 +72,14 @@ function useRest<T extends { id: string }>(
           return {
             ...cachedData,
             data: (cachedData?.data ?? []).map((item) =>
-              item.id === updatedItem.id ? mapItem(updatedItem) : item,
+              item.id === updatedItem.id ? updatedItem : item,
             ),
           };
         },
         false,
       );
     },
-    [path, queryParams, mutate, mapItem],
+    [path, queryParams, mutate],
   );
 
   const handleDelete = useCallback(
@@ -105,13 +102,8 @@ function useRest<T extends { id: string }>(
     [path, queryParams, mutate],
   );
 
-  const data = useMemo(
-    () => response?.data?.map(mapItem),
-    [mapItem, response?.data],
-  );
-
   return {
-    data,
+    data: response?.data,
     error,
     isLoading: !response && !error,
     handleAdd,
@@ -121,5 +113,3 @@ function useRest<T extends { id: string }>(
 }
 
 export default useRest;
-
-const identity = <T>(v: T) => v;

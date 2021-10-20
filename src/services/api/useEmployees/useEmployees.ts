@@ -1,8 +1,6 @@
 import type { Employee, NewEmployee } from "../employees";
 import type { ResponseStatus, QueriableList } from "../shared";
 
-import { mapEmployee } from "../employees";
-
 import useRest from "../useRest";
 
 interface EmployeeActions {
@@ -26,7 +24,7 @@ export default function useEmployees(
     handleAdd,
     handleUpdate,
     handleDelete,
-  } = useRest<Employee>("/api/v1/employees", queryParams, mapEmployee);
+  } = useRest<Employee>("/api/v1/employees", queryParams);
 
   return {
     employees,
