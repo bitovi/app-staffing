@@ -6,8 +6,6 @@ import EmployeeCard from "../EmployeeCard";
 
 import FolderWithFileIcon from "../../assets/pngs/FolderWithFile.png";
 
-import styles from "./EmployeeTable.module.scss";
-
 interface IEmployeeTable {
   filterValue?: string;
   filteredEmployees: Employee[] | undefined;
@@ -21,7 +19,7 @@ export default function EmployeeTable({
 }: IEmployeeTable): JSX.Element {
   return (
     <>
-      {!filteredEmployees && <div className={styles.noResults}>LOADING...</div>}
+      {!filteredEmployees && <Box>LOADING...</Box>}
 
       {filteredEmployees && filteredEmployees.length === 0 && (
         <Box
