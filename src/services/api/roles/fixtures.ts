@@ -28,6 +28,8 @@ export function makeRole(role?: Partial<Role>): Role {
       endDate: faker.date.future(),
     }));
 
+  console.log(assignedEmployees);
+
   return {
     id: `${++roleId}`,
     skill: faker.random.arrayElement(skillList),
