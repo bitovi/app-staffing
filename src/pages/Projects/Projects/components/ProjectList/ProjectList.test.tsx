@@ -7,13 +7,10 @@ describe("Components/Layout", () => {
   it("renders", () => {
     render(
       <MemoryRouter>
-        <ProjectList
-          projects={projects}
-          onAddNew={() => null}
-        />
+        <ProjectList projects={projects} onAddNew={() => null} />
       </MemoryRouter>,
     );
-    
+
     const projectContainer = screen.getByText(/Add Project/i);
     expect(projectContainer.tagName).toBe("BUTTON");
     const viewCount = screen.getAllByText("View");
@@ -21,30 +18,24 @@ describe("Components/Layout", () => {
   });
 
   it("calls 'onAddNew' on button click", () => {
-    const onClick = jest.fn()
+    const onClick = jest.fn();
     const { getByText } = render(
       <MemoryRouter>
-        <ProjectList
-          projects={projects}
-          onAddNew={onClick}
-        />
+        <ProjectList projects={projects} onAddNew={onClick} />
       </MemoryRouter>,
     );
 
     fireEvent.click(getByText(/Add Project/i));
     expect(onClick).toHaveBeenCalled();
-    })
+  });
   it("checks if the second project exists", async () => {
-   render(
+    render(
       <MemoryRouter>
-        <ProjectList
-          projects={projects}
-          onAddNew={() => null}
-        />
+        <ProjectList projects={projects} onAddNew={() => null} />
       </MemoryRouter>,
     );
 
-    const secondProject = screen.getByText(projects[1].name)
+    const secondProject = screen.getByText(projects[1].name);
     expect(secondProject).toBeInTheDocument();
   });
 });

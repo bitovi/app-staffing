@@ -21,10 +21,7 @@ export default function Projects(): JSX.Element {
 
   return (
     <div className={styles.wrapper}>
-      <ProjectList
-        onAddNew={addNewProject}
-        projects={projects}
-      />
+      <ProjectList onAddNew={addNewProject} projects={projects} />
     </div>
   );
 }

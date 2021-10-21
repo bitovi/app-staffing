@@ -12,10 +12,7 @@ export default function Button({
   ...props
 }: ButtonProps): JSX.Element {
   return (
-    <ChakraButton
-      {...props}
-      variant={variant}
-    >
+    <ChakraButton {...props} variant={variant}>
       {children}
     </ChakraButton>
   );

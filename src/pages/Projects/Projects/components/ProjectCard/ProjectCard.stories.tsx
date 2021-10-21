@@ -11,10 +11,7 @@ export default {
 export const Basic: ComponentStory<typeof ProjectCard> = () => {
   return (
     <BrowserRouter>
-      <ProjectCard
-        project={projects[1]}
-      />
+      <ProjectCard project={projects[1]} />
     </BrowserRouter>
-  )
-}
-
+  );
+};

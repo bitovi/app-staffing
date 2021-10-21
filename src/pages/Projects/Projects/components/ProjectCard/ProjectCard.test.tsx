@@ -15,7 +15,7 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const projectContainer = screen.getByTestId("container")
+    const projectContainer = screen.getByTestId("container");
     expect(projectContainer).to.have.tagName("div");
 
     const projectName = screen.getByText(project.name);
