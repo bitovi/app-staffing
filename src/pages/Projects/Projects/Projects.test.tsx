@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { Project, ProjectActions } from "../../../services/api";
 import { projectStoreManager } from "../../../services/api/projects/mocks";
-import { QueriableList, ResponseStatus } from "../../../services/api/shared";
+import { mockLoadingProjectsHook } from "../../../services/api/useProjects/mocks";
 import Projects from "./Projects";
 
 describe("Pages/Projects", () => {
@@ -9,18 +8,7 @@ describe("Pages/Projects", () => {
   afterEach((async () => await projectStoreManager.clearResources()));
 
   it("displays skeleton components while fetching projects from api", () => {
-
-    const mockLoadingProjectsHook: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions = () => ({
-      projects: [],
-      isLoading: true,
-      error: undefined,
-      addProject: () => Promise.resolve("new id"),
-      updateProject: () => Promise.resolve(),
-      deleteProject: () => Promise.resolve()
-    });
-
     render(<Projects useProjects={mockLoadingProjectsHook} />);
-
     expect(screen.getByTestId("projects-loading-skeleton")).toBeInTheDocument();
   });
 

@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "eslint": "eslint src",
     "prettier": "prettier --check src",
+    "prettier:write": "prettier:write src",
     "depcheck": "depcheck .",
     "clean": "rm -rf build coverage",
     "dev": "react-scripts start",
