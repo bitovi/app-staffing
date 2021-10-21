@@ -14,18 +14,38 @@ function TableRow({ rowData, onClick }: TableRowProps): JSX.Element {
   const badgeForRole = (role: SkillName) => {
     switch (role) {
       case "Angular":
-        return <Badge size="sm" background="#876363">{role}</Badge>
+        return (
+          <Badge size="sm" background="#876363">
+            {role}
+          </Badge>
+        );
       case "Design":
-        return <Badge size="sm" background="#435BAE">{role}</Badge>
+        return (
+          <Badge size="sm" background="#435BAE">
+            {role}
+          </Badge>
+        );
       case "DevOps":
-        return <Badge size="sm" background="#5FAE43">{role}</Badge>
+        return (
+          <Badge size="sm" background="#5FAE43">
+            {role}
+          </Badge>
+        );
       case "Node":
-        return <Badge size="sm" background="#805AD5">{role}</Badge>
+        return (
+          <Badge size="sm" background="#805AD5">
+            {role}
+          </Badge>
+        );
       case "UX":
-        return <Badge size="sm" background="#AE436A">{role}</Badge>
+        return (
+          <Badge size="sm" background="#AE436A">
+            {role}
+          </Badge>
+        );
       case "React":
       default:
-        return <Badge size="sm" >{role}</Badge>
+        return <Badge size="sm">{role}</Badge>;
     }
   };
 
