@@ -21,7 +21,7 @@ const ProjectCard = ({
             <p>{project?.description}</p>
         </div>
         <div>
-          <ChakraLink isExternal
+          <ChakraLink
             className={styles.viewProject}
             as={ReactLink}
             to={`/${project.id}`}
