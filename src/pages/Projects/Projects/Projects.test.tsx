@@ -5,11 +5,10 @@ import Projects from "./Projects";
 
 describe("Pages/Projects", () => {
   beforeEach(async () => await projectStoreManager.loadResources());
-  afterEach((async () => await projectStoreManager.clearResources()));
+  afterEach(async () => await projectStoreManager.clearResources());
 
   it("displays skeleton components while fetching projects from api", () => {
     render(<Projects useProjects={mockLoadingProjectsHook} />);
     expect(screen.getByTestId("projects-loading-skeleton")).toBeInTheDocument();
   });
-
 });

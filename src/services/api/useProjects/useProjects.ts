@@ -25,6 +25,6 @@ export default function useProjects(
     error,
     addProject: handleAdd,
     updateProject: handleUpdate,
-    deleteProject: handleDelete
+    deleteProject: handleDelete,
   };
 }

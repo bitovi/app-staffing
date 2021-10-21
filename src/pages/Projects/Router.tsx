@@ -7,7 +7,6 @@ const Projects = lazy(() => import("./Projects"));
 const ProjectDetail = lazy(() => import("./ProjectDetail"));
 
 export default function ProjectRouter(): JSX.Element {
-
   const { path } = useRouteMatch();
 
   return (
