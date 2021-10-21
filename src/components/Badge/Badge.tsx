@@ -3,7 +3,7 @@ import { Tag as ChakraTag } from "@chakra-ui/tag";
 
 type BadgeProps = {
   size: "sm" | "md" | "lg";
-  background: string;
+  background?: string;
   children: React.ReactNode;
 };
 
