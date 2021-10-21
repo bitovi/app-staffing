@@ -12,10 +12,11 @@ describe("Components/Layout", () => {
         onEdit={() => null}
       />,
     );
-    const skeleton = queryByAttribute('class', container, 'skeleton', {exact: false});
+    const skeleton = queryByAttribute("class", container, "skeleton", {
+      exact: false,
+    });
     expect(skeleton).toBeTruthy();
   });
-
 
   it("has an 'empty' state", async () => {
     render(<EmployeeTable filteredEmployees={[]} onEdit={() => null} />);
