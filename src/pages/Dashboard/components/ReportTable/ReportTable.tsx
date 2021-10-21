@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { Box, Flex } from "@chakra-ui/layout";
-import { Center, Spacer, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/layout";
+import { Center, Text, VStack } from "@chakra-ui/react";
 import {
   getMonthForWeek,
   getTimescaleData,
@@ -8,16 +8,162 @@ import {
   TimescaleType,
 } from "../../../../services/timeReport/timesReport";
 import { format, setMonth } from "date-fns";
+import TableRow from "./TableRow";
+import { ProjectedData } from "../../../../services/timeReport/interfaces";
 
 interface IProps {
   reportDate: Date;
 }
+
+const projectedData: ProjectedData[] = [
+  {
+    role: "React",
+    projections: [
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+    ],
+  },
+  {
+    role: "React",
+    projections: [
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+    ],
+  },
+];
 
 export function ReportTable({ reportDate }: IProps): JSX.Element {
   const timeFrames: TimescaleData[] = useMemo(
     () => getTimescaleData(reportDate),
     [reportDate],
   );
+
 
   const columnHeading: string[] = timeFrames.map((item) => {
     switch (item.type) {
@@ -34,43 +180,58 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
     }
   });
 
+  const handleRowClick = () => {
+    console.log("row click");
+  };
+
   return (
-    <Flex flex={1} height={8} justifyContent={"start"}>
-      <Box flex={2} alignItems={"start"}>
-        <Text textStyle="tableHead">Departments</Text>
-      </Box>
+    <Flex flexDirection="column">
+      <Flex flex={1} height={8} mb={7} alignItems={"start"}>
+        <Center width="3xs" justifyContent={"start"}>
+          <Text textStyle="tableHead">Departments</Text>
+        </Center>
 
-      <Spacer />
+        {/* Table Heading */}
+        {columnHeading.map((item, index) => {
+          return (
+            <Center
+              flex={1}
+              key={index}
+              alignItems={"start"}
+              flexDirection="column"
+            >
+              <Center height={4} flex={1}>
+                <Text textStyle="tableHead">{item}</Text>
+              </Center>
 
-      {/* Table Heading */}
-      {columnHeading.map((item, index) => {
-        return (
-          <Center
-            flex={1}
-            key={index}
-            alignItems={"start"}
-            flexDirection="column"
-          >
-            <Center height={4} flex={1}>
-              <Text textStyle="tableHead">{item}</Text>
+              {/* Sub Heading */}
+              <Center height={4} flex={1} justifyContent="start">
+                {timeFrames[index].type === TimescaleType.month && (
+                  <Text textStyle="subHead">
+                    {format(timeFrames[index].startDate, "MMM do")}
+                  </Text>
+                )}
+              </Center>
             </Center>
+          );
+        })}
+      </Flex>
 
-            {/* Sub Heading */}
-            <Center height={4} flex={1}>
-              {timeFrames[index].type === TimescaleType.month && (
-                <Text textStyle="subHead">
-                  {format(timeFrames[index].startDate, "MMM do")}
-                </Text>
-              )}
-            </Center>
-          </Center>
-        );
-      })}
+      {/*<Flex flex={1} flexDirection="column" alignItems="start">*/}
+      {/* Table Rows */}
 
-
+      <VStack
+        spacing={4}
+        align="stretch"
+      >
+        {projectedData.map((item) => (
 
 
+          <TableRow key={item.role} rowData={item} onClick={handleRowClick} />
+        ))}
+      </VStack>
 
+      {/*</Flex>*/}
     </Flex>
   );
 }
