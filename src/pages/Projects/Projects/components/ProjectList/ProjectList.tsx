@@ -19,7 +19,7 @@ export default function Projects({
       </Button>
 
       {projects?.map((project) => (
-        <ProjectCard key={project.id} project={project} onView={onView} />
+        <ProjectCard key={project.id} project={project} />
       ))}
     </div>
   );

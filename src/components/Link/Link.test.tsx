@@ -1,15 +1,20 @@
 import { render, screen } from "@testing-library/react";
+import {MemoryRouter} from 'react-router-dom'
+
 
 import Link from ".";
 
-describe("Components/Button", () => {
-  const mockOnClick = jest.fn();
+describe("Components/Link", () => {
 
   it("works", () => {
-    render(<Link to="/home">View</Link>);
+    render(
+      <MemoryRouter>
+        <Link to="/home">View</Link>
+      </MemoryRouter>  
+      );
 
     const link = screen.getByText(/View/i);
     expect(link.tagName).toBe("A");
-    expect(mockOnClick).toHaveBeenCalled();
+    expect(link).toHaveAttribute("href", "/home")
   });
 });
