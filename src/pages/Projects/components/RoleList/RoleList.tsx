@@ -12,8 +12,8 @@ export default function RoleList({
   project,
   onEdit,
 }: {
-  project: Project;
-  onEdit: (project: Project) => void;
+  project: Project,
+  onEdit: (project: Project) => void,
 }): JSX.Element {
   const createNewRole = (): Role => {
     return {
@@ -58,17 +58,18 @@ export default function RoleList({
       >
         Add Role
       </Button>
-      {!project?.roles?.length 
-       ?  <div className={styles.noRoles}>There are currently no roles assigned
-          to this project, add some</div>
-       
-       :  <div className={styles.skillFilter}>
-        {skillList.map((s) => (
-          <p key={s}>{s}</p>
-        ))}
-      </div>
-      }
-      
+      {!project?.roles?.length ? (
+        <div className={styles.noRoles}>
+          There are currently no roles assigned to this project, add some
+        </div>
+      ) : (
+        <div className={styles.skillFilter}>
+          {skillList.map((s) => (
+            <p key={s}>{s}</p>
+          ))}
+        </div>
+      )}
+
       {project.roles.map((role) => (
         <RoleDetails
           role={role}
