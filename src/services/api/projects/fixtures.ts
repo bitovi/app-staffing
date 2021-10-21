@@ -3,7 +3,7 @@ import type { Project, Role } from "./interfaces";
 
 import faker from "faker";
 
-import { skillList } from "../shared";
+import { skillList } from "../skills/fixtures";
 import { employees } from "../employees/fixtures";
 
 faker.seed(0);
@@ -41,7 +41,7 @@ export function makeRole(role?: Partial<Role>): Role {
 
   return {
     id: `${++roleId}`,
-    skill: { name: faker.random.arrayElement(skillList) },
+    skill: faker.random.arrayElement(skillList),
     startDate,
     endDate,
     employees: assignedEmployees,
