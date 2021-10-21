@@ -1,0 +1,2 @@
+# This will solve prettier problems on windows with end of line chars
+* text=auto eol=lf
