@@ -1,12 +1,16 @@
-import { addDecorator } from "@storybook/react";
-
 import { setupWorker } from "msw";
-import mocks from "../src/services/mocks";
+import mocks from "../src/shared/services/mocks";
 import theme from "../src/theme/";
 
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
   chakra: { theme },
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
 };
 
 const pathPrefix =

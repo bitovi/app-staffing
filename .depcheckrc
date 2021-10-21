@@ -11,6 +11,7 @@ ignores:
   - "@staffing/*"
   - babel-*
   - eslint-*
+  - storybook-*
   - identity-obj-proxy
   - node-sass
   - framer-motion

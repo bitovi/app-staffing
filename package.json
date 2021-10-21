@@ -11,12 +11,12 @@
     "eslint": "eslint src",
     "prettier": "prettier --check src",
     "depcheck": "depcheck .",
-    "clean": "rm -rf dist coverage",
+    "clean": "rm -rf dist coverage node_modules/.cache node_modules/.vite",
     "dev": "vite",
     "test": "jest --watch",
     "test:ci": "CI=true jest --coverage",
     "storybook": "start-storybook -s public -p 6006",
-    "storybook:build": "build-storybook -s public -o build/storybook",
+    "storybook:build": "build-storybook -s public -o dist/storybook",
     "build": "vite build"
   },
   "eslintConfig": {
@@ -127,6 +127,7 @@
     "msw": "^0.35.0",
     "prettier": "^2.3.2",
     "react-select-event": "^5.3.0",
+    "storybook-builder-vite": "^0.1.2",
     "ts-jest": "^27.0.7",
     "typescript": "^4.4.4",
     "unfetch": "^4.2.0",
