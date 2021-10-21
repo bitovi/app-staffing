@@ -11,7 +11,7 @@ export default function Projects({
   projects?: Project[];
 }): JSX.Element {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid="projectList">
       <Button variant="link" onClick={onAddNew}>
         + Add Project
       </Button>

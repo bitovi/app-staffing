@@ -9,10 +9,10 @@ const ProjectCard = ({
 }): JSX.Element => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.container}>
+      <div className={styles.container} data-testid="container">
         <div className={styles.projectNameWrapper}>
           <div>
-             <span className={styles.projectName}>{project?.name}</span>
+             <span className={styles.projectName} >{project?.name}</span>
           </div>
             <p>{project?.description}</p>
         </div>
