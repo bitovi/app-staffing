@@ -5,11 +5,9 @@ import ProjectCard from "../ProjectCard";
 
 export default function Projects({
   onAddNew,
-  onView,
   projects,
 }: {
   onAddNew: () => void;
-  onView: (project: Project) => void;
   projects?: Project[];
 }): JSX.Element {
   return (
