@@ -1,15 +1,13 @@
-import Button from "../../../../components/Button";
-import { Project } from "../../../../services/api";
+import styles from "./ProjectList.module.scss";
+import { Project } from "../../../../../services/api";
 import ProjectCard from "../ProjectCard";
-import styles from "./ListProjects.module.scss";
+import Button from "../../../../../components/Button";
 
 export default function Projects({
   onAddNew,
-  onView,
   projects,
 }: {
   onAddNew: () => void;
-  onView: (project: Project) => void;
   projects?: Project[];
 }): JSX.Element {
   return (
@@ -19,7 +17,7 @@ export default function Projects({
       </Button>
 
       {projects?.map((project) => (
-        <ProjectCard key={project.id} project={project} onView={onView} />
+        <ProjectCard key={project.id} project={project} />
       ))}
     </div>
   );
