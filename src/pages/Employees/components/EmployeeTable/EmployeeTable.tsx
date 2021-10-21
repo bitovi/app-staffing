@@ -1,4 +1,4 @@
-import { Box, Stack, StackDivider, Skeleton } from "@chakra-ui/react";
+import { Box, Stack, StackDivider } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import type { Employee } from "../../../../services/api";
 
@@ -6,20 +6,18 @@ import EmployeeCard from "../EmployeeCard";
 
 import FolderWithFileIcon from "../../assets/pngs/FolderWithFile.png";
 interface IEmployeeTable {
-  loading?: boolean;
   filterValue?: string;
   filteredEmployees: Employee[] | undefined;
   onEdit: (id: string, employee: Employee) => void;
 }
 
 export default function EmployeeTable({
-  loading,
   filterValue,
   filteredEmployees,
   onEdit,
 }: IEmployeeTable): JSX.Element {
   return (
-    <Skeleton isLoaded={!loading}>
+    <>
       {filteredEmployees && filteredEmployees.length === 0 && (
         <Box
           width="100%"
@@ -51,6 +49,6 @@ export default function EmployeeTable({
           ))}
         </Stack>
       )}
-    </Skeleton>
+    </>
   );
 }

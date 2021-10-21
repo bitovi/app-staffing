@@ -7,7 +7,6 @@ describe("Components/Layout", () => {
   it("has a 'loading' state", async () => {
     const { container } = render(
       <EmployeeTable
-        loading={false}
         filteredEmployees={[]}
         onEdit={() => null}
       />,
