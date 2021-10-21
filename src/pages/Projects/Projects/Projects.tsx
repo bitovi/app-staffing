@@ -1,14 +1,17 @@
-import type { Project } from "../../../services/api";
-
+import type { Project, ResponseStatus } from "../../../services/api";
 import { useHistory } from "react-router-dom";
-
 import ListProjects from "../components/ListProjects";
-import { useProjects } from "../../../services/api";
-
+import { useProjects as useProjectsDefault, ProjectActions } from "../../../services/api";
 import styles from "./Projects.module.scss";
 import { Skeleton } from "@chakra-ui/react";
+import { QueriableList } from "../../../services/api/shared";
 
-export default function Projects(): JSX.Element {
+export default function Projects({
+  useProjects = useProjectsDefault
+}: {
+  useProjects?: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions
+}): JSX.Element {
+
   const { projects, addProject, isLoading } = useProjects();
   const history = useHistory();
 
@@ -29,7 +32,7 @@ export default function Projects(): JSX.Element {
   return (
     <div className={styles.wrapper}>
       {isLoading
-        ? <Skeleton height="50px" />
+        ? <Skeleton data-testid="projects-loading-skeleton" height="50px" />
         : <ListProjects
             onAddNew={addNewProject}
             onView={editProject}

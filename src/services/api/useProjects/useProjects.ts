@@ -1,19 +1,10 @@
-import type { Project, NewProject } from "../projects";
+import type { Project } from "../projects";
 import type { ResponseStatus, QueriableList } from "../shared";
+import { ProjectActions } from "./interfaces";
 
 import { mapProject } from "../projects";
 
 import useRest from "../useRest";
-
-interface ProjectActions {
-  projects?: Project[];
-  addProject: (project: NewProject) => Promise<string>;
-  updateProject: (
-    projectId: string,
-    project: Partial<Project>,
-  ) => Promise<void>;
-  deleteProject: (projectId: string) => Promise<void>;
-}
 
 /** Hook for getting a list of the projects */
 export default function useProjects(
@@ -34,6 +25,6 @@ export default function useProjects(
     error,
     addProject: handleAdd,
     updateProject: handleUpdate,
-    deleteProject: handleDelete,
+    deleteProject: handleDelete
   };
 }

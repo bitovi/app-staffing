@@ -5,3 +5,5 @@ export type { Employee, NewEmployee, AssignedEmployee } from "./employees";
 export { skillList } from "./shared";
 export { default as useEmployees } from "./useEmployees";
 export { default as useProjects } from "./useProjects";
+
+export type { ProjectActions } from "./useProjects";
