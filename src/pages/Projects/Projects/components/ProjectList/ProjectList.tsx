@@ -1,6 +1,5 @@
 import styles from "./ProjectList.module.scss";
 import { Project } from "../../../../../services/api";
-import { Button } from "@chakra-ui/react";
 import ProjectCard from "../ProjectCard";
 
 export default function Projects({
@@ -11,11 +10,7 @@ export default function Projects({
   projects?: Project[];
 }): JSX.Element {
   return (
-    <div className={styles.container} data-testid="projectList">
-      <Button variant="link" onClick={onAddNew}>
-        + Add Project
-      </Button>
-
+    <div className={styles.container}>
       {projects?.map((project) => (
         <ProjectCard key={project.id} project={project} />
       ))}
