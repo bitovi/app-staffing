@@ -1,15 +1,11 @@
 import type { Project } from "../../../../../services/api";
-import { Link as ChakraLink } from "@chakra-ui/react";
-import { Link as ReactLink } from "react-router-dom";
-
+import Link from "../../../../../components/Link";
 import styles from "./ProjectCard.module.scss";
 
 const ProjectCard = ({
   project,
-  onView,
 }: {
   project: Project;
-  onView: (project: Project) => void;
 }): JSX.Element => {
   return (
     <div className={styles.wrapper}>
@@ -21,13 +17,9 @@ const ProjectCard = ({
             <p>{project?.description}</p>
         </div>
         <div>
-          <ChakraLink
-            className={styles.viewProject}
-            as={ReactLink}
-            to={`/${project.id}`}
-          >
+          <Link className={styles.viewProject} to={`/${project.id}`}> 
             View
-          </ChakraLink>
+          </Link>
         </div>
       </div>
     </div>
