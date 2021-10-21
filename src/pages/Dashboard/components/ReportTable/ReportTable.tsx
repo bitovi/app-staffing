@@ -87,7 +87,7 @@ const projectedData: ProjectedData[] = [
     ],
   },
   {
-    role: "React",
+    role: "Angular",
     projections: [
       {
         needed: [],
@@ -156,6 +156,287 @@ const projectedData: ProjectedData[] = [
       },
     ],
   },
+  {
+    role: "DevOps",
+    projections: [
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+    ],
+  },
+  {
+    role: "UX",
+    projections: [
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+    ],
+  },
+  {
+    role: "Design",
+    projections: [
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+    ],
+  },
+  {
+    role: "Node",
+    projections: [
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+    ],
+  },
+
 ];
 
 export function ReportTable({ reportDate }: IProps): JSX.Element {
