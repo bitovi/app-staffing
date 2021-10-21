@@ -12,7 +12,7 @@ export default function Projects({
 }): JSX.Element {
   return (
     <div className={styles.container}>
-     <Button variant="link" onClick={onAddNew}>
+      <Button variant="link" onClick={onAddNew}>
         + Add Project
       </Button>
 
