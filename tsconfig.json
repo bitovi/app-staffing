@@ -18,7 +18,7 @@
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "downlevelIteration": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "noFallthroughCasesInSwitch": true,
@@ -31,5 +31,5 @@
     "strictPropertyInitialization": true,
     "useDefineForClassFields": true
   },
-  "include": ["src"]
+  "include": ["src", "jest.setup.ts"]
 }

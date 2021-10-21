@@ -13,8 +13,8 @@
     "depcheck": "depcheck .",
     "clean": "rm -rf dist coverage",
     "dev": "vite",
-    "test": "react-scripts test",
-    "test:ci": "CI=true react-scripts test --coverage",
+    "test": "jest --watch",
+    "test:ci": "CI=true jest --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook -s public -o build/storybook",
     "build": "vite build"
@@ -55,20 +55,6 @@
   "msw": {
     "workerDirectory": "public"
   },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "\\.stories\\."
-    ],
-    "coverageThreshold": {
-      "global": {
-        "statements": 0,
-        "branches": 0,
-        "lines": 0,
-        "functions": 0
-      }
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -104,15 +90,14 @@
     "swr": "^1.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.8",
     "@chakra-ui/cli": "^1.5.0",
     "@hmudesign/eslint-config": "^2.0.2",
     "@snek-at/storybook-addon-chakra-ui": "^1.0.0-beta.1",
     "@storybook/addon-actions": "^6.3.7",
-    "@storybook/addon-docs": "^6.3.9",
+    "@storybook/addon-docs": "^6.3.7",
     "@storybook/addon-essentials": "^6.3.7",
     "@storybook/addon-links": "^6.3.7",
-    "@storybook/node-logger": "^6.3.7",
-    "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.7",
     "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -131,17 +116,21 @@
     "@types/react-router-dom": "^5.1.8",
     "@types/react-select": "^4.0.17",
     "@vitejs/plugin-react-refresh": "^1.3.6",
+    "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
     "chai-dom": "^1.9.0",
     "chai-spies": "^1.0.0",
     "depcheck": "^1.4.2",
     "eslint": "^7.32.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.3.1",
     "msw": "^0.35.0",
     "prettier": "^2.3.2",
     "react-select-event": "^5.3.0",
+    "ts-jest": "^27.0.7",
     "typescript": "^4.4.4",
+    "unfetch": "^4.2.0",
     "vite": "^2.6.10",
-    "vite-plugin-svgr": "^0.4.0",
     "vite-react-jsx": "^1.1.2"
   }
 }

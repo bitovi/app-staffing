@@ -9,7 +9,8 @@ ignores:
   - "@types/*"
   - "@typescript-eslint/*"
   - "@staffing/*"
-  - babel-eslint
+  - babel-*
   - eslint-*
+  - identity-obj-proxy
   - node-sass
   - framer-motion

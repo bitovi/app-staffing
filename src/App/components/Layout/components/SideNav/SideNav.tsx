@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 import styles from "./SideNav.module.scss";
 
-import BitoviLogo from "./assets/bitovi.png";
+import logo from "./assets/bitovi.png";
 import homeIcon from "./assets/Home.svg";
 import userIcon from "./assets/User.svg";
 import projectIcon from "./assets/Activity.svg";
@@ -29,7 +29,7 @@ export default function SideNav(): JSX.Element {
 
   return (
     <div className={styles.wrapper}>
-      <img src={BitoviLogo} alt="Bitovi" className={styles.image} />
+      <img src={logo} alt="Bitovi" className={styles.image} />
 
       {links.map(({ exact, link, label, icon }) => (
         <NavLink
