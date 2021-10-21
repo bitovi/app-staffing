@@ -10,30 +10,28 @@ export default {
 
 export const Loading: ComponentStory<typeof Projects> = ({ ...props }) => {
 
-  const mockLoadingProjectsHook: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions = () => {
-    return {
-      projects: [],
-      isLoading: true,
-      error: undefined,
-      addProject: () => Promise.resolve("new id"),
-      updateProject: () => Promise.resolve()
-    }
-  };
+  const mockLoadingProjectsHook: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions = () => ({
+    projects: [],
+    isLoading: true,
+    error: undefined,
+    addProject: () => Promise.resolve("new id"),
+    updateProject: () => Promise.resolve(),
+    deleteProject: () => Promise.resolve()
+  });
 
   return <Projects useProjects={mockLoadingProjectsHook} />
 };
 
 export const LoadedProjects: ComponentStory<typeof Projects> = ({ ...props }) => {
 
-  const mockLoadingProjectsHook: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions = () => {
-    return {
-      projects: [],
-      isLoading: false,
-      error: undefined,
-      addProject: () => Promise.resolve("new id"),
-      updateProject: () => Promise.resolve()
-    }
-  };
+  const mockLoadingProjectsHook: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions = () => ({
+    projects: [],
+    isLoading: false,
+    error: undefined,
+    addProject: () => Promise.resolve("new id"),
+    updateProject: () => Promise.resolve(),
+    deleteProject: () => Promise.resolve()
+  });
 
   return <Projects useProjects={mockLoadingProjectsHook} />
 };

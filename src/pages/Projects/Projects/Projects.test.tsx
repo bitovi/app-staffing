@@ -10,16 +10,14 @@ describe("Pages/Projects", () => {
 
   it("displays skeleton components while fetching projects from api", () => {
 
-    const mockLoadingProjectsHook: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions = () => {
-      return {
-        projects: [],
-        isLoading: true,
-        error: undefined,
-        addProject: () => Promise.resolve("new id"),
-        updateProject: () => Promise.resolve(),
-        deleteProject: () => Promise.resolve()
-      }
-    };
+    const mockLoadingProjectsHook: (queryParams?: QueriableList<Project> | undefined) => ResponseStatus & ProjectActions = () => ({
+      projects: [],
+      isLoading: true,
+      error: undefined,
+      addProject: () => Promise.resolve("new id"),
+      updateProject: () => Promise.resolve(),
+      deleteProject: () => Promise.resolve()
+    });
 
     render(<Projects useProjects={mockLoadingProjectsHook} />);
 
