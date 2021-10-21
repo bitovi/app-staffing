@@ -12,8 +12,8 @@ export default function RoleList({
   project,
   onEdit,
 }: {
-  project: Project;
-  onEdit: (project: Project) => void;
+  project: Project,
+  onEdit: (project: Project) => void,
 }): JSX.Element {
   const createNewRole = (): Role => {
     return {
