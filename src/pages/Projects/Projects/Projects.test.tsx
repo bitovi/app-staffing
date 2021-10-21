@@ -16,7 +16,8 @@ describe("Pages/Projects", () => {
         isLoading: true,
         error: undefined,
         addProject: () => Promise.resolve("new id"),
-        updateProject: () => Promise.resolve()
+        updateProject: () => Promise.resolve(),
+        deleteProject: () => Promise.resolve()
       }
     };
 
