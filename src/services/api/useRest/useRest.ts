@@ -25,7 +25,7 @@ function useRest<T extends { id: string }>(
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     `${path}?${param(queryParams)}`,
     (url) => fetcher("GET", url),
-    {suspense: true}
+    { suspense: true },
   );
 
   const handleAdd = useCallback<

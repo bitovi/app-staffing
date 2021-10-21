@@ -20,19 +20,21 @@ function EmployeePageLoadingLayout() {
         <Button
           variant="link"
           disabled={true}
-          onClick={() => {null}}
+          onClick={() => {
+            null;
+          }}
         >
           Add Team Member +
         </Button>
       </div>
-      <EmployeeCardSkeleton/>
+      <EmployeeCardSkeleton />
     </div>
   );
 }
 
 export default function EmployeesWrapper(): JSX.Element {
   return (
-    <Suspense fallback={<EmployeePageLoadingLayout/>}>
+    <Suspense fallback={<EmployeePageLoadingLayout />}>
       <Employees />
     </Suspense>
   );
@@ -88,8 +90,8 @@ export function Employees(): JSX.Element {
           Add Team Member +
         </Button>
       </div>
-      
-      <Suspense fallback={<EmployeeCardSkeleton/>}>
+
+      <Suspense fallback={<EmployeeCardSkeleton />}>
         <EmployeeTable
           filterValue={filterValue}
           filteredEmployees={filteredEmployees}

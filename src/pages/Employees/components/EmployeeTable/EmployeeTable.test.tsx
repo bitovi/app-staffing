@@ -1,22 +1,9 @@
-import { queryByAttribute, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { employees } from "../../../../services/api/employees/fixtures";
 
 import EmployeeTable from "./EmployeeTable";
 
 describe("Components/Layout", () => {
-  it("has a 'loading' state", async () => {
-    const { container } = render(
-      <EmployeeTable
-        filteredEmployees={[]}
-        onEdit={() => null}
-      />,
-    );
-    const skeleton = queryByAttribute("class", container, "skeleton", {
-      exact: false,
-    });
-    expect(skeleton).toBeTruthy();
-  });
-
   it("has an 'empty' state", async () => {
     render(<EmployeeTable filteredEmployees={[]} onEdit={() => null} />);
 

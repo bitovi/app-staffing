@@ -144,5 +144,5 @@ export function EmployeeCardSkeleton(): JSX.Element {
         <Skeleton height="130px"></Skeleton>
       </GridItem>
     </Grid>
-  )
+  );
 }
