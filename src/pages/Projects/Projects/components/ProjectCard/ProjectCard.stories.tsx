@@ -1,7 +1,7 @@
+import { BrowserRouter } from "react-router-dom";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import ProjectCard from "./ProjectCard";
 import { projects } from "../../../../../services/api/projects/fixtures";
-import { BrowserRouter } from "react-router-dom";
 
 export default {
   title: "ProjectCard",

@@ -1,9 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-
 import { MemoryRouter } from "react-router-dom";
-
-import ProjectList from "./ProjectList";
 import { projects } from "../../../../../services/api/projects/fixtures";
+import ProjectList from "./ProjectList";
 
 describe("Components/Layout", () => {
   it("renders", () => {
