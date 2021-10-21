@@ -1,4 +1,4 @@
-export const skillListEnum = [
+export const skillList = [
   "Angular",
   "Design",
   "DevOps",
@@ -7,7 +7,7 @@ export const skillListEnum = [
   "UX",
 ] as const;
 
-export type SkillName = typeof skillListEnum[number];
+export type SkillName = typeof skillList[number];
 
 export interface Skill {
   id: string;
