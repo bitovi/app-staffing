@@ -1,10 +1,10 @@
-import type { APIResponse, QueriableList } from "../shared";
+import type { APIResponse, QueriableList } from "../common";
 
 import { useCallback, useMemo } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
 
-import { fetcher } from "../shared";
+import { fetcher } from "../common";
 
 interface RestActions<T> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;

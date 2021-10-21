@@ -8,11 +8,11 @@ import { wrapper } from "../useRest/useRest.test";
 
 describe("useEmployees", () => {
   beforeEach(async () => {
-    await employeeStoreManager.loadResources();
+    await employeeStoreManager.load();
   });
 
   afterEach(async () => {
-    await employeeStoreManager.clearResources();
+    await employeeStoreManager.clear();
   });
 
   it("works", async () => {

@@ -15,11 +15,11 @@ export const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe("useRest", () => {
   beforeEach(async () => {
-    await employeeStoreManager.loadResources();
+    await employeeStoreManager.load();
   });
 
   afterEach(async () => {
-    await employeeStoreManager.clearResources();
+    await employeeStoreManager.clear();
   });
 
   it("works", async () => {

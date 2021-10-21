@@ -1,5 +1,5 @@
 import type { AssignedEmployee } from "../employees";
-import type { Skill } from "../shared";
+import type { Skill } from "../common";
 
 export interface Role {
   id: string;

@@ -6,11 +6,11 @@ import RoleDetails from "./RoleDetails";
 
 describe("Pages/Projects/components/RoleDetails", () => {
   beforeEach(async () => {
-    await employeeStoreManager.loadResources();
+    await employeeStoreManager.load();
   });
 
   afterEach(async () => {
-    await employeeStoreManager.clearResources();
+    await employeeStoreManager.clear();
   });
 
   it("works", () => {
