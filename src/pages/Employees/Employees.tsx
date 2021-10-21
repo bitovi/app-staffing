@@ -35,7 +35,7 @@ function EmployeePageLoadingLayout(): JSX.Element {
 export default function EmployeesWrapper({
   useEmployees = useEmployeesDefault,
 }: {
-  useEmployees: typeof useEmployeesDefault;
+  useEmployees?: typeof useEmployeesDefault;
 }): JSX.Element {
   return (
     <Suspense fallback={<EmployeePageLoadingLayout />}>
