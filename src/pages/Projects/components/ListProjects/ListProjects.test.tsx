@@ -4,7 +4,7 @@ import { expect, spy } from "chai";
 import { MemoryRouter } from "react-router-dom";
 
 import ListProjects from "./ListProjects";
-import { projects } from "../../../../shared/services/api/projects/fixtures";
+import { projects } from "@staffing/services/api/projects/fixtures";
 
 describe("Components/Layout", () => {
   it("renders", () => {

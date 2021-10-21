@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
-import { projects } from "../../../../shared/services/api/projects/fixtures";
+import { projects } from "@staffing/services/api/projects/fixtures";
 import RoleDate from "./RoleDate";
 
 describe.only("Pages/Projects/components/RoleDates", () => {

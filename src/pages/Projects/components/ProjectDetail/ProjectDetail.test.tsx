@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { MemoryRouter } from "react-router-dom";
 
 import ProjectDetail from "./ProjectDetail";
-import { projects } from "../../../../shared/services/api/projects/fixtures";
+import { projects } from "@staffing/services/api/projects/fixtures";
 
 const project = projects[0];
 

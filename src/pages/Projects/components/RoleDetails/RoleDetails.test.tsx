@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { employeeStoreManager } from "../../../../shared/services/api/employees/mocks";
+import { employeeStoreManager } from "@staffing/services/api/employees/mocks";
 
-import { projects } from "../../../../shared/services/api/projects/fixtures";
+import { projects } from "@staffing/services/api/projects/fixtures";
 import RoleDetails from "./RoleDetails";
 
 describe("Pages/Projects/components/RoleDetails", () => {

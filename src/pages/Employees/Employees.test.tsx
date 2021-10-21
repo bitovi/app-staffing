@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { employees } from "../../shared/services/api/employees/fixtures";
-import { employeeStoreManager } from "../../shared/services/api/employees/mocks";
+import { employees } from "@staffing/services/api/employees/fixtures";
+import { employeeStoreManager } from "@staffing/services/api/employees/mocks";
 
 import Employees from "./Employees";
 
