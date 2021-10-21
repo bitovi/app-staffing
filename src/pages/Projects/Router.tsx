@@ -1,17 +1,17 @@
-import { Route, HashRouter } from "react-router-dom";
+import { Route } from "react-router-dom";
 
 import ProjectDetail from "./ProjectDetail";
 import Projects from "./Projects";
 
 export default function ProjectRouter(): JSX.Element {
   return (
-    <HashRouter basename="/projects">
-      <Route exact path="/">
+    <>
+      <Route exact path="/projects">
         <Projects />
       </Route>
-      <Route path="/:id">
+      <Route path="/projects/:id">
         <ProjectDetail />
       </Route>
-    </HashRouter>
+    </>
   );
 }
