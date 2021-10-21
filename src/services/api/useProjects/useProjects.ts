@@ -26,7 +26,7 @@ export default function useProjects(
     handleAdd,
     handleUpdate,
     handleDelete,
-  } = useRest<Project>("/api/v1/projects", queryParams, mapProject);
+  } = useRest<Project>("/api/v1/projects", "projects", queryParams, mapProject);
 
   return {
     projects,

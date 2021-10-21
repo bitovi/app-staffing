@@ -1,5 +1,6 @@
 import type { AssignedEmployee } from "../employees";
 import type { Project, Role } from "./interfaces";
+import JSONAPISerializer from "json-api-serializer";
 
 import faker from "faker";
 
@@ -56,3 +57,8 @@ export const projects = [
   makeProject(),
   makeProject(),
 ];
+const Serializer = new JSONAPISerializer();
+Serializer.register("projects", {
+  id: "id",
+});
+export const jsonApiProjects = Serializer.serialize("projects", projects);

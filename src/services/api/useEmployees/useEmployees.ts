@@ -26,7 +26,12 @@ export default function useEmployees(
     handleAdd,
     handleUpdate,
     handleDelete,
-  } = useRest<Employee>("/api/v1/employees", queryParams, mapEmployee);
+  } = useRest<Employee>(
+    "/api/v1/employees",
+    "employees",
+    queryParams,
+    mapEmployee,
+  );
 
   return {
     employees,

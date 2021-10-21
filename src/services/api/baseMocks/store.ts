@@ -3,7 +3,7 @@ import QueryLogic from "can-query-logic";
 
 // Creates a CanLocalStore and returns some helper functions to intialize and clear out the data
 export default function createStore<Resource>(
-  collection: Resource[],
+  collection: Resource[] | Resource,
   queryLogic: QueryLogic<Resource>,
   name: string,
 ): {

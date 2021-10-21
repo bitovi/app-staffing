@@ -5,6 +5,8 @@ import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
 
 import { fetcher } from "../shared";
+import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
+import { SerializerTypes } from "./getJsonApiSerializer";
 
 interface RestActions<T> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
@@ -17,6 +19,7 @@ interface RestActions<T> extends APIResponse<T[]> {
 
 function useRest<T extends { id: string }>(
   path: string,
+  type: SerializerTypes,
   queryParams?: QueriableList<T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapItem: (input: any) => T = identity,
@@ -25,6 +28,7 @@ function useRest<T extends { id: string }>(
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     `${path}?${param(queryParams)}`,
     (url) => fetcher("GET", url),
+    { use: [jsonApiMiddleware(type)] },
   );
 
   const handleAdd = useCallback<

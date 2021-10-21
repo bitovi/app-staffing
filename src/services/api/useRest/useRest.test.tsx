@@ -24,7 +24,13 @@ describe("useRest", () => {
 
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () =>
+        useRest<Employee>(
+          "/api/v1/employees",
+          "projects",
+          undefined,
+          mapEmployee,
+        ),
       { wrapper },
     );
 
@@ -39,7 +45,13 @@ describe("useRest", () => {
 
   it("adds", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () =>
+        useRest<Employee>(
+          "/api/v1/employees",
+          "projects",
+          undefined,
+          mapEmployee,
+        ),
       { wrapper },
     );
 
@@ -66,7 +78,13 @@ describe("useRest", () => {
 
   it("updates", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () =>
+        useRest<Employee>(
+          "/api/v1/employees",
+          "projects",
+          undefined,
+          mapEmployee,
+        ),
       { wrapper },
     );
 
@@ -86,7 +104,13 @@ describe("useRest", () => {
 
   it("deletes", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useRest<Employee>("/api/v1/employees", undefined, mapEmployee),
+      () =>
+        useRest<Employee>(
+          "/api/v1/employees",
+          "projects",
+          undefined,
+          mapEmployee,
+        ),
       { wrapper },
     );
 
@@ -104,6 +128,7 @@ describe("useRest", () => {
       () =>
         useRest<Employee>(
           "/api/v1/employees",
+          "projects",
           {
             count: 1,
             page: 2,
@@ -124,6 +149,7 @@ describe("useRest", () => {
       () =>
         useRest<Employee>(
           "/api/v1/employees",
+          "projects",
           {
             filter: { name: employees[1].name },
           },
@@ -143,6 +169,7 @@ describe("useRest", () => {
       () =>
         useRest<Employee>(
           "/api/v1/employees",
+          "projects",
           {
             sort: "name",
           },
@@ -163,6 +190,7 @@ describe("useRest", () => {
       () =>
         useRest<Employee>(
           "/api/v1/employees",
+          "projects",
           {
             filter: { id: { $lte: "3" } },
             page: 1,
