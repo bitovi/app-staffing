@@ -2,11 +2,8 @@ import type { Role, Project } from "../../../../services/api";
 
 import { cloneDeep } from "lodash";
 
-import { skillList } from "../../../../services/api";
 import RoleDetails from "../RoleDetails";
 import Button from "../../../../components/Button";
-
-import styles from "./RoleList.module.scss";
 
 export default function RoleList({
   project,
@@ -58,11 +55,6 @@ export default function RoleList({
       >
         Add Role
       </Button>
-      <div className={styles.skillFilter}>
-        {skillList.map((s) => (
-          <p key={s}>{s}</p>
-        ))}
-      </div>
       {project.roles.map((role) => (
         <RoleDetails
           role={role}
@@ -71,6 +63,11 @@ export default function RoleList({
           deleteRole={deleteRole}
         />
       ))}
+      {!project.roles.length ? (
+        <div data-testid="no-roles">
+          There are no roles assigned to this project. Add one!{" "}
+        </div>
+      ) : null}
     </>
   );
 }
