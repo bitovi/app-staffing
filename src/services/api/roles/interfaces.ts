@@ -13,3 +13,5 @@ export interface Role {
   endDate: EstimatedDate;
   employees: AssignedEmployee[];
 }
+
+export type NewRole = Omit<Role, "id">;
