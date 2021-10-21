@@ -12,10 +12,11 @@ export default function Projects({
   onView: (project: Project) => void;
   projects?: Project[];
 }): JSX.Element {
+  
   return (
     <div className={styles.container}>
       <Button variant="link" onClick={onAddNew}>
-        + Add Project
+        Create a new project
       </Button>
 
       {projects?.map((project) => (
