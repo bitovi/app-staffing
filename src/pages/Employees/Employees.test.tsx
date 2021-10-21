@@ -2,8 +2,9 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { employees } from "../../services/api/employees/fixtures";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
+import { useEmployees } from "../../services/api";
 
-import { Employees } from "./Employees";
+import Employees from "../Employees";
 
 describe("Pages/Employees", () => {
   beforeEach(async () => {
@@ -15,12 +16,12 @@ describe("Pages/Employees", () => {
   });
 
   it("works", async () => {
-    render(<Employees />);
+    render(<Employees useEmployees={useEmployees} />);
     expect(screen.getByText("Team")).toBeInTheDocument();
   });
 
   it("filters by name", async () => {
-    render(<Employees />);
+    render(<Employees useEmployees={useEmployees} />);
 
     // wait for the first row
     expect(

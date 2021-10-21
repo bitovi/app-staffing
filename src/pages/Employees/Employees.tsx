@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useState } from "react";
 import type { Employee } from "../../services/api";
-import { useEmployees } from "../../services/api";
+import { useEmployees as useEmployeesDefault } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 
@@ -8,7 +8,7 @@ import styles from "./Employees.module.scss";
 
 import Button from "../../components/Button";
 
-function EmployeePageLoadingLayout() {
+function EmployeePageLoadingLayout(): JSX.Element {
   return (
     <div className={styles.wrapper}>
       <div className={styles.actionBar}>
@@ -32,15 +32,23 @@ function EmployeePageLoadingLayout() {
   );
 }
 
-export default function EmployeesWrapper(): JSX.Element {
+export default function EmployeesWrapper({
+  useEmployees = useEmployeesDefault,
+}: {
+  useEmployees: typeof useEmployeesDefault;
+}): JSX.Element {
   return (
     <Suspense fallback={<EmployeePageLoadingLayout />}>
-      <Employees />
+      <Employees useEmployees={useEmployees} />
     </Suspense>
   );
 }
 
-export function Employees(): JSX.Element {
+function Employees({
+  useEmployees,
+}: {
+  useEmployees: typeof useEmployeesDefault;
+}): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();
 
   const [filterValue, setFilterValue] = useState<string>();
