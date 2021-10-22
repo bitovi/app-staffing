@@ -1,5 +1,6 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { useEffect } from "react";
+import { useHistory } from "react-router";
 import Button from "../../../../components/Button";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { useProjects } from "../../../../services/api";
@@ -11,11 +12,13 @@ interface IProps {
 const ProjectDeleteButton = ({ projectId }: IProps): JSX.Element => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { deleteProject, error, isLoading, reset } = useProjects();
+  const history = useHistory();
 
   const onDelete = async (projectId: string) => {
     try {
       await deleteProject(projectId);
       onClose();
+      history.push("/");
     } catch (e) {
       // Eat Error
     }
