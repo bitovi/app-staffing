@@ -1,11 +1,11 @@
-import type { Project } from "../../../services/api";
-
-import { useState, useEffect } from "react";
+import { Box } from "@chakra-ui/layout";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
+import type { Project } from "../../../services/api";
+import { useProjects } from "../../../services/api";
+import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
 import RoleList from "../components/RoleList";
-import { useProjects } from "../../../services/api";
 
 export default function ProjectDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +31,9 @@ export default function ProjectDetail(): JSX.Element {
         <>
           <ProjectDescription onEdit={onSave} project={projectData} />
           <RoleList onEdit={onSave} project={projectData} />
+          <Box mt={10}>
+            <ProjectDeleteButton projectId={projectData.id} />
+          </Box>
         </>
       )}
     </div>

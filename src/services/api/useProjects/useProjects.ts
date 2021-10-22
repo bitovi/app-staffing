@@ -13,6 +13,7 @@ interface ProjectActions {
     project: Partial<Project>,
   ) => Promise<void>;
   deleteProject: (projectId: string) => Promise<void>;
+  reset: () => void;
 }
 
 /** Hook for getting a list of the projects */
@@ -26,6 +27,7 @@ export default function useProjects(
     handleAdd,
     handleUpdate,
     handleDelete,
+    reset,
   } = useRest<Project>("/api/v1/projects", queryParams, mapProject);
 
   return {
@@ -35,5 +37,6 @@ export default function useProjects(
     addProject: handleAdd,
     updateProject: handleUpdate,
     deleteProject: handleDelete,
+    reset,
   };
 }

@@ -8,6 +8,7 @@ interface ButtonProps {
   tabIndex?: number;
   variant?: "primary" | "secondary" | "link";
   onClick(): void;
+  isLoading?: boolean;
 }
 
 export default function Button({
@@ -17,15 +18,17 @@ export default function Button({
   tabIndex,
   variant = "primary",
   onClick,
+  isLoading = false,
   ...props
 }: ButtonProps): JSX.Element {
   return (
     <ChakraButton
       {...props}
       variant={variant}
-      disabled={disabled}
       tabIndex={tabIndex}
       onClick={onClick}
+      isLoading={isLoading}
+      isDisabled={disabled}
     >
       {children}
     </ChakraButton>
