@@ -1,9 +1,9 @@
 import type { AssignedEmployee } from "../employees";
-import type { Skill } from "../skills";
+import type { SkillName } from "../skills";
 
 export interface Role {
   id: string;
-  skill: Skill;
+  skill: SkillName;
   startDate: EstimatedDate;
   endDate: EstimatedDate;
   employees: AssignedEmployee[];
