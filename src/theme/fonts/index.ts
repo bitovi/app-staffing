@@ -16,4 +16,18 @@ export const textStyles = {
     fontStyle: "normal",
     color: "#3D3D3D",
   },
+  bold: {
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "md",
+    lineHeight: "md",
+
+    color: "#4B4B4B",
+  },
+  normal: {
+    fontStyle: "normal",
+    fontWeight: 600,
+    fontSize: "md",
+    lineHeight: "md",
+  },
 };

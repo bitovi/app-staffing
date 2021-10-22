@@ -11,7 +11,7 @@ type TableRowProps = {
 };
 
 function TableRow({ rowData, onClick }: TableRowProps): JSX.Element {
-  const badgeForRole = (role: SkillName) => {
+  const badgeForRole = (role: SkillName): JSX.Element => {
     switch (role) {
       case "Angular":
         return (
@@ -49,26 +49,55 @@ function TableRow({ rowData, onClick }: TableRowProps): JSX.Element {
     }
   };
 
+  const getRowHighlight = (
+    action: "Ok" | "Hire" | "Sell" | "Assign",
+  ): string => {
+    switch (action) {
+      case "Assign":
+        return "rgba(9, 240, 4, 0.27)";
+      case "Hire":
+        return "rgba(211, 42, 42, 0.12)";
+      case "Sell":
+        return "rgba(252, 208, 142, 0.32)";
+      case "Ok":
+      default:
+        return "";
+    }
+  };
+
+  const getTextColor = (action: "Ok" | "Hire" | "Sell" | "Assign"): string => {
+    switch (action) {
+      case "Assign":
+        return "#1D5E1A";
+      case "Hire":
+        return "#D10C0C";
+      case "Sell":
+        return "#DB8C15";
+      case "Ok":
+      default:
+        return "";
+    }
+  };
+
   return (
-    <Box
-      boxShadow="base"
-      bg="white"
-      py={2.5}
-      minHeight=""
-      w="100%"
-      borderRadius="lg"
-    >
+    <Box boxShadow="base" bg="white" minHeight="" w="100%" borderRadius="lg">
       <Flex flex={1} flexDirection="row" onClick={onClick}>
         {/* Department Column*/}
-        <Center width="3xs" pr={3}>
+        <Center width="3xs" pr={3} py={2.5}>
           <Flex flex={1} ml={1}>
             {badgeForRole(rowData.role)}
           </Flex>
 
           <Flex flexDirection="column">
-            <Box>NEEDED</Box>
-            <Box>BENCH</Box>
-            <Box>ACTION</Box>
+            <Box>
+              <Text textStyle="bold">NEEDED</Text>
+            </Box>
+            <Box>
+              <Text textStyle="bold">BENCH</Text>
+            </Box>
+            <Box>
+              <Text textStyle="bold">ACTION</Text>
+            </Box>
           </Flex>
         </Center>
 
@@ -77,18 +106,21 @@ function TableRow({ rowData, onClick }: TableRowProps): JSX.Element {
             <Center
               key={index}
               flex={1}
-              alignItems="start"
+              alignItems="end"
               flexDirection="column"
+              background={getRowHighlight(item.action)}
             >
-              <Flex flexDirection="column">
+              <Flex alignItems="end" flexDirection="column" px={3}>
                 <Box>
-                  <Text>{item.needed.length}</Text>
+                  <Text textStyle="normal">{item.needed.length}</Text>
                 </Box>
                 <Box>
-                  <Text>{item.needed.length}</Text>
+                  <Text textStyle="normal">{item.needed.length}</Text>
                 </Box>
                 <Box>
-                  <Text>{item.action}</Text>
+                  <Text fontWeight="bold" color={getTextColor(item.action)}>
+                    {item.action}
+                  </Text>
                 </Box>
               </Flex>
             </Center>

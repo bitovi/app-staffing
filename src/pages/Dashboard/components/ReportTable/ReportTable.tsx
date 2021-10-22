@@ -22,7 +22,27 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
+        action: "Hire",
+      },
+      {
+        needed: [],
+        bench: [],
         action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Assign",
       },
       {
         needed: [],
@@ -47,27 +67,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
+        action: "Sell",
       },
       {
         needed: [],
@@ -92,7 +92,22 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
+        action: "Hire",
+      },
+      {
+        needed: [],
+        bench: [],
         action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Assign",
       },
       {
         needed: [],
@@ -112,22 +127,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
+        action: "Sell",
       },
       {
         needed: [],
@@ -167,7 +167,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Assign",
       },
       {
         needed: [],
@@ -187,7 +187,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Hire",
       },
       {
         needed: [],
@@ -202,7 +202,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Sell",
       },
       {
         needed: [],
@@ -237,7 +237,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Assign",
       },
       {
         needed: [],
@@ -252,7 +252,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Hire",
       },
       {
         needed: [],
@@ -262,7 +262,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Hire",
       },
       {
         needed: [],
@@ -312,7 +312,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Assign",
       },
       {
         needed: [],
@@ -332,7 +332,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Hire",
       },
       {
         needed: [],
@@ -347,7 +347,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Sell",
       },
       {
         needed: [],
@@ -372,7 +372,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Assign",
       },
       {
         needed: [],
@@ -392,7 +392,17 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
+        action: "Hire",
+      },
+      {
+        needed: [],
+        bench: [],
         action: "Ok",
+      },
+      {
+        needed: [],
+        bench: [],
+        action: "Assign",
       },
       {
         needed: [],
@@ -407,7 +417,7 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
+        action: "Hire",
       },
       {
         needed: [],
@@ -422,21 +432,10 @@ const projectedData: ProjectedData[] = [
       {
         needed: [],
         bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
-      },
-      {
-        needed: [],
-        bench: [],
-        action: "Ok",
+        action: "Sell",
       },
     ],
   },
-
 ];
 
 export function ReportTable({ reportDate }: IProps): JSX.Element {
@@ -445,15 +444,17 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
     [reportDate],
   );
 
-
   const columnHeading: string[] = timeFrames.map((item) => {
     switch (item.type) {
       case TimescaleType.week:
-        return format(item.startDate, "MMM do");
+        return `${format(item.startDate, "MMM").toUpperCase()} ${format(
+          item.startDate,
+          "do",
+        )}`;
       case TimescaleType.month:
         const monthNum = getMonthForWeek(item.startDate);
         const monthDate = setMonth(new Date(), monthNum);
-        return format(monthDate, "MMMM");
+        return format(monthDate, "MMMM").toUpperCase();
       case TimescaleType.quarter:
         return `Q${format(item.startDate, "Q yyyy")}`;
       default:
@@ -469,7 +470,7 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
     <Flex flexDirection="column">
       <Flex flex={1} height={8} mb={7} alignItems={"start"}>
         <Center width="3xs" justifyContent={"start"}>
-          <Text textStyle="tableHead">Departments</Text>
+          <Text textStyle="tableHead">DEPARTMENT</Text>
         </Center>
 
         {/* Table Heading */}
@@ -478,7 +479,7 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
             <Center
               flex={1}
               key={index}
-              alignItems={"start"}
+              alignItems={"end"}
               flexDirection="column"
             >
               <Center height={4} flex={1}>
@@ -488,7 +489,7 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
               {/* Sub Heading */}
               <Center height={4} flex={1} justifyContent="start">
                 {timeFrames[index].type === TimescaleType.month && (
-                  <Text textStyle="subHead">
+                  <Text color={"#718096"}>
                     {format(timeFrames[index].startDate, "MMM do")}
                   </Text>
                 )}
@@ -498,21 +499,11 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
         })}
       </Flex>
 
-      {/*<Flex flex={1} flexDirection="column" alignItems="start">*/}
-      {/* Table Rows */}
-
-      <VStack
-        spacing={4}
-        align="stretch"
-      >
+      <VStack spacing={4} align="stretch">
         {projectedData.map((item) => (
-
-
           <TableRow key={item.role} rowData={item} onClick={handleRowClick} />
         ))}
       </VStack>
-
-      {/*</Flex>*/}
     </Flex>
   );
 }
