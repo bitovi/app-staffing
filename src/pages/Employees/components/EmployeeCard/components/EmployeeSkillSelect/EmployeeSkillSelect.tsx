@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Select from "../../../../../../components/Select";
-import { Skill, SkillName } from "../../../../../../services/api";
+import { Skill, SkillName } from "../../../../../../services/api/skills";
 
 interface EmployeeSkillSelectProps {
   selectedSkills: Skill[];
   allSkills: SkillName[];
-  onAddSkill: (skill: SkillName) => void;
+  onAddSkill: (skill: string) => void;
 }
 
 export const EmployeeSkillSelect = ({
@@ -24,9 +24,9 @@ export const EmployeeSkillSelect = ({
     )
     .map((skill) => ({ label: skill, value: skill }));
 
-  const handleAddSkill = (skillName: SkillName) => {
-    setSkillValue(skillName);
-    onAddSkill(skillName);
+  const handleAddSkill = (name: string) => {
+    setSkillValue(name);
+    onAddSkill(name);
   };
 
   return (

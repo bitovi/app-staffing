@@ -10,6 +10,6 @@ export const skillList = [
 export type SkillName = typeof skillList[number];
 
 export interface Skill {
-  id: string;
+  id?: string;
   name: SkillName;
 }
