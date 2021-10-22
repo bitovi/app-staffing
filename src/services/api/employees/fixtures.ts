@@ -3,7 +3,7 @@ import type { Employee } from "./interfaces";
 
 import faker from "faker";
 
-import { skillList } from "../skills";
+import { skillList } from "../skills/fixtures";
 
 faker.seed(0);
 
@@ -13,7 +13,7 @@ export function makeEmployee(employee?: Partial<Employee>): Employee {
 
   const skills: Skill[] = faker.random
     .arrayElements(skillList, faker.datatype.number(3) + 1)
-    .map((name) => ({ name }));
+    .map(({ name, id }) => ({ name, id }));
 
   return {
     id: `${++employeeId}`,

@@ -3,7 +3,6 @@ import type {
   Employee,
   Role,
 } from "../../../../services/api";
-import type { SkillName } from "../../../../services/api/skills";
 
 import { cloneDeep } from "lodash";
 
@@ -52,7 +51,7 @@ export default function RoleDetails({
         .filter(
           (employee) =>
             !role.employees
-              .map(({ employee: { id } }) => id)
+              .map(({ employee: { id } }: { employee: { id: string } }) => id)
               .includes(employee.id),
         ),
     ];
@@ -61,7 +60,8 @@ export default function RoleDetails({
   const editAssignedEmployee = (assignedEmployee: AssignedEmployee) => {
     const employees = cloneDeep(role.employees);
     const index = employees.findIndex(
-      ({ employee: { id } }) => id === assignedEmployee.employee.id,
+      ({ employee: { id } }: { employee: { id: string } }) =>
+        id === assignedEmployee.employee.id,
     );
 
     employees[index] = assignedEmployee;
@@ -78,7 +78,7 @@ export default function RoleDetails({
   ) => {
     const employees = cloneDeep(role.employees);
     const index = employees.findIndex(
-      ({ employee: { id } }) => id === previousId,
+      ({ employee: { id } }: { employee: { id: string } }) => id === previousId,
     );
 
     employees[index] = newAssignedEmployee;
@@ -97,13 +97,13 @@ export default function RoleDetails({
             label="Role"
             name="roleSkill"
             disabled={role.employees.length > 0}
-            onChange={(skill?: SkillName) =>
-              skill && editRole({ ...role, skill })
+            onChange={(skill?: string) =>
+              skill && editRole({ ...role, skill: skill })
             }
             value={role.skill}
-            options={skills.map((value) => ({
-              label: value,
-              value,
+            options={skills.map(({ name }) => ({
+              label: name,
+              value: name,
             }))}
           />
         )}
@@ -123,15 +123,17 @@ export default function RoleDetails({
       <div className={styles.employees}>
         Assigned Employees
         {employees &&
-          role.employees.map((assignedEmployee, index) => (
-            <AssignedEmployeeDetails
-              key={assignedEmployee.employee.id + role.id + index}
-              assignedEmployee={assignedEmployee}
-              onChange={editAssignedEmployee}
-              changeEmployee={changeAssignedEmployee}
-              possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
-            />
-          ))}
+          role.employees.map(
+            (assignedEmployee: AssignedEmployee, index: string) => (
+              <AssignedEmployeeDetails
+                key={assignedEmployee.employee.id + role.id + index}
+                assignedEmployee={assignedEmployee}
+                onChange={editAssignedEmployee}
+                changeEmployee={changeAssignedEmployee}
+                possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
+              />
+            ),
+          )}
       </div>
       <div className={styles.controls}>
         <Button
