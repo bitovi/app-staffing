@@ -33,7 +33,6 @@ export default function ConfirmationModal({
   error,
   isLoading,
 }: IConfirmationModalProps): JSX.Element {
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -54,11 +53,7 @@ export default function ConfirmationModal({
             <Button disabled={isLoading} onClick={onClose} variant="secondary">
               {closeText}
             </Button>
-            <Button
-              isLoading={isLoading}
-              onClick={onConfirm}
-              variant="primary"
-            >
+            <Button isLoading={isLoading} onClick={onConfirm} variant="primary">
               {confirmText}
             </Button>
           </Flex>
