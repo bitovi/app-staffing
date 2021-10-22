@@ -1,10 +1,10 @@
-import type { APIResponse, QueriableList } from "../shared";
+import type { APIResponse, QueriableList } from "../common";
 
 import { useCallback, useMemo } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
 
-import { fetcher } from "../shared";
+import { fetcher } from "../common";
 
 interface RestActions<T> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
@@ -25,6 +25,7 @@ function useRest<T extends { id: string }>(
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     `${path}?${param(queryParams)}`,
     (url) => fetcher("GET", url),
+    { suspense: true },
   );
 
   const handleAdd = useCallback<
