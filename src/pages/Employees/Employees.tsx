@@ -8,7 +8,7 @@ import styles from "./Employees.module.scss";
 
 import Button from "../../components/Button";
 
-function EmployeePageLoadingLayout(): JSX.Element {
+export function EmployeePageLoadingLayout(): JSX.Element {
   return (
     <div className={styles.wrapper}>
       <div className={styles.actionBar}>
@@ -32,19 +32,15 @@ function EmployeePageLoadingLayout(): JSX.Element {
   );
 }
 
-export default function EmployeesWrapper({
-  useEmployees = useEmployeesDefault,
-}: {
-  useEmployees?: typeof useEmployeesDefault;
-}): JSX.Element {
+export default function EmployeesWrapper(): JSX.Element {
   return (
     <Suspense fallback={<EmployeePageLoadingLayout />}>
-      <Employees useEmployees={useEmployees} />
+      <Employees useEmployees={useEmployeesDefault} />
     </Suspense>
   );
 }
 
-function Employees({
+export function Employees({
   useEmployees,
 }: {
   useEmployees: typeof useEmployeesDefault;

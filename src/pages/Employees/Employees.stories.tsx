@@ -1,6 +1,6 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { employees } from "../../services/api/employees/fixtures";
-import Employees from "./Employees";
+import { Employees, EmployeePageLoadingLayout } from "./Employees";
 
 export default {
   title: "Pages/Employees",
@@ -37,11 +37,6 @@ export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
   />
 );
 
-export const Loading: ComponentStory<typeof Employees> = ({ ...props }) => (
-  <Employees
-    {...props}
-    useEmployees={() => {
-      throw new Promise(() => undefined);
-    }}
-  />
+export const Loading: ComponentStory<any> = ({ ...props }) => (
+  <EmployeePageLoadingLayout {...props} />
 );
