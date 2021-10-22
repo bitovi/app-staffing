@@ -69,7 +69,6 @@ export default function RoleList({
           ))}
         </div>
       )}
-
       {project.roles.map((role) => (
         <RoleDetails
           role={role}

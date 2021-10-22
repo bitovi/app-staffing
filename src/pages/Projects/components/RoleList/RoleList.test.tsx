@@ -17,7 +17,6 @@ describe("Pages/Projects/components/RoleLists Empty roles", () => {
   it("works", () => {
     projects[0].roles = [];
     render(<RoleList project={projects[0]} onEdit={jest.fn()} />);
-
     expect(document.getElementsByClassName("noRoles").length).to.equal(1);
   });
 });
