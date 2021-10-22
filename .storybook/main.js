@@ -19,7 +19,7 @@ module.exports = {
       ...config,
       resolve: {
         alias: {
-          "@staffing": path.resolve(__dirname, "src", "shared"),
+          "@staffing": path.resolve(__dirname, "..", "src", "shared"),
         },
       },
       optimizeDeps: {

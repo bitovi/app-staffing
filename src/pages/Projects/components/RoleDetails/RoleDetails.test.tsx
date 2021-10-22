@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { employeeStoreManager } from "@staffing/services/api/employees/mocks";
 
 import { projects } from "@staffing/services/api/projects/fixtures";
+import { employeeStoreManager } from "@staffing/services/api/employees/mocks";
+
 import RoleDetails from "./RoleDetails";
 
 describe("Pages/Projects/components/RoleDetails", () => {
@@ -13,19 +15,21 @@ describe("Pages/Projects/components/RoleDetails", () => {
     await employeeStoreManager.clear();
   });
 
-  it("works", () => {
+  it("works", async () => {
     const onEditMock = jest.fn();
     const onDeleteMock = jest.fn();
 
     render(
-      <RoleDetails
-        role={projects[0].roles[0]}
-        editRole={onEditMock}
-        deleteRole={onDeleteMock}
-      />,
+      <Suspense fallback={<div>Loading...</div>}>
+        <RoleDetails
+          role={projects[0].roles[0]}
+          editRole={onEditMock}
+          deleteRole={onDeleteMock}
+        />
+      </Suspense>,
     );
 
-    expect(screen.getByText("Role")).toBeInTheDocument();
+    expect(await screen.findByText("Role")).toBeInTheDocument();
   });
 
   it("fires onBlur/onChange", async () => {
@@ -35,11 +39,13 @@ describe("Pages/Projects/components/RoleDetails", () => {
     const role = projects[0].roles[0];
 
     render(
-      <RoleDetails
-        role={role}
-        editRole={onEditMock}
-        deleteRole={onDeleteMock}
-      />,
+      <Suspense fallback={<div>Loading...</div>}>
+        <RoleDetails
+          role={role}
+          editRole={onEditMock}
+          deleteRole={onDeleteMock}
+        />
+      </Suspense>,
     );
 
     await waitFor(() => {

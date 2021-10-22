@@ -3,8 +3,8 @@ import type { Project } from "@staffing/services/api";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ProjectDescription from "../Projects/components/ProjectDescription";
-import RoleList from "../Projects/components/RoleList";
+import ProjectDescription from "../components/ProjectDescription";
+import RoleList from "../components/RoleList";
 import { useProjects } from "@staffing/services/api";
 
 export default function ProjectDetail(): JSX.Element {

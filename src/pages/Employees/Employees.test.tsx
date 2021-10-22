@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { employees } from "@staffing/services/api/employees/fixtures";
@@ -15,8 +16,13 @@ describe("Pages/Employees", () => {
   });
 
   it("works", async () => {
-    render(<Employees />);
-    expect(screen.getByText("Team")).toBeInTheDocument();
+    render(
+      <Suspense fallback={<div>Loading...</div>}>
+        <Employees />
+      </Suspense>,
+    );
+
+    expect(await screen.findByText("Team")).toBeInTheDocument();
   });
 
   it("shows names", async () => {

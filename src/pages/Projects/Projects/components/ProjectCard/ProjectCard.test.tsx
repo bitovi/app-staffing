@@ -11,17 +11,17 @@ describe("Components/Layout", () => {
   it("renders", () => {
     render(
       <MemoryRouter>
-        <ProjectCard key={project.id} project={project} onView={(p) => null} />
+        <ProjectCard key={project.id} project={project} />
       </MemoryRouter>,
     );
 
-    const projectContainer = screen.getByText(/Project:/i);
+    const projectContainer = screen.getByTestId("container");
     expect(projectContainer).to.have.tagName("div");
 
     const projectName = screen.getByText(project.name);
     expect(projectName).to.have.tagName("span");
 
-    const viewProject = screen.getByText(/View Project/i);
-    expect(viewProject).to.have.tagName("button");
+    const viewProject = screen.getByText(/View/i);
+    expect(viewProject).to.have.tagName("A");
   });
 });
