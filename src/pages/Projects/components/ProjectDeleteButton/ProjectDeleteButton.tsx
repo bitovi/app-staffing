@@ -1,6 +1,6 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { useEffect } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import Button from "../../../../components/Button";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { useProjects } from "../../../../services/api";
