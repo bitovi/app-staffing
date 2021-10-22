@@ -463,7 +463,7 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
   });
 
   const handleRowClick = () => {
-    console.log("row click");
+    //  TODO handle row click.
   };
 
   return (
