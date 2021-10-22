@@ -1,18 +1,4 @@
-import type { AssignedEmployee } from "../employees";
-import type { Skill } from "../shared";
-
-export interface Role {
-  id: string;
-  skill: Skill;
-  startDate: EstimatedDate;
-  endDate: EstimatedDate;
-  employees: AssignedEmployee[];
-}
-
-export interface EstimatedDate {
-  date?: Date;
-  confidence: string;
-}
+import type { Role } from "../roles";
 
 export interface Project {
   id: string;
