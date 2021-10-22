@@ -2,7 +2,8 @@ import { Modal as ChakraModal,
   ModalContent as ChakraModalContent,
   ModalHeader as ChakraModalHeader,
   ModalCloseButton as ChakraModalCloseButton,
-  ModalBody as ChakraModalBody
+  ModalBody as ChakraModalBody,
+  // Button as ChakraButton,
  } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
@@ -34,6 +35,7 @@ export default function Modal({
         <ChakraModalBody>
           {children}
         </ChakraModalBody>
+        {/* <ChakraButton onClose={} /> */}
       </ChakraModalContent>
     </ChakraModal>
   );
