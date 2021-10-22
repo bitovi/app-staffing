@@ -14,5 +14,5 @@ export interface ProjectedData {
 
 export interface TimeReportData {
   dates: TimescaleData[];
-  data:  ProjectedData[]
+  data: ProjectedData[];
 }
