@@ -1,6 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import ConfirmationModal from ".";
-
 
 describe("Components/ConfirmationModal", () => {
   const title = "Delete Project?";
@@ -41,39 +40,41 @@ describe("Components/ConfirmationModal", () => {
 
     expect(onConfirm).toHaveBeenCalledTimes(1);
 
-    await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
-
     const closeTextButton = screen.getByText(closeText);
     expect(closeTextButton).toBeInTheDocument();
     fireEvent.click(closeTextButton);
-    expect(onClose).toHaveBeenCalledTimes(2);
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it("If is Loading, disabled buttons", async () => {
-    const { rerender } = render(<ConfirmationModal
-      title={title}
-      message={message}
-      closeText={closeText}
-      confirmText={confirmText}
-      onClose={jest.fn()}
-      onConfirm={jest.fn()}
-      isOpen={true}
-      isLoading={false}
-    />);
+    const { rerender } = render(
+      <ConfirmationModal
+        title={title}
+        message={message}
+        closeText={closeText}
+        confirmText={confirmText}
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+        isOpen={true}
+        isLoading={false}
+      />,
+    );
 
     const confirmButton = screen.getByText(confirmText);
     fireEvent.click(confirmButton);
 
-    rerender(<ConfirmationModal
-      title={title}
-      message={message}
-      closeText={closeText}
-      confirmText={confirmText}
-      onClose={jest.fn()}
-      onConfirm={jest.fn()}
-      isOpen={true}
-      isLoading={true}
-    />)
+    rerender(
+      <ConfirmationModal
+        title={title}
+        message={message}
+        closeText={closeText}
+        confirmText={confirmText}
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+        isOpen={true}
+        isLoading={true}
+      />,
+    );
 
     expect(confirmButton).toBeDisabled();
   });
