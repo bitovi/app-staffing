@@ -1,5 +1,5 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import { MemoryRouter, Route } from "react-router";
+import { MemoryRouter, Route } from "react-router-dom";
 import ProjectDetail from ".";
 import { makeProject } from "../../../services/api/projects/fixtures";
 export default {
