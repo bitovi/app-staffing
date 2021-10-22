@@ -1,11 +1,11 @@
 import QueryLogic from "can-query-logic";
 
-import type { Skill, SkillName } from ".";
+import type { Skill } from ".";
 import { skillList } from "./fixtures";
 import { createStore, requestCreator } from "../baseMocks";
 
 const queryLogic = new QueryLogic<Skill>({
-  identity: ["id"],
+  identifier: ["id"],
   keys: {
     id: "string",
     name: "string",
