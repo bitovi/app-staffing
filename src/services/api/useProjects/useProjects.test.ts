@@ -20,9 +20,6 @@ describe("useProjects", () => {
       wrapper,
     });
 
-    expect(result.current.isLoading).toBe(true);
-    expect(result.current.projects).toBe(undefined);
-
     await waitForNextUpdate();
 
     expect(result.current.isLoading).toBe(false);

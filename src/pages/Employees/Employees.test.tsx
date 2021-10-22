@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
 import { employees } from "../../services/api/employees/fixtures";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
 
@@ -15,8 +17,13 @@ describe("Pages/Employees", () => {
   });
 
   it("works", async () => {
-    render(<Employees />);
-    expect(screen.getByText("Team")).toBeInTheDocument();
+    render(
+      <Suspense fallback={<div>Loading...</div>}>
+        <Employees />
+      </Suspense>,
+    );
+
+    expect(await screen.findByText("Team")).toBeInTheDocument();
   });
 
   it("shows names", async () => {

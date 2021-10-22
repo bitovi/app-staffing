@@ -20,9 +20,6 @@ describe("useEmployees", () => {
       wrapper,
     });
 
-    expect(result.current.isLoading).toBe(true);
-    expect(result.current.employees).toBe(undefined);
-
     await waitForNextUpdate();
 
     expect(result.current.isLoading).toBe(false);
