@@ -1,5 +1,5 @@
 import type { Project, NewProject } from "../projects";
-import type { ResponseStatus, QueriableList } from "../shared";
+import type { ResponseStatus, QueriableList } from "../common";
 
 import { mapProject } from "../projects";
 
@@ -12,6 +12,7 @@ interface ProjectActions {
     projectId: string,
     project: Partial<Project>,
   ) => Promise<void>;
+  deleteProject: (projectId: string) => Promise<void>;
 }
 
 /** Hook for getting a list of the projects */
@@ -24,6 +25,7 @@ export default function useProjects(
     isLoading,
     handleAdd,
     handleUpdate,
+    handleDelete,
   } = useRest<Project>("/api/v1/projects", queryParams, mapProject);
 
   return {
@@ -32,5 +34,6 @@ export default function useProjects(
     error,
     addProject: handleAdd,
     updateProject: handleUpdate,
+    deleteProject: handleDelete,
   };
 }

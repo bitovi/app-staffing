@@ -3,7 +3,7 @@ import type { Project, Role } from "./interfaces";
 
 import faker from "faker";
 
-import { skillList } from "../shared";
+import { skillList } from "../common";
 import { employees } from "../employees/fixtures";
 
 faker.seed(0);

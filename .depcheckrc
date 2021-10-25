@@ -8,7 +8,9 @@ ignores:
   - "@testing-library/*"
   - "@types/*"
   - "@typescript-eslint/*"
-  - babel-eslint
+  - babel-*
   - eslint-*
+  - storybook-*
+  - identity-obj-proxy
   - node-sass
   - framer-motion

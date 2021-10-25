@@ -1,5 +1,5 @@
 import type { Employee, NewEmployee } from "../employees";
-import type { ResponseStatus, QueriableList } from "../shared";
+import type { ResponseStatus, QueriableList } from "../common";
 
 import { mapEmployee } from "../employees";
 
@@ -12,6 +12,7 @@ interface EmployeeActions {
     employeeId: string,
     employee: Partial<Employee>,
   ) => Promise<void>;
+  deleteEmployee: (employeeId: string) => Promise<void>;
 }
 
 /** Hook for getting a list of the employees */
@@ -24,6 +25,7 @@ export default function useEmployees(
     isLoading,
     handleAdd,
     handleUpdate,
+    handleDelete,
   } = useRest<Employee>("/api/v1/employees", queryParams, mapEmployee);
 
   return {
@@ -32,5 +34,6 @@ export default function useEmployees(
     error,
     addEmployee: handleAdd,
     updateEmployee: handleUpdate,
+    deleteEmployee: handleDelete,
   };
 }
