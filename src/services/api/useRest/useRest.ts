@@ -13,6 +13,7 @@ interface RestActions<T> extends APIResponse<T[]> {
     updatedCollectionItem: Partial<T>,
   ) => Promise<void>;
   handleDelete: (collectionItemId: string) => Promise<void>;
+  reset: () => void;
 }
 
 function useRest<T extends { id: string }>(
@@ -21,9 +22,10 @@ function useRest<T extends { id: string }>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapItem: (input: any) => T = identity,
 ): RestActions<T> {
+  const key = `${path}?${param(queryParams)}`;
   const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
-    `${path}?${param(queryParams)}`,
+    key,
     (url) => fetcher("GET", url),
     { suspense: true },
   );
@@ -34,7 +36,7 @@ function useRest<T extends { id: string }>(
     async (newCollectionItem: Omit<T, "id">) => {
       let newId = "";
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (addResponse: { data: T[] }) => {
           const { data: newItem } = await fetcher<{ data: T }>(
             "POST",
@@ -54,7 +56,7 @@ function useRest<T extends { id: string }>(
 
       return newId;
     },
-    [path, queryParams, mutate, mapItem],
+    [path, key, mutate, mapItem],
   );
 
   const handleUpdate = useCallback<
@@ -65,7 +67,7 @@ function useRest<T extends { id: string }>(
   >(
     async (collectionItemId: string, updatedCollectionItem: Partial<T>) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (cachedData: { data: T[] }) => {
           const { data: updatedItem } = await fetcher<{ data: T }>(
             "PUT",
@@ -83,13 +85,13 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams, mutate, mapItem],
+    [path, key, mutate, mapItem],
   );
 
   const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (deleteResponse: { data: T[] }) => {
           await fetcher("DELETE", `${path}/${collectionItemId}`);
 
@@ -103,7 +105,7 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams, mutate],
+    [path, key, mutate],
   );
 
   const data = useMemo(
@@ -118,6 +120,7 @@ function useRest<T extends { id: string }>(
     handleAdd,
     handleUpdate,
     handleDelete,
+    reset: () => mutate(key, (v: T) => v, false),
   };
 }
 
