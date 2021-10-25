@@ -18,7 +18,7 @@ IMAGE_TAG="latest"
 #Building the docker image...
 docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
 
-if [[ "$BRANCH_NAME" != "$DEFAULT_BRANCH" ]]; then
+if [[ ${BRANCH_NAME} != ${DEFAULT_BRANCH} ]]; then
   IMAGE_TAG="${GITHUB_SHA}"
 else
 
