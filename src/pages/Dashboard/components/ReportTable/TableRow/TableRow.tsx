@@ -19,7 +19,7 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
     const DEVOPS_BADGE_COLOR = "#5FAE43";
     const NODE_BADGE_COLOR = "#805AD5";
     const UX_BADGE_COLOR = "#AE436A";
-    const REACT_BADGE_COLOR = "#876363";
+    const REACT_BADGE_COLOR = "#61D0D7";
 
     switch (role) {
       case "Angular":
@@ -54,7 +54,11 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
         );
       case "React":
       default:
-        return <Badge size="sm">{REACT_BADGE_COLOR}</Badge>;
+        return (
+          <Badge size="sm" background={REACT_BADGE_COLOR}>
+            {role}
+          </Badge>
+        );
     }
   };
 
