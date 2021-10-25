@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ProjectedData } from "../../../../../services/timeReport/interfaces";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Center } from "@chakra-ui/react";
@@ -7,10 +7,11 @@ import Badge from "../../../../../components/Badge";
 
 type TableRowProps = {
   rowData: ProjectedData;
-  onClick(): void;
 };
 
-function TableRow({ rowData, onClick }: TableRowProps): JSX.Element {
+function TableRow({ rowData }: TableRowProps): JSX.Element {
+  const [isExpanded, setExpanded] = useState<boolean>(false);
+
   const badgeForRole = (role: SkillName): JSX.Element => {
     switch (role) {
       case "Angular":
@@ -79,9 +80,13 @@ function TableRow({ rowData, onClick }: TableRowProps): JSX.Element {
     }
   };
 
+  const handleRowClick = () => {
+    setExpanded(!isExpanded);
+  };
+
   return (
     <Box boxShadow="base" bg="white" minHeight="" w="100%" borderRadius="lg">
-      <Flex flex={1} flexDirection="row" onClick={onClick}>
+      <Flex flex={1} flexDirection="row" onClick={handleRowClick}>
         {/* Department Column*/}
         <Center width="3xs" pr={3} py={2.5}>
           <Flex flex={1} ml={1}>

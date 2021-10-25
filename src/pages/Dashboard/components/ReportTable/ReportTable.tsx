@@ -462,10 +462,6 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
     }
   });
 
-  const handleRowClick = () => {
-    //  TODO handle row click.
-  };
-
   return (
     <Flex flexDirection="column">
       <Flex flex={1} height={8} mb={7} alignItems={"start"}>
@@ -501,7 +497,7 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
 
       <VStack spacing={4} align="stretch">
         {projectedData.map((item) => (
-          <TableRow key={item.role} rowData={item} onClick={handleRowClick} />
+          <TableRow key={item.role} rowData={item} />
         ))}
       </VStack>
     </Flex>
