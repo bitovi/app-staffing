@@ -22,6 +22,7 @@ describe("Components/ConfirmationModal", () => {
         onConfirm={onConfirm}
         isOpen={true}
         error={errorText}
+        confirmButtonVariant="danger"
       />,
     );
     const domTitle = screen.getByText(title);

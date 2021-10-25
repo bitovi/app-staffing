@@ -32,4 +32,5 @@ Basic.args = {
   closeText: "No, Return to Page",
   error: "",
   isLoading: false,
+  confirmButtonVariant: "primary",
 };

@@ -7,9 +7,13 @@ import { useProjects } from "../../../../services/api";
 
 interface IProps {
   projectId: string;
+  projectName: string;
 }
 
-const ProjectDeleteButton = ({ projectId }: IProps): JSX.Element => {
+const ProjectDeleteButton = ({
+  projectId,
+  projectName,
+}: IProps): JSX.Element => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { deleteProject, error, isLoading, reset } = useProjects();
   const history = useHistory();
@@ -39,7 +43,7 @@ const ProjectDeleteButton = ({ projectId }: IProps): JSX.Element => {
       <ConfirmationModal
         onConfirm={() => onDelete(projectId)}
         title="Delete Project?"
-        message="Are you sure you want to delete the Nike store project? This can’t be undone."
+        message={`Are you sure you want to delete the ${projectName} project? This can’t be undone.`}
         confirmText="Yes, Remove & Delete"
         closeText="No, Return to Page"
         error={
@@ -48,6 +52,7 @@ const ProjectDeleteButton = ({ projectId }: IProps): JSX.Element => {
         isLoading={isLoading}
         isOpen={isOpen}
         onClose={onClose}
+        confirmButtonVariant="danger"
       />
     </>
   );

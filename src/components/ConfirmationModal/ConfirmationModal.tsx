@@ -8,7 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import Button from "../Button";
+import Button, { ButtonVariant } from "../Button";
 
 interface IConfirmationModalProps {
   isOpen: boolean;
@@ -20,6 +20,7 @@ interface IConfirmationModalProps {
   confirmText: string;
   error?: string;
   isLoading?: boolean;
+  confirmButtonVariant?: ButtonVariant;
 }
 
 export default function ConfirmationModal({
@@ -32,6 +33,7 @@ export default function ConfirmationModal({
   confirmText,
   error,
   isLoading,
+  confirmButtonVariant = "primary",
 }: IConfirmationModalProps): JSX.Element {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -53,7 +55,11 @@ export default function ConfirmationModal({
             <Button disabled={isLoading} onClick={onClose} variant="secondary">
               {closeText}
             </Button>
-            <Button isLoading={isLoading} onClick={onConfirm} variant="primary">
+            <Button
+              isLoading={isLoading}
+              onClick={onConfirm}
+              variant={confirmButtonVariant}
+            >
               {confirmText}
             </Button>
           </Flex>
