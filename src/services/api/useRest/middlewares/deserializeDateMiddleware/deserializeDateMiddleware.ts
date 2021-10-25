@@ -1,15 +1,19 @@
 import { Fetcher, Key, SWRConfiguration, SWRHook } from "swr";
 
-const isDate = (date: any) =>
+// This only works for ISO DateTime Strings in the format of "2020-01-01T00:00:00.000Z" where ms are optional (.000)
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+export const isIsoDateTime = (date: any) =>
   /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/.test(
     date,
   );
-function parseDate(obj: any) {
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+export function parseDate(obj: any): void {
   for (const key in obj) {
     if (typeof obj[key] === "object") {
       parseDate(obj[key]);
     } else {
-      if (isDate(obj[key])) {
+      if (isIsoDateTime(obj[key])) {
         obj[key] = new Date(obj[key]);
       }
     }

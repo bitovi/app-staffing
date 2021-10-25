@@ -30,9 +30,13 @@ describe("useRest", () => {
     );
 
     await waitForNextUpdate();
+    const results = employees.map((x) => {
+      x.startDate = new Date(x.startDate);
+      return x;
+    });
 
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.data).toEqual(employees);
+    expect(result.current.data).toEqual(results);
   });
 
   it("adds", async () => {
