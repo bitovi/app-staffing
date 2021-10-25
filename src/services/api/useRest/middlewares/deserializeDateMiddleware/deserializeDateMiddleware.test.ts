@@ -7,29 +7,29 @@ import { wrapper } from "../../useRest.test";
 import { isIsoDateTime, parseDate } from "./deserializeDateMiddleware";
 
 describe("deserializeDateMiddleware", () => {
-  //   beforeAll(async () => {
-  //     await employeeStoreManager.load();
-  //   });
+  beforeAll(async () => {
+    await employeeStoreManager.load();
+  });
 
-  //   afterAll(async () => {
-  //     await employeeStoreManager.clear();
-  //   });
+  afterAll(async () => {
+    await employeeStoreManager.clear();
+  });
 
-  //   it("works", async () => {
-  //     const { result, waitForNextUpdate } = renderHook(
-  //       () => useRest<Employee>("/api/v1/employees", undefined),
-  //       { wrapper },
-  //     );
+  it("works", async () => {
+    const { result, waitForNextUpdate } = renderHook(
+      () => useRest<Employee>("/api/v1/employees", undefined),
+      { wrapper },
+    );
 
-  //     await waitForNextUpdate();
-  //     const results = employees.map((x) => {
-  //       x.startDate = new Date(x.startDate);
-  //       return x;
-  //     });
+    await waitForNextUpdate();
+    const results = employees.map((x) => {
+      x.startDate = new Date(x.startDate);
+      return x;
+    });
 
-  //     expect(result.current.isLoading).toBe(false);
-  //     expect(result.current.data).toEqual(results);
-  //   });
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.data).toEqual(results);
+  });
 
   it("isIsoDateTime recognizes Valid ISO date", async () => {
     expect(isIsoDateTime("asdf")).toBe(false);
