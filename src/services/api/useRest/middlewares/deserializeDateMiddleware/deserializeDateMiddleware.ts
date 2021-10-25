@@ -20,7 +20,8 @@ export function parseDate(obj: any): void {
   }
 }
 
-function deserializeDateMiddleware<T>(useSWRNext: SWRHook): unknown {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+function deserializeDateMiddleware<T>(useSWRNext: SWRHook): any {
   return (
     key: Key,
     fetcher: Fetcher<T> | null,
