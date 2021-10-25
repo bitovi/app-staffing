@@ -1,5 +1,5 @@
 import type { Project, NewProject } from "../projects";
-import type { ResponseStatus, QueriableList } from "../shared";
+import type { ResponseStatus, QueriableList } from "../common";
 
 import { mapProject } from "../projects";
 

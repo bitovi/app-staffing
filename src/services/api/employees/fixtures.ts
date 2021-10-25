@@ -1,9 +1,9 @@
-import type { Skill } from "../shared";
+import type { Skill } from "../common";
 import type { Employee } from "./interfaces";
 
 import faker from "faker";
 
-import { skillList } from "../shared";
+import { skillList } from "../common";
 
 faker.seed(0);
 
