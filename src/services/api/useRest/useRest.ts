@@ -12,15 +12,17 @@ interface RestActions<T> extends APIResponse<T[]> {
     updatedCollectionItem: Partial<T>,
   ) => Promise<void>;
   handleDelete: (collectionItemId: string) => Promise<void>;
+  reset: () => void;
 }
 
 function useRest<T extends { id: string }>(
   path: string,
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
+  const key = `${path}?${param(queryParams)}`;
   const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
-    `${path}?${param(queryParams)}`,
+    key,
     (url) => fetcher("GET", url),
     { suspense: true, use: [deserializeDateMiddleware] },
   );
@@ -31,7 +33,7 @@ function useRest<T extends { id: string }>(
     async (newCollectionItem: Omit<T, "id">) => {
       let newId = "";
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (addResponse: { data: T[] }) => {
           const { data: newItem } = await fetcher<{ data: T }>(
             "POST",
@@ -50,7 +52,7 @@ function useRest<T extends { id: string }>(
 
       return newId;
     },
-    [path, queryParams, mutate],
+    [path, key, mutate],
   );
 
   const handleUpdate = useCallback<
@@ -61,7 +63,7 @@ function useRest<T extends { id: string }>(
   >(
     async (collectionItemId: string, updatedCollectionItem: Partial<T>) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (cachedData: { data: T[] }) => {
           const { data: updatedItem } = await fetcher<{ data: T }>(
             "PUT",
@@ -79,13 +81,13 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams, mutate],
+    [path, key, mutate],
   );
 
   const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (deleteResponse: { data: T[] }) => {
           await fetcher("DELETE", `${path}/${collectionItemId}`);
 
@@ -99,7 +101,7 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams, mutate],
+    [path, key, mutate],
   );
 
   return {
@@ -109,6 +111,7 @@ function useRest<T extends { id: string }>(
     handleAdd,
     handleUpdate,
     handleDelete,
+    reset: () => mutate(key, (v: T) => v, false),
   };
 }
 
