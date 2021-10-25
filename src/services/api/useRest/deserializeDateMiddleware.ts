@@ -16,19 +16,16 @@ function parseDate(obj: any) {
   }
 }
 
-// This is a SWR middleware for keeping the data even if key changes.
 function deserializeDateMiddleware<T>(useSWRNext: SWRHook): any {
   return (
     key: Key,
     fetcher: Fetcher<T> | null,
     config: SWRConfiguration<T, Error>,
   ) => {
-    // Actual SWR hook.
     const swr = useSWRNext(key, fetcher, config);
 
     const { data } = swr;
     parseDate(data);
-    // Also add a `isLagging` field to SWR.
     return Object.assign({}, swr, {
       data,
     });
