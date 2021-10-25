@@ -32,7 +32,10 @@ export default function ProjectDetail(): JSX.Element {
           <ProjectDescription onEdit={onSave} project={projectData} />
           <RoleList onEdit={onSave} project={projectData} />
           <Box mt={10}>
-            <ProjectDeleteButton projectId={projectData.id} />
+            <ProjectDeleteButton
+              projectName={projectData.name}
+              projectId={projectData.id}
+            />
           </Box>
         </>
       )}
