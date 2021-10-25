@@ -45,6 +45,7 @@ function useRest<T extends { id: string }>(
 
           return {
             ...addResponse,
+            data: [...addResponse.data, { ...newCollectionItem, id: newId }],
           };
         },
         false,
