@@ -8,21 +8,21 @@ export default function createStore<Resource>(
   name: string,
 ): {
   store: CanLocalStore<Resource>;
-  loadResources: () => Promise<void>;
-  clearResources: () => Promise<void>;
-  dataIsLoaded: () => Promise<boolean>;
+  load: () => Promise<void>;
+  clear: () => Promise<void>;
+  isLoaded: () => Promise<boolean>;
 } {
   const store = localStore<Resource>({ queryLogic, name });
 
   return {
     store,
-    loadResources: async () => {
+    load: async () => {
       await store.updateListData(collection);
     },
-    clearResources: async () => {
+    clear: async () => {
       await store.clear();
     },
-    dataIsLoaded: async () =>
+    isLoaded: async () =>
       store
         .getListData()
         .then(({ data }) => data.length > 0)

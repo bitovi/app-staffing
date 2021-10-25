@@ -1,5 +1,5 @@
 import type { Employee, NewEmployee } from "../employees";
-import type { ResponseStatus, QueriableList } from "../shared";
+import type { ResponseStatus, QueriableList } from "../common";
 
 import useRest from "../useRest";
 

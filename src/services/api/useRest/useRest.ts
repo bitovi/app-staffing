@@ -1,8 +1,8 @@
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import type { APIResponse, QueriableList } from "../shared";
-import { fetcher } from "../shared";
+import type { APIResponse, QueriableList } from "../common";
+import { fetcher } from "../common";
 import deserializeDateMiddleware from "./deserializeDateMiddleware";
 
 interface RestActions<T> extends APIResponse<T[]> {
@@ -22,7 +22,7 @@ function useRest<T extends { id: string }>(
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     `${path}?${param(queryParams)}`,
     (url) => fetcher("GET", url),
-    { use: [deserializeDateMiddleware] },
+    { suspense: true, use: [deserializeDateMiddleware] },
   );
 
   const handleAdd = useCallback<

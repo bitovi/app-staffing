@@ -6,18 +6,21 @@ import { SWRConfig } from "swr";
 import useRest from "./useRest";
 import { employeeStoreManager } from "../employees/mocks";
 import { employees } from "../employees/fixtures";
+import { Suspense } from "react";
 
 export const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
+  <Suspense fallback={<div>Loading...</div>}>
+    <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
+  </Suspense>
 );
 
 describe("useRest", () => {
   beforeEach(async () => {
-    await employeeStoreManager.loadResources();
+    await employeeStoreManager.load();
   });
 
   afterEach(async () => {
-    await employeeStoreManager.clearResources();
+    await employeeStoreManager.clear();
   });
 
   it("works", async () => {
@@ -25,9 +28,6 @@ describe("useRest", () => {
       () => useRest<Employee>("/api/v1/employees", undefined),
       { wrapper },
     );
-
-    expect(result.current.isLoading).toBe(true);
-    expect(result.current.data).toBe(undefined);
 
     await waitForNextUpdate();
 
