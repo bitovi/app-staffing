@@ -52,6 +52,7 @@ describe("deserializeDateMiddleware", () => {
         nestedDate: "2020-01-01T00:00:00.000Z",
         notadate: 1234,
       },
+      bar: null,
     };
 
     parseDate(someObj);
@@ -61,5 +62,6 @@ describe("deserializeDateMiddleware", () => {
     expect(someObj.foo).not.toBeInstanceOf(Date);
     expect(someObj.foo.nestedDate).toBeInstanceOf(Date);
     expect(someObj.foo.notadate).not.toBeInstanceOf(Date);
+    expect(someObj.bar).toBe(null);
   });
 });
