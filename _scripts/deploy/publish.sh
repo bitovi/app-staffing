@@ -23,6 +23,7 @@ IMAGE_TAG="latest"
 else
 IMAGE_TAG=${GITHUB_SHA}
 docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
+echo "About to push the docker image to the ecr repository....."
 docker push ${REGISTRY_URL}:${IMAGE_TAG}
 fi
 
