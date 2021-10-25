@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Defining the Image name variable
+IMAGE_NAME=echo $GITHUB_REPOSITORY | sed 's/^.*\///'
+
+
 #Defining the Registry url variable
 REGISTRY_URL=$(printf %s.dkr.ecr.%s.amazonaws.com/%s "$AWS_ACCOUNT_NO" "$AWS_DEFAULT_REGION" "$IMAGE_NAME")
 
