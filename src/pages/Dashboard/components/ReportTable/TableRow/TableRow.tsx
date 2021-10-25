@@ -118,21 +118,21 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
     <Box boxShadow="base" bg="white" minHeight="" w="100%" borderRadius="lg">
       <Flex flex={1} flexDirection="row" onClick={handleRowClick}>
         {/* Department Column*/}
-        <Center width="3xs" pr={3} py={2.5}>
+        <Center width="3xs" px={3} minH={24}>
           <Flex flex={1} ml={1}>
             {badgeForRole(rowData.role)}
           </Flex>
 
-          <Flex flexDirection="column">
-            <Box>
+          <Flex h="100%" flexDirection="column">
+            <Flex flex={1} alignItems="center">
               <Text textStyle="bold">NEEDED</Text>
-            </Box>
-            <Box>
+            </Flex>
+            <Flex flex={1} alignItems="center">
               <Text textStyle="bold">BENCH</Text>
-            </Box>
-            <Box>
+            </Flex>
+            <Flex flex={1} alignItems="center">
               <Text textStyle="bold">ACTION</Text>
-            </Box>
+            </Flex>
           </Flex>
         </Center>
 
@@ -146,7 +146,7 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
               background={getRowHighlight(item.action)}
             >
               <Flex w="100%" h="100%" flexDirection="column">
-                <Flex flex={1} px={3} justifyContent="end">
+                <Flex flex={1} px={4} justifyContent="end">
                   <Text
                     color={isLabelBold(item.needed.length)}
                     textStyle="normal"
