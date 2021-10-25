@@ -32,6 +32,8 @@ describe("deserializeDateMiddleware", () => {
   });
 
   it("isIsoDateTime recognizes Valid ISO date", async () => {
+    expect(isIsoDateTime(null)).toBe(false);
+    expect(isIsoDateTime(undefined)).toBe(false);
     expect(isIsoDateTime("asdf")).toBe(false);
     expect(isIsoDateTime(123411)).toBe(false);
     expect(isIsoDateTime("2020-01-01")).toBe(false);

@@ -10,7 +10,7 @@ export const isIsoDateTime = (date: any) =>
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export function parseDate(obj: any): void {
   for (const key in obj) {
-    if (typeof obj[key] === "object") {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
       parseDate(obj[key]);
     } else {
       if (isIsoDateTime(obj[key])) {
