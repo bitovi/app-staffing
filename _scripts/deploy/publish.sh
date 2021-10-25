@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Defining the Image name variable
-IMAGE_NAME=echo $GITHUB_REPOSITORY | sed 's/^.*\///'
+IMAGE_NAME=$(echo $GITHUB_REPOSITORY | sed 's/^.*\///')
 
 
 #Defining the Registry url variable
