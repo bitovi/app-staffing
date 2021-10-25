@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ProjectedData } from "../../../../../services/timeReport/interfaces";
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { Center } from "@chakra-ui/react";
+import { Center, Divider } from "@chakra-ui/react";
 import { SkillName } from "../../../../../services/api";
 import Badge from "../../../../../components/Badge";
 
@@ -13,40 +13,47 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
   const [isExpanded, setExpanded] = useState<boolean>(false);
 
   const badgeForRole = (role: SkillName): JSX.Element => {
+    const ANGULAR_BADGE_COLOR = "#876363";
+    const DESIGN_BADGE_COLOR = "#435BAE";
+    const DEVOPS_BADGE_COLOR = "#5FAE43";
+    const NODE_BADGE_COLOR = "#805AD5";
+    const UX_BADGE_COLOR = "#AE436A";
+    const REACT_BADGE_COLOR = "#876363";
+
     switch (role) {
       case "Angular":
         return (
-          <Badge size="sm" background="#876363">
+          <Badge size="sm" background={ANGULAR_BADGE_COLOR}>
             {role}
           </Badge>
         );
       case "Design":
         return (
-          <Badge size="sm" background="#435BAE">
+          <Badge size="sm" background={DESIGN_BADGE_COLOR}>
             {role}
           </Badge>
         );
       case "DevOps":
         return (
-          <Badge size="sm" background="#5FAE43">
+          <Badge size="sm" background={DEVOPS_BADGE_COLOR}>
             {role}
           </Badge>
         );
       case "Node":
         return (
-          <Badge size="sm" background="#805AD5">
+          <Badge size="sm" background={NODE_BADGE_COLOR}>
             {role}
           </Badge>
         );
       case "UX":
         return (
-          <Badge size="sm" background="#AE436A">
+          <Badge size="sm" background={UX_BADGE_COLOR}>
             {role}
           </Badge>
         );
       case "React":
       default:
-        return <Badge size="sm">{role}</Badge>;
+        return <Badge size="sm">{REACT_BADGE_COLOR}</Badge>;
     }
   };
 
@@ -57,7 +64,23 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
       case "Assign":
         return "rgba(9, 240, 4, 0.27)";
       case "Hire":
-        return "rgba(211, 42, 42, 0.12)";
+        return "#FFF5F7";
+      case "Sell":
+        return "rgba(252, 208, 142, 0.32)";
+      case "Ok":
+      default:
+        return "";
+    }
+  };
+
+  const getRowBackground = (
+    action: "Ok" | "Hire" | "Sell" | "Assign",
+  ): string => {
+    switch (action) {
+      case "Assign":
+        return "rgba(9, 240, 4, 0.27)";
+      case "Hire":
+        return "#FC8181";
       case "Sell":
         return "rgba(252, 208, 142, 0.32)";
       case "Ok":
@@ -69,16 +92,18 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
   const getTextColor = (action: "Ok" | "Hire" | "Sell" | "Assign"): string => {
     switch (action) {
       case "Assign":
-        return "#1D5E1A";
+        return "#38A169";
       case "Hire":
-        return "#D10C0C";
+        return "#63171B";
       case "Sell":
-        return "#DB8C15";
+        return "#DD6B20";
       case "Ok":
       default:
         return "";
     }
   };
+
+  const isLabelBold = (length: number): string => (length < 1 ? "#9DA8B7" : "");
 
   const handleRowClick = () => {
     setExpanded(!isExpanded);
@@ -108,27 +133,47 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
 
         {rowData.projections.map((item, index) => {
           return (
-            <Center
+            <Flex
               key={index}
               flex={1}
               alignItems="end"
               flexDirection="column"
               background={getRowHighlight(item.action)}
             >
-              <Flex alignItems="end" flexDirection="column" px={3}>
-                <Box>
-                  <Text textStyle="normal">{item.needed.length}</Text>
-                </Box>
-                <Box>
-                  <Text textStyle="normal">{item.needed.length}</Text>
-                </Box>
-                <Box>
-                  <Text fontWeight="bold" color={getTextColor(item.action)}>
+              <Flex w="100%" h="100%" flexDirection="column">
+                <Flex flex={1} px={3} justifyContent="end">
+                  <Text
+                    color={isLabelBold(item.needed.length)}
+                    textStyle="normal"
+                  >
+                    {item.needed.length}
+                  </Text>
+                </Flex>
+                <Divider border={1} orientation="horizontal" />
+                <Flex flex={1} px={3} justifyContent="end">
+                  <Text
+                    color={isLabelBold(item.bench.length)}
+                    textStyle="normal"
+                  >
+                    {item.bench.length}
+                  </Text>
+                </Flex>
+                <Divider border={1} orientation="horizontal" />
+                <Center
+                  flex={1}
+                  px={3}
+                  background={getRowBackground(item.action)}
+                >
+                  <Text
+                    textStyle="bold"
+                    fontWeight={800}
+                    color={getTextColor(item.action)}
+                  >
                     {item.action}
                   </Text>
-                </Box>
+                </Center>
               </Flex>
-            </Center>
+            </Flex>
           );
         })}
       </Flex>
