@@ -20,7 +20,7 @@ export function parseDate(obj: any): void {
   }
 }
 
-function deserializeDateMiddleware<T>(useSWRNext: SWRHook): any {
+function deserializeDateMiddleware<T>(useSWRNext: SWRHook): unknown {
   return (
     key: Key,
     fetcher: Fetcher<T> | null,
