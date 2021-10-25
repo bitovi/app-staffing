@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Flex } from "@chakra-ui/layout";
+import React, { useMemo } from "react";
+import { Box, Flex } from "@chakra-ui/layout";
 import { Center, Text, VStack } from "@chakra-ui/react";
 import {
   getMonthForWeek,
@@ -493,6 +493,7 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
             </Center>
           );
         })}
+        <Box w={28} />
       </Flex>
 
       <VStack spacing={4} align="stretch">

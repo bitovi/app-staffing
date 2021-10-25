@@ -3,6 +3,7 @@ import { ProjectedData } from "../../../../../services/timeReport/interfaces";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Center, Divider } from "@chakra-ui/react";
 import { SkillName } from "../../../../../services/api";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import Badge from "../../../../../components/Badge";
 
 type TableRowProps = {
@@ -176,6 +177,14 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
             </Flex>
           );
         })}
+
+        <Center w={28} cursor="pointer" onClick={handleRowClick}>
+          <Text userSelect="none" color="#3171D0">
+            {" "}
+            Details{" "}
+          </Text>
+          <ChevronDownIcon ml={2} color="#3171D0" />
+        </Center>
       </Flex>
     </Box>
   );
