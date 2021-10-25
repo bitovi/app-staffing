@@ -11,7 +11,6 @@ import Button from "../../components/Button";
 
 export default function Employees(): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();
-
   const [filterValue, setFilterValue] = useState<string>();
 
   const handleEditSave = useCallback(
