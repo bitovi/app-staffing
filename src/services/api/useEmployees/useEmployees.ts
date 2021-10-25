@@ -13,6 +13,7 @@ interface EmployeeActions {
     employee: Partial<Employee>,
   ) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
+  reset: () => void;
 }
 
 /** Hook for getting a list of the employees */
@@ -26,6 +27,7 @@ export default function useEmployees(
     handleAdd,
     handleUpdate,
     handleDelete,
+    reset,
   } = useRest<Employee>("/api/v1/employees", queryParams, mapEmployee);
 
   return {
@@ -35,5 +37,6 @@ export default function useEmployees(
     addEmployee: handleAdd,
     updateEmployee: handleUpdate,
     deleteEmployee: handleDelete,
+    reset,
   };
 }

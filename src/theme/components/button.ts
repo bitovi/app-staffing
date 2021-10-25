@@ -18,6 +18,11 @@ const button: StyleConfig = {
       borderWidth: "1px",
       borderColor: "gray.600",
     },
+    danger: {
+      backgroundColor: "red.500",
+      _hover: { backgroundColor: "red.600" },
+      color: "white",
+    },
   },
   sizes: {
     md: {
