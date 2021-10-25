@@ -18,15 +18,16 @@ IMAGE_TAG="latest"
 #Building the docker image...
 docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
 
-if [[ ${BRANCH_NAME} != ${DEFAULT_BRANCH} ]]; then
-  IMAGE_TAG="${GITHUB_SHA}"
-else
-
+if [[ BRANCH_NAME == 'main' ]]; then
+IMAGE_TAG="latest"
 echo $REGISTRY_AUTHENTICATION
 docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
-echo "About to push the image......."
 docker push ${REGISTRY_URL}:${IMAGE_TAG}
+else
+echo $REGISTRY_AUTHENTICATION
+echo ${REGISTRY_URL}:${BRANCH_NAME}${GITHUB_SHA}
+docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${GITHUB_SHA}
+docker push ${REGISTRY_URL}:${GITHUB_SHA}
 fi
-
 
 
