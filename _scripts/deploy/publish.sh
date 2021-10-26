@@ -19,16 +19,15 @@ DEFAULT_BRANCH="main"
 #Building the docker image...
 docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
 
-echo $REGISTRY_AUTHENTICATION
+${REGISTRY_AUTHENTICATION}
 
-if [[ BRANCH_NAME == DEFAULT_BRANCH ]]; then
-IMAGE_TAG="latest"
 
+if [[ "$BRANCH_NAME" != "$DEFAULT_BRANCH"  ]]; then
+  IMAGE_TAG="${GITHUB_SHA}"
 else
-IMAGE_TAG=${GITHUB_SHA}
+
+echo "BRANCH_NAME is "$BRANCH_NAME". Tagging "$IMAGE_TAG"
 docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
-echo "About to push the docker image to the ecr repository....."
+
+echo "pushing image..."
 docker push ${REGISTRY_URL}:${IMAGE_TAG}
-fi
-
-
