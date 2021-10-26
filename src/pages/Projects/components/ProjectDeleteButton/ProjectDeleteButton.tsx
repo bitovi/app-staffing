@@ -1,5 +1,4 @@
 import { useDisclosure } from "@chakra-ui/hooks";
-import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "../../../../components/Button";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
@@ -18,21 +17,20 @@ const ProjectDeleteButton = ({
   const { deleteProject, error, isLoading, reset } = useProjects();
   const history = useHistory();
 
+  const onCloseModal = () => {
+    reset();
+    onClose();
+  };
+
   const onDelete = async (projectId: string) => {
     try {
       await deleteProject(projectId);
-      onClose();
+      onCloseModal();
       history.push("/");
     } catch (e) {
       // Eat Error
     }
   };
-
-  useEffect(() => {
-    if (!isOpen) {
-      reset();
-    }
-  }, [isOpen, reset]);
 
   return (
     <>
@@ -51,7 +49,7 @@ const ProjectDeleteButton = ({
         }
         isLoading={isLoading}
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={onCloseModal}
         confirmButtonVariant="danger"
       />
     </>

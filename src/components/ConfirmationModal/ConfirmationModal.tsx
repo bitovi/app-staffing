@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/layout";
+import { Text } from "@chakra-ui/layout";
 import {
   Modal,
   ModalBody,
@@ -51,18 +51,21 @@ export default function ConfirmationModal({
           <Text>{message}</Text>
         </ModalBody>
         <ModalFooter>
-          <Flex flexGrow={1} justifyContent="space-between">
-            <Button disabled={isLoading} onClick={onClose} variant="secondary">
-              {closeText}
-            </Button>
-            <Button
-              isLoading={isLoading}
-              onClick={onConfirm}
-              variant={confirmButtonVariant}
-            >
-              {confirmText}
-            </Button>
-          </Flex>
+          <Button
+            mr={4}
+            disabled={isLoading}
+            onClick={onClose}
+            variant="secondary"
+          >
+            {closeText}
+          </Button>
+          <Button
+            isLoading={isLoading}
+            onClick={onConfirm}
+            variant={confirmButtonVariant}
+          >
+            {confirmText}
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

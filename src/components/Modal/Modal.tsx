@@ -1,10 +1,10 @@
-import { Modal as ChakraModal, 
+import {
+  Modal as ChakraModal,
   ModalContent as ChakraModalContent,
   ModalHeader as ChakraModalHeader,
   ModalCloseButton as ChakraModalCloseButton,
-  ModalBody as ChakraModalBody,
-  // Button as ChakraButton,
- } from "@chakra-ui/react";
+  ModalOverlay as ChakraModalOverlay,
+} from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface ModalProps extends React.ComponentProps<typeof ChakraModal> {
@@ -22,20 +22,12 @@ export default function Modal({
   ...props
 }: ModalProps): JSX.Element {
   return (
-    <ChakraModal
-      isOpen={isOpen}
-      onClose={onClose}
-      {...props}
-    >
-      <ChakraModalContent> 
-        <ChakraModalHeader>
-          {title}
-        </ChakraModalHeader>
+    <ChakraModal isOpen={isOpen} onClose={onClose} {...props}>
+      <ChakraModalOverlay />
+      <ChakraModalContent>
+        <ChakraModalHeader>{title}</ChakraModalHeader>
         <ChakraModalCloseButton />
-        <ChakraModalBody>
-          {children}
-        </ChakraModalBody>
-        {/* <ChakraButton onClose={} /> */}
+        {children}
       </ChakraModalContent>
     </ChakraModal>
   );
