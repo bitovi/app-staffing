@@ -16,7 +16,7 @@ describe("Pages/Employees", () => {
     await employeeStoreManager.clear();
   });
 
-  it("works", async () => {
+  it("renders", async () => {
     render(
       <Suspense fallback={<div>Loading...</div>}>
         <Employees />

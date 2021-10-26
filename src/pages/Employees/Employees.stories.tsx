@@ -17,6 +17,7 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
         addEmployee: (employee) => new Promise((resolve) => resolve("")),
         deleteEmployee: (employeeId) => new Promise((resolve) => resolve()),
         updateEmployee: (employeeId) => new Promise((resolve) => resolve()),
+        reset: () => undefined,
       };
     }}
   />
@@ -32,6 +33,7 @@ export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
         addEmployee: (employee) => new Promise((resolve) => resolve("")),
         deleteEmployee: (employeeId) => new Promise((resolve) => resolve()),
         updateEmployee: (employeeId) => new Promise((resolve) => resolve()),
+        reset: () => undefined,
       };
     }}
   />
