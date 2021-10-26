@@ -26,7 +26,7 @@ if [[ "$BRANCH_NAME" != "$DEFAULT_BRANCH"  ]]; then
   IMAGE_TAG="${GITHUB_SHA}"
 else
 
-echo "BRANCH_NAME is "$BRANCH_NAME". Tagging "$IMAGE_TAG"
+
 docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
 
 echo "pushing image..."
