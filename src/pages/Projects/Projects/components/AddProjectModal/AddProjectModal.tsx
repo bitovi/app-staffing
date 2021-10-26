@@ -5,10 +5,7 @@ import { useHistory } from "react-router-dom";
 import Button from "../../../../../components/Button";
 import { InputControl, TextArea } from "../../../../../components/formControls";
 import Modal from "../../../../../components/Modal";
-import {
-  Project,
-  useProjects as useProjectsDefault,
-} from "../../../../../services/api";
+import { Project, useProjects } from "../../../../../services/api";
 
 type IFormData = Omit<Project, "id">;
 
@@ -17,13 +14,11 @@ const initialFormState: IFormData = { name: "", description: "", roles: [] };
 interface IProps {
   onClose: () => void;
   isOpen: boolean;
-  useProjects?: typeof useProjectsDefault;
 }
 
 export default function AddProjectModal({
   isOpen,
   onClose,
-  useProjects = useProjectsDefault,
 }: IProps): JSX.Element {
   const { reset, addProject } = useProjects();
   const history = useHistory();

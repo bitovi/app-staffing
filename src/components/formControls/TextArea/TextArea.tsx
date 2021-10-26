@@ -1,6 +1,6 @@
 import { Textarea, TextareaProps } from "@chakra-ui/react";
 import { FormHelperText } from "@chakra-ui/form-control";
-import React from "react";
+import React, { ReactNode } from "react";
 import { BaseProps } from "../baseProps";
 import { FormControl } from "../FormControl";
 

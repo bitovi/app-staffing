@@ -9,74 +9,38 @@ jest.mock("react-router-dom", () => ({
   }),
 }));
 
+const mockAddProject = jest.fn();
+const mockReset = jest.fn();
+jest.mock("../../../../../services/api", () => ({
+  useProjects: () => ({
+    addProject: mockAddProject,
+    reset: mockReset,
+  }),
+}));
+
 describe("Pages/Projects/Components/AddProjectModal", () => {
   it("renders", async () => {
-    render(
-      <AddProjectModal
-        isOpen={true}
-        onClose={() => undefined}
-        useProjects={() => {
-          return {
-            projects: undefined,
-            isLoading: false,
-            error: undefined,
-            addProject: () => new Promise((resolve) => resolve("")),
-            updateProject: () => new Promise((resolve) => resolve()),
-            deleteProject: () => new Promise((resolve) => resolve()),
-            reset: () => undefined,
-          };
-        }}
-      />,
-    );
+    render(<AddProjectModal isOpen={true} onClose={() => undefined} />);
 
     expect(screen.getByText(/Save/g)).toBeInTheDocument();
   });
 
   it("navigate to project details on success", async () => {
     const someId = "1234";
-    render(
-      <AddProjectModal
-        isOpen={true}
-        onClose={() => undefined}
-        useProjects={() => {
-          return {
-            projects: undefined,
-            isLoading: false,
-            error: undefined,
-            addProject: () => new Promise((resolve) => resolve(someId)),
-            updateProject: () => new Promise((resolve) => resolve()),
-            deleteProject: () => new Promise((resolve) => resolve()),
-            reset: () => undefined,
-          };
-        }}
-      />,
+    mockAddProject.mockReturnValueOnce(
+      new Promise((resolve) => resolve(someId)),
     );
+
+    render(<AddProjectModal isOpen={true} onClose={() => undefined} />);
 
     fireEvent.click(screen.getByText(/Save/g));
     await waitFor(() => expect(mockHistoryPush).toBeCalledWith(`/${someId}`));
   });
 
   it("reset modal on close", async () => {
-    const reset = jest.fn();
-    render(
-      <AddProjectModal
-        isOpen={true}
-        onClose={() => undefined}
-        useProjects={() => {
-          return {
-            projects: undefined,
-            isLoading: false,
-            error: undefined,
-            addProject: () => new Promise((resolve) => resolve("")),
-            updateProject: () => new Promise((resolve) => resolve()),
-            deleteProject: () => new Promise((resolve) => resolve()),
-            reset: reset,
-          };
-        }}
-      />,
-    );
+    render(<AddProjectModal isOpen={true} onClose={() => undefined} />);
 
     fireEvent.click(screen.getByText(/Cancel/g));
-    expect(reset).toBeCalled();
+    expect(mockReset).toBeCalled();
   });
 });
