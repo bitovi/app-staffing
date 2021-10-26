@@ -4,7 +4,7 @@ import ProjectCard from "./ProjectCard";
 import { projects } from "../../../../../services/api/projects/fixtures";
 
 export default {
-  title: "ProjectCard",
+  title: "Pages/Projects/ProjectCard",
   component: ProjectCard,
 } as ComponentMeta<typeof ProjectCard>;
 
