@@ -10,8 +10,6 @@ REGISTRY_URL=$(printf %s.dkr.ecr.%s.amazonaws.com/%s "$AWS_ACCOUNT_NO" "$AWS_DEF
 #Defining the Branch name variable
 BRANCH_NAME=$(echo $GITHUB_REF | awk -F"  +|/" '{print $5, $NF}')
 
-#Defining Registry Authentication variablee
-
 
 #Defining the Default branch variable
 DEFAULT_BRANCH="main"
@@ -22,12 +20,12 @@ docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
 aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REGISTRY_URL}
 
 
-if [[ "$BRANCH_NAME" != "$DEFAULT_BRANCH"  ]]; then
-  IMAGE_TAG="${GITHUB_SHA}"
+if [[ ${BRANCH_NAME} != ${DEFAULT_BRANCH} ]]; then
+IMAGE_TAG=${GITHUB_SHA}
+
 else
-
-
+IMAGE_TAG="latest"
 docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
-
-echo "pushing image..."
+echo "About to push the docker image to the ecr repository....."
 docker push ${REGISTRY_URL}:${IMAGE_TAG}
+fi
