@@ -1,4 +1,5 @@
 import { Input, InputGroup, InputProps } from "@chakra-ui/react";
+import { FormHelperText } from "@chakra-ui/form-control";
 import React, { ReactNode } from "react";
 import { BaseProps } from "../baseProps";
 import { FormControl } from "../FormControl";
@@ -28,7 +29,7 @@ export const InputControl = (props: InputControlProps): JSX.Element => {
         <Input data-testid={testid} {...inputProps} />
         {inputRightElement}
       </InputGroup>
-      {formHelperText}
+      {formHelperText && <FormHelperText>{formHelperText}</FormHelperText>}
     </FormControl>
   );
 };
