@@ -11,7 +11,7 @@ REGISTRY_URL=$(printf %s.dkr.ecr.%s.amazonaws.com/%s "$AWS_ACCOUNT_NO" "$AWS_DEF
 BRANCH_NAME=$(echo $GITHUB_REF | awk -F"  +|/" '{print $5, $NF}')
 
 #Defining Registry Authentication variablee
-REGISTRY_AUTHENTICATION=$(aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REGISTRY_URL})
+
 
 #Defining the Default branch variable
 DEFAULT_BRANCH="main"
@@ -19,7 +19,7 @@ DEFAULT_BRANCH="main"
 #Building the docker image...
 docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
 
-${REGISTRY_AUTHENTICATION}
+aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REGISTRY_URL}
 
 
 if [[ "$BRANCH_NAME" != "$DEFAULT_BRANCH"  ]]; then
