@@ -8,20 +8,17 @@ import { wrapper } from "../useRest/useRest.test";
 
 describe("useEmployees", () => {
   beforeEach(async () => {
-    await employeeStoreManager.loadResources();
+    await employeeStoreManager.load();
   });
 
   afterEach(async () => {
-    await employeeStoreManager.clearResources();
+    await employeeStoreManager.clear();
   });
 
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useEmployees(), {
       wrapper,
     });
-
-    expect(result.current.isLoading).toBe(true);
-    expect(result.current.employees).toBe(undefined);
 
     await waitForNextUpdate();
 

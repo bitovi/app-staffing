@@ -8,20 +8,17 @@ import { wrapper } from "../useRest/useRest.test";
 
 describe("useProjects", () => {
   beforeEach(async () => {
-    await projectStoreManager.loadResources();
+    await projectStoreManager.load();
   });
 
   afterEach(async () => {
-    await projectStoreManager.clearResources();
+    await projectStoreManager.clear();
   });
 
   it("works", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useProjects(), {
       wrapper,
     });
-
-    expect(result.current.isLoading).toBe(true);
-    expect(result.current.projects).toBe(undefined);
 
     await waitForNextUpdate();
 

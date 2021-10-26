@@ -46,7 +46,6 @@ export function Employees({
   useEmployees: typeof useEmployeesDefault;
 }): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();
-
   const [filterValue, setFilterValue] = useState<string>();
 
   const handleEditSave = useCallback(
