@@ -7,7 +7,7 @@ import { projects } from "../../../../../services/api/projects/fixtures";
 
 const project = projects[0];
 
-describe("Components/Layout", () => {
+describe("Pages/Projects/ProjectCard", () => {
   it("renders", () => {
     render(
       <MemoryRouter>

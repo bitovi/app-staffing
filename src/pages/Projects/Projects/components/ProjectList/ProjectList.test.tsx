@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { projects } from "../../../../../services/api/projects/fixtures";
 import ProjectList from "./ProjectList";
 
-describe("Components/Layout", () => {
+describe("Pages/Projects/ProjectList", () => {
   it("renders", () => {
     render(
       <MemoryRouter>
