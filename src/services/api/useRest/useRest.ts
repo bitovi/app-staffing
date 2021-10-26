@@ -1,10 +1,9 @@
-import type { APIResponse, QueriableList } from "../shared";
-
-import { useCallback, useMemo } from "react";
-import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
-
-import { fetcher } from "../shared";
+import { useCallback } from "react";
+import useSWR, { useSWRConfig } from "swr";
+import type { APIResponse, QueriableList } from "../common";
+import { fetcher } from "../common";
+import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 
 interface RestActions<T> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
@@ -13,18 +12,19 @@ interface RestActions<T> extends APIResponse<T[]> {
     updatedCollectionItem: Partial<T>,
   ) => Promise<void>;
   handleDelete: (collectionItemId: string) => Promise<void>;
+  reset: () => void;
 }
 
 function useRest<T extends { id: string }>(
   path: string,
   queryParams?: QueriableList<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mapItem: (input: any) => T = identity,
 ): RestActions<T> {
+  const key = `${path}?${param(queryParams)}`;
   const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
-    `${path}?${param(queryParams)}`,
+    key,
     (url) => fetcher("GET", url),
+    { suspense: true, use: [deserializeDateMiddleware] },
   );
 
   const handleAdd = useCallback<
@@ -33,7 +33,7 @@ function useRest<T extends { id: string }>(
     async (newCollectionItem: Omit<T, "id">) => {
       let newId = "";
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (addResponse: { data: T[] }) => {
           const { data: newItem } = await fetcher<{ data: T }>(
             "POST",
@@ -45,7 +45,7 @@ function useRest<T extends { id: string }>(
 
           return {
             ...addResponse,
-            data: [mapItem(newItem), ...addResponse.data],
+            data: [...addResponse.data, { ...newCollectionItem, id: newId }],
           };
         },
         false,
@@ -53,7 +53,7 @@ function useRest<T extends { id: string }>(
 
       return newId;
     },
-    [path, queryParams, mutate, mapItem],
+    [path, key, mutate],
   );
 
   const handleUpdate = useCallback<
@@ -64,7 +64,7 @@ function useRest<T extends { id: string }>(
   >(
     async (collectionItemId: string, updatedCollectionItem: Partial<T>) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (cachedData: { data: T[] }) => {
           const { data: updatedItem } = await fetcher<{ data: T }>(
             "PUT",
@@ -75,20 +75,20 @@ function useRest<T extends { id: string }>(
           return {
             ...cachedData,
             data: (cachedData?.data ?? []).map((item) =>
-              item.id === updatedItem.id ? mapItem(updatedItem) : item,
+              item.id === updatedItem.id ? updatedItem : item,
             ),
           };
         },
         false,
       );
     },
-    [path, queryParams, mutate, mapItem],
+    [path, key, mutate],
   );
 
   const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (deleteResponse: { data: T[] }) => {
           await fetcher("DELETE", `${path}/${collectionItemId}`);
 
@@ -102,24 +102,18 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams, mutate],
-  );
-
-  const data = useMemo(
-    () => response?.data?.map(mapItem),
-    [mapItem, response?.data],
+    [path, key, mutate],
   );
 
   return {
-    data,
+    data: response?.data,
     error,
     isLoading: !response && !error,
     handleAdd,
     handleUpdate,
     handleDelete,
+    reset: () => mutate(key, (v: T) => v, false),
   };
 }
 
 export default useRest;
-
-const identity = <T>(v: T) => v;
