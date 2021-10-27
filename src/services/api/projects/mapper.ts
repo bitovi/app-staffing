@@ -1,7 +1,7 @@
-import type { Project, Role, EstimatedDate } from "./interfaces";
+import type { Project } from "./interfaces";
+import { EstimatedDate, Role } from "../roles";
 import type { AssignedEmployee } from "../employees";
 import type { ServerEmployee } from "../employees/mapper";
-
 import mapEmployee from "../employees/mapper";
 
 export interface ServerEstimatedDate extends Omit<EstimatedDate, "date"> {

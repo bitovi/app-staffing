@@ -12,7 +12,11 @@ const queryLogic = new QueryLogic<Skill>({
   },
 });
 
-const { store, ...storeManager } = createStore(skillList, queryLogic, "skills");
+const { store, ...storeManager } = createStore<Skill>(
+  skillList,
+  queryLogic,
+  "skills",
+);
 
 export default [requestCreator("/skills", store).getAll];
 
