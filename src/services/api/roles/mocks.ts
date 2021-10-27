@@ -33,7 +33,7 @@ const queryLogic = new QueryLogic<Role>({
 
 const { store, ...storeManager } = createStore(roles, queryLogic, "roles");
 
-export default Object.values(requestCreator("/roles", store));
+export default Object.values(requestCreator<Role>("/roles", store));
 
 export const rolesStoreManager = {
   ...storeManager,

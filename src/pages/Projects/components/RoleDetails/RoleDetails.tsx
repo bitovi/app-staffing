@@ -1,12 +1,7 @@
-import type {
-  AssignedEmployee,
-  Employee,
-  Role,
-} from "../../../../services/api";
+import type { AssignedEmployee, Employee, Role, Skill } from "../../../../services/api";
+import { useEmployees, useSkills } from "../../../../services/api";
 
 import { cloneDeep } from "lodash";
-
-import { useEmployees, useSkills } from "../../../../services/api";
 import Button from "../../../../components/Button";
 import Select from "../../../../components/Select";
 import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
@@ -46,7 +41,7 @@ export default function RoleDetails({
       assignedEmployee.employee,
       ...(employees || [])
         .filter(({ skills }) =>
-          skills.map(({ name }) => name).includes(role.skill),
+          skills.map(({ name }) => name).includes(role.skill.name),
         )
         .filter(
           (employee) =>
@@ -93,17 +88,15 @@ export default function RoleDetails({
     <div className={styles.roleContainer}>
       <div className={styles.header}>
         {skills && (
-          <Select
+          <Select<Skill>
             label="Role"
             name="roleSkill"
             disabled={role.employees.length > 0}
-            onChange={(skill?: string) =>
-              skill && editRole({ ...role, skill: skill })
-            }
+            onChange={(skill?: Skill) => skill && editRole({ ...role, skill })}
             value={role.skill}
-            options={skills.map(({ name }) => ({
-              label: name,
-              value: name,
+            options={skills.map((skill) => ({
+              label: skill.name,
+              value: skill,
             }))}
           />
         )}
@@ -124,7 +117,7 @@ export default function RoleDetails({
         Assigned Employees
         {employees &&
           role.employees.map(
-            (assignedEmployee: AssignedEmployee, index: string) => (
+            (assignedEmployee: AssignedEmployee, index: number) => (
               <AssignedEmployeeDetails
                 key={assignedEmployee.employee.id + role.id + index}
                 assignedEmployee={assignedEmployee}
