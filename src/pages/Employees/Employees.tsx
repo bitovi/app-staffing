@@ -69,7 +69,7 @@ export function Employees({
   useSkills,
 }: IEmployees): JSX.Element {
   const { employees, updateEmployee } = useEmployees();
-  const { skills } = useSkills();
+  // const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   const handleEditSave = useCallback(
@@ -100,8 +100,6 @@ export function Employees({
           console.log(employeeData);
         }}
       />
-
-      {skills}
 
       <Flex
         width="full"
