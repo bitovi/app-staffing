@@ -1,7 +1,7 @@
 import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
 import { Tag, TagCloseButton } from "../../../../components/Tag";
 import useAutoSaveForm from "../../../../hooks/useAutoSaveForm";
-import type { Employee, SkillName } from "../../../../services/api";
+import type { Employee, Skill } from "../../../../services/api";
 import { useSkills } from "../../../../services/api";
 import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
@@ -22,10 +22,10 @@ export default function EmployeeCard({
   });
   const { skills } = useSkills();
 
-  const onAddSkill = (skillName: SkillName) => {
+  const onAddSkill = (skill: Skill) => {
     setFormData({
       ...formData,
-      skills: [...formData.skills, { name: skillName, id: "" }],
+      skills: [...formData.skills, skill],
     });
   };
 
@@ -113,7 +113,7 @@ export default function EmployeeCard({
         {skills && (
           <EmployeeSkillSelect
             selectedSkills={formData.skills}
-            allSkills={formData.skills.map(({ name }) => name)}
+            allSkills={skills}
             onAddSkill={onAddSkill}
           />
         )}

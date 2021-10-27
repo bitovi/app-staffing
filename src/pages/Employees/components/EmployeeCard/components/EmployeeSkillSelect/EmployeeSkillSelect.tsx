@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Select from "../../../../../../components/Select";
-import { Skill, SkillName } from "../../../../../../services/api";
+import { Skill } from "../../../../../../services/api";
 
 interface EmployeeSkillSelectProps {
   selectedSkills: Skill[];
-  allSkills: SkillName[];
-  onAddSkill: (skill: SkillName) => void;
+  allSkills: Skill[];
+  onAddSkill: (skill: Skill) => void;
 }
 
 export const EmployeeSkillSelect = ({
@@ -15,22 +15,24 @@ export const EmployeeSkillSelect = ({
 }: EmployeeSkillSelectProps): JSX.Element => {
   // This value is being used to re-render react-select
   // not actually to keep track of the value
-  const [skillValue, setSkillValue] = useState<string>();
+  const [skillValue, setSkillValue] = useState<Skill>();
 
   const availableSkills = allSkills
     .filter(
       (skill) =>
-        !selectedSkills.some((activeSkill) => activeSkill.name === skill),
+        !selectedSkills.some((activeSkill) => activeSkill.name === skill.name),
     )
-    .map((skill) => ({ label: skill, value: skill }));
+    .map((skill) => ({ label: skill.name, value: skill }));
 
-  const handleAddSkill = (name: SkillName) => {
-    setSkillValue(name);
-    onAddSkill(name);
+  const handleAddSkill = (skill: Skill) => {
+    setSkillValue(skill);
+    onAddSkill(skill);
   };
 
+  console.log("allSkills", allSkills);
+
   return (
-    <Select
+    <Select<Skill>
       // This key forces a re-render when the value changes
       // this clears out the selected value when an option is chosen
       key={`react-select__${skillValue}`}
