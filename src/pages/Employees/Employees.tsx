@@ -1,15 +1,50 @@
+import { Suspense, useCallback, useState } from "react";
 import type { Employee } from "../../services/api";
-
-import { useCallback, useState } from "react";
-
-import { useEmployees } from "../../services/api";
+import { useEmployees as useEmployeesDefault } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
+import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 
 import styles from "./Employees.module.scss";
 
 import Button from "../../components/Button";
 
-export default function Employees(): JSX.Element {
+export function EmployeePageLoadingLayout(): JSX.Element {
+  return (
+    <div className={styles.wrapper}>
+      <div className={styles.actionBar}>
+        <div className={styles.actionBarTitle}>Team</div>
+        <div className={styles.actionBarActions} />
+      </div>
+
+      <div className={styles.row}>
+        <Button
+          variant="link"
+          disabled={true}
+          onClick={() => {
+            null;
+          }}
+        >
+          Add Team Member +
+        </Button>
+      </div>
+      <EmployeeCardSkeleton />
+    </div>
+  );
+}
+
+export default function EmployeesWrapper(): JSX.Element {
+  return (
+    <Suspense fallback={<EmployeePageLoadingLayout />}>
+      <Employees useEmployees={useEmployeesDefault} />
+    </Suspense>
+  );
+}
+
+export function Employees({
+  useEmployees,
+}: {
+  useEmployees: typeof useEmployeesDefault;
+}): JSX.Element {
   const { employees, addEmployee, updateEmployee } = useEmployees();
   const [filterValue, setFilterValue] = useState<string>();
 
@@ -47,6 +82,7 @@ export default function Employees(): JSX.Element {
           />
         </div>
       </div>
+
       <div className={styles.row}>
         <Button
           variant="link"
@@ -57,17 +93,14 @@ export default function Employees(): JSX.Element {
           Add Team Member +
         </Button>
       </div>
-      {!employees && <div className={styles.noResults}>LOADING...</div>}
-      {employees && employees.length === 0 && (
-        <div className={styles.noResults}>NO DATA FOUND!</div>
-      )}
-      {filteredEmployees?.length && (
+
+      <Suspense fallback={<EmployeeCardSkeleton />}>
         <EmployeeTable
           filterValue={filterValue}
           filteredEmployees={filteredEmployees}
           onEdit={handleEditSave}
         />
-      )}
+      </Suspense>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default function App(): JSX.Element {
           <Route path="/" exact>
             <Dashboard />
           </Route>
-          <Route path="/employees">
+          <Route path="/team-members">
             <Employees />
           </Route>
           <ProjectRouter />

@@ -6,6 +6,7 @@ import { skillList } from "../../../../services/api";
 import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
 import styles from "./EmployeeCard.module.scss";
 import { DatePicker } from "../../../../components/DatePicker";
+import { Skeleton } from "@chakra-ui/skeleton";
 
 interface EmployeeCardProps {
   employee: Employee;
@@ -114,6 +115,33 @@ export default function EmployeeCard({
           allSkills={[...skillList]}
           onAddSkill={onAddSkill}
         />
+      </GridItem>
+    </Grid>
+  );
+}
+
+export function EmployeeCardSkeleton(): JSX.Element {
+  return (
+    <Grid
+      alignItems="center"
+      templateColumns={{
+        base: "1fr",
+        md: "repeat(2, 1fr)",
+        lg: "repeat(4, 1fr)",
+      }}
+      gap={4}
+    >
+      <GridItem>
+        <Skeleton height="130px"></Skeleton>
+      </GridItem>
+      <GridItem>
+        <Skeleton height="130px"></Skeleton>
+      </GridItem>
+      <GridItem>
+        <Skeleton height="130px"></Skeleton>
+      </GridItem>
+      <GridItem>
+        <Skeleton height="130px"></Skeleton>
       </GridItem>
     </Grid>
   );
