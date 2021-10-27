@@ -4,6 +4,9 @@ import { HashRouter } from "react-router-dom";
 import { setupWorker } from "msw";
 import { ChakraProvider } from "@chakra-ui/react";
 
+import "@fontsource/inter";
+import "@fontsource/montserrat";
+
 import mocks from "./services/mocks";
 
 import App from "./App";

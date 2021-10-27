@@ -76,6 +76,8 @@
     "@chakra-ui/react": "^1.6.8",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@fontsource/inter": "^4.5.0",
+    "@fontsource/montserrat": "^4.5.1",
     "can-deparam": "^1.2.3",
     "can-local-store": "^1.0.1",
     "can-param": "^1.1.3",

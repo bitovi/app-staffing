@@ -2,14 +2,14 @@ import { StyleConfig } from "@chakra-ui/theme-tools";
 
 const button: StyleConfig = {
   baseStyle: {
-    px: 4,
-    py: 2,
+    px: "24px",
+    py: "10px",
   },
   variants: {
     primary: {
-      backgroundColor: "red.500",
-      _hover: { backgroundColor: "red.600" },
+      backgroundColor: "primary",
       color: "white",
+      _hover: { opacity: 0.8 },
     },
     secondary: {
       backgroundColor: "white",
