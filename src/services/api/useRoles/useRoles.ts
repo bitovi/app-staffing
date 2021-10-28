@@ -1,8 +1,6 @@
 import type { Role, NewRole } from "../roles";
 import type { ResponseStatus, QueriableList } from "../shared";
 
-import { mapRole } from "../roles";
-
 import useRest from "../useRest";
 
 interface RoleActions {
@@ -21,7 +19,7 @@ export default function useRoles(
     isLoading,
     handleAdd,
     handleUpdate,
-  } = useRest<Role>("/api/v1/roles", queryParams, mapRole);
+  } = useRest<Role>("/api/v1/roles", queryParams);
 
   return {
     roles,

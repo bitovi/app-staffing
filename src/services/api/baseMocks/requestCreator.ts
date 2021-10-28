@@ -1,5 +1,5 @@
 import type { MockResponse } from "./interfaces";
-import type { QueriableList } from "../common";
+import type { QueriableList } from "../shared";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 
 import { rest } from "msw";
