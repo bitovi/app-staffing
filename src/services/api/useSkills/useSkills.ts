@@ -1,25 +1,14 @@
 import type { Skill } from "../skills";
-import type { ResponseStatus } from "../common";
+import type { ResponseStatus } from "../shared";
 
 import useRest from "../useRest";
 
-interface SkillsActions {
-  skills?: Skill[];
-  reset: () => void;
-}
-
-export default function useSkills(): ResponseStatus & SkillsActions {
-  const {
-    data: skills,
-    error,
-    isLoading,
-    reset,
-  } = useRest<Skill>("/api/v1/skills");
+export default function useSkills(): ResponseStatus & { skills?: Skill[] } {
+  const { data: skills, error, isLoading } = useRest<Skill>("/api/v1/skills");
 
   return {
     skills,
-    isLoading,
     error,
-    reset,
+    isLoading,
   };
 }

@@ -1,8 +1,8 @@
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import type { APIResponse, QueriableList } from "../common";
-import { fetcher } from "../common";
+import type { APIResponse, QueriableList } from "../shared";
+import { fetcher } from "../shared";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 
 interface RestActions<T> extends APIResponse<T[]> {

@@ -1,4 +1,4 @@
-import { Skill } from "../common";
+import { Skill } from "../skills";
 
 export interface Employee {
   id: string;
