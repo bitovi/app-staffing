@@ -1,4 +1,9 @@
-import type { AssignedEmployee, Employee, Role, Skill } from "../../../../services/api";
+import type {
+  AssignedEmployee,
+  Employee,
+  Role,
+  Skill,
+} from "../../../../services/api";
 import { useEmployees, useSkills } from "../../../../services/api";
 
 import { cloneDeep } from "lodash";
