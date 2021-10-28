@@ -22,10 +22,11 @@ DEFAULT_BRANCH="main"
 #Building the docker image...
 docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
 
-aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REGISTRY_URL}
+
 
 #docker image deploy function
 docker_deploy(){
+aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REGISTRY_URL}    
 docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
 echo "About to push the docker image to the ecr repository....."
 docker push ${REGISTRY_URL}:${IMAGE_TAG}
