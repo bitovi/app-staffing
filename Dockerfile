@@ -1,4 +1,5 @@
-FROM beevelop/nodejs-python
+
+FROM node:14
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -7,10 +8,10 @@ WORKDIR /usr/src/app
 COPY . .
 
 # install dependencies
-RUN npm install
+RUN npm build
 
 # expose your ports
 EXPOSE 3000
 
 # start it up
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "run", "prod" ]
