@@ -9,11 +9,11 @@ import {
 } from "../../../../services/timeReport/timesReport";
 import { format, setMonth } from "date-fns";
 
-interface IProps {
+interface IReportTableProps {
   reportDate: Date;
 }
 
-export function ReportTable({ reportDate }: IProps): JSX.Element {
+export function ReportTable({ reportDate }: IReportTableProps): JSX.Element {
   const timeFrames: TimescaleData[] = useMemo(
     () => getTimescaleData(reportDate),
     [reportDate],
@@ -66,11 +66,6 @@ export function ReportTable({ reportDate }: IProps): JSX.Element {
           </Center>
         );
       })}
-
-
-
-
-
     </Flex>
   );
 }
