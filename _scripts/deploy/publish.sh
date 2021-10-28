@@ -36,6 +36,6 @@ if [[ ${BRANCH_NAME} != ${DEFAULT_BRANCH} ]]; then
 IMAGE_TAG=${GITHUB_SHA}
 docker_deploy
 else
-IMAGE_TAG="latest"
+
 docker_deploy
 fi
