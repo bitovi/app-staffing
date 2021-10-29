@@ -5,7 +5,7 @@ import { skillList } from "./fixtures";
 import { createStore, requestCreator } from "../baseMocks";
 
 const queryLogic = new QueryLogic<Skill>({
-  identifier: ["id"],
+  identity: ["id"],
   keys: {
     id: "string",
     name: "string",

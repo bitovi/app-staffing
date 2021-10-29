@@ -69,8 +69,10 @@ export function Employees({
   useSkills,
 }: IEmployees): JSX.Element {
   const { employees, updateEmployee } = useEmployees();
-  // const { skills } = useSkills();
+  const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
+
+  console.log(skills);
 
   const handleEditSave = useCallback(
     async (id: string, employee: Employee) => {
