@@ -69,6 +69,7 @@ export function Employees({
   useSkills,
 }: IEmployees): JSX.Element {
   const { employees, updateEmployee } = useEmployees();
+  console.log('EMMPLOYEES', employees)
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 

@@ -21,6 +21,7 @@ interface EmployeeCardProps {
 export default function EmployeeCard({
   employee,
 }: EmployeeCardProps): JSX.Element {
+  console.log(employee)
   return (
     <SimpleGrid
       key={employee.id}
