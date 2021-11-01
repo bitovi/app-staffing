@@ -1,7 +1,7 @@
 import QueryLogic from "can-query-logic";
 
 import type { Skill } from ".";
-import { skillList } from "./fixtures";
+import { skills } from "./fixtures";
 import { createStore, requestCreator } from "../baseMocks";
 
 const queryLogic = new QueryLogic<Skill>({
@@ -13,7 +13,7 @@ const queryLogic = new QueryLogic<Skill>({
 });
 
 const { store, ...storeManager } = createStore<Skill>(
-  skillList,
+  skills,
   queryLogic,
   "skills",
 );

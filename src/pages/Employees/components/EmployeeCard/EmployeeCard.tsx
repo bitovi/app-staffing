@@ -11,7 +11,7 @@ import {
 import { Image } from "@chakra-ui/image";
 import { format } from "date-fns";
 
-import { Tag } from "../../../../components/Tag";
+// import { Tag } from "../../../../components/Tag";
 import type { Employee } from "../../../../services/api";
 
 interface EmployeeCardProps {
@@ -57,7 +57,7 @@ export default function EmployeeCard({
         {employee.endDate && format(employee.endDate, "MM/dd/yyyy")}
       </Text>
       <HStack spacing="8px">
-        {employee.skills.map((skill) => (
+        {/* {employee.skills.map((skill) => (
           <Tag variant="primary" key={skill.name}>
             <Text
               fontFamily="Inter"
@@ -69,7 +69,7 @@ export default function EmployeeCard({
               {skill.name}
             </Text>
           </Tag>
-        ))}
+        ))} */}
       </HStack>
       <Box justifySelf="end">
         <IconButton

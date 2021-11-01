@@ -2,7 +2,7 @@ import { Skill } from ".";
 
 let skillId = 100;
 
-export const skillList: Array<Skill> = [
+export const skills: Array<Skill> = [
   { id: `${++skillId}`, name: "Angular" },
   { id: `${++skillId}`, name: "Design" },
   { id: `${++skillId}`, name: "DevOps" },

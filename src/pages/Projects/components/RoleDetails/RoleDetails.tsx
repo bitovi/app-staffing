@@ -43,17 +43,17 @@ export default function RoleDetails({
     // This list consists of the current assigned employees and any other
     // employee which has the skill but isn't already assigned
     return [
-      assignedEmployee.employee,
-      ...(employees || [])
-        .filter(({ skills }) =>
-          skills.map(({ name }) => name).includes(role.skill.name),
-        )
-        .filter(
-          (employee) =>
-            !role.employees
-              .map(({ employee: { id } }: { employee: { id: string } }) => id)
-              .includes(employee.id),
-        ),
+      // assignedEmployee.employee,
+      // ...(employees || [])
+      //   .filter(({ skills }) =>
+      //     skills.map(({ name }) => name).includes(role.skill.name),
+      //   )
+      //   .filter(
+      //     (employee) =>
+      //       !role.employees
+      //         .map(({ employee: { id } }: { employee: { id: string } }) => id)
+      //         .includes(employee.id),
+      //   ),
     ];
   };
 

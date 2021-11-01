@@ -8,6 +8,13 @@ export interface Employee {
   skills: Skill[];
 }
 
+export interface EmployeeTable {
+  id: string;
+  name: string;
+  startDate: Date;
+  endDate?: Date;
+}
+
 export type NewEmployee = Omit<Employee, "id">;
 
 export interface AssignedEmployee {

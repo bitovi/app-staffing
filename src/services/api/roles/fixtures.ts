@@ -3,8 +3,8 @@ import type { Role } from "./interfaces";
 
 import faker from "faker";
 
-import { skillList } from "../skills/fixtures";
-import { employees } from "../employees/fixtures";
+import { skills } from "../skills/fixtures";
+// import { employees } from "../employees/fixtures";
 
 faker.seed(0);
 
@@ -20,21 +20,22 @@ export function makeRole(role?: Partial<Role>): Role {
     confidence: `${faker.datatype.number({ min: 0, max: 100 })}%`,
   };
 
-  const assignedEmployees: AssignedEmployee[] = faker.random
-    .arrayElements(employees, faker.datatype.number(2) + 1)
-    .map((employee) => ({
-      employee,
-      startDate: faker.date.past(),
-      endDate: faker.date.future(),
-    }));
+  const assignedEmployees: AssignedEmployee[] = [];
+
+  // const assignedEmployees: AssignedEmployee[] = faker.random
+  //   .arrayElements(employees, faker.datatype.number(2) + 1)
+  //   .map((employee) => ({
+  //     employee,
+  //     startDate: faker.date.past(),
+  //     endDate: faker.date.future(),
+  //   }));
 
   return {
     id: `${++roleId}`,
-    skill: faker.random.arrayElement(skillList),
+    skill: faker.random.arrayElement(skills),
     startDate,
     endDate,
     employees: assignedEmployees,
-
     ...role,
   };
 }
