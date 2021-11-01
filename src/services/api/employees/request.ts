@@ -3,11 +3,13 @@ import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
 
-import type { QueriableList } from "../shared";
+//import type { QueriableList } from "../shared";
 
-import { MockResponse } from "../baseMocks/interfaces";
+import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import { skillStoreManager } from "../skills/mocks";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
+import { JSONAPIEmployee, /*EmployeeTable*/ } from "./interfaces";
+import { JSONAPISkill } from "../skills/interfaces";
 
 export default function requestCreatorEmployee<Resource extends { id: string }>(
   resourcePath: string,
@@ -105,11 +107,11 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
         return res(ctx.status(201), ctx.json({ data: item }));
       },
     ),
-
+    //////////////////////////////
+    //**  Changed parameter typing to suit response object in JSON API format
+    /////////////////////////////
     getAll: rest.get<
-      undefined,
-      MockResponse<Resource[], { total: number }>,
-      QueriableList<Resource>
+      JSONAPI<JSONAPIEmployee[], JSONAPISkill[]>
     >(`${basePath}${resourcePath}`, async (req, res, ctx) => {
       const {
         filter,
@@ -118,14 +120,10 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
         count = 25,
       } = deparam(req.url.searchParams.toString());
 
-      const employeeSkillsData =
-        await employeeSkillsStoreManager.store.getListData();
-      const skillData = await skillStoreManager.store.getListData();
-
-      console.log("employeeSkillsData", employeeSkillsData);
-      console.log("skillData", skillData);
-
-      const { data, count: total } = await store.getListData({
+      ////////////////////////////////////////////
+      // ** Employee store data
+      ///////////////////////////////////////////
+      const { data: employees } = await store.getListData({
         filter,
         sort,
         page: {
@@ -134,14 +132,62 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
         },
       });
 
+      /////////////////////////////////////////////
+      // ** JSON API formatting each employee for response
+      // ** finding relevant skill IDs with the "join table" employeeSkillsStore
+      // ** includedSkills will provide the "included" field for data response
+      ////////////////////////////////////////////
+      const includedSkills: string[]  = [];
+      const jsonAPIEmployees: JSONAPIEmployee[] = await Promise.all(employees.map(async(employee: any): Promise<JSONAPIEmployee> => {
+        const { data: employeeSkills } = await employeeSkillsStoreManager.store.getListData({
+          filter: {
+            employee_id: employee.id
+          }
+        })
+
+         return {
+          type: 'employees',
+          id: employee.id,
+          attributes: {
+            name: employee.name,
+            startDate: employee.startDate,
+            endDate: employee.endDate
+          },
+          relationships: {
+            skills: {
+              data: employeeSkills.map(skill => {
+                if(!includedSkills.includes(skill.skill_id)) {
+                  includedSkills.push(skill.skill_id)
+                }
+                return { 
+                  type: "skills", id: skill.skill_id 
+                }
+              })
+            }
+          }
+        }
+      }))
+      //////////////////////////////////////////////
+      // ** Filtering the skillStoreManager to join
+      // ** the skill id to its skill object
+      /////////////////////////////////////////////
+      const included: JSONAPISkill[] = (await skillStoreManager.store.getListData({
+        filter: {
+          id: includedSkills
+        }
+      })).data.map(skill =>  ({
+        type: "skills",
+        id: skill.id,
+        attributes: {
+          name: skill.name
+        }
+      }))
+
       return res(
         ctx.status(200),
         ctx.json({
-          data,
-          metadata: {
-            total,
-            pages: Math.ceil(total / count),
-          },
+          data: jsonAPIEmployees,
+          included,
         }),
       );
     }),
