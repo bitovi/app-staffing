@@ -25,7 +25,7 @@ docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
 
 
 #docker image deploy function
-docker_deploy(){
+image_deploy(){
 aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REGISTRY_URL}    
 docker tag ${IMAGE_NAME} ${REGISTRY_URL}:${IMAGE_TAG}
 echo "About to push the docker image to the ecr repository....."
@@ -33,9 +33,9 @@ docker push ${REGISTRY_URL}:${IMAGE_TAG}
 }
 
 if [[ ${BRANCH_NAME} != ${DEFAULT_BRANCH} ]]; then
-IMAGE_TAG=${GITHUB_SHA}
-docker_deploy
-else
+   IMAGE_TAG=${GITHUB_SHA}
 
-docker_deploy
 fi
+
+image_deploy
+
