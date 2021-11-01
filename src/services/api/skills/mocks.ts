@@ -21,5 +21,6 @@ const { store, ...storeManager } = createStore<Skill>(
 export default [requestCreator("/skills", store).getAll];
 
 export const skillStoreManager = {
+  store,
   ...storeManager,
 };

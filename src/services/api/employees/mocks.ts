@@ -36,5 +36,6 @@ const { store, ...storeManager } = createStore(
 export default Object.values(requestCreator("/employees", store));
 
 export const employeeStoreManager = {
+  store,
   ...storeManager,
 };
