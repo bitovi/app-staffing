@@ -35,7 +35,7 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
 
 4)  Once the Provisioning is complete, the next step is to obtain the kubeconfig file (This is the wrapper that interpretes API calls send to the API Server).
 
-5)  Simply type in this command *scp root@172.16.16.100:/etc/kubernetes/admin.conf -target=config*
+5)  Simply type in this command *scp root@172.16.16.100:/etc/kubernetes/admin.conf ~/.kube/config*
 
 6)  Type in this password: *a3ViZWFkbWlu* (decode to view).
 
