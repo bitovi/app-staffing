@@ -5,12 +5,12 @@ import useDataPreloader from "./useDataPreloader";
 import Layout from "./components/Layout";
 import Loading from "../pages/Loading";
 import Error from "../pages/Error";
-import { ProjectRouter } from "../pages/Projects";
 
 import "./App.scss";
 
 const Employees = lazy(() => import("../pages/Employees"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
+const ProjectRoutes = lazy(() => import("../pages/Projects/Routes"));
 
 export default function App(): JSX.Element {
   useDataPreloader();
@@ -25,7 +25,9 @@ export default function App(): JSX.Element {
           <Route path="/team-members">
             <Employees />
           </Route>
-          <ProjectRouter />
+          <Route path="/projects">
+            <ProjectRoutes />
+          </Route>
           <Route>
             <Error />
           </Route>

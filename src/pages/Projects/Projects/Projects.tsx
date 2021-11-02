@@ -1,11 +1,16 @@
 import { useHistory } from "react-router-dom";
-
+import { Suspense } from "react";
 import ProjectList from "./components/ProjectList";
-import { useProjects } from "../../../services/api";
+import { useProjects as defaultUseProjects } from "../../../services/api";
+import { LoadingProjectList } from "./components/LoadingProjectList";
 
-import styles from "./Projects.module.scss";
+// import styles from "./Projects.module.scss";
 
-export default function Projects(): JSX.Element {
+export default function Projects({
+  useProjects = defaultUseProjects,
+}: {
+  useProjects?: typeof defaultUseProjects;
+}): JSX.Element {
   const { projects, addProject } = useProjects();
   const history = useHistory();
 
@@ -16,12 +21,16 @@ export default function Projects(): JSX.Element {
       roles: [],
     });
 
-    history.push(`/${newProjectId}`);
+    history.push(`/projects/${newProjectId}`);
   };
 
   return (
-    <div className={styles.wrapper}>
-      <ProjectList onAddNew={addNewProject} projects={projects} />
-    </div>
+    <>
+      {/* <ProjectsHeader></ProjectsHeader> */}
+
+      <Suspense fallback={<LoadingProjectList />}>
+        <ProjectList onAddNew={addNewProject} projects={projects} />
+      </Suspense>
+    </>
   );
 }
