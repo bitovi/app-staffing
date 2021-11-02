@@ -1,4 +1,4 @@
-  ![alt text](https://s.yimg.jp/images/tecblog/2016-1H/os_n_k8s/kubernetes.png)
+  ![1 Master | 2 Worker Nodes Kubernetes Cluster (Picture Source: Kubernetes.io)](https://s.yimg.jp/images/tecblog/2016-1H/os_n_k8s/kubernetes.png)
 
 # STAF-43 | Local Kubernetes Provisioning.
 
