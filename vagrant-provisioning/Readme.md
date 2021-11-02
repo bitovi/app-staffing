@@ -20,7 +20,7 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
   * For Windows: https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.msi
 
 
-# Provisioning the Kubernetes Cluster
+## Provisioning the Kubernetes Cluster
 
 1)  Git clone this repository on to your local Laptop.
 
@@ -38,7 +38,7 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
 
 
 
-# To delete the entire Cluster 
+## To delete the entire Cluster 
 
  1)  Navigate to the vagrant-provisioning folder, type in command "vagrant destroy"
 
@@ -46,11 +46,11 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
 
 
 
-# Future to do 
+## Future to do 
 
 1)  Install Private (In-house) helm chart repository and charts for the following:
 
-* Prometheus (kube-stack)
+* Prometheus (kube-stack chart)
 * Grafana
 * Postgres Database (In-cluster setup)
 * Metallb (For Local Load Balancer Tests)
