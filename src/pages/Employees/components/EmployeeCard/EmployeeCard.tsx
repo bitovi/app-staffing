@@ -1,17 +1,17 @@
 import { Text } from "@chakra-ui/layout";
 import {
   SimpleGrid,
-  HStack,
   Box,
   Grid,
   GridItem,
   Skeleton,
   IconButton,
+  Wrap,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
-// import { format } from "date-fns";
+import { format } from "date-fns";
 
-// import { Tag } from "../../../../components/Tag";
+import { Tag } from "../../../../components/Tag";
 import type { Employee } from "../../../../services/api";
 
 interface EmployeeCardProps {
@@ -47,7 +47,7 @@ export default function EmployeeCard({
         lineHeight="20px"
         letterSpacing="0.25px"
       >
-        {/* {format(employee.startDate, "MM/dd/yyyy")} */}
+        {format(employee.startDate, "MM/dd/yyyy")}
       </Text>
       <Text
         color="gray.600"
@@ -55,10 +55,12 @@ export default function EmployeeCard({
         lineHeight="20px"
         letterSpacing="0.25px"
       >
-        {/* {employee.endDate && format(employee.endDate, "MM/dd/yyyy")} */}
+        {employee.endDate && format(employee.endDate, "MM/dd/yyyy")}
       </Text>
-      <HStack spacing="8px">
-        {/* {employee.skills.map((skill) => (
+      <Wrap
+      spacing="8px"
+      >
+        {employee.skills.map((skill) => (
           <Tag variant="primary" key={skill.name}>
             <Text
               fontFamily="Inter"
@@ -70,8 +72,8 @@ export default function EmployeeCard({
               {skill.name}
             </Text>
           </Tag>
-        ))} */}
-      </HStack>
+        ))}
+      </Wrap>
       <Box justifySelf="end">
         <IconButton
           variant="ghost"
