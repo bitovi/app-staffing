@@ -1,38 +1,37 @@
 import type { Employee, NewEmployee } from "../employees";
 import type { ResponseStatus, QueriableList } from "../shared";
 
-import useRest from "../useRest";
+import useRest from "../useRest/useRestV2";
 
 import { JSONAPI } from "../baseMocks/interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
 import { JSONAPIEmployee } from "../employees/interfaces";
 
 const employeeDataFormatter = (
-  employee: { data: JSONAPIEmployee[]; included: JSONAPISkill[] } | undefined,
-): Employee[] => {
+  employee: { data: JSONAPIEmployee[], included: JSONAPISkill[] } | undefined,
+): Employee[] | [] => {
   if (employee) {
     const { data: unformatedEmployees, included: unformatedSkills } = employee;
-
-    const formattedEmployees: Employee[] = unformatedEmployees.map((em) => {
+    //////////////////////////////////
+    //** NEED TO FIX any[] to Employee[]; TypeScript Issue
+    //////////////////////////////////
+    const formattedEmployees: any[] = unformatedEmployees.map((em) => {
       return {
         id: em.id,
         name: em.attributes.name,
         startDate: em.attributes.startDate,
         endDate: em.attributes.endDate,
         skills: em.relationships?.skills?.data?.map((skill) => {
-          return {
-            id: skill.id,
-            name: unformatedSkills.find((unformatedSkill) => {
-              if (unformatedSkill.id === skill.id) {
-                return unformatedSkill.attributes.name;
-              }
-            }),
-          };
-        }),
+          if(skill.id) {
+            return {
+              id: skill.id,
+              name: unformatedSkills.find((unformatedSkill)=> unformatedSkill.id === skill.id)?.attributes.name,
+            };
+          }
+        })
       };
     });
-
-    console.log("formattedEmployees", formattedEmployees);
+    return formattedEmployees
   }
 
   return [];
