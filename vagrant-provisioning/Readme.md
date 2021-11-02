@@ -50,6 +50,7 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
 
 * Prometheus (kube-stack)
 * Grafana
+* Postgres Database
 * Metallb (For Local Load Balancer Tests)
 * Nginx or Traefik (Ingress rules & routing)
 * Pebble (Fake/Dummy TLS Testing)
