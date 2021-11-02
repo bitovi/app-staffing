@@ -1,4 +1,3 @@
-  ![1 Master | 2 Worker Nodes Kubernetes Cluster (Picture Source: Kubernetes.io)](https://s.yimg.jp/images/tecblog/2016-1H/os_n_k8s/kubernetes.png)
 
   ![Screen Shot 2021-11-02 at 3 44 25 PM](https://user-images.githubusercontent.com/25004712/139949020-f22cc63e-6e9e-4d5c-9c7a-bb821360e655.png)
 
