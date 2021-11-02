@@ -44,5 +44,13 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
 
 
 
+# Future to do 
 
+1)  Install Private (In-house) helm chart repository and charts for the following:
+
+* Prometheus (kube-stack)
+* Grafana
+* Metallb (For Local Load Balancer Tests)
+* Nginx or Traefik (Ingress rules & routing)
+* Pebble (Fake/Dummy TLS Testing)
 
