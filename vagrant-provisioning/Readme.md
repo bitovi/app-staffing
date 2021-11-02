@@ -1,4 +1,4 @@
-  https://s.yimg.jp/images/tecblog/2016-1H/os_n_k8s/kubernetes.png
+  ![alt text](https://s.yimg.jp/images/tecblog/2016-1H/os_n_k8s/kubernetes.png)
 
 # STAF-43 | Local Kubernetes Provisioning.
 
