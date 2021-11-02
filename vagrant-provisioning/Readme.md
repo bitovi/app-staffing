@@ -6,9 +6,12 @@
 ## Pre-requisite Software to install
 
 * VirtualBox 
-  * For Mac: https://download.virtualbox.org/virtualbox/6.1.28/VirtualBox-6.1.28-147628-OSX.dmg
-  * For Ubuntu | 18.04 | 18.10 | 19.04 : https://download.virtualbox.org/virtualbox/6.1.28/virtualbox-6.1_6.1.28-147628~Ubuntu~bionic_amd64.deb
-  * For Windows: https://download.virtualbox.org/virtualbox/6.1.28/VirtualBox-6.1.28-147628-Win.exe
+  * For Mac: 
+  https://download.virtualbox.org/virtualbox/6.1.28/VirtualBox-6.1.28-147628-OSX.dmg
+  * For Ubuntu | 18.04 | 18.10 | 19.04 : 
+  https://download.virtualbox.org/virtualbox/6.1.28/virtualbox-6.1_6.1.28-147628~Ubuntu~bionic_amd64.deb
+  * For Windows: 
+  https://download.virtualbox.org/virtualbox/6.1.28/VirtualBox-6.1.28-147628-Win.exe
 
 ## Mac User Installation Guide
 * For Mac Users, Kindly find a detailed set of installation instructions here:
@@ -16,8 +19,10 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
 
 * Vagrant
   * For Mac: brew install vagrant
-  * For Ubuntu | 18.04 | 18.10 | 19.04 : https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.deb
-  * For Windows: https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.msi
+  * For Ubuntu | 18.04 | 18.10 | 19.04: 
+  https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.deb
+  * For Windows: 
+  https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.msi
 
 
 ## Provisioning the Kubernetes Cluster
