@@ -20,17 +20,19 @@ https://confluence.uconn.edu/busnit/windows-learning-environment/installing-orac
 
 # Provisioning the Kubernetes Cluster
 
-1)  Change Directory to the vagrant-provisioning folder.
+1)  Git clone this repository on to your local Laptop.
 
-2)  Within this folder, type in the command vagrant up | This command would provision a 1 Master 2 Worker Nodes Kubernetes Cluster.
+2)  Change Directory to the vagrant-provisioning folder.
 
-3)  Once the Provisioning is complete, the next step is to obtain the kubeconfig file (This is the wrapper that interpretes API calls send to the API Server).
+3)  Within this folder, type in the command vagrant up | This command would provision a 1 Master 2 Worker Nodes Kubernetes Cluster.
 
-4)  Simply type in this command scp root@172.16.16.100:/etc/kubernetes/admin.conf -target=config.
+4)  Once the Provisioning is complete, the next step is to obtain the kubeconfig file (This is the wrapper that interpretes API calls send to the API Server).
 
-5)  Type in this password: a3ViZWFkbWlu (decode to view).
+5)  Simply type in this command scp root@172.16.16.100:/etc/kubernetes/admin.conf -target=config.
 
-6)  kubectl get nodes --kubeconfig=target=config  | With this command you should be able to view the 1Master 2Worker Cluster setup.
+6)  Type in this password: a3ViZWFkbWlu (decode to view).
+
+7)  kubectl get nodes --kubeconfig=target=config  | With this command you should be able to view the 1Master 2Worker Cluster setup.
 
 
 
