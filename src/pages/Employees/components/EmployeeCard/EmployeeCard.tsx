@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 
 // import { Tag } from "../../../../components/Tag";
 import type { Employee } from "../../../../services/api";
@@ -47,7 +47,7 @@ export default function EmployeeCard({
         lineHeight="20px"
         letterSpacing="0.25px"
       >
-        {format(employee.startDate, "MM/dd/yyyy")}
+        {/* {format(employee.startDate, "MM/dd/yyyy")} */}
       </Text>
       <Text
         color="gray.600"
@@ -55,7 +55,7 @@ export default function EmployeeCard({
         lineHeight="20px"
         letterSpacing="0.25px"
       >
-        {employee.endDate && format(employee.endDate, "MM/dd/yyyy")}
+        {/* {employee.endDate && format(employee.endDate, "MM/dd/yyyy")} */}
       </Text>
       <HStack spacing="8px">
         {/* {employee.skills.map((skill) => (

@@ -1,6 +1,6 @@
-import { Suspense, useCallback, useState } from "react";
+import { Suspense, useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import type { Employee } from "../../services/api";
+// import type { Employee } from "../../services/api";
 import {
   useEmployees as useEmployeesDefault,
   useSkills as useSkillsDefault,
@@ -68,19 +68,19 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { employees, updateEmployee } = useEmployees();
-  console.log('EMMPLOYEES', employees)
+  const { employees } = useEmployees();
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
+  console.log("employees", employees);
   console.log(skills);
 
-  const handleEditSave = useCallback(
-    async (id: string, employee: Employee) => {
-      employee.name && (await updateEmployee(id, employee)); // @TODO: add a loading spinner to save button
-    },
-    [updateEmployee],
-  );
+  // const handleEditSave = useCallback(
+  //   async (id: string, employee: Employee) => {
+  //     employee.name && (await updateEmployee(id, employee)); // @TODO: add a loading spinner to save button
+  //   },
+  //   [updateEmployee],
+  // );
 
   // const handleAddEmployee = async () => {
   //   await addEmployee({
@@ -121,7 +121,7 @@ export function Employees({
       </Flex>
 
       <Suspense fallback={<EmployeeCardSkeleton />}>
-        <EmployeeTable employees={employees} onEdit={handleEditSave} />
+        <EmployeeTable employees={employees} onEdit={() => undefined} />
       </Suspense>
     </Box>
   );

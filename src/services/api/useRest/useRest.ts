@@ -5,7 +5,7 @@ import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 
-interface RestActions<T> extends APIResponse<T[]> {
+interface RestActions<T> extends APIResponse<T> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
   handleUpdate: (
     collectionItemId: string,
@@ -15,13 +15,14 @@ interface RestActions<T> extends APIResponse<T[]> {
   reset: () => void;
 }
 
-function useRest<T extends { id: string }>(
+// function useRest<T extends { id: string }>(
+function useRest<T>(
   path: string,
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
   const key = `${path}?${param(queryParams)}`;
   const { mutate } = useSWRConfig();
-  const { data: response, error } = useSWR<{ data: T[] }, Error>(
+  const { data: response, error } = useSWR<{ data: T }, Error>(
     key,
     (url) => fetcher("GET", url),
     { suspense: true, use: [deserializeDateMiddleware] },

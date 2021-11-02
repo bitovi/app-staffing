@@ -24,19 +24,19 @@ export interface AssignedEmployee {
 }
 
 export interface JSONAPIEmployee {
-  type: string,
-  id: string,
+  type: string;
+  id: string;
   attributes: {
-    name: string,
-    startDate?: Date,
-    endDate?: Date
-  },
+    name: string;
+    startDate: Date;
+    endDate?: Date;
+  };
   relationships?: {
     skills?: {
       data?: {
-        type: string,
-        id: string,
-      }[]
-    }
-  }
+        type: string;
+        id: string;
+      }[];
+    };
+  };
 }
