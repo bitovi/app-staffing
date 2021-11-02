@@ -38,27 +38,31 @@ export default function EmployeeTable({
         </Flex>
       )}
 
-      <SimpleGrid mt="48px" columns={5}>
-        <Text color="gray.800" textStyle="table.title">
-          EMPLOYEE NAME
-        </Text>
-        <Text color="gray.800" textStyle="table.title">
-          START DATE
-        </Text>
-        <Text color="gray.800" textStyle="table.title">
-          END DATE
-        </Text>
-        <Text color="gray.800" textStyle="table.title">
-          ROLES
-        </Text>
-        <Text color="gray.800" textStyle="table.title" justifySelf="end">
-          ACTIONS
-        </Text>
-      </SimpleGrid>
+      {employees && employees.length > 0 && (
+        <>
+          <SimpleGrid mt="48px" columns={5}>
+            <Text color="gray.800" textStyle="table.title">
+              EMPLOYEE NAME
+            </Text>
+            <Text color="gray.800" textStyle="table.title">
+              START DATE
+            </Text>
+            <Text color="gray.800" textStyle="table.title">
+              END DATE
+            </Text>
+            <Text color="gray.800" textStyle="table.title">
+              ROLES
+            </Text>
+            <Text color="gray.800" textStyle="table.title" justifySelf="end">
+              ACTIONS
+            </Text>
+          </SimpleGrid>
 
-      {employees?.map((employee) => (
-        <EmployeeCard key={employee.id} employee={employee} />
-      ))}
+          {employees?.map((employee) => (
+            <EmployeeCard key={employee.id} employee={employee} />
+          ))}
+        </>
+      )}
     </>
   );
 }
