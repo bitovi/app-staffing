@@ -31,9 +31,9 @@ export interface JSONAPIEmployee {
     startDate: Date;
     endDate?: Date;
   };
-  relationships?: {
-    skills?: {
-      data?: {
+  relationships: {
+    skills: {
+      data: {
         type: string;
         id: string;
       }[];

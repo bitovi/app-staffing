@@ -73,7 +73,7 @@ export function Employees({
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   console.log("employees", employees);
-  console.log(skills);
+  console.log("skills", skills);
 
   // const handleEditSave = useCallback(
   //   async (id: string, employee: Employee) => {
