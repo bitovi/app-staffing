@@ -2,7 +2,6 @@ import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import { projects } from "../../../services/api/projects/fixtures";
 import Projects from "./Projects";
-import { LoadingProjectList } from "./components/LoadingProjectList";
 
 export default {
   title: "Pages/Projects",
@@ -29,9 +28,19 @@ export const LoadingProjects: ComponentStory<typeof Projects> = () => (
   />
 );
 
-export const LoadingProjectListComponent: ComponentStory<
-  typeof LoadingProjectList
-> = () => <LoadingProjectList />;
+export const Error: ComponentStory<typeof Projects> = () => (
+  <Projects
+    useProjects={() => ({
+      projects: [],
+      isLoading: false,
+      error: { name: "error", message: "msg" },
+      addProject: () => Promise.resolve(""),
+      updateProject: () => Promise.resolve(),
+      deleteProject: () => Promise.resolve(),
+      reset: () => undefined,
+    })}
+  />
+);
 
 export const nonEmpty: ComponentStory<typeof Projects> = ({ ...props }) => (
   <Projects
