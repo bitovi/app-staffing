@@ -14,7 +14,7 @@ export default function Layout({
         backgroundColor="gray.10"
         flex="1 1"
         padding="40px"
-        overflow-y="auto"
+        overflow="auto"
       >
         {children}
       </Box>

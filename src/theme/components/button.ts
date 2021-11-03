@@ -23,11 +23,16 @@ const button: StyleConfig = {
       _hover: { backgroundColor: "red.600" },
       color: "white",
     },
-    action: {
+    deleteAction: {
       backgroundColor: "gray.100",
       _hover: { backgroundColor: "red.50" , color: "red.500" },
       color: "#2D3748", 
     },
+    editAction: {
+      backgroundColor: "gray.100",
+      _hover: { backgroundColor: "teal.50", color: "teal.500" },
+      color: "#2D3748", 
+    }
   },
   sizes: {
     md: {

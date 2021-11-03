@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/layout";
 import {
-  Box,
+  Flex,
   Grid,
   GridItem,
   Skeleton,
@@ -78,22 +78,22 @@ export default function EmployeeCard({
           ))}
         </Wrap>
       </Td>
-      <Td isNumeric>
-        <Box justifySelf="end">
+      <Td >
+        <Flex justifySelf="end">
           <IconButton
-            variant="action"
+            variant="editAction"
             aria-label="Edit Member"
             fontSize="20px"
             icon={<EditIcon fill="currentColor" />}
           />
           <IconButton
             ml="8px"
-            variant="action"
+            variant="deleteAction"
             aria-label="Delete Member"
             fontSize="20px"
             icon={<TrashIcon fill="currentColor" />}
           />
-        </Box>
+        </Flex>
       </Td>
     </Tr>
   );

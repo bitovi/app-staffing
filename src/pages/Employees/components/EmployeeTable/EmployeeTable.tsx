@@ -25,7 +25,7 @@ export default function EmployeeTable({
   ...props
 }: IEmployeeTable): JSX.Element {
   return (
-    <Box {...props}>
+    <Box {...props} >
       {employees && employees.length === 0 && (
         <Flex
           width="100%"
@@ -52,8 +52,9 @@ export default function EmployeeTable({
 
       {employees && employees.length > 0 && (
         <>
+        <Box maxHeight="80vh" overflowY="auto" >
           <Table>
-            <Thead>
+            <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10" >
               <Tr>
                 <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
                   EMPLOYEE NAME
@@ -70,7 +71,6 @@ export default function EmployeeTable({
                 <Th
                   pt="0px"
                   pb={4}
-                  isNumeric
                   color="gray.800"
                   textStyle="table.title"
                 >
@@ -87,6 +87,7 @@ export default function EmployeeTable({
               ))}
             </Tbody>
           </Table>
+          </Box>
         </>
       )}
     </Box>

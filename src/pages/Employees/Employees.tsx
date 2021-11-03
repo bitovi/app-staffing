@@ -95,7 +95,7 @@ export function Employees({
   // };
 
   return (
-    <Box>
+    <Box maxHeight="100%" /*overflow="scroll"*/>
       <EmployeeModal
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
