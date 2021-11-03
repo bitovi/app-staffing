@@ -9,12 +9,11 @@ import {
   Td,
   Tr,
 } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/image";
 import { format } from "date-fns";
 
 import { Tag } from "../../../../components/Tag";
 import type { Employee } from "../../../../services/api";
-
+import {TrashIcon, EditIcon } from './assets'
 interface EmployeeCardProps {
   employee: Employee;
 }
@@ -82,17 +81,17 @@ export default function EmployeeCard({
       <Td isNumeric>
         <Box justifySelf="end">
           <IconButton
-            variant="ghost"
+            variant="action"
             aria-label="Edit Member"
             fontSize="20px"
-            icon={<Image src="assets/icons/editIcon.svg" />}
+            icon={<EditIcon fill="currentColor" />}
           />
           <IconButton
             ml="8px"
-            variant="ghost"
+            variant="action"
             aria-label="Delete Member"
             fontSize="20px"
-            icon={<Image src="assets/icons/trashIcon.svg" />}
+            icon={<TrashIcon fill="currentColor" />}
           />
         </Box>
       </Td>

@@ -13,6 +13,7 @@ import { Image } from "@chakra-ui/image";
 import type { Employee } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 
+
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   onEdit: (id: string, employee: Employee) => void;

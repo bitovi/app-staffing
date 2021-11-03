@@ -23,6 +23,11 @@ const button: StyleConfig = {
       _hover: { backgroundColor: "red.600" },
       color: "white",
     },
+    action: {
+      backgroundColor: "gray.100",
+      _hover: { backgroundColor: "red.50" , color: "red.500" },
+      color: "#2D3748", 
+    },
   },
   sizes: {
     md: {
