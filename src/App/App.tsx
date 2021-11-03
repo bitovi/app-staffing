@@ -26,7 +26,6 @@ export default function App(): JSX.Element {
             <Employees />
           </Route>
           <Route path="/projects">
-            {/* <Projects /> */}
             <ProjectRoutes />
           </Route>
           <Route>

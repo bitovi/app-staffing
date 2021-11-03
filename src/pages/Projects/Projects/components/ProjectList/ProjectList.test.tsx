@@ -11,8 +11,6 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const projectContainer = screen.getByText(/Add Project/i);
-    expect(projectContainer.tagName).toBe("BUTTON");
     const viewCount = screen.getAllByText("View");
     expect(viewCount.length).toEqual(projects.length);
   });

@@ -42,9 +42,8 @@ export const Error: ComponentStory<typeof Projects> = () => (
   />
 );
 
-export const nonEmpty: ComponentStory<typeof Projects> = ({ ...props }) => (
+export const nonEmpty: ComponentStory<typeof Projects> = () => (
   <Projects
-    {...props}
     useProjects={() => ({
       projects,
       isLoading: false,
@@ -57,7 +56,7 @@ export const nonEmpty: ComponentStory<typeof Projects> = ({ ...props }) => (
   />
 );
 
-export const Empty: ComponentStory<typeof Projects> = ({ ...props }) => (
+export const Empty: ComponentStory<typeof Projects> = () => (
   <Projects
     useProjects={() => ({
       projects: [],
