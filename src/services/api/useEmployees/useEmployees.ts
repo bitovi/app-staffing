@@ -12,22 +12,16 @@ const employeeDataFormatter = (
 ): Employee[] | [] => {
   if (employee) {
     const { data: unformatedEmployees, included: unformatedSkills } = employee;
-    //////////////////////////////////
-    //** NEED TO FIX any[] to Employee[]; TypeScript Issue
-    //////////////////////////////////
-    const formattedEmployees: any[] = unformatedEmployees.map((em) => {
+
+    const formattedEmployees: Employee[] = unformatedEmployees.map((em) => {
+      const { id, relationships: { skills: { data } }, attributes: { name, startDate, endDate, }} = em
       return {
-        id: em.id,
-        name: em.attributes.name,
-        startDate: em.attributes.startDate,
-        endDate: em.attributes.endDate,
-        skills: em.relationships?.skills?.data?.map((skill) => {
-          if(skill.id) {
+        id, name, startDate, endDate,
+        skills: data.map((skill) => {
             return {
               id: skill.id,
               name: unformatedSkills.find((unformatedSkill)=> unformatedSkill.id === skill.id)?.attributes.name,
             };
-          }
         })
       };
     });
