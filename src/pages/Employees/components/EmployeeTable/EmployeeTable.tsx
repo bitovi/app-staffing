@@ -1,9 +1,19 @@
-import { Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  BoxProps,
+  Flex,
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import type { Employee } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 
-interface IEmployeeTable {
+interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   onEdit: (id: string, employee: Employee) => void;
 }
@@ -11,9 +21,10 @@ interface IEmployeeTable {
 export default function EmployeeTable({
   employees,
   onEdit,
+  ...props
 }: IEmployeeTable): JSX.Element {
   return (
-    <>
+    <Box {...props}>
       {employees && employees.length === 0 && (
         <Flex
           width="100%"
@@ -40,29 +51,43 @@ export default function EmployeeTable({
 
       {employees && employees.length > 0 && (
         <>
-          <SimpleGrid mt="48px" columns={5}>
-            <Text color="gray.800" textStyle="table.title">
-              EMPLOYEE NAME
-            </Text>
-            <Text color="gray.800" textStyle="table.title">
-              START DATE
-            </Text>
-            <Text color="gray.800" textStyle="table.title">
-              END DATE
-            </Text>
-            <Text color="gray.800" textStyle="table.title">
-              ROLES
-            </Text>
-            <Text color="gray.800" textStyle="table.title" justifySelf="end">
-              ACTIONS
-            </Text>
-          </SimpleGrid>
-
-          {employees?.map((employee) => (
-            <EmployeeCard key={employee.id} employee={employee} />
-          ))}
+          <Table>
+            <Thead>
+              <Tr>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  EMPLOYEE NAME
+                </Th>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  START DATE
+                </Th>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  END DATE
+                </Th>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  ROLES
+                </Th>
+                <Th
+                  pt="0px"
+                  pb={4}
+                  isNumeric
+                  color="gray.800"
+                  textStyle="table.title"
+                >
+                  ACTIONS
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {employees?.map((employee) => (
+                <>
+                  <EmployeeCard key={employee.id} employee={employee} />
+                  <Box height={4} />
+                </>
+              ))}
+            </Tbody>
+          </Table>
         </>
       )}
-    </>
+    </Box>
   );
 }

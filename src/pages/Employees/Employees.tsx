@@ -109,19 +109,26 @@ export function Employees({
         fontFamily="Arial, Helvetica, sans-serif"
         display="flex"
         justifyContent="space-between"
-        padding="20px 0"
       >
         <Text textStyle="title" color="gray.700">
           Team Members
         </Text>
 
-        <Button variant="primary" onClick={() => setEmployeeModal(true)}>
+        <Button
+          size="lg"
+          variant="primary"
+          onClick={() => setEmployeeModal(true)}
+        >
           Add Team Member
         </Button>
       </Flex>
 
       <Suspense fallback={<EmployeeCardSkeleton />}>
-        <EmployeeTable employees={employees} onEdit={() => undefined} />
+        <EmployeeTable
+          mt="48px"
+          employees={employees}
+          onEdit={() => undefined}
+        />
       </Suspense>
     </Box>
   );

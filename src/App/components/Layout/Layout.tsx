@@ -13,7 +13,7 @@ export default function Layout({
       <Box
         backgroundColor="gray.10"
         flex="1 1"
-        padding="16px 32px"
+        padding="40px"
         overflow-y="auto"
       >
         {children}

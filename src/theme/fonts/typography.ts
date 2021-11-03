@@ -1,7 +1,7 @@
 export const textStyles = {
   title: {
     fontFamily: "Inter",
-    fontWeight: "bold",
+    fontWeight: "700",
     fontSize: "30px",
     lineHeight: "36px",
   },
