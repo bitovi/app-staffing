@@ -19,36 +19,27 @@ interface IEmployees {
 export function EmployeePageLoadingLayout(): JSX.Element {
   return (
     <Box>
-      <Box
+      <Flex
         width="full"
         fontFamily="Arial, Helvetica, sans-serif"
         display="flex"
         justifyContent="space-between"
-        padding="20px 0"
       >
-        <Box fontSize="27px" color="#222">
-          Team
-        </Box>
-        <Box display="flex" align-items="center" />
-      </Box>
+        <Text textStyle="title" color="gray.700">
+          Team Members
+        </Text>
 
-      <Box
-        padding="30px 0px 10px 0px"
-        display="table"
-        minHeight="30px"
-        width="calc(100% - 60px)"
-      >
         <Button
-          variant="link"
-          disabled={true}
-          onClick={() => {
-            null;
-          }}
+          size="lg"
+          variant="primary"
+          onClick={() => { null }}
         >
-          Add Team Member +
+          Add Team Member
         </Button>
+      </Flex>
+      <Box mt="48px">
+        <EmployeeCardSkeleton />
       </Box>
-      <EmployeeCardSkeleton />
     </Box>
   );
 }

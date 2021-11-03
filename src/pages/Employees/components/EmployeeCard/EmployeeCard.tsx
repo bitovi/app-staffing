@@ -1,13 +1,16 @@
 import { Text } from "@chakra-ui/layout";
 import {
   Flex,
-  Grid,
-  GridItem,
   Skeleton,
   IconButton,
   Wrap,
   Td,
   Tr,
+  Box,
+  Table,
+  Tbody,
+  Th,
+  Thead,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
@@ -99,29 +102,45 @@ export default function EmployeeCard({
   );
 }
 
+const SkeletonRow = () => (
+    <>
+      <Tr
+        p="16px"
+        alignItems="center"
+        backgroundColor="#DCDCDC"
+        height="55px">
+        <Td><Skeleton startColor="#C4C4C4" endColor="#C4C4C4" height="16px" width="99px" /></Td>
+        <Td><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="75px"/></Td>
+        <Td></Td>
+        <Td><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="99px" /></Td>
+        <Td ><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="99px" /></Td>
+      </Tr>
+      <Box height={4} />
+    </>
+  )
+
 export function EmployeeCardSkeleton(): JSX.Element {
   return (
-    <Grid
-      alignItems="center"
-      templateColumns={{
-        base: "1fr",
-        md: "repeat(2, 1fr)",
-        lg: "repeat(4, 1fr)",
-      }}
-      gap={4}
-    >
-      <GridItem>
-        <Skeleton height="130px"></Skeleton>
-      </GridItem>
-      <GridItem>
-        <Skeleton height="130px"></Skeleton>
-      </GridItem>
-      <GridItem>
-        <Skeleton height="130px"></Skeleton>
-      </GridItem>
-      <GridItem>
-        <Skeleton height="130px"></Skeleton>
-      </GridItem>
-    </Grid>
+    <Table>
+      <Thead >
+        <Tr>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">EMPLOYEE NAME</Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">START DATE</Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">END DATE</Th>
+          <Th pt="0px" pr={80} pb={4} color="gray.800" textStyle="table.title">ROLES</Th>
+          <Th
+            pt="0px"
+            pb={4}
+            color="gray.800"
+            textStyle="table.title"
+           >
+            ACTIONS
+          </Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        { [1,2,3,4].map(row => { return <SkeletonRow key={row} /> })  }
+      </Tbody>
+    </Table>
   );
 }
