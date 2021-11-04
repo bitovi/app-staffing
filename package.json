@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf build",
     "dev": "react-scripts start",
+    
     "test": "react-scripts test",
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",

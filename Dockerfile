@@ -5,10 +5,9 @@ FROM node:14
 WORKDIR /usr/src/app
 
 # get files
+COPY ./package.json .
+RUN npm build
 COPY . .
-
-# install dependencies
-RUN npm install
 
 # expose your ports
 EXPOSE 3000
