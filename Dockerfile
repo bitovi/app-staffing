@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # install dependencies
-RUN npm build
+RUN npm install
 
 # expose your ports
 EXPOSE 3000
