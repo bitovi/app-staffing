@@ -6,7 +6,6 @@ import {
   Wrap,
   Td,
   Tr,
-  //Box,
   Table,
   Tbody,
   Th,
@@ -16,7 +15,7 @@ import { format } from "date-fns";
 
 import { Tag } from "../../../../components/Tag";
 import type { Employee } from "../../../../services/api";
-import {TrashIcon, EditIcon } from './assets'
+import { TrashIcon, EditIcon } from "./assets";
 interface EmployeeCardProps {
   employee: Employee;
 }
@@ -103,43 +102,72 @@ export default function EmployeeCard({
 }
 
 const SkeletonRow = () => (
-    <>
-      <Tr
-        p="16px"
-        alignItems="center"
-        backgroundColor="#DCDCDC"
-        height="55px">
-        <Td><Skeleton startColor="#C4C4C4" endColor="#C4C4C4" height="16px" width="99px" /></Td>
-        <Td><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="75px"/></Td>
-        <Td></Td>
-        <Td><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="99px" /></Td>
-        <Td ><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="99px" /></Td>
-      </Tr>
-      <Tr height={4}></Tr>
-    </>
-  )
+  <>
+    <Tr p="16px" alignItems="center" backgroundColor="#DCDCDC" height="55px">
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="99px"
+        />
+      </Td>
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="75px"
+        />
+      </Td>
+      <Td></Td>
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="99px"
+        />
+      </Td>
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="99px"
+        />
+      </Td>
+    </Tr>
+    <Tr height={4}></Tr>
+  </>
+);
 
 export function EmployeeCardSkeleton(): JSX.Element {
   return (
     <Table>
-      <Thead >
+      <Thead>
         <Tr>
-          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">EMPLOYEE NAME</Th>
-          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">START DATE</Th>
-          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">END DATE</Th>
-          <Th pt="0px" pr={80} pb={4} color="gray.800" textStyle="table.title">ROLES</Th>
-          <Th
-            pt="0px"
-            pb={4}
-            color="gray.800"
-            textStyle="table.title"
-           >
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+            EMPLOYEE NAME
+          </Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+            START DATE
+          </Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+            END DATE
+          </Th>
+          <Th pt="0px" pr={80} pb={4} color="gray.800" textStyle="table.title">
+            ROLES
+          </Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
             ACTIONS
           </Th>
         </Tr>
       </Thead>
       <Tbody>
-        { [1,2,3,4].map(row => { return <SkeletonRow key={row} /> })  }
+        {[1, 2, 3, 4].map((row) => {
+          return <SkeletonRow key={row} />;
+        })}
       </Tbody>
     </Table>
   );

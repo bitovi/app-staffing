@@ -1,6 +1,5 @@
 import { Suspense, useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
-// import type { Employee } from "../../services/api";
 import {
   useEmployees as useEmployeesDefault,
   useSkills as useSkillsDefault,
@@ -32,7 +31,9 @@ export function EmployeePageLoadingLayout(): JSX.Element {
         <Button
           size="lg"
           variant="primary"
-          onClick={() => { null }}
+          onClick={() => {
+            null;
+          }}
         >
           Add Team Member
         </Button>
@@ -60,39 +61,14 @@ export function Employees({
   useSkills,
 }: IEmployees): JSX.Element {
   const { employees } = useEmployees();
-  const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
-  console.log("employees", employees);
-  console.log("skills", skills);
-
-  // const handleEditSave = useCallback(
-  //   async (id: string, employee: Employee) => {
-  //     employee.name && (await updateEmployee(id, employee)); // @TODO: add a loading spinner to save button
-  //   },
-  //   [updateEmployee],
-  // );
-
-  // const handleAddEmployee = async () => {
-  //   await addEmployee({
-  //     name: "",
-  //     startDate: new Date(),
-  //     skills: [],
-  //   }); // @TODO: add a loading spinner to save button
-  // };
-
-  // const handleAddEmployee = (form: any) => {
-  //   console.log(form);
-  // };
-
   return (
-    <Box maxHeight="100%" /*overflow="scroll"*/>
+    <Box maxHeight="100%">
       <EmployeeModal
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
-        onSave={(employeeData) => {
-          console.log(employeeData);
-        }}
+        onSave={(employeeData) => undefined}
       />
 
       <Flex
@@ -114,11 +90,7 @@ export function Employees({
         </Button>
       </Flex>
 
-        <EmployeeTable
-          mt="48px"
-          employees={employees}
-          onEdit={() => undefined}
-        />
+      <EmployeeTable mt="48px" employees={employees} onEdit={() => undefined} />
     </Box>
   );
 }
