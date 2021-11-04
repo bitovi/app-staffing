@@ -6,7 +6,7 @@ export default {
   component: Employees,
 } as ComponentMeta<typeof Employees>;
 
-const employeeMockData = () => {
+export const employeeMockData = () => {
   const employees = [
     {
       id: "1",

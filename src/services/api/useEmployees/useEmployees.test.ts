@@ -23,6 +23,6 @@ describe("useEmployees", () => {
     await waitForNextUpdate();
 
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.employees).toEqual(employees);
+    expect(result.current.employees).toEqual(employees); //useEmployees currently returns joined data between Employees and Skills
   });
 });

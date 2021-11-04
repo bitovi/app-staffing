@@ -8,24 +8,35 @@ import { JSONAPISkill } from "../skills/interfaces";
 import { JSONAPIEmployee } from "../employees/interfaces";
 
 const employeeDataFormatter = (
-  employee: { data: JSONAPIEmployee[], included: JSONAPISkill[] } | undefined,
+  employee: { data: JSONAPIEmployee[]; included: JSONAPISkill[] } | undefined,
 ): Employee[] | [] => {
   if (employee) {
     const { data: unformatedEmployees, included: unformatedSkills } = employee;
 
     const formattedEmployees: Employee[] = unformatedEmployees.map((em) => {
-      const { id, relationships: { skills: { data } }, attributes: { name, startDate, endDate, }} = em
+      const {
+        id,
+        relationships: {
+          skills: { data },
+        },
+        attributes: { name, startDate, endDate },
+      } = em;
       return {
-        id, name, startDate, endDate,
+        id,
+        name,
+        startDate,
+        endDate,
         skills: data.map((skill) => {
-            return {
-              id: skill.id,
-              name: unformatedSkills.find((unformatedSkill)=> unformatedSkill.id === skill.id)?.attributes.name,
-            };
-        })
+          return {
+            id: skill.id,
+            name: unformatedSkills.find(
+              (unformatedSkill) => unformatedSkill.id === skill.id,
+            )?.attributes.name,
+          };
+        }),
       };
     });
-    return formattedEmployees
+    return formattedEmployees;
   }
 
   return [];

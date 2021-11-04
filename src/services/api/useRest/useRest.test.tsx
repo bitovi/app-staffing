@@ -3,7 +3,7 @@ import type { Employee } from "..";
 import { act, renderHook } from "@testing-library/react-hooks";
 import { SWRConfig } from "swr";
 
-import useRest from "./useRest";
+import useRest from "./useRestV2";
 import { employeeStoreManager } from "../employees/mocks";
 import { employees } from "../employees/fixtures";
 import { Suspense } from "react";
