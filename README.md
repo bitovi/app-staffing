@@ -127,6 +127,25 @@ Run `npm run test` to run test scripts.
 
 In the project directory, you can run:
 
+### For Production Dockerfiles,
+# Generating the Docker Image
+
+`docker build -f ./Dockerfile -t Any-repo-name/Any-image-name .`
+
+# Building the Docker Container
+
+`docker run --rm -it -p 3000:3000 Any-repo-name/Any-image-name`
+
+### For Development Dockerfiles,
+# Generating the Docker Image
+
+`docker build -f ./Dockerfile.dev -t Any-dev-repo-name/Any-dev-image-name .`
+
+# Building the Docker Container
+
+`docker run --rm -it -p 3000:3000 Any-dev-repo-name/Any-dev-image-name`
+
+
 ### `docker-compose up`
 Runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.

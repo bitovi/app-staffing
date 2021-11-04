@@ -13,4 +13,4 @@ COPY . .
 EXPOSE 3000
 
 # start it up
-CMD [ "npm", "run", "prod" ]
+CMD [ "npm", "build", "prod" ]
