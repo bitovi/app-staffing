@@ -7,6 +7,78 @@ export default {
   component: Employees,
 } as ComponentMeta<typeof Employees>;
 
+const employeeMockData = () => {
+  const employees = [
+    {
+        "id": "1",
+        "name": "Vitor Forbrig",
+        "startDate": new Date(),
+        "endDate": new Date(),
+        "skills": [
+            {
+                "id": "105",
+                "name": "React"
+            },
+            {
+              "id": "102",
+              "name": "Angular"
+          },
+          {
+            "id": "101",
+            "name": "UX"
+          }
+        ]
+    },
+    {
+      "id": "1",
+      "name": "Travis Draper",
+      "startDate": new Date(),
+      "endDate": new Date(),
+      "skills": [
+          {
+              "id": "106",
+              "name": "React"
+          }
+      ]
+  },
+  {
+    "id": "1",
+    "name": "Rosemarie Mitchell",
+    "startDate": new Date(),
+    "endDate": new Date(),
+    "skills": [
+        {
+            "id": "107",
+            "name": "React"
+        },
+        {
+          "id": "101",
+          "name": "UX"
+      }
+    ]
+},
+]
+  return {
+    employees,
+    isLoading: false,
+    //addEmployee: (employee) => new Promise((resolve) => resolve("")),
+    //deleteEmployee: (employeeId) => new Promise((resolve) => resolve()),
+    //updateEmployee: (employeeId) => new Promise((resolve) => resolve()),
+    reset: () => undefined,
+  }
+}
+
+
+export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
+  <Employees
+    {...props}
+    useEmployees={employeeMockData}
+    useSkills={(): any => {
+      return { skills: null }
+    }}
+  />
+);
+
 export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
   <Employees
     {...props}
@@ -14,40 +86,17 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
       return {
         isLoading: false,
         employees: [],
-        addEmployee: (_employee) => new Promise((resolve):void => resolve('')),
-        deleteEmployee: (_employee) => new Promise((resolve):void => resolve()),
-        updateEmployee: (_employee) => new Promise((resolve):void => resolve()),
+        addEmployee: (employee) => new Promise((resolve) => resolve("")),
+        deleteEmployee: (employeeId) => new Promise((resolve) => resolve()),
+        updateEmployee: (employeeId) => new Promise((resolve) => resolve()),
         reset: () => undefined,
       };
     }}
-    useSkills={() => {
-      return {
-        isLoading: false,
-        employees: [],
-        addEmployee: (_employee: any) => new Promise((resolve):void => resolve('')),
-        //deleteEmployee: (): void => new Promise((resolve):void => resolve()),
-        //updateEmployee: (): void => new Promise((resolve):void => resolve()),
-        //reset: () => undefined,
-      };
+    useSkills={(): any => {
+      return { skills: null }
     }}
   />
 );
-
-// export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
-//   <Employees
-//     {...props}
-//     useEmployees={() => {
-//       return {
-//         isLoading: false,
-//         employees: employees,
-//         addEmployee: (employee) => new Promise((resolve) => resolve("")),
-//         deleteEmployee: (employeeId) => new Promise((resolve) => resolve()),
-//         updateEmployee: (employeeId) => new Promise((resolve) => resolve()),
-//         reset: () => undefined,
-//       };
-//     }}
-//   />
-// );
 
 export const Loading: ComponentStory<any> = ({ ...props }) => (
   <EmployeePageLoadingLayout {...props} />

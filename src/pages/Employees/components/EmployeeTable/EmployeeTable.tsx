@@ -81,12 +81,7 @@ export default function EmployeeTable({
               </Tr>
             </Thead>
             <Tbody>
-              {employees?.map((employee) => (
-                <>
-                  <EmployeeCard key={employee.id} employee={employee} />
-                  <Box height={4} />
-                </>
-              ))}
+              {employees?.map((employee) => <EmployeeTableRow key={employee.id} employee={employee} /> )}
             </Tbody>
           </Table>
           </Box>
@@ -94,4 +89,15 @@ export default function EmployeeTable({
       )}
     </Box>
   );
+}
+
+const EmployeeTableRow = ({ 
+  employee 
+}: { employee: Employee } ): JSX.Element => {
+  return (
+    <>
+      <EmployeeCard employee={employee} />
+      <Tr height={4}></Tr>
+    </>
+  )
 }

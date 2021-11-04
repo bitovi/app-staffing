@@ -6,7 +6,7 @@ import {
   Wrap,
   Td,
   Tr,
-  Box,
+  //Box,
   Table,
   Tbody,
   Th,
@@ -115,7 +115,7 @@ const SkeletonRow = () => (
         <Td><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="99px" /></Td>
         <Td ><Skeleton startColor="#C4C4C4" endColor="#C4C4C4"  height="16px" width="99px" /></Td>
       </Tr>
-      <Box height={4} />
+      <Tr height={4}></Tr>
     </>
   )
 
