@@ -71,8 +71,10 @@ export default function EmployeeTable({
                 <Th
                   pt="0px"
                   pb={4}
+                  pr={12}
                   color="gray.800"
                   textStyle="table.title"
+                  isNumeric
                 >
                   ACTIONS
                 </Th>

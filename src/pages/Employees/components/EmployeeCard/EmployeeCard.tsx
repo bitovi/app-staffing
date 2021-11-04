@@ -81,8 +81,8 @@ export default function EmployeeCard({
           ))}
         </Wrap>
       </Td>
-      <Td >
-        <Flex justifySelf="end">
+      <Td>
+        <Flex justifyContent="end" justifySelf="end">
           <IconButton
             variant="editAction"
             aria-label="Edit Member"

@@ -114,13 +114,11 @@ export function Employees({
         </Button>
       </Flex>
 
-      <Suspense fallback={<EmployeeCardSkeleton />}>
         <EmployeeTable
           mt="48px"
           employees={employees}
           onEdit={() => undefined}
         />
-      </Suspense>
     </Box>
   );
 }
