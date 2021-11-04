@@ -2,8 +2,8 @@ import { StyleConfig } from "@chakra-ui/theme-tools";
 
 const button: StyleConfig = {
   baseStyle: {
-    px: "24px",
-    py: "10px",
+    px: 6.25,
+    py: 2.5,
   },
   variants: {
     primary: {
@@ -25,14 +25,14 @@ const button: StyleConfig = {
     },
     deleteAction: {
       backgroundColor: "gray.100",
-      _hover: { backgroundColor: "red.50" , color: "red.500" },
-      color: "#2D3748", 
+      _hover: { backgroundColor: "red.50", color: "red.500" },
+      color: "#2D3748",
     },
     editAction: {
       backgroundColor: "gray.100",
       _hover: { backgroundColor: "teal.50", color: "teal.500" },
-      color: "#2D3748", 
-    }
+      color: "#2D3748",
+    },
   },
   sizes: {
     md: {
