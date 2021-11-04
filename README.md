@@ -143,6 +143,8 @@ In the project directory, you can run:
 
 `docker run --rm -it -p 3000:3000 Any-dev-repo-name/Any-dev-image-name`
 
+## Docker-Compose:
+
 ### Generating a Production based App via Docker-compose
 
  `docker-compose -f ./docker-compose.yml up`
