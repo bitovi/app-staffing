@@ -1,5 +1,4 @@
 import type { Project, Role } from "../../../../services/api";
-import { skillList } from "../../../../services/api";
 
 import { cloneDeep } from "lodash";
 import RoleDetails from "../RoleDetails";
@@ -58,7 +57,7 @@ export default function RoleList({
         Add Role
       </Button>
       <div className={styles.skillFilter}>
-        {skillList.map((s) => (
+        {[].map((s) => (
           <p key={s}>{s}</p>
         ))}
       </div>

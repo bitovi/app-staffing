@@ -19,36 +19,27 @@ interface IEmployees {
 export function EmployeePageLoadingLayout(): JSX.Element {
   return (
     <Box>
-      <Box
+      <Flex
         width="full"
         fontFamily="Arial, Helvetica, sans-serif"
         display="flex"
         justifyContent="space-between"
-        padding="20px 0"
       >
-        <Box fontSize="27px" color="#222">
-          Team
-        </Box>
-        <Box display="flex" align-items="center" />
-      </Box>
+        <Text textStyle="title" color="gray.700">
+          Team Members
+        </Text>
 
-      <Box
-        padding="30px 0px 10px 0px"
-        display="table"
-        minHeight="30px"
-        width="calc(100% - 60px)"
-      >
         <Button
-          variant="link"
-          disabled={true}
-          onClick={() => {
-            null;
-          }}
+          size="lg"
+          variant="primary"
+          onClick={() => { null }}
         >
-          Add Team Member +
+          Add Team Member
         </Button>
+      </Flex>
+      <Box mt="48px">
+        <EmployeeCardSkeleton />
       </Box>
-      <EmployeeCardSkeleton />
     </Box>
   );
 }
@@ -95,7 +86,7 @@ export function Employees({
   // };
 
   return (
-    <Box>
+    <Box maxHeight="100%" /*overflow="scroll"*/>
       <EmployeeModal
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
@@ -109,20 +100,25 @@ export function Employees({
         fontFamily="Arial, Helvetica, sans-serif"
         display="flex"
         justifyContent="space-between"
-        padding="20px 0"
       >
         <Text textStyle="title" color="gray.700">
           Team Members
         </Text>
 
-        <Button variant="primary" onClick={() => setEmployeeModal(true)}>
+        <Button
+          size="lg"
+          variant="primary"
+          onClick={() => setEmployeeModal(true)}
+        >
           Add Team Member
         </Button>
       </Flex>
 
-      <Suspense fallback={<EmployeeCardSkeleton />}>
-        <EmployeeTable employees={employees} onEdit={() => undefined} />
-      </Suspense>
+        <EmployeeTable
+          mt="48px"
+          employees={employees}
+          onEdit={() => undefined}
+        />
     </Box>
   );
 }

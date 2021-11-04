@@ -1,9 +1,20 @@
-import { Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  BoxProps,
+  Flex,
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import type { Employee } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 
-interface IEmployeeTable {
+
+interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   onEdit: (id: string, employee: Employee) => void;
 }
@@ -11,9 +22,10 @@ interface IEmployeeTable {
 export default function EmployeeTable({
   employees,
   onEdit,
+  ...props
 }: IEmployeeTable): JSX.Element {
   return (
-    <>
+    <Box {...props} >
       {employees && employees.length === 0 && (
         <Flex
           width="100%"
@@ -38,27 +50,54 @@ export default function EmployeeTable({
         </Flex>
       )}
 
-      <SimpleGrid mt="48px" columns={5}>
-        <Text color="gray.800" textStyle="table.title">
-          EMPLOYEE NAME
-        </Text>
-        <Text color="gray.800" textStyle="table.title">
-          START DATE
-        </Text>
-        <Text color="gray.800" textStyle="table.title">
-          END DATE
-        </Text>
-        <Text color="gray.800" textStyle="table.title">
-          ROLES
-        </Text>
-        <Text color="gray.800" textStyle="table.title" justifySelf="end">
-          ACTIONS
-        </Text>
-      </SimpleGrid>
-
-      {employees?.map((employee) => (
-        <EmployeeCard key={employee.id} employee={employee} />
-      ))}
-    </>
+      {employees && employees.length > 0 && (
+        <>
+        <Box maxHeight="80vh" overflowY="auto" >
+          <Table>
+            <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10" >
+              <Tr>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  EMPLOYEE NAME
+                </Th>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  START DATE
+                </Th>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  END DATE
+                </Th>
+                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                  ROLES
+                </Th>
+                <Th
+                  pt="0px"
+                  pb={4}
+                  pr={12}
+                  color="gray.800"
+                  textStyle="table.title"
+                  isNumeric
+                >
+                  ACTIONS
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {employees?.map((employee) => <EmployeeTableRow key={employee.id} employee={employee} /> )}
+            </Tbody>
+          </Table>
+          </Box>
+        </>
+      )}
+    </Box>
   );
+}
+
+const EmployeeTableRow = ({ 
+  employee 
+}: { employee: Employee } ): JSX.Element => {
+  return (
+    <>
+      <EmployeeCard employee={employee} />
+      <Tr height={4}></Tr>
+    </>
+  )
 }
