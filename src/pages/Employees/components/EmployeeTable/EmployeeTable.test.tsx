@@ -55,7 +55,6 @@ const mockData = [
 ];
 
 describe("Components/Layout", () => {
-  const employees = employeeMockData;
   it("has an 'empty' state", async () => {
     render(<EmployeeTable employees={[]} onEdit={() => null} />);
 
@@ -66,7 +65,7 @@ describe("Components/Layout", () => {
     render(<EmployeeTable employees={mockData} onEdit={() => null} />);
 
     // wait for the first row
-    expect(await screen.getByText(mockData[0].name)).toBeInTheDocument();
+    expect(screen.getByText(mockData[0].name)).toBeInTheDocument();
 
     // check the rest of the rows
     // expect(screen.getByDisplayValue(employees[1].name)).toBeInTheDocument();
