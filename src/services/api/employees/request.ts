@@ -10,7 +10,6 @@ import { skillStoreManager } from "../skills/mocks";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
 import { JSONAPIEmployee /*EmployeeTable*/ } from "./interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
-import { Console } from "console";
 
 export default function requestCreatorEmployee<Resource extends { id: string }>(
   resourcePath: string,
