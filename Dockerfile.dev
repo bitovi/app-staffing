@@ -4,11 +4,10 @@ FROM node:14
 # Create app directory
 WORKDIR /usr/src/app
 
-# get files
-COPY . .
-
-# install dependencies
+# get files && install dependencies
+COPY ./package.json .
 RUN npm install
+COPY . .
 
 # expose your ports
 EXPOSE 3000
