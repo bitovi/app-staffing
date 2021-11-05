@@ -6,9 +6,9 @@ import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
 import { Employee } from "../../../../services/api";
+import { employeeMockData } from "../../../../services/api/employees/fixtures";
 import theme from "../../../../theme";
 //import { employees } from "../../../../services/api/employees/fixtures";
-import { employeeMockData } from "../../Employees.stories";
 import EmployeeCard from "./EmployeeCard";
 //import { act } from "react-dom/test-utils";
 

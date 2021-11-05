@@ -1,68 +1,11 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
+import { employeeMockData } from "../../services/api/employees/fixtures";
 import { Employees, EmployeePageLoadingLayout } from "./Employees";
 
 export default {
   title: "Pages/Employees",
   component: Employees,
 } as ComponentMeta<typeof Employees>;
-
-export const employeeMockData = () => {
-  const employees = [
-    {
-      id: "1",
-      name: "Vitor Forbrig",
-      startDate: new Date(),
-      endDate: new Date(),
-      skills: [
-        {
-          id: "105",
-          name: "React",
-        },
-        {
-          id: "102",
-          name: "Angular",
-        },
-        {
-          id: "101",
-          name: "UX",
-        },
-      ],
-    },
-    {
-      id: "3",
-      name: "Travis Draper",
-      startDate: new Date(),
-      endDate: new Date(),
-      skills: [
-        {
-          id: "106",
-          name: "React",
-        },
-      ],
-    },
-    {
-      id: "2",
-      name: "Rosemarie Mitchell",
-      startDate: new Date(),
-      endDate: new Date(),
-      skills: [
-        {
-          id: "107",
-          name: "React",
-        },
-        {
-          id: "101",
-          name: "UX",
-        },
-      ],
-    },
-  ];
-  return {
-    employees,
-    isLoading: false,
-    reset: () => undefined,
-  };
-};
 
 export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
   <Employees

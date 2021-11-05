@@ -8,10 +8,10 @@ import { CanLocalStore } from "can-local-store";
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import { skillStoreManager } from "../skills/mocks";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
-import { JSONAPIEmployee /*EmployeeTable*/ } from "./interfaces";
+import { EmployeeTable, JSONAPIEmployee /*EmployeeTable*/ } from "./interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
 
-export default function requestCreatorEmployee<Resource extends { id: string }>(
+export default function requestCreatorEmployee<Resource extends EmployeeTable>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
@@ -21,7 +21,6 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
     getOne: rest.get<undefined, MockResponse<Resource>, { id: string }>(
       `${basePath}${resourcePath}/:id`,
       async (req, res, ctx) => {
-        console.log("get one");
         const id = req.params.id;
         const item = await store.getData({ id });
 
@@ -45,7 +44,6 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
     update: rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
       `${basePath}${resourcePath}/:id`,
       async (req, res, ctx) => {
-        console.log("UPDATE");
         const id = req.params.id;
         // const index = collection.findIndex((item) => item.id === id);
         const itemExists = await store.getData({ id });
@@ -81,7 +79,6 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
     delete: rest.delete<undefined, MockResponse, { id: string }>(
       `${basePath}${resourcePath}/:id`,
       async (req, res, ctx) => {
-        console.log("DELETE");
         const id = req.params.id;
         const resourceToDelete = await store.getData({ id });
 
@@ -102,7 +99,6 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
     create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
-        console.log("CREATE");
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
         const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
 
@@ -148,37 +144,39 @@ export default function requestCreatorEmployee<Resource extends { id: string }>(
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         const includedSkills: string[] = [];
         const jsonAPIEmployees: JSONAPIEmployee[] = await Promise.all(
-          employees.map(async (employee: any): Promise<JSONAPIEmployee> => {
-            const { data: employeeSkills } =
-              await employeeSkillsStoreManager.store.getListData({
-                filter: {
-                  employee_id: employee.id,
-                },
-              });
+          employees.map(
+            async (employee: EmployeeTable): Promise<JSONAPIEmployee> => {
+              const { data: employeeSkills } =
+                await employeeSkillsStoreManager.store.getListData({
+                  filter: {
+                    employee_id: employee.id,
+                  },
+                });
 
-            return {
-              type: "employees",
-              id: employee.id,
-              attributes: {
-                name: employee.name,
-                startDate: employee.startDate,
-                endDate: employee.endDate,
-              },
-              relationships: {
-                skills: {
-                  data: employeeSkills.map((skill) => {
-                    if (!includedSkills.includes(skill.skill_id)) {
-                      includedSkills.push(skill.skill_id);
-                    }
-                    return {
-                      type: "skills",
-                      id: skill.skill_id,
-                    };
-                  }),
+              return {
+                type: "employees",
+                id: employee.id,
+                attributes: {
+                  name: employee.name,
+                  startDate: employee.startDate,
+                  endDate: employee.endDate,
                 },
-              },
-            };
-          }),
+                relationships: {
+                  skills: {
+                    data: employeeSkills.map((skill) => {
+                      if (!includedSkills.includes(skill.skill_id)) {
+                        includedSkills.push(skill.skill_id);
+                      }
+                      return {
+                        type: "skills",
+                        id: skill.skill_id,
+                      };
+                    }),
+                  },
+                },
+              };
+            },
+          ),
         );
         //////////////////////////////////////////////
         // ** Filtering the skillStoreManager to join

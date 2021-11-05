@@ -42,7 +42,7 @@ const employeeDataFormatter = (
   return [];
 };
 
-interface EmployeeActions {
+export interface EmployeeActions {
   employees?: Employee[];
   addEmployee?: (employee: NewEmployee) => Promise<string>;
   updateEmployee?: (

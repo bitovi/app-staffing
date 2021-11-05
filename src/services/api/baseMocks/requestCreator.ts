@@ -2,7 +2,6 @@ import type { MockResponse } from "./interfaces";
 import type { QueriableList } from "../shared";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 
-
 import { rest } from "msw";
 import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";

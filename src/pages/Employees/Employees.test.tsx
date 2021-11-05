@@ -1,12 +1,12 @@
 // import { Suspense } from "react";
 import { render /*screen*/ } from "@testing-library/react";
+import { employeeMockData } from "../../services/api/employees/fixtures";
 // import userEvent from "@testing-library/user-event";
 
 // import { employees } from "../../services/api/employees/fixtures";
 // import { employeeStoreManager } from "../../services/api/employees/mocks";
 
 import EmployeesWrapper, { Employees } from "./Employees";
-import { employeeMockData } from "./Employees.stories";
 
 describe("Pages/Employees", () => {
   // beforeEach(async () => {

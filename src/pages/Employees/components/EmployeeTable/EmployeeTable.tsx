@@ -13,7 +13,6 @@ import { Image } from "@chakra-ui/image";
 import type { Employee } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 
-
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   onEdit: (id: string, employee: Employee) => void;
@@ -25,7 +24,7 @@ export default function EmployeeTable({
   ...props
 }: IEmployeeTable): JSX.Element {
   return (
-    <Box {...props} >
+    <Box {...props}>
       {employees && employees.length === 0 && (
         <Flex
           width="100%"
@@ -52,38 +51,42 @@ export default function EmployeeTable({
 
       {employees && employees.length > 0 && (
         <>
-        <Box maxHeight="80vh" overflowY="auto" >
-          <Table>
-            <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10" >
-              <Tr>
-                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-                  EMPLOYEE NAME
-                </Th>
-                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-                  START DATE
-                </Th>
-                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-                  END DATE
-                </Th>
-                <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-                  ROLES
-                </Th>
-                <Th
-                  pt="0px"
-                  pb={4}
-                  pr={12}
-                  color="gray.800"
-                  textStyle="table.title"
-                  isNumeric
-                >
-                  ACTIONS
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {employees?.map((employee) => <EmployeeTableRow key={employee.id} employee={employee} /> )}
-            </Tbody>
-          </Table>
+          <Box maxHeight="80vh" overflowY="auto">
+            <Table>
+              <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10">
+                <Tr>
+                  <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                    EMPLOYEE NAME
+                  </Th>
+                  <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                    START DATE
+                  </Th>
+                  <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                    END DATE
+                  </Th>
+                  <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+                    ROLES
+                  </Th>
+                  <Th
+                    pt="0px"
+                    pb={4}
+                    pr={12}
+                    color="gray.800"
+                    textStyle="table.title"
+                    isNumeric
+                  >
+                    ACTIONS
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {employees?.map((employee, index) => (
+                  <EmployeeTableRow key={employee.id} employee={employee}>
+                    {employees.length - 1 !== index && <Tr height={4}></Tr>}
+                  </EmployeeTableRow>
+                ))}
+              </Tbody>
+            </Table>
           </Box>
         </>
       )}
@@ -91,13 +94,17 @@ export default function EmployeeTable({
   );
 }
 
-const EmployeeTableRow = ({ 
-  employee 
-}: { employee: Employee } ): JSX.Element => {
+const EmployeeTableRow = ({
+  employee,
+  children,
+}: {
+  employee: Employee;
+  children: JSX.Element | boolean;
+}): JSX.Element => {
   return (
     <>
       <EmployeeCard employee={employee} />
-      <Tr height={4}></Tr>
+      {children}
     </>
-  )
-}
+  );
+};

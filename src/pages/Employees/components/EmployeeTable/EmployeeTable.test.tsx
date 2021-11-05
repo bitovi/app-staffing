@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { employeeMockData } from "../../Employees.stories";
 //import { employees } from "../../../../services/api/employees/fixtures";
 import EmployeeTable from "./EmployeeTable";
 
