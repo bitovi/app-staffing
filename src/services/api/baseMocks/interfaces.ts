@@ -1,6 +1,13 @@
-export interface MockResponse<D = undefined, M = undefined> {
+export interface MockResponse<D = undefined, M = undefined, I = undefined> {
   data?: D;
+  included?: I;
   metadata?: M;
+  error?: string;
+}
+
+export interface JSONAPI<D, M> {
+  data: D;
+  included: M;
   error?: string;
 }
 

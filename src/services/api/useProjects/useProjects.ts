@@ -1,4 +1,4 @@
-import type { QueriableList, ResponseStatus } from "../common";
+import type { QueriableList, ResponseStatus } from "../shared";
 import type { NewProject, Project } from "../projects";
 import useRest from "../useRest";
 

@@ -1,5 +1,5 @@
 import type { MockResponse } from "./interfaces";
-import type { QueriableList } from "../common";
+import type { QueriableList } from "../shared";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 
 import { rest } from "msw";
@@ -9,11 +9,11 @@ import { CanLocalStore } from "can-local-store";
 export default function requestCreator<Resource extends { id: string }>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
-): Array<RestHandler<MockedRequest<DefaultRequestBody>>> {
+): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
   const basePath = "/api/v1";
 
-  return [
-    rest.get<undefined, MockResponse<Resource>, { id: string }>(
+  return {
+    getOne: rest.get<undefined, MockResponse<Resource>, { id: string }>(
       `${basePath}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
@@ -36,7 +36,7 @@ export default function requestCreator<Resource extends { id: string }>(
         );
       },
     ),
-    rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
+    update: rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
       `${basePath}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
@@ -71,7 +71,7 @@ export default function requestCreator<Resource extends { id: string }>(
         );
       },
     ),
-    rest.delete<undefined, MockResponse, { id: string }>(
+    delete: rest.delete<undefined, MockResponse, { id: string }>(
       `${basePath}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
@@ -91,7 +91,7 @@ export default function requestCreator<Resource extends { id: string }>(
         return res(ctx.status(200), ctx.json({}));
       },
     ),
-    rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
+    create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
@@ -103,7 +103,7 @@ export default function requestCreator<Resource extends { id: string }>(
       },
     ),
 
-    rest.get<
+    getAll: rest.get<
       undefined,
       MockResponse<Resource[], { total: number }>,
       QueriableList<Resource>
@@ -135,5 +135,5 @@ export default function requestCreator<Resource extends { id: string }>(
         }),
       );
     }),
-  ];
+  };
 }

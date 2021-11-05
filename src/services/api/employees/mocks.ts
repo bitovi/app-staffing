@@ -1,29 +1,17 @@
-import type { Employee } from "./interfaces";
-
 import QueryLogic from "can-query-logic";
+import requestCreatorEmployee from "./request";
+import { createStore, DateString } from "../baseMocks";
 
+import type { EmployeeTable } from "./interfaces";
 import { employees } from "./fixtures";
-import { createStore, requestCreator, DateString } from "../baseMocks";
 
-const queryLogic = new QueryLogic<Employee>({
+const queryLogic = new QueryLogic<EmployeeTable>({
   identity: ["id"],
   keys: {
     id: "string",
     name: "string",
     startDate: DateString,
     endDate: DateString,
-    skills: {
-      type: "list",
-      values: {
-        keys: {
-          id: "string",
-          name: "string",
-        },
-      },
-      keys: {
-        count: "number",
-      },
-    },
   },
 });
 
@@ -33,8 +21,9 @@ const { store, ...storeManager } = createStore(
   "employees",
 );
 
-export default requestCreator("/employees", store);
+export default Object.values(requestCreatorEmployee("/employees", store));
 
 export const employeeStoreManager = {
+  store,
   ...storeManager,
 };
