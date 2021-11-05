@@ -14,13 +14,14 @@ function useRest<T>(
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
   const key = `${path}?${param(queryParams)}`;
+
   const { mutate } = useSWRConfig();
+
   const { data: response, error } = useSWR<{ data: T }, Error>(
     key,
     (url) => fetcher("GET", url),
     { suspense: true, use: [deserializeDateMiddleware] },
   );
-
 
   return {
     data: response?.data,

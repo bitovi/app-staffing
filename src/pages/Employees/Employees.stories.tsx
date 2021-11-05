@@ -29,7 +29,7 @@ export const employeeMockData = () => {
       ],
     },
     {
-      id: "1",
+      id: "3",
       name: "Travis Draper",
       startDate: new Date(),
       endDate: new Date(),
@@ -41,7 +41,7 @@ export const employeeMockData = () => {
       ],
     },
     {
-      id: "1",
+      id: "2",
       name: "Rosemarie Mitchell",
       startDate: new Date(),
       endDate: new Date(),
