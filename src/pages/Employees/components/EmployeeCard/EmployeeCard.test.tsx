@@ -5,14 +5,13 @@ import { /*fireEvent,*/ render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
-import { Employee } from "../../../../services/api";
 import { employeeMockData } from "../../../../services/api/employees/fixtures";
 import theme from "../../../../theme";
 //import { employees } from "../../../../services/api/employees/fixtures";
 import EmployeeCard from "./EmployeeCard";
 //import { act } from "react-dom/test-utils";
 
-const { employees }: { employees: Employee[] } = employeeMockData();
+const { employees } = employeeMockData();
 
 jest.useFakeTimers("modern");
 
@@ -23,11 +22,13 @@ describe("Components/Layout", () => {
         <StylesProvider value={theme}>
           <table>
             <tbody>
-              <EmployeeCard
-                key={employees[0].id}
-                employee={employees[0]}
-                //onSave={() => null}
-              />
+              {employees && (
+                <EmployeeCard
+                  key={employees[0].id}
+                  employee={employees[0]}
+                  //onSave={() => null}
+                />
+              )}
             </tbody>
           </table>
         </StylesProvider>
