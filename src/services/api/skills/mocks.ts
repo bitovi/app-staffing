@@ -3,7 +3,7 @@ import QueryLogic from "can-query-logic";
 import type { Skill } from ".";
 import { skills } from "./fixtures";
 import { createStore, requestCreator } from "../baseMocks";
-
+//comment for adding commit message to branch merge
 const queryLogic = new QueryLogic<Skill>({
   identity: ["id"],
   keys: {
