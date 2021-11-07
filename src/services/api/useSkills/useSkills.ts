@@ -4,22 +4,23 @@ import type { ResponseStatus } from "../shared";
 import useRest from "../useRest/useRestV2";
 import { JSONAPI } from "../baseMocks/interfaces";
 
-const skillsDataFormatter = ({
-  data: skills,
-}: { data: JSONAPISkill[] } | any): Skill[] | undefined =>
-  skills?.map((skill: JSONAPISkill): Skill[] | any => {
-    const {
-      id,
-      attributes: { name },
-    } = skill;
-    return {
-      id,
-      name,
-    };
-  });
+const skillsDataFormatter = (
+  data: JSONAPI<JSONAPISkill[], undefined> | undefined,
+): Skill[] => {
+  if (data) {
+    const { data: skills } = data;
+    skills.map((skill) => {
+      return {
+        id: skill.id,
+        name: skill?.attributes?.name,
+      };
+    });
+  }
+  return [];
+};
 
 export default function useSkills(): ResponseStatus & {
-  skills: Skill[] | undefined;
+  skills: Skill[] | [];
 } {
   const {
     data: skills,
