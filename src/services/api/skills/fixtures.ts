@@ -8,5 +8,7 @@ export const skills: Array<Skill> = [
   { id: `${++skillId}`, name: "DevOps" },
   { id: `${++skillId}`, name: "Node" },
   { id: `${++skillId}`, name: "React" },
-  { id: `${++skillId}`, name: "UX" },
+  { id: `${++skillId}`, name: "UX Designer" },
+  { id: `${++skillId}`, name: "UI Designer" },
+  { id: `${++skillId}`, name: "Project Management" },
 ];
