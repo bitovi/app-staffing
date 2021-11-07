@@ -1,13 +1,34 @@
-import type { Skill } from "../skills";
+import type { Skill, JSONAPISkill } from "../skills";
 import type { ResponseStatus } from "../shared";
 
-import useRest from "../useRest";
+import useRest from "../useRest/useRestV2";
+import { JSONAPI } from "../baseMocks/interfaces";
 
-export default function useSkills(): ResponseStatus & { skills?: Skill[] } {
-  const { data: skills, error, isLoading } = useRest<Skill>("/api/v1/skills");
+const skillsDataFormatter = ({
+  data: skills,
+}: { data: JSONAPISkill[] } | any): Skill[] | undefined =>
+  skills?.map((skill: JSONAPISkill): Skill[] | any => {
+    const {
+      id,
+      attributes: { name },
+    } = skill;
+    return {
+      id,
+      name,
+    };
+  });
+
+export default function useSkills(): ResponseStatus & {
+  skills: Skill[] | undefined;
+} {
+  const {
+    data: skills,
+    error,
+    isLoading,
+  } = useRest<JSONAPI<JSONAPISkill[], undefined>>("/api/v1/skills");
 
   return {
-    skills,
+    skills: skillsDataFormatter(skills),
     error,
     isLoading,
   };

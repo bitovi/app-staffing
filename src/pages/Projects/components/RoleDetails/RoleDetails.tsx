@@ -25,7 +25,6 @@ export default function RoleDetails({
 }): JSX.Element {
   const { employees } = useEmployees();
   const { skills } = useSkills();
-
   const createUnassignedEmployee = (): AssignedEmployee => {
     return {
       employee: {
