@@ -18,24 +18,13 @@ import {
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import { useEffect, useState } from "react";
-
-const roles = [
-  {
-    label: "Uxer Experience",
-    value: "Uxer Experience",
-  },
-  { label: "React", value: "React" },
-  { label: "Node", value: "Node" },
-  { label: "Angular", value: "Angular" },
-  { label: "UI Designer", value: "UI Designer" },
-  { label: "Project Management", value: "Project Management" },
-  { label: "DevOps", value: "DevOps" },
-];
+import { Skill } from "../../../../services/api";
 
 interface IEmployeeModal {
   onSave: (employeeData: IEmployeeData) => void;
   onClose: () => void;
   isOpen: boolean;
+  skills?: Skill[];
 }
 
 interface IRole {
@@ -47,13 +36,14 @@ interface IEmployeeData {
   name: string;
   start_date: string;
   end_date: string;
-  roles: string[];
+  roles?: string[] | undefined;
 }
 
 export default function EmployeeModal({
   onSave,
   onClose,
   isOpen,
+  skills,
 }: IEmployeeModal): JSX.Element {
   const [employeeData, setEmployeeData] = useState<IEmployeeData>({
     name: "",
@@ -61,6 +51,15 @@ export default function EmployeeModal({
     end_date: "",
     roles: [],
   });
+  const [roles, setRoles] = useState<IRole[]>([]);
+
+  useEffect(() => {
+    if (skills) {
+      setRoles(
+        skills.map((skill) => ({ label: skill.name!, value: skill.name! })),
+      );
+    }
+  }, [skills]);
 
   const [checkedRolesState, setCheckedRolesState] = useState(
     new Array(roles.length).fill(false),
@@ -82,13 +81,13 @@ export default function EmployeeModal({
       return {
         ...e,
         roles: roles
-          .filter((role: IRole, index: number) => {
+          ?.filter((role: IRole, index: number) => {
             if (checkedRolesState[index] === true) return role.value;
           })
-          .map((role) => role.value),
+          ?.map((role) => role.value),
       };
     });
-  }, [checkedRolesState]);
+  }, [checkedRolesState, roles]);
 
   const renderRolesCheckboxes = (rolesToRender: IRole[]) => {
     const half = Math.ceil(rolesToRender.length / 2);
