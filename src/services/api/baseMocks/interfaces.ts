@@ -7,7 +7,7 @@ export interface MockResponse<D = undefined, M = undefined, I = undefined> {
 
 export interface JSONAPI<D, M> {
   data: D;
-  included: M;
+  included?: M;
   error?: string;
 }
 

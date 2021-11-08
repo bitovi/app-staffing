@@ -8,7 +8,7 @@ import { JSONAPISkill } from "../skills/interfaces";
 import { JSONAPIEmployee } from "../employees/interfaces";
 
 const employeeDataFormatter = (
-  employee: { data: JSONAPIEmployee[]; included: JSONAPISkill[] } | undefined,
+  employee: JSONAPI<JSONAPIEmployee[], JSONAPISkill[]> | undefined,
 ): Employee[] | [] => {
   if (employee) {
     const { data: unformatedEmployees, included: unformatedSkills } = employee;
@@ -29,7 +29,7 @@ const employeeDataFormatter = (
         skills: data.map((skill) => {
           return {
             id: skill.id,
-            name: unformatedSkills.find(
+            name: unformatedSkills?.find(
               (unformatedSkill) => unformatedSkill.id === skill.id,
             )?.attributes.name,
           };
