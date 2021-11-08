@@ -9,7 +9,8 @@ const skillsDataFormatter = (
 ): Skill[] => {
   if (data) {
     const { data: skills } = data;
-    skills.map((skill) => {
+
+    return skills.map((skill) => {
       return {
         id: skill.id,
         name: skill?.attributes?.name,

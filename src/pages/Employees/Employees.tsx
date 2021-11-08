@@ -61,6 +61,7 @@ export function Employees({
   useSkills,
 }: IEmployees): JSX.Element {
   const { employees } = useEmployees();
+  const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   return (
@@ -69,6 +70,7 @@ export function Employees({
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
         onSave={(employeeData) => undefined}
+        skills={skills}
       />
 
       <Flex
