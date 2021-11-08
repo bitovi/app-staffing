@@ -18,10 +18,11 @@ import {
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import { useEffect, useState } from "react";
-import { Skill } from "../../../../services/api";
+import { JSONAPISkill, Skill } from "../../../../services/api";
+import { FrontEndEmployee } from "../../../../services/api/employees/interfaces";
 
 interface IEmployeeModal {
-  onSave: (employeeData: IEmployeeData) => void;
+  onSave: (employee: { data: FrontEndEmployee }) => Promise<string>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[] | [];
@@ -37,7 +38,7 @@ interface IEmployeeData {
   name: string;
   start_date: string;
   end_date: string;
-  roles?: Skill[];
+  roles?: Omit<JSONAPISkill, "attributes">[];
 }
 
 interface RoleState {
@@ -85,7 +86,28 @@ export default function EmployeeModal({
   }, [skills]);
 
   const submitForm = async () => {
-    await onSave(employeeData);
+    /////////////////////////////////////////////////////////////
+    //** Formatting employee for POST into JSON API format
+    ////////////////////////////////////////////////////////////
+
+    const newEmployee: { data: FrontEndEmployee } = {
+      data: {
+        type: "employees",
+        attributes: {
+          name: employeeData.name,
+          startDate: employeeData.start_date,
+          endDate: employeeData.end_date,
+        },
+        relationships: {
+          skills: {
+            data: employeeData.roles,
+          },
+        },
+      },
+    };
+    console.log(newEmployee);
+    //await onSave(newEmployee);
+    console.log(onSave);
     await onClose();
   };
 
@@ -106,7 +128,7 @@ export default function EmployeeModal({
             if (checkedRolesState[index].selected === true)
               return { skill: role.value, id: role.id };
           })
-          ?.map((role) => ({ skill: role.value, id: role.id })),
+          ?.map((role) => ({ type: "skills", id: role.id })),
       };
     });
   }, [checkedRolesState, roles]);

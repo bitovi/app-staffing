@@ -60,7 +60,7 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { employees } = useEmployees();
+  const { employees, addEmployee } = useEmployees();
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
@@ -69,7 +69,7 @@ export function Employees({
       <EmployeeModal
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
-        onSave={(employeeData) => undefined}
+        onSave={addEmployee}
         skills={skills}
       />
 

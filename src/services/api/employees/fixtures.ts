@@ -77,8 +77,13 @@ export const employeeMockData = (): ResponseStatus & EmployeeActions => {
       ],
     },
   ];
+  //////////////////////////////////////////////
+  //** Expanded Employee service functionality,
+  //** added back in "addEmployee" method
+  /////////////////////////////////////////////
   return {
     employees,
+    addEmployee: (employee) => new Promise((resolve) => resolve("")),
     isLoading: false,
     reset: () => undefined,
   };
