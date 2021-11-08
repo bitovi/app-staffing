@@ -29,14 +29,14 @@ interface IEmployeeModal {
 
 interface IRole {
   label: string;
-  value: string;
+  value: Skill;
 }
 
 interface IEmployeeData {
   name: string;
   start_date: string;
   end_date: string;
-  roles?: string[] | undefined;
+  roles?: IRole[];
 }
 
 export default function EmployeeModal({
@@ -51,25 +51,36 @@ export default function EmployeeModal({
     end_date: "",
     roles: [],
   });
-  const [roles, setRoles] = useState<IRole[]>([]);
 
+  const [roles, setRoles] = useState<IRole[]>([]);
+  // console.log({ roles });
+  // console.log({ skills });
   useEffect(() => {
     if (skills) {
       setRoles(
         skills.map((skill) => ({
           label: skill.name as string,
-          value: skill.name as string,
+          value: skill,
         })),
       );
     }
   }, [skills]);
 
-  const [checkedRolesState, setCheckedRolesState] = useState(
-    new Array(roles.length).fill(false),
+  //////////////////////////////////////////////////////
+  //**  Now that Skills data is retrieved from server
+  //**  checkedRolesState will initially be empty until
+  //**  the roles.length property has a value
+  //**  this explains the useEffect defined below
+  //////////////////////////////////////////////////////
+  const [checkedRolesState, setCheckedRolesState] = useState<Array<boolean>>(
+    [],
   );
-
+  useEffect(() => {
+    setCheckedRolesState(new Array(roles.length).fill(false));
+  }, [roles]);
   const submitForm = async () => {
-    await onSave(employeeData);
+    // await onSave(employeeData);
+    console.log({ employeeData });
     await onClose();
   };
 
@@ -84,23 +95,22 @@ export default function EmployeeModal({
       return {
         ...e,
         roles: roles
-          ?.filter((role: IRole, index: number) => {
-            if (checkedRolesState[index] === true) return role.value;
+          ?.filter((role, index) => {
+            if (checkedRolesState[index] === true) return role;
           })
-          ?.map((role) => role.value),
+          ?.map((role) => role),
       };
     });
   }, [checkedRolesState, roles]);
 
   const renderRolesCheckboxes = (rolesToRender: IRole[]) => {
     const half = Math.ceil(rolesToRender.length / 2);
-
     return (
       <>
         <VStack display="flex" flex={1} alignItems="start">
           {rolesToRender.slice(0, half).map((role: IRole, index: number) => (
             <Checkbox
-              key={role.value}
+              key={role.label}
               value={role.value}
               onChange={() => handleRolesChange(index)}
               isChecked={checkedRolesState[index]}
@@ -115,7 +125,7 @@ export default function EmployeeModal({
             .slice(half, rolesToRender.length)
             .map((role: IRole, index: number) => (
               <Checkbox
-                key={role.value}
+                key={role.label}
                 value={role.value}
                 onChange={() => handleRolesChange(index + half)}
                 isChecked={checkedRolesState[index + half]}
