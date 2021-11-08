@@ -24,7 +24,7 @@ interface IEmployeeModal {
   onSave: (employeeData: IEmployeeData) => void;
   onClose: () => void;
   isOpen: boolean;
-  skills?: Skill[];
+  skills: Skill[] | [];
 }
 
 interface IRole {
@@ -56,7 +56,10 @@ export default function EmployeeModal({
   useEffect(() => {
     if (skills) {
       setRoles(
-        skills.map((skill) => ({ label: skill.name!, value: skill.name! })),
+        skills.map((skill) => ({
+          label: skill.name as string,
+          value: skill.name as string,
+        })),
       );
     }
   }, [skills]);
