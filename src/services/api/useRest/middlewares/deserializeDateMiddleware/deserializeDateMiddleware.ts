@@ -21,10 +21,6 @@ export function parseDate(obj: any): void {
       parseDate(obj[key]);
     } else {
       if (isIsoDateTime(obj[key])) {
-        console.log(
-          "*********************************************DATE PASSED:",
-          obj[key],
-        );
         obj[key] = new Date(obj[key]);
       }
     }

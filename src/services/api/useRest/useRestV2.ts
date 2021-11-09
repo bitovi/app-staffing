@@ -2,8 +2,9 @@ import param from "can-param";
 import { useCallback } from "react";
 //import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { JSONAPISkill } from "..";
-import { FrontEndEmployee } from "../employees/interfaces";
+import { JSONAPISkill, Skill } from "..";
+//import { JSONAPI } from "../baseMocks/interfaces";
+import { FrontEndEmployee, JSONAPIEmployee } from "../employees/interfaces";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
 // import { skills } from "../skills/fixtures";
@@ -17,9 +18,7 @@ import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 // ** for example in the interface below
 ///////////////////////////////////////////////////////////////////
 interface RestActions<T> extends APIResponse<T> {
-  handleAdd: (
-    newCollectionItem: { data: FrontEndEmployee } | Omit<JSONAPISkill, "id">,
-  ) => Promise<string>;
+  handleAdd: (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>;
   reset: () => void;
 }
 
@@ -31,25 +30,23 @@ function useRest<T>(
 
   const { mutate } = useSWRConfig();
 
-  const { data: response, error } = useSWR<{ data: T | any }, Error>(
+  const { data: response, error } = useSWR<{ data: T }, Error>(
     key,
     (url) => fetcher("GET", url),
     { suspense: true, use: [deserializeDateMiddleware] },
   );
 
   const handleAdd = useCallback<
-    (
-      newCollectionItem: { data: FrontEndEmployee } | Omit<JSONAPISkill, "id">,
-    ) => Promise<string>
+    (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>
   >(
-    async (
-      newCollectionItem: { data: FrontEndEmployee } | Omit<JSONAPISkill, "id">,
-    ) => {
+    async (newCollectionItem: { data: FrontEndEmployee }) => {
       let newId = "";
       await mutate(
         key,
-        async (addResponse: { data: any }) => {
-          const { data: newItem } = await fetcher<{ data: any }>(
+        async (addResponse: {
+          data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
+        }) => {
+          const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
             "POST",
             path,
             newCollectionItem,
@@ -59,7 +56,7 @@ function useRest<T>(
           const newItemIncluded = await skillStoreManager.store.getListData({
             filter: {
               id: newItem.relationships.skills.data.map(
-                (skill: any) => skill.id,
+                (skill: Skill) => skill.id,
               ),
             },
           });
@@ -67,7 +64,7 @@ function useRest<T>(
             .filter((skill) => {
               if (
                 !addResponse.data.included.find(
-                  (cacheObject: any) => cacheObject.id === skill.id,
+                  (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
                 )
               ) {
                 return skill;

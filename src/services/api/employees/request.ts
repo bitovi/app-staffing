@@ -163,8 +163,10 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
               data: { ...item.data } as unknown as Resource,
             }),
           );
-        } catch (error: any) {
-          console.log("Error in Employee Requests: ", error.message);
+        } catch (error) {
+          if (error instanceof Error) {
+            console.error(error.message);
+          }
         }
       },
     ),
