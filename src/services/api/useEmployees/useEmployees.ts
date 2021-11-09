@@ -12,7 +12,6 @@ export const employeeDataFormatter = (
 ): Employee[] | [] => {
   if (employee) {
     const { data: unformatedEmployees, included: unformatedSkills } = employee;
-
     const formattedEmployees: Employee[] = unformatedEmployees.map(
       (em: JSONAPIEmployee) => {
         const { id, relationships } = em;
