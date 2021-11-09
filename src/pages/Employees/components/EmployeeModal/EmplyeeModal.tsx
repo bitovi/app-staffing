@@ -105,9 +105,7 @@ export default function EmployeeModal({
         },
       },
     };
-    console.log(newEmployee);
-    //await onSave(newEmployee);
-    console.log(onSave);
+    await onSave(newEmployee);
     await onClose();
   };
 

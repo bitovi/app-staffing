@@ -6,6 +6,9 @@ import { JSONAPISkill } from "..";
 import { FrontEndEmployee } from "../employees/interfaces";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
+// import { skills } from "../skills/fixtures";
+import { skillStoreManager } from "../skills/mocks";
+// import { employeeDataFormatter } from "../useEmployees/useEmployees";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 
 ///////////////////////////////////////////////////////////////////
@@ -28,7 +31,7 @@ function useRest<T>(
 
   const { mutate } = useSWRConfig();
 
-  const { data: response, error } = useSWR<{ data: T }, Error>(
+  const { data: response, error } = useSWR<{ data: T | any }, Error>(
     key,
     (url) => fetcher("GET", url),
     { suspense: true, use: [deserializeDateMiddleware] },
@@ -51,10 +54,41 @@ function useRest<T>(
             path,
             newCollectionItem,
           );
+
           newId = newItem.id;
+          const newItemIncluded = await skillStoreManager.store.getListData({
+            filter: {
+              id: newItem.relationships.skills.data.map(
+                (skill: any) => skill.id,
+              ),
+            },
+          });
+          const skillsToAdd = newItemIncluded.data
+            .filter((skill) => {
+              if (
+                !addResponse.data.included.find(
+                  (cacheObject: any) => cacheObject.id === skill.id,
+                )
+              ) {
+                return skill;
+              }
+            })
+            .map((skill) => ({
+              type: "skills",
+              id: skill.id,
+              attributes: {
+                name: skill.name,
+              },
+            }));
+
+          const newCache = {
+            data: [...addResponse.data.data, newItem],
+            included: [...addResponse.data.included, ...skillsToAdd],
+          };
+
           return {
             ...addResponse,
-            data: [...addResponse.data, { ...newCollectionItem, id: newId }],
+            data: newCache,
           };
         },
         false,

@@ -7,35 +7,34 @@ import { JSONAPI } from "../baseMocks/interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
 import { FrontEndEmployee, JSONAPIEmployee } from "../employees/interfaces";
 
-const employeeDataFormatter = (
+export const employeeDataFormatter = (
   employee: JSONAPI<JSONAPIEmployee[], JSONAPISkill[]> | undefined,
 ): Employee[] | [] => {
   if (employee) {
     const { data: unformatedEmployees, included: unformatedSkills } = employee;
 
-    const formattedEmployees: Employee[] = unformatedEmployees.map((em) => {
-      const {
-        id,
-        relationships: {
-          skills: { data },
-        },
-        attributes: { name, startDate, endDate },
-      } = em;
-      return {
-        id,
-        name,
-        startDate,
-        endDate,
-        skills: data?.map((skill: { type: string; id: string }) => {
-          return {
-            id: skill.id,
-            name: unformatedSkills?.find(
-              (unformatedSkill) => unformatedSkill.id === skill.id,
-            )?.attributes.name,
-          };
-        }),
-      };
-    });
+    const formattedEmployees: Employee[] = unformatedEmployees.map(
+      (em: JSONAPIEmployee) => {
+        const { id, relationships } = em;
+        return {
+          id,
+          ...em.attributes,
+          skills:
+            relationships && relationships.skills
+              ? relationships.skills?.data?.map(
+                  (skill: { type: string; id: string }) => {
+                    return {
+                      id: skill.id,
+                      name: unformatedSkills?.find(
+                        (unformatedSkill) => unformatedSkill.id === skill.id,
+                      )?.attributes.name,
+                    };
+                  },
+                )
+              : [],
+        };
+      },
+    );
     return formattedEmployees;
   }
 
