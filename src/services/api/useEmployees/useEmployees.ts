@@ -7,6 +7,11 @@ import { JSONAPI } from "../baseMocks/interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
 import { FrontEndEmployee, JSONAPIEmployee } from "../employees/interfaces";
 
+const alphabetize = (array: Employee[]): Employee[] =>
+  array.sort((a, b) =>
+    a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
+  );
+
 export const employeeDataFormatter = (
   employee: JSONAPI<JSONAPIEmployee[], JSONAPISkill[]> | undefined,
 ): Employee[] | [] => {
@@ -34,6 +39,7 @@ export const employeeDataFormatter = (
         };
       },
     );
+
     return formattedEmployees;
   }
 
@@ -69,7 +75,7 @@ export default function useEmployees(
   );
 
   return {
-    employees: employeeDataFormatter(employees),
+    employees: alphabetize(employeeDataFormatter(employees)),
     isLoading,
     error,
     addEmployee: handleAdd,
