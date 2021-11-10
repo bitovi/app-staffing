@@ -18,10 +18,11 @@ import {
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import { useEffect, useState } from "react";
-import { Skill } from "../../../../services/api";
+import { JSONAPISkill, Skill } from "../../../../services/api";
+import { FrontEndEmployee } from "../../../../services/api/employees/interfaces";
 
 interface IEmployeeModal {
-  onSave: (employeeData: IEmployeeData) => void;
+  onSave: (employee: { data: FrontEndEmployee }) => Promise<string>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[] | [];
@@ -30,12 +31,19 @@ interface IEmployeeModal {
 interface IRole {
   label: string;
   value: string;
+  id: string;
 }
 
 interface IEmployeeData {
   name: string;
   start_date: string;
   end_date: string;
+  roles?: Omit<JSONAPISkill, "attributes">[];
+}
+
+interface RoleState {
+  selected: boolean;
+  id: string;
   roles?: string[] | undefined;
 }
 
@@ -53,29 +61,60 @@ export default function EmployeeModal({
   });
   const [roles, setRoles] = useState<IRole[]>([]);
 
+  const [checkedRolesState, setCheckedRolesState] = useState<RoleState[]>([]);
+  /////////////////////////////////////////////////////////////////
+  //**  Now that Skills data is retrieved from server
+  //**  checkedRolesState will initially be empty until
+  //**  the roles.length property has a value
+  //**  this explains the useEffect defined below.
+  //**  Also, the UseEffect generates our checkedRolesState array
+  //**  To contain the boolean for selected AND the associated
+  //**  Skill ID to simplify backend joining operations
+  ////////////////////////////////////////////////////////////////
   useEffect(() => {
     if (skills) {
       setRoles(
         skills.map((skill) => ({
           label: skill.name as string,
           value: skill.name as string,
+          id: skill.id as string,
         })),
+      );
+      setCheckedRolesState(
+        skills.map((skill) => ({ selected: false, id: skill.id })),
       );
     }
   }, [skills]);
 
-  const [checkedRolesState, setCheckedRolesState] = useState(
-    new Array(roles.length).fill(false),
-  );
-
   const submitForm = async () => {
-    await onSave(employeeData);
+    /////////////////////////////////////////////////////////////
+    //** Formatting employee for POST into JSON API format
+    ////////////////////////////////////////////////////////////
+
+    const newEmployee: { data: FrontEndEmployee } = {
+      data: {
+        type: "employees",
+        attributes: {
+          name: employeeData.name,
+          startDate: employeeData.start_date,
+          endDate: employeeData.end_date,
+        },
+        relationships: {
+          skills: {
+            data: employeeData.roles,
+          },
+        },
+      },
+    };
+    await onSave(newEmployee);
     await onClose();
   };
 
   const handleRolesChange = (index: number) => {
     setCheckedRolesState(
-      checkedRolesState.map((item, i) => (i === index ? !item : item)),
+      checkedRolesState.map((item, i) =>
+        i === index ? { ...item, selected: !item.selected } : item,
+      ),
     );
   };
 
@@ -84,26 +123,26 @@ export default function EmployeeModal({
       return {
         ...e,
         roles: roles
-          ?.filter((role: IRole, index: number) => {
-            if (checkedRolesState[index] === true) return role.value;
+          ?.filter((role, index) => {
+            if (checkedRolesState[index].selected === true)
+              return { skill: role.value, id: role.id };
           })
-          ?.map((role) => role.value),
+          ?.map((role) => ({ type: "skills", id: role.id })),
       };
     });
   }, [checkedRolesState, roles]);
 
   const renderRolesCheckboxes = (rolesToRender: IRole[]) => {
     const half = Math.ceil(rolesToRender.length / 2);
-
     return (
       <>
         <VStack display="flex" flex={1} alignItems="start">
           {rolesToRender.slice(0, half).map((role: IRole, index: number) => (
             <Checkbox
-              key={role.value}
+              key={role.label}
               value={role.value}
               onChange={() => handleRolesChange(index)}
-              isChecked={checkedRolesState[index]}
+              isChecked={checkedRolesState[index].selected}
             >
               {role.label}
             </Checkbox>
@@ -115,10 +154,10 @@ export default function EmployeeModal({
             .slice(half, rolesToRender.length)
             .map((role: IRole, index: number) => (
               <Checkbox
-                key={role.value}
+                key={role.label}
                 value={role.value}
                 onChange={() => handleRolesChange(index + half)}
-                isChecked={checkedRolesState[index + half]}
+                isChecked={checkedRolesState[index + half].selected}
               >
                 {role.label}
               </Checkbox>

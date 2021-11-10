@@ -1,41 +1,39 @@
-import type { Employee, NewEmployee } from "../employees";
+import type { Employee } from "../employees";
 import type { ResponseStatus, QueriableList } from "../shared";
 
 import useRest from "../useRest/useRestV2";
 
 import { JSONAPI } from "../baseMocks/interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
-import { JSONAPIEmployee } from "../employees/interfaces";
+import { FrontEndEmployee, JSONAPIEmployee } from "../employees/interfaces";
 
-const employeeDataFormatter = (
+export const employeeDataFormatter = (
   employee: JSONAPI<JSONAPIEmployee[], JSONAPISkill[]> | undefined,
 ): Employee[] | [] => {
   if (employee) {
     const { data: unformatedEmployees, included: unformatedSkills } = employee;
-
-    const formattedEmployees: Employee[] = unformatedEmployees.map((em) => {
-      const {
-        id,
-        relationships: {
-          skills: { data },
-        },
-        attributes: { name, startDate, endDate },
-      } = em;
-      return {
-        id,
-        name,
-        startDate,
-        endDate,
-        skills: data.map((skill) => {
-          return {
-            id: skill.id,
-            name: unformatedSkills?.find(
-              (unformatedSkill) => unformatedSkill.id === skill.id,
-            )?.attributes.name,
-          };
-        }),
-      };
-    });
+    const formattedEmployees: Employee[] = unformatedEmployees.map(
+      (em: JSONAPIEmployee) => {
+        const { id, relationships } = em;
+        return {
+          id,
+          ...em.attributes,
+          skills:
+            relationships && relationships.skills
+              ? relationships.skills?.data?.map(
+                  (skill: { type: string; id: string }) => {
+                    return {
+                      id: skill.id,
+                      name: unformatedSkills?.find(
+                        (unformatedSkill) => unformatedSkill.id === skill.id,
+                      )?.attributes.name,
+                    };
+                  },
+                )
+              : [],
+        };
+      },
+    );
     return formattedEmployees;
   }
 
@@ -44,7 +42,7 @@ const employeeDataFormatter = (
 
 export interface EmployeeActions {
   employees?: Employee[];
-  addEmployee?: (employee: NewEmployee) => Promise<string>;
+  addEmployee: (employee: { data: FrontEndEmployee }) => Promise<string>;
   updateEmployee?: (
     employeeId: string,
     employee: Partial<Employee>,
@@ -61,7 +59,7 @@ export default function useEmployees(
     data: employees,
     error,
     isLoading,
-    // handleAdd,
+    handleAdd,
     // handleUpdate,
     // handleDelete,
     reset,
@@ -74,7 +72,7 @@ export default function useEmployees(
     employees: employeeDataFormatter(employees),
     isLoading,
     error,
-    // addEmployee: handleAdd,
+    addEmployee: handleAdd,
     // updateEmployee: handleUpdate,
     // deleteEmployee: handleDelete,
     reset,

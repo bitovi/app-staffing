@@ -8,7 +8,7 @@ import { CanLocalStore } from "can-local-store";
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import { skillStoreManager } from "../skills/mocks";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
-import { EmployeeTable, JSONAPIEmployee /*EmployeeTable*/ } from "./interfaces";
+import { EmployeeTable, JSONAPIEmployee } from "./interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
 
 export default function requestCreatorEmployee<Resource extends EmployeeTable>(
@@ -96,15 +96,78 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         return res(ctx.status(200), ctx.json({}));
       },
     ),
-    create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
+    create: rest.post<JSONAPI<JSONAPIEmployee, null>, MockResponse<Resource>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
-        const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
+        const {
+          attributes,
+          relationships: {
+            skills: { data: skillData },
+          },
+        } = req.body.data;
+        const item = {
+          data: {
+            id,
+            type: "employees",
+            attributes: req.body.data.attributes,
+            relationships: {
+              skills: {
+                data: skillData,
+              },
+            },
+          },
+        }; // @TODO: look into typing issue
 
-        await store.createData(item);
+        // const included: JSONAPISkill[] = (
+        //   await skillStoreManager.store.getListData({
+        //     filter: {
+        //       id: item.data.relationships.skills.data.map((skill) => skill.id),
+        //     },
+        //   })
+        // ).data.map((skill) => ({
+        //   type: "skills",
+        //   id: skill.id,
+        //   attributes: {
+        //     name: skill.name,
+        //   },
+        // }));
 
-        return res(ctx.status(201), ctx.json({ data: item }));
+        ////////////////////////////////
+        //** Updates the Employee store
+        ////////////////////////////////
+        const newEmployeeTableEntry = {
+          name: attributes.name,
+          id,
+          startDate: attributes.startDate,
+          endDate: attributes.endDate,
+        } as unknown as Resource;
+
+        const employeeSkillsTableJoins = skillData.map((skill) => ({
+          id: (Math.floor(Math.random() * 1000) + 1).toString(),
+          employee_id: id,
+          skill_id: skill.id,
+        }));
+
+        try {
+          await Promise.all(
+            employeeSkillsTableJoins.map(async (skillJoin) => {
+              await employeeSkillsStoreManager.store.createData(skillJoin);
+            }),
+          );
+          await store.createData(newEmployeeTableEntry);
+
+          return res(
+            ctx.status(201),
+            ctx.json({
+              data: { ...item.data } as unknown as Resource,
+            }),
+          );
+        } catch (error) {
+          if (error instanceof Error) {
+            console.error(error.message);
+          }
+        }
       },
     ),
     //////////////////////////////

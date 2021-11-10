@@ -40,3 +40,25 @@ export interface JSONAPIEmployee {
     };
   };
 }
+
+//////////////////////////////////////////////////////////////////
+//** This interface for Typing frontend Employee sent through POST
+//**  Note that the date values are strings and not date objects --
+//**  This happens in middleware
+/////////////////////////////////////////////////////////////////
+export interface FrontEndEmployee
+  extends Omit<JSONAPIEmployee, "id" | "attributes" | "relationships"> {
+  attributes: {
+    name: string;
+    startDate: string;
+    endDate?: string;
+  };
+  relationships: {
+    skills: {
+      data?: {
+        type: string;
+        id: string;
+      }[];
+    };
+  };
+}
