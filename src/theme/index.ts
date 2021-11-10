@@ -5,6 +5,7 @@ import Button from "./components/button";
 import { Checkbox } from "./components/checkbox";
 import { textStyles } from "./fonts/typography";
 import DatePicker from "./components/date-picker";
+import { FormLabel } from "./components/form-label";
 import Tag from "./components/tag";
 
 const theme = extendTheme({
@@ -19,6 +20,7 @@ const theme = extendTheme({
     Button,
     DatePicker,
     Tag,
+    FormLabel,
   },
 });
 
