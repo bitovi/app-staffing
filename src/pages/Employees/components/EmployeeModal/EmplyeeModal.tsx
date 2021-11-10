@@ -61,18 +61,6 @@ export default function EmployeeModal({
   });
   const [roles, setRoles] = useState<IRole[]>([]);
 
-  useEffect(() => {
-    if (skills) {
-      setRoles(
-        skills.map((skill) => ({
-          label: skill.name as string,
-          value: skill.name as string,
-        })),
-      );
-    }
-  }, [skills]);
-
-  const [roles, setRoles] = useState<IRole[]>([]);
   const [checkedRolesState, setCheckedRolesState] = useState<RoleState[]>([]);
   /////////////////////////////////////////////////////////////////
   //**  Now that Skills data is retrieved from server
@@ -139,7 +127,7 @@ export default function EmployeeModal({
             if (checkedRolesState[index].selected === true)
               return { skill: role.value, id: role.id };
           })
-          ?.map((role) => ({ type: "skills", id: role.id }))
+          ?.map((role) => ({ type: "skills", id: role.id })),
       };
     });
   }, [checkedRolesState, roles]);
