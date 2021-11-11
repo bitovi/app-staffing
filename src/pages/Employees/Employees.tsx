@@ -6,7 +6,6 @@ import {
 } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
-
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
 
