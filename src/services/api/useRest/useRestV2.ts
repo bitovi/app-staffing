@@ -18,7 +18,9 @@ import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 // ** for example in the interface below
 ///////////////////////////////////////////////////////////////////
 interface RestActions<T> extends APIResponse<T> {
-  handleAdd: (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>;
+  handleAdd: (newCollectionItem: {
+    data: FrontEndEmployee;
+  }) => Promise<string | undefined>;
   reset: () => void;
 }
 
@@ -37,7 +39,9 @@ function useRest<T>(
   );
 
   const handleAdd = useCallback<
-    (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>
+    (newCollectionItem: {
+      data: FrontEndEmployee;
+    }) => Promise<string | undefined>
   >(
     async (newCollectionItem: { data: FrontEndEmployee }) => {
       let newId = "";
@@ -91,8 +95,10 @@ function useRest<T>(
           false,
         );
         return newId;
-      } catch (e) {
-        throw new Error(e.message);
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
       }
     },
     [path, key, mutate],

@@ -48,7 +48,9 @@ export const employeeDataFormatter = (
 
 export interface EmployeeActions {
   employees?: Employee[];
-  addEmployee: (employee: { data: FrontEndEmployee }) => Promise<string>;
+  addEmployee: (employee: {
+    data: FrontEndEmployee;
+  }) => Promise<string | undefined>;
   updateEmployee?: (
     employeeId: string,
     employee: Partial<Employee>,

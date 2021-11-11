@@ -28,7 +28,7 @@ import { FrontEndEmployee } from "../../../../services/api/employees/interfaces"
 import { useForm } from "react-hook-form";
 import { ServiceError } from "../../../../components/ServiceError";
 interface IEmployeeModal {
-  onSave: (employee: { data: FrontEndEmployee }) => Promise<string>;
+  onSave: (employee: { data: FrontEndEmployee }) => Promise<string | undefined>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[] | [];

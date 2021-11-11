@@ -8,21 +8,18 @@ export default {
   component: EmployeeModal,
 } as ComponentMeta<typeof EmployeeModal>;
 
-export const works: ComponentStory<typeof EmployeeModal> = ({ ...props }) => {
+export const works: ComponentStory<typeof EmployeeModal> = () => {
   return (
     <EmployeeModal
       onSave={() => new Promise((resolve) => resolve(""))}
       onClose={() => true}
       isOpen={true}
       skills={skills}
-      {...props}
     />
   );
 };
 
-export const serverError: ComponentStory<typeof EmployeeModal> = ({
-  ...props
-}) => {
+export const serverError: ComponentStory<typeof EmployeeModal> = () => {
   return (
     <EmployeeModal
       onSave={() => {
@@ -31,7 +28,6 @@ export const serverError: ComponentStory<typeof EmployeeModal> = ({
       onClose={() => true}
       isOpen={true}
       skills={skills}
-      {...props}
     />
   );
 };
