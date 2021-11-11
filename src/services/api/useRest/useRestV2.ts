@@ -91,7 +91,7 @@ function useRest<T>(
           false,
         );
         return newId;
-      } catch (e: any) {
+      } catch (e) {
         throw new Error(e.message);
       }
     },

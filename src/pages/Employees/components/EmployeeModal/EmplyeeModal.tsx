@@ -165,7 +165,7 @@ export default function EmployeeModal({
       </>
     );
   };
-  console.log({ errors });
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
       <ModalOverlay />
