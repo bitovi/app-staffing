@@ -41,56 +41,59 @@ function useRest<T>(
   >(
     async (newCollectionItem: { data: FrontEndEmployee }) => {
       let newId = "";
-      await mutate(
-        key,
-        async (addResponse: {
-          data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
-        }) => {
-          const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
-            "POST",
-            path,
-            newCollectionItem,
-          );
-
-          newId = newItem.id;
-          const newItemIncluded = await skillStoreManager.store.getListData({
-            filter: {
-              id: newItem.relationships.skills.data.map(
-                (skill: Skill) => skill.id,
-              ),
-            },
-          });
-          const skillsToAdd = newItemIncluded.data
-            .filter((skill) => {
-              if (
-                !addResponse.data.included.find(
-                  (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
-                )
-              ) {
-                return skill;
-              }
-            })
-            .map((skill) => ({
-              type: "skills",
-              id: skill.id,
-              attributes: {
-                name: skill.name,
+      try {
+        await mutate(
+          key,
+          async (addResponse: {
+            data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
+          }) => {
+            const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
+              "POST",
+              path,
+              newCollectionItem,
+            );
+            newId = newItem.id;
+            const newItemIncluded = await skillStoreManager.store.getListData({
+              filter: {
+                id: newItem.relationships.skills.data.map(
+                  (skill: Skill) => skill.id,
+                ),
               },
-            }));
+            });
+            const skillsToAdd = newItemIncluded.data
+              .filter((skill) => {
+                if (
+                  !addResponse.data.included.find(
+                    (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
+                  )
+                ) {
+                  return skill;
+                }
+              })
+              .map((skill) => ({
+                type: "skills",
+                id: skill.id,
+                attributes: {
+                  name: skill.name,
+                },
+              }));
 
-          const newCache = {
-            data: [...addResponse.data.data, newItem],
-            included: [...addResponse.data.included, ...skillsToAdd],
-          };
+            const newCache = {
+              data: [...addResponse.data.data, newItem],
+              included: [...addResponse.data.included, ...skillsToAdd],
+            };
 
-          return {
-            ...addResponse,
-            data: newCache,
-          };
-        },
-        false,
-      );
-      return newId;
+            return {
+              ...addResponse,
+              data: newCache,
+            };
+          },
+          false,
+        );
+        return newId;
+      } catch (e: any) {
+        throw new Error(e.message);
+      }
     },
     [path, key, mutate],
   );

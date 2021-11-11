@@ -68,7 +68,7 @@ export default function EmployeeModal({
   //////////////////////////////////////////
   const [roles, setRoles] = useState<IRole[]>([]);
   const [checkedRolesState, setCheckedRolesState] = useState<RoleState[]>([]);
-  const [serverError, setServerError] = useState(true);
+  const [serverError, setServerError] = useState(false);
 
   useEffect(() => {
     if (skills) {
@@ -113,9 +113,12 @@ export default function EmployeeModal({
         },
       },
     };
-
-    await onSave(newEmployee);
-    await onClose();
+    try {
+      await onSave(newEmployee);
+      onClose();
+    } catch (e) {
+      setServerError(!serverError);
+    }
   };
 
   const handleRolesChange = (index: number) => {
@@ -162,7 +165,7 @@ export default function EmployeeModal({
       </>
     );
   };
-
+  console.log({ errors });
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
       <ModalOverlay />
@@ -174,9 +177,13 @@ export default function EmployeeModal({
             <FormControl isRequired isInvalid={errors.name ? true : false}>
               <FormLabel>Full name</FormLabel>
               <Input
-                {...register("name", { required: "Name not filled out" })}
+                {...register("name", {
+                  required: "Name not filled out",
+                  validate: (name) =>
+                    name.split(" ").length >= 2 || "Full name required",
+                })}
                 id="name"
-                focusBorderColor={errors.name ? "red.600" : "currentColor"}
+                // focusBorderColor={errors.name ? "red.600" : "currentColor"}
                 placeholder="name"
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
@@ -190,7 +197,7 @@ export default function EmployeeModal({
                 <FormLabel>Start Date</FormLabel>
                 <Input
                   {...register("start_date", {
-                    required: "Start date required",
+                    required: true,
                   })}
                   id="start_date"
                   type="date"
@@ -203,12 +210,7 @@ export default function EmployeeModal({
               </FormControl>
             </HStack>
 
-            <FormControl
-              isRequired
-              isInvalid={
-                !checkedRolesState.some((role) => role.selected === true)
-              }
-            >
+            <FormControl isRequired>
               <FormLabel>Roles</FormLabel>
               <Flex flexGrow={1}>{renderRolesCheckboxes(roles)}</Flex>
             </FormControl>
@@ -245,7 +247,14 @@ export default function EmployeeModal({
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant={
+              !checkedRolesState.some((role) => role.selected === true)
+                ? "primaryDisabled"
+                : "primary"
+            }
+            isDisabled={
+              !checkedRolesState.some((role) => role.selected === true)
+            }
             onClick={handleSubmit((data) => submitForm(data))}
           >
             Add & Close

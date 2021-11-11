@@ -11,6 +11,11 @@ const button: StyleConfig = {
       color: "white",
       _hover: { opacity: 0.8 },
     },
+    primaryDisabled: {
+      backgroundColor: "primary",
+      color: "white",
+      _hover: { opacity: 0.4, _disabled: { bg: "primary" } },
+    },
     secondary: {
       backgroundColor: "white",
       _hover: { backgroundColor: "gray.200" },
