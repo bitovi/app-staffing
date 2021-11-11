@@ -15,11 +15,13 @@ import EmployeeCard from "../EmployeeCard";
 
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
+  deleteEmployee: (employeeId: string) => Promise<void>;
   onEdit: (id: string, employee: Employee) => void;
 }
 
 export default function EmployeeTable({
   employees,
+  deleteEmployee,
   onEdit,
   ...props
 }: IEmployeeTable): JSX.Element {
@@ -81,7 +83,11 @@ export default function EmployeeTable({
               </Thead>
               <Tbody>
                 {employees?.map((employee, index) => (
-                  <EmployeeTableRow key={employee.id} employee={employee}>
+                  <EmployeeTableRow
+                    key={employee.id}
+                    deleteEmployee={deleteEmployee}
+                    employee={employee}
+                  >
                     {employees.length - 1 !== index && <Tr height={4}></Tr>}
                   </EmployeeTableRow>
                 ))}
@@ -97,13 +103,15 @@ export default function EmployeeTable({
 const EmployeeTableRow = ({
   employee,
   children,
+  deleteEmployee,
 }: {
   employee: Employee;
+  deleteEmployee: (employeeId: string) => Promise<void>;
   children: JSX.Element | boolean;
 }): JSX.Element => {
   return (
     <>
-      <EmployeeCard employee={employee} />
+      <EmployeeCard deleteEmployee={deleteEmployee} employee={employee} />
       {children}
     </>
   );

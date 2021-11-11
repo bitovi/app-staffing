@@ -59,7 +59,7 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { employees, addEmployee } = useEmployees();
+  const { employees, addEmployee, deleteEmployee } = useEmployees();
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
@@ -91,7 +91,12 @@ export function Employees({
         </Button>
       </Flex>
 
-      <EmployeeTable mt="48px" employees={employees} onEdit={() => undefined} />
+      <EmployeeTable
+        mt="48px"
+        deleteEmployee={deleteEmployee}
+        employees={employees}
+        onEdit={() => undefined}
+      />
     </Box>
   );
 }

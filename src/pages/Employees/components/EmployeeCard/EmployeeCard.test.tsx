@@ -24,6 +24,7 @@ describe("Components/Layout", () => {
             <tbody>
               {employees && (
                 <EmployeeCard
+                  deleteEmployee={(id) => new Promise((resolve) => resolve())}
                   key={employees[0].id}
                   employee={employees[0]}
                   //onSave={() => null}

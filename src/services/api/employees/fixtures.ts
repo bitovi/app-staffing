@@ -84,6 +84,7 @@ export const employeeMockData = (): ResponseStatus & EmployeeActions => {
   return {
     employees,
     addEmployee: (employee) => new Promise((resolve) => resolve("")),
+    deleteEmployee: (id) => new Promise((resolve) => resolve()),
     isLoading: false,
     reset: () => undefined,
   };

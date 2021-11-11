@@ -12,16 +12,17 @@ import {
   Thead,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
-
 import { Tag } from "../../../../components/Tag";
 import type { Employee } from "../../../../services/api";
 import { TrashIcon, EditIcon } from "../../../assets";
 interface EmployeeCardProps {
   employee: Employee;
+  deleteEmployee: (employeeId: string) => Promise<void>;
 }
 
 export default function EmployeeCard({
   employee,
+  deleteEmployee,
 }: EmployeeCardProps): JSX.Element {
   return (
     <Tr
@@ -94,6 +95,8 @@ export default function EmployeeCard({
             aria-label="Delete Member"
             fontSize="20px"
             icon={<TrashIcon fill="currentColor" />}
+            as="button"
+            onClick={() => deleteEmployee(employee.id)}
           />
         </Flex>
       </Td>

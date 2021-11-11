@@ -22,6 +22,7 @@ interface RestActions<T> extends APIResponse<T> {
     data: FrontEndEmployee;
   }) => Promise<string | undefined>;
   reset: () => void;
+  handleDelete: (collectionItemId: string) => Promise<void>;
 }
 
 function useRest<T>(
@@ -104,9 +105,56 @@ function useRest<T>(
     [path, key, mutate],
   );
 
+  const handleDelete = useCallback(
+    async (collectionItemId: string) => {
+      await mutate(
+        key,
+        async (deleteResponse: {
+          data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
+        }) => {
+          await fetcher("DELETE", `${path}/${collectionItemId}`);
+
+          const newData = [
+            ...deleteResponse.data.data.filter(
+              (item) => item.id !== collectionItemId,
+            ),
+          ];
+
+          const newCache = {
+            data: newData,
+            included: [
+              ...deleteResponse.data.included.filter((skill) => {
+                if (
+                  newData.find(
+                    ({
+                      relationships: {
+                        skills: { data: employeeSkill },
+                      },
+                    }) =>
+                      employeeSkill.some((eSkill) => eSkill.id === skill.id),
+                  )
+                ) {
+                  return skill;
+                }
+              }),
+            ],
+          };
+
+          return {
+            ...deleteResponse,
+            data: newCache,
+          };
+        },
+        false,
+      );
+    },
+    [path, key, mutate],
+  );
+
   return {
     data: response?.data,
     handleAdd,
+    handleDelete,
     error,
     isLoading: !response && !error,
     reset: () => mutate(key, (v: T) => v, false),

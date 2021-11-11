@@ -55,13 +55,25 @@ const mockData = [
 
 describe("Components/Layout", () => {
   it("has an 'empty' state", async () => {
-    render(<EmployeeTable employees={[]} onEdit={() => null} />);
+    render(
+      <EmployeeTable
+        deleteEmployee={(id) => new Promise((resolve) => resolve())}
+        employees={[]}
+        onEdit={() => null}
+      />,
+    );
 
     expect(screen.getByText(/There are currently no team members./i));
   });
 
   it("shows employees", async () => {
-    render(<EmployeeTable employees={mockData} onEdit={() => null} />);
+    render(
+      <EmployeeTable
+        deleteEmployee={(id) => new Promise((resolve) => resolve())}
+        employees={mockData}
+        onEdit={() => null}
+      />,
+    );
 
     // wait for the first row
     expect(screen.getByText(mockData[0].name)).toBeInTheDocument();
