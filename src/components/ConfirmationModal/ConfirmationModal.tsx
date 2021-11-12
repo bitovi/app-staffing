@@ -62,7 +62,7 @@ export default function ConfirmationModal({
         <ModalFooter>
           <HStack flexGrow={1} justifyContent="flex-end">
             <Button
-              disabled={isLoading}
+              isDisabled={isLoading}
               onClick={onClose}
               variant="deleteAction"
             >
@@ -70,8 +70,10 @@ export default function ConfirmationModal({
             </Button>
             <Button
               isLoading={isLoading}
+              isDisabled={isLoading}
               onClick={onConfirm}
               variant={confirmButtonVariant}
+              aria-label="confirm button"
             >
               <Text textStyle="modal.button">{confirmText}</Text>
             </Button>

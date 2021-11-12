@@ -74,7 +74,7 @@ export default function EmployeeTable({
         confirmText="Delete Team Member"
         confirmButtonVariant="danger"
         modalSize="lg"
-        // isCentered={true}
+        isLoading={true}
       />
       <Box {...props}>
         {employees && employees.length === 0 && (
