@@ -6,7 +6,9 @@ export type ButtonVariant =
   | "secondary"
   | "danger"
   | "link"
-  | "deleteAction";
+  | "deleteAction"
+  | "modalCancel"
+  | "modalConfirm";
 interface ButtonProps extends React.ComponentProps<typeof ChakraButton> {
   children: ReactNode;
   variant?: ButtonVariant;

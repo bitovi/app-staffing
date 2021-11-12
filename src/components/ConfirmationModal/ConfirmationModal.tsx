@@ -64,9 +64,9 @@ export default function ConfirmationModal({
             <Button
               isDisabled={isLoading}
               onClick={onClose}
-              variant="deleteAction"
+              variant="modalCancel"
             >
-              <Text textStyle="modal.button">{closeText}</Text>
+              {closeText}
             </Button>
             <Button
               isLoading={isLoading}
@@ -75,7 +75,7 @@ export default function ConfirmationModal({
               variant={confirmButtonVariant}
               aria-label="confirm button"
             >
-              <Text textStyle="modal.button">{confirmText}</Text>
+              {confirmText}
             </Button>
           </HStack>
         </ModalFooter>

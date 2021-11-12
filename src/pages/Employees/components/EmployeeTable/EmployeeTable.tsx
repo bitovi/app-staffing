@@ -72,9 +72,8 @@ export default function EmployeeTable({
         }. This can't be undone.`}
         closeText="Cancel"
         confirmText="Delete Team Member"
-        confirmButtonVariant="danger"
+        confirmButtonVariant="modalConfirm"
         modalSize="lg"
-        isLoading={true}
       />
       <Box {...props}>
         {employees && employees.length === 0 && (
