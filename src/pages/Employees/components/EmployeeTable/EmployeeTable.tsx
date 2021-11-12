@@ -160,7 +160,7 @@ export default function EmployeeTable({
   );
 }
 
-const EmployeeTableRow = ({
+export const EmployeeTableRow = ({
   employee,
   children,
   setEmployeeToDelete,

@@ -1,5 +1,5 @@
 // import { Suspense } from "react";
-import { render /*screen, fireEvent*/ } from "@testing-library/react";
+import { render /*screen*/ } from "@testing-library/react";
 import { employeeMockData } from "../../services/api/employees/fixtures";
 // import userEvent from "@testing-library/user-event";
 
@@ -53,6 +53,4 @@ describe("Pages/Employees", () => {
 
     //expect(screen.getByText("Loading...")).toBe(true);
   });
-
-  // it("Displays delete message", async () => {});
 });

@@ -98,7 +98,6 @@ export default function EmployeeCard({
               aria-label="Delete Member"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
-              as="button"
               onClick={() => setEmployeeToDelete(employee)}
             />
           </Flex>
