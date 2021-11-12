@@ -1,4 +1,4 @@
-import { Select } from "../../../../components/Select";
+import Select from "../../../../components/Select";
 import {
   AssignedEmployee,
   Employee,
@@ -31,7 +31,7 @@ export default function AssignedEmployeeDetails({
       return;
     }
 
-    changeEmployee(assignedEmployee.id, {
+    changeEmployee(assignedEmployee.employee.id, {
       ...assignedEmployee,
       ...newEmployee,
     });
@@ -44,7 +44,7 @@ export default function AssignedEmployeeDetails({
           className={styles.employee}
           label=""
           name="assignedEmployee"
-          value={assignedEmployee.name}
+          value={assignedEmployee.employee.name}
           onChange={(value) => updateEmployee(value || "")}
           options={possibleOtherEmployees.map(({ name }) => ({
             label: name,
@@ -56,9 +56,12 @@ export default function AssignedEmployeeDetails({
         Start Date:
         <input
           type="date"
-          defaultValue={assignedEmployee.assignmentStartDate}
-          onChange={({ target }) =>
-            onChange({ ...assignedEmployee, assignmentStartDate: target.value })
+          defaultValue={assignedEmployee.startDate?.toString()}
+          onChange={(e) =>
+            onChange({
+              ...assignedEmployee,
+              startDate: new Date(e.target.value),
+            })
           }
         />
       </label>
@@ -66,9 +69,9 @@ export default function AssignedEmployeeDetails({
         End Date:
         <input
           type="date"
-          defaultValue={assignedEmployee.assignmnetEndDate}
-          onChange={({ target }) =>
-            onChange({ ...assignedEmployee, assignmnetEndDate: target.value })
+          defaultValue={assignedEmployee.endDate?.toString()}
+          onChange={(e) =>
+            onChange({ ...assignedEmployee, endDate: new Date(e.target.value) })
           }
         />
       </label>

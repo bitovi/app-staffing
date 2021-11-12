@@ -1,115 +1,174 @@
-import { Flex, Grid, GridItem, Text, Wrap } from "@chakra-ui/layout";
-import React from "react";
-import { Tag, TagCloseButton } from "../../../../components/Tag";
-import useAutoSaveForm from "../../../../hooks/useAutoSaveForm";
-import type { Employee, SkillName } from "../../../../services/api";
-import { skillList } from "../../../../services/api";
-import { EmployeeSkillSelect } from "./components/EmployeeSkillSelect";
-import styles from "./EmployeeCard.module.scss";
+import { Text } from "@chakra-ui/layout";
+import {
+  Flex,
+  Skeleton,
+  IconButton,
+  Wrap,
+  Td,
+  Tr,
+  Table,
+  Tbody,
+  Th,
+  Thead,
+} from "@chakra-ui/react";
+import { format } from "date-fns";
 
-interface IProps {
+import { Tag } from "../../../../components/Tag";
+import type { Employee } from "../../../../services/api";
+import { TrashIcon, EditIcon } from "../../../assets";
+interface EmployeeCardProps {
   employee: Employee;
-  onSave: (employee: Employee) => void;
 }
 
 export default function EmployeeCard({
   employee,
-  onSave,
-}: IProps): JSX.Element {
-  const [formData, setFormData] = useAutoSaveForm<Employee>({
-    initialFormData: employee,
-    onSave,
-  });
-
-  const onAddSkill = (skillName: SkillName) => {
-    setFormData({
-      ...formData,
-      skills: [...formData.skills, { name: skillName }],
-    });
-  };
-
-  const onRemoveSkill = (skillName: string) => {
-    setFormData({
-      ...formData,
-      skills: formData.skills.filter((x) => x.name != skillName),
-    });
-  };
-
-  const updateField = (evt: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = evt.currentTarget;
-    setFormData({ ...formData, [name]: value });
-  };
-
+}: EmployeeCardProps): JSX.Element {
   return (
-    <Grid
+    <Tr
+      p="16px"
       alignItems="center"
-      templateColumns={{
-        base: "1fr",
-        md: "repeat(2, 1fr)",
-        lg: "repeat(4, 1fr)",
-      }}
-      gap={4}
+      backgroundColor="white"
+      boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
     >
-      <GridItem>
-        <Flex justifyContent={{ lg: "center" }} alignItems={{ lg: "center" }}>
-          <input
-            name="name"
-            aria-label="employee-name"
-            className={styles.name}
-            value={formData.name}
-            onChange={updateField}
-          />
-        </Flex>
-      </GridItem>
-
-      <GridItem>
-        <Flex
-          flexDirection={{ base: "row", lg: "column" }}
-          justifyContent="space-between"
+      <Td>
+        <Text
+          color="gray.600"
+          fontWeight="600"
+          fontSize="16px"
+          lineHeight="20px"
+          letterSpacing="0.25px"
         >
-          <Text
-            fontSize="sm"
-            as="label"
-            mt={{ base: 0, lg: 2 }}
-            mr={{ base: 2, lg: 0 }}
-          >
-            Start Date
-            <input
-              name="startDate"
-              value={formData.startDate}
-              onChange={updateField}
-            />
-          </Text>
-          <Text fontSize="sm" as="label">
-            End Date
-            <input
-              name="endDate"
-              value={formData.endDate}
-              onChange={updateField}
-            />
-          </Text>
-        </Flex>
-      </GridItem>
-      <GridItem>
-        <Wrap as="ul" data-testid="display-skills" shouldWrapChildren>
-          {formData.skills.map(({ name }) => (
-            <Tag variant="primary" key={name}>
-              {name}
-              <TagCloseButton
-                onClick={() => onRemoveSkill(name)}
-                data-testid="remove-skill"
-              />
+          {employee.name}
+        </Text>
+      </Td>
+      <Td>
+        <Text
+          color="gray.600"
+          fontWeight="400"
+          fontSize="14px"
+          lineHeight="20px"
+          letterSpacing="0.25px"
+        >
+          {format(employee.startDate, "MM/dd/yyyy")}
+        </Text>
+      </Td>
+      <Td>
+        <Text
+          color="gray.600"
+          fontWeight="400"
+          fontSize="14px"
+          lineHeight="20px"
+          letterSpacing="0.25px"
+        >
+          {employee.endDate && format(employee.endDate, "MM/dd/yyyy")}
+        </Text>
+      </Td>
+      <Td>
+        <Wrap spacing="8px">
+          {employee.skills.map((skill) => (
+            <Tag variant="primary" key={skill.name}>
+              <Text
+                fontFamily="Inter"
+                fontStyle="normal"
+                fontWeight="500"
+                fontSize="12px"
+                lineHeight="16px"
+              >
+                {skill.name}
+              </Text>
             </Tag>
           ))}
         </Wrap>
-      </GridItem>
-      <GridItem>
-        <EmployeeSkillSelect
-          selectedSkills={formData.skills}
-          allSkills={[...skillList]}
-          onAddSkill={onAddSkill}
+      </Td>
+      <Td>
+        <Flex justifyContent="end" justifySelf="end">
+          <IconButton
+            variant="editAction"
+            aria-label="Edit Member"
+            fontSize="20px"
+            icon={<EditIcon fill="currentColor" />}
+          />
+          <IconButton
+            ml="8px"
+            variant="deleteAction"
+            aria-label="Delete Member"
+            fontSize="20px"
+            icon={<TrashIcon fill="currentColor" />}
+          />
+        </Flex>
+      </Td>
+    </Tr>
+  );
+}
+
+const SkeletonRow = () => (
+  <>
+    <Tr p="16px" alignItems="center" backgroundColor="#DCDCDC" height="55px">
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="99px"
         />
-      </GridItem>
-    </Grid>
+      </Td>
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="75px"
+        />
+      </Td>
+      <Td></Td>
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="99px"
+        />
+      </Td>
+      <Td>
+        <Skeleton
+          startColor="#C4C4C4"
+          endColor="#C4C4C4"
+          height="16px"
+          width="99px"
+        />
+      </Td>
+    </Tr>
+    <Tr height={4}></Tr>
+  </>
+);
+
+export function EmployeeCardSkeleton(): JSX.Element {
+  return (
+    <Table>
+      <Thead>
+        <Tr>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+            EMPLOYEE NAME
+          </Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+            START DATE
+          </Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+            END DATE
+          </Th>
+          <Th pt="0px" pr={80} pb={4} color="gray.800" textStyle="table.title">
+            ROLES
+          </Th>
+          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+            ACTIONS
+          </Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {[1, 2, 3, 4].map((row) => {
+          return <SkeletonRow key={row} />;
+        })}
+      </Tbody>
+    </Table>
   );
 }

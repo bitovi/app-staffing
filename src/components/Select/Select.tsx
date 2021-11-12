@@ -3,23 +3,23 @@ import ReactSelect from "react-select";
 
 import styles from "./Select.module.scss";
 
-interface SelectProps {
+interface SelectProps<Type> {
   className?: string;
   disabled?: boolean;
   name: string;
   label: string;
-  value?: string;
+  value?: Type;
   options: Array<{
-    value?: string;
+    value?: Type;
     label: ReactNode;
   }>;
-  onChange(value?: string): void;
+  onChange(value?: Type): void;
   onBlur?(): void;
   onFocus?(): void;
   placeholder?: string;
 }
 
-export function Select({
+export default function Select<Type>({
   className,
   disabled,
   name,
@@ -30,7 +30,7 @@ export function Select({
   onBlur,
   onFocus,
   placeholder = "Select...",
-}: SelectProps): JSX.Element {
+}: SelectProps<Type>): JSX.Element {
   const activeOption = options.find((option) => option.value === value);
 
   return (
@@ -44,7 +44,7 @@ export function Select({
         value={activeOption}
         options={options}
         onBlur={onBlur}
-        onChange={(option) => onChange(option?.value ?? undefined)}
+        onChange={(option) => onChange(option?.value)}
         onFocus={onFocus}
         placeholder={placeholder}
       />

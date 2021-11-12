@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
-import { Select } from "./Select";
+import Select from "./Select";
 
 describe("Components/Select", () => {
   const mockOnChange = jest.fn();

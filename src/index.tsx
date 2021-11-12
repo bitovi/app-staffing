@@ -9,6 +9,9 @@ import mocks from "./services/mocks";
 import App from "./App";
 import theme from "./theme";
 
+// fonts
+import "./theme/fonts/styles.css";
+
 if (process.env.PUBLIC_URL) {
   if (!window.location.pathname.startsWith(`${process.env.PUBLIC_URL}/`)) {
     window.location.pathname = `${process.env.PUBLIC_URL}/`;

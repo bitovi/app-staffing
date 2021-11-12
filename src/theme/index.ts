@@ -1,11 +1,24 @@
 import { extendTheme } from "@chakra-ui/react";
-import { button } from "./components/button";
-import { tag } from "./components/tag";
+import { colors } from "./colors";
+
+import Button from "./components/button";
+import { Checkbox } from "./components/checkbox";
+import { textStyles } from "./fonts/typography";
+import DatePicker from "./components/date-picker";
+import Tag from "./components/tag";
 
 const theme = extendTheme({
+  fonts: {
+    headers: "Inter",
+    body: "Montserrat",
+  },
+  colors,
+  textStyles,
   components: {
-    Button: button,
-    Tag: tag,
+    Checkbox,
+    Button,
+    DatePicker,
+    Tag,
   },
 });
 

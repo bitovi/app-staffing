@@ -10,7 +10,7 @@ declare module "can-local-store" {
     };
   }
 
-  type PropertyFilter<T> = {
+  interface PropertyFilter<T> {
     $eq?: T;
     $ne?: T;
     $in?: T[];
@@ -22,21 +22,21 @@ declare module "can-local-store" {
     $all?: T;
     $not?: T;
     $and?: T;
-  };
+  }
 
   export type Filter<T extends BaseT> = {
     [key in keyof T]?: T[key] | Array<T[key]> | PropertyFilter<T[key]>;
   };
 
-  export type CanLocalStore<T> = {
-    getData(baseId: { id: string }): Promise<?T>;
+  export interface CanLocalStore<T> {
+    getData(baseId: { id: string }): Promise<T>;
     getListData(query?: Query<T>): Promise<{ data: T[]; count: number }>;
     createData(data: T): Promise<T>;
-    updateData(data: Partial<T> & { id: string }): Promise<?T>;
+    updateData(data: Partial<T> & { id: string }): Promise<T>;
     updateListData(data: T[]): Promise<Array<T>>;
     destroyData(data: T): Promise<T>;
     clear(): Promise<void>;
-  };
+  }
 
   export default function localStore<T extends BaseT>(connection: {
     queryLogic: any;

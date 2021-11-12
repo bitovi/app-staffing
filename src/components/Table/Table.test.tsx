@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { Cell, Header, Row, Table } from ".";
+import Table, { Cell, Header, Row } from ".";
 
 describe("Components/Table", () => {
   it("renders child Cell text and elements", async () => {
@@ -21,6 +21,7 @@ describe("Components/Table", () => {
         </Row>
       </Table>,
     );
+
     // Can render headers
     expect(screen.getByText("Header 1")).toBeInTheDocument();
     // Can render cells

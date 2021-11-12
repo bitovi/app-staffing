@@ -1,61 +1,55 @@
-import type { APIResponse, QueriableList } from "../shared";
-
-import { useCallback } from "react";
-import useSWR, { mutate } from "swr";
 import param from "can-param";
-
+import { useCallback } from "react";
+import useSWR, { useSWRConfig } from "swr";
+import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
-
+import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 interface RestActions<T> extends APIResponse<T[]> {
-  useAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
-  useUpdate: (
+  handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
+  handleUpdate: (
     collectionItemId: string,
     updatedCollectionItem: Partial<T>,
   ) => Promise<void>;
-  useDelete: (collectionItemId: string) => Promise<void>;
+  handleDelete: (collectionItemId: string) => Promise<void>;
+  reset: () => void;
 }
-
 function useRest<T extends { id: string }>(
   path: string,
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
+  const key = `${path}?${param(queryParams)}`;
+  const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
-    `${path}?${param(queryParams)}`,
-    (url) => {
-      return fetcher("GET", url);
-    },
+    key,
+    (url) => fetcher("GET", url),
+    { suspense: true, use: [deserializeDateMiddleware] },
   );
-
-  const useAdd = useCallback<
+  const handleAdd = useCallback<
     (newCollectionItem: Omit<T, "id">) => Promise<string>
   >(
     async (newCollectionItem: Omit<T, "id">) => {
       let newId = "";
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (addResponse: { data: T[] }) => {
           const { data: newItem } = await fetcher<{ data: T }>(
             "POST",
             path,
             newCollectionItem,
           );
-
           newId = newItem.id;
-
           return {
             ...addResponse,
-            data: [...addResponse.data, newItem],
+            data: [...addResponse.data, { ...newCollectionItem, id: newId }],
           };
         },
         false,
       );
-
       return newId;
     },
-    [path, queryParams],
+    [path, key, mutate],
   );
-
-  const useUpdate = useCallback<
+  const handleUpdate = useCallback<
     (
       collectionItemId: string,
       updatedCollectionItem: Partial<T>,
@@ -63,34 +57,31 @@ function useRest<T extends { id: string }>(
   >(
     async (collectionItemId: string, updatedCollectionItem: Partial<T>) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (cachedData: { data: T[] }) => {
-          const response = await fetcher<{ data: T }>(
+          const { data: updatedItem } = await fetcher<{ data: T }>(
             "PUT",
             `${path}/${collectionItemId}`,
             updatedCollectionItem,
           );
-
           return {
             ...cachedData,
             data: (cachedData?.data ?? []).map((item) =>
-              item.id === response.data.id ? response.data : item,
+              item.id === updatedItem.id ? updatedItem : item,
             ),
           };
         },
         false,
       );
     },
-    [path, queryParams],
+    [path, key, mutate],
   );
-
-  const useDelete = useCallback(
+  const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
-        `${path}?${param(queryParams)}`,
+        key,
         async (deleteResponse: { data: T[] }) => {
           await fetcher("DELETE", `${path}/${collectionItemId}`);
-
           return {
             ...deleteResponse,
             data: deleteResponse.data.filter(
@@ -101,17 +92,16 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, queryParams],
+    [path, key, mutate],
   );
-
   return {
     data: response?.data,
     error,
     isLoading: !response && !error,
-    useAdd,
-    useUpdate,
-    useDelete,
+    handleAdd,
+    handleUpdate,
+    handleDelete,
+    reset: () => mutate(key, (v: T) => v, false),
   };
 }
-
 export default useRest;
