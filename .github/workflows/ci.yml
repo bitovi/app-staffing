@@ -33,12 +33,3 @@ jobs:
         run: npm run build
       - name: Build Storybook
         run: npm run storybook:build
-
-      - name: Deploy
-        if: ${{ github.ref == 'refs/heads/main' }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          user_name: "Workflow: ${{ env.GITHUB_WORKFLOW }}[bot]"
-          user_email: "${{ env.GITHUB_WORKFLOW }}[bot]@workflow"
-          publish_dir: ./build

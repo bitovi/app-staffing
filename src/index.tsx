@@ -1,6 +1,6 @@
 import { render } from "react-dom";
 import { StrictMode } from "react";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { setupWorker } from "msw";
 import { ChakraProvider } from "@chakra-ui/react";
 
@@ -12,12 +12,6 @@ import theme from "./theme";
 // fonts
 import "./theme/fonts/styles.css";
 
-if (process.env.PUBLIC_URL) {
-  if (!window.location.pathname.startsWith(`${process.env.PUBLIC_URL}/`)) {
-    window.location.pathname = `${process.env.PUBLIC_URL}/`;
-  }
-}
-
 setupWorker(...mocks).start({
   onUnhandledRequest: "bypass",
   serviceWorker: {
@@ -28,9 +22,9 @@ setupWorker(...mocks).start({
 render(
   <StrictMode>
     <ChakraProvider theme={theme}>
-      <HashRouter>
+      <BrowserRouter>
         <App />
-      </HashRouter>
+      </BrowserRouter>
     </ChakraProvider>
   </StrictMode>,
   document.getElementById("root"),
