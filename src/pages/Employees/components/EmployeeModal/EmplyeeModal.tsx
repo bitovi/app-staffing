@@ -167,9 +167,9 @@ export default function EmployeeModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mt="14vh">
         <ModalHeader>Add a New Team Member</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -212,7 +212,9 @@ export default function EmployeeModal({
 
             <FormControl isRequired>
               <FormLabel>Roles</FormLabel>
-              <Flex flexGrow={1}>{renderRolesCheckboxes(roles)}</Flex>
+              <Flex mt={4} mb={11} flexGrow={1}>
+                {renderRolesCheckboxes(roles)}
+              </Flex>
             </FormControl>
           </VStack>
         </ModalBody>
