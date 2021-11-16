@@ -53,6 +53,7 @@ function useRest<T>(
               newCollectionItem,
             );
             newId = newItem.id;
+
             // Employee specific, ideally needs to be move outside of the useRest function
             // Fetches the skills by id for new employee & checks them
             // against the skills already in the included field of the cache
@@ -78,6 +79,7 @@ function useRest<T>(
               })
               // only maps those skills not already in the cache into the appropriate
               // data shape
+
               .map((skill) => ({
                 type: "skills",
                 id: skill.id,
@@ -85,6 +87,7 @@ function useRest<T>(
                   name: skill.name,
                 },
               }));
+
             //^^^^^^
 
             const newCache = {
@@ -102,7 +105,7 @@ function useRest<T>(
         return newId;
       } catch (error) {
         if (error instanceof Error) {
-          console.log(error.message);
+          //console.log(error.message);
         }
       }
     },
