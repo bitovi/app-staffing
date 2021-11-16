@@ -86,6 +86,7 @@ export function Employees({
           size="lg"
           variant="primary"
           onClick={() => setEmployeeModal(true)}
+          arialabel="Add Employee"
         >
           Add Team Member
         </Button>

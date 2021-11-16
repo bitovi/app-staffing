@@ -12,11 +12,6 @@ import { skillStoreManager } from "../skills/mocks";
 // import { employeeDataFormatter } from "../useEmployees/useEmployees";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 
-///////////////////////////////////////////////////////////////////
-// ** V2 is still not abstracted enough for consumption by all endpoints
-// ** Currently implementing TypeScript unions to check for specific types
-// ** for example in the interface below
-///////////////////////////////////////////////////////////////////
 interface RestActions<T> extends APIResponse<T> {
   handleAdd: (newCollectionItem: {
     data: FrontEndEmployee;
@@ -58,6 +53,12 @@ function useRest<T>(
               newCollectionItem,
             );
             newId = newItem.id;
+            // Employee specific, ideally needs to be move outside of the useRest function
+            // Fetches the skills by id for new employee & checks them
+            // against the skills already in the included field of the cache
+            // if the skill has no match, add it to cache; if it does
+            // ignore it  V V.
+
             const newItemIncluded = await skillStoreManager.store.getListData({
               filter: {
                 id: newItem.relationships.skills.data.map(
@@ -75,6 +76,8 @@ function useRest<T>(
                   return skill;
                 }
               })
+              // only maps those skills not already in the cache into the appropriate
+              // data shape
               .map((skill) => ({
                 type: "skills",
                 id: skill.id,
@@ -82,6 +85,7 @@ function useRest<T>(
                   name: skill.name,
                 },
               }));
+            //^^^^^^
 
             const newCache = {
               data: [...addResponse.data.data, newItem],
@@ -98,7 +102,7 @@ function useRest<T>(
         return newId;
       } catch (error) {
         if (error instanceof Error) {
-          throw new Error(error.message);
+          console.log(error.message);
         }
       }
     },
@@ -119,7 +123,9 @@ function useRest<T>(
               (item) => item.id !== collectionItemId,
             ),
           ];
-
+          //Employee specific, ideally needs to be moved outside of the useRest
+          //function. Checks, after a delete, whether all the skills in "included"
+          //are still connected to at least one employee. VV
           const newCache = {
             data: newData,
             included: [
@@ -139,7 +145,7 @@ function useRest<T>(
               }),
             ],
           };
-
+          //^^^^^^^^^^^^^^^^^^^
           return {
             ...deleteResponse,
             data: newCache,
