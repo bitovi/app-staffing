@@ -18,7 +18,9 @@ import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 // ** for example in the interface below
 ///////////////////////////////////////////////////////////////////
 interface RestActions<T> extends APIResponse<T> {
-  handleAdd: (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>;
+  handleAdd: (newCollectionItem: {
+    data: FrontEndEmployee;
+  }) => Promise<string | undefined>;
   reset: () => void;
 }
 
@@ -37,60 +39,67 @@ function useRest<T>(
   );
 
   const handleAdd = useCallback<
-    (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>
+    (newCollectionItem: {
+      data: FrontEndEmployee;
+    }) => Promise<string | undefined>
   >(
     async (newCollectionItem: { data: FrontEndEmployee }) => {
       let newId = "";
-      await mutate(
-        key,
-        async (addResponse: {
-          data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
-        }) => {
-          const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
-            "POST",
-            path,
-            newCollectionItem,
-          );
-
-          newId = newItem.id;
-          const newItemIncluded = await skillStoreManager.store.getListData({
-            filter: {
-              id: newItem.relationships.skills.data.map(
-                (skill: Skill) => skill.id,
-              ),
-            },
-          });
-          const skillsToAdd = newItemIncluded.data
-            .filter((skill) => {
-              if (
-                !addResponse.data.included.find(
-                  (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
-                )
-              ) {
-                return skill;
-              }
-            })
-            .map((skill) => ({
-              type: "skills",
-              id: skill.id,
-              attributes: {
-                name: skill.name,
+      try {
+        await mutate(
+          key,
+          async (addResponse: {
+            data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
+          }) => {
+            const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
+              "POST",
+              path,
+              newCollectionItem,
+            );
+            newId = newItem.id;
+            const newItemIncluded = await skillStoreManager.store.getListData({
+              filter: {
+                id: newItem.relationships.skills.data.map(
+                  (skill: Skill) => skill.id,
+                ),
               },
-            }));
+            });
+            const skillsToAdd = newItemIncluded.data
+              .filter((skill) => {
+                if (
+                  !addResponse.data.included.find(
+                    (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
+                  )
+                ) {
+                  return skill;
+                }
+              })
+              .map((skill) => ({
+                type: "skills",
+                id: skill.id,
+                attributes: {
+                  name: skill.name,
+                },
+              }));
 
-          const newCache = {
-            data: [...addResponse.data.data, newItem],
-            included: [...addResponse.data.included, ...skillsToAdd],
-          };
+            const newCache = {
+              data: [...addResponse.data.data, newItem],
+              included: [...addResponse.data.included, ...skillsToAdd],
+            };
 
-          return {
-            ...addResponse,
-            data: newCache,
-          };
-        },
-        false,
-      );
-      return newId;
+            return {
+              ...addResponse,
+              data: newCache,
+            };
+          },
+          false,
+        );
+        return newId;
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
+      }
     },
     [path, key, mutate],
   );
