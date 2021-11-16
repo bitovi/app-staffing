@@ -13,7 +13,8 @@
     "depcheck": "depcheck .",
     "clean": "rm -rf build coverage",
     "dev": "react-scripts start",
-    
+    "build:nginx": "rimraf dist && npm run generate-imported-components && npm run create-bundle:nginx",
+    "create-bundle:nginx": "cross-env BABEL_ENV=client parcel build app/index.html -d dist/client --public-url .",
     "test": "react-scripts test",
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
