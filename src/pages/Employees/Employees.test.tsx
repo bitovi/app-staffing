@@ -1,5 +1,12 @@
 // import { Suspense } from "react";
-import { fireEvent, render, screen, cleanup } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  cleanup,
+  within,
+  waitFor,
+} from "@testing-library/react";
 // import userEvent from "@testing-library/user-event";
 
 // import { employees } from "../../services/api/employees/fixtures";
@@ -8,10 +15,12 @@ import { employeeSkillsStoreManager } from "../../services/api/employee_skills/m
 import { skillStoreManager } from "../../services/api/skills/mocks";
 
 import EmployeesWrapper from "./Employees";
-import { PortalManager } from "@chakra-ui/portal";
+import { StylesProvider } from "@chakra-ui/system";
+import theme from "../../theme";
+// import { PortalManager } from "@chakra-ui/portal";
 
-const renderWithPortal = (ui: React.ReactElement) =>
-  render(<PortalManager>{ui}</PortalManager>);
+// const renderWithPortal = (ui: React.ReactElement) =>
+//   render(<PortalManager>{ui}</PortalManager>);
 
 describe("Pages/Employees", () => {
   beforeEach(async () => {
@@ -34,7 +43,6 @@ describe("Pages/Employees", () => {
     });
     expect(await screen.findByText("Sam Kreiger")).toBeInTheDocument();
     fireEvent.click(addButton);
-    screen.debug();
   });
 
   // it("filters by name", async () => {
@@ -62,23 +70,53 @@ describe("Pages/Employees", () => {
   });
 
   it("Creates new employee", async () => {
-    render(<EmployeesWrapper />);
+    render(
+      <StylesProvider value={theme}>
+        <EmployeesWrapper />
+      </StylesProvider>,
+    );
     const addButton = await screen.findByRole("button", {
       name: /add team member/i,
     });
     fireEvent.click(addButton);
-    // expect(
-    //   await screen.findByRole("button", { name: /Cancel/i }),
-    // ).toBeInTheDocument();
-    // expect(await tools.findByTestId("custom-element")).toBeInTheDocument();
-    // const result = await screen.findAllByRole("dialog");
-    // waitFor(() =>
-    //   expect(
-    //     document.getElementsByClassName("chakra-modal__content"),
-    //   ).toBeInTheDocument(),
-    // );
-    // await waitFor(() => screen.getByTestId("custom-element"));
 
-    // screen.debug(newThing);
+    const modalNameInput = await screen.findByPlaceholderText(/name/i);
+    fireEvent.change(modalNameInput, {
+      target: { value: "Johnny Appleseed" },
+    });
+    expect(modalNameInput).toHaveValue("Johnny Appleseed");
+
+    const modalStartDateInput = await screen.findByTestId(/start_date/i);
+    fireEvent.change(modalStartDateInput, {
+      target: { value: "1993-01-24" },
+    });
+    expect(modalStartDateInput).toHaveValue("1993-01-24");
+
+    const modal = await screen.findByRole("dialog");
+    const submitButton = within(modal).getByText(/Add & Close/i);
+    expect(submitButton).toBeDisabled();
+
+    const angularCheckBox = within(modal).getByLabelText("Angular");
+    const designCheckBox = within(modal).getByLabelText("Design");
+
+    expect(angularCheckBox).not.toBeChecked();
+    expect(designCheckBox).not.toBeChecked();
+
+    fireEvent.click(angularCheckBox);
+    fireEvent.click(designCheckBox);
+
+    expect(angularCheckBox).toBeChecked();
+    expect(designCheckBox).toBeChecked();
+
+    expect(submitButton).toBeEnabled();
+
+    await waitFor(() => fireEvent.click(submitButton));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
+
+    expect(NewEmployee).toBeInTheDocument();
   });
 });

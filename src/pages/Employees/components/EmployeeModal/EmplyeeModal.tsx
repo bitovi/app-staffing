@@ -92,9 +92,14 @@ export default function EmployeeModal({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IEmployeeData>();
+  } = useForm<IEmployeeData>({ defaultValues: {} });
 
   const submitForm = async (data: IEmployeeData) => {
+    const newRoles = [
+      ...document.querySelectorAll<HTMLInputElement>(
+        "input[type=checkbox]:checked",
+      ),
+    ].map((node) => parseInt(node.value));
     const newEmployee: { data: FrontEndEmployee } = {
       data: {
         type: "employees",
@@ -105,7 +110,7 @@ export default function EmployeeModal({
         },
         relationships: {
           skills: {
-            data: data.roles?.map((role: number) => ({
+            data: newRoles.map((role: number) => ({
               type: "Skills",
               id: checkedRolesState[role].id,
             })),
@@ -141,6 +146,7 @@ export default function EmployeeModal({
               value={role.value}
               onChange={() => handleRolesChange(index)}
               isChecked={checkedRolesState[index].selected}
+              defaultChecked={true}
             >
               {role.label}
             </Checkbox>
@@ -201,6 +207,7 @@ export default function EmployeeModal({
                   })}
                   id="start_date"
                   type="date"
+                  data-testid="start_date"
                 />
               </FormControl>
 
