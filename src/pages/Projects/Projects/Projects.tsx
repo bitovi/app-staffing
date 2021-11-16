@@ -17,7 +17,7 @@ export default function Projects({
       ) : error ? (
         <ServiceError />
       ) : (
-        <ProjectList projects={projects ? [] : []} />
+        <ProjectList projects={projects} />
       )}
     </>
   );
