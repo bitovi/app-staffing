@@ -128,5 +128,9 @@ describe("Pages/Employees", () => {
         screen.queryByText("RoseMarie Mitchell", { exact: false }),
       ).not.toBeInTheDocument(),
     );
+
+    const employeeStore = await employeeStoreManager.store.getListData();
+
+    expect(employeeStore.data).toHaveLength(4);
   });
 });
