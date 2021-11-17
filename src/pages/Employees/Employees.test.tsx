@@ -1,26 +1,16 @@
-// import { Suspense } from "react";
 import {
   fireEvent,
   render,
   screen,
-  cleanup,
   within,
   waitFor,
+  waitForElementToBeRemoved,
 } from "@testing-library/react";
-// import userEvent from "@testing-library/user-event";
-
-// import { employees } from "../../services/api/employees/fixtures";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
 import { employeeSkillsStoreManager } from "../../services/api/employee_skills/mocks";
 import { skillStoreManager } from "../../services/api/skills/mocks";
 
 import EmployeesWrapper from "./Employees";
-import { StylesProvider } from "@chakra-ui/system";
-import theme from "../../theme";
-// import { PortalManager } from "@chakra-ui/portal";
-
-// const renderWithPortal = (ui: React.ReactElement) =>
-//   render(<PortalManager>{ui}</PortalManager>);
 
 describe("Pages/Employees", () => {
   beforeEach(async () => {
@@ -33,16 +23,11 @@ describe("Pages/Employees", () => {
     await employeeStoreManager.clear();
     await employeeSkillsStoreManager.clear();
     await skillStoreManager.clear();
-    cleanup();
   });
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
-    const addButton = await screen.findByRole("button", {
-      name: /add team member/i,
-    });
     expect(await screen.findByText("Sam Kreiger")).toBeInTheDocument();
-    fireEvent.click(addButton);
   });
 
   // it("filters by name", async () => {
@@ -65,16 +50,10 @@ describe("Pages/Employees", () => {
   it("Displays loading state skeleton", () => {
     const { container } = render(<EmployeesWrapper />);
     expect(container.getElementsByClassName("chakra-skeleton")).toBeDefined();
-
-    //expect(screen.getByText("Loading...")).toBe(true);
   });
 
   it("Creates new employee", async () => {
-    render(
-      <StylesProvider value={theme}>
-        <EmployeesWrapper />
-      </StylesProvider>,
-    );
+    render(<EmployeesWrapper />);
     const addButton = await screen.findByRole("button", {
       name: /add team member/i,
     });
@@ -118,5 +97,34 @@ describe("Pages/Employees", () => {
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
 
     expect(NewEmployee).toBeInTheDocument();
+  });
+
+  it("Deletes employee", async () => {
+    render(<EmployeesWrapper />);
+    expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
+    const rosemarieRow = await screen.findByRole("row", {
+      name: "Rosemarie Mitchell 04/30/2021 04/30/2021 React Project Management",
+      exact: false,
+    });
+    const deleteMember = await within(rosemarieRow).findByLabelText(
+      "Delete Member",
+    );
+
+    fireEvent.click(deleteMember);
+
+    const deleteModal = await screen.findByRole("dialog");
+    expect(deleteModal).toBeInTheDocument();
+
+    const deleteButton = await screen.findByLabelText(/confirm button/i);
+
+    await waitFor(() => fireEvent.click(deleteButton));
+
+    await waitForElementToBeRemoved(deleteModal);
+
+    await waitFor(() =>
+      expect(
+        screen.queryByText("RoseMarie Mitchell", { exact: false }),
+      ).not.toBeInTheDocument(),
+    );
   });
 });

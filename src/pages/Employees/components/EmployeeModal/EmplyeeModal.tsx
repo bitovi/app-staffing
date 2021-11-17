@@ -91,10 +91,21 @@ export default function EmployeeModal({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<IEmployeeData>({ defaultValues: {} });
+  } = useForm<IEmployeeData>({
+    defaultValues: {
+      start_date: "",
+      end_date: "",
+      name: "",
+    },
+  });
 
   const submitForm = async (data: IEmployeeData) => {
+    // Currently a fix to manage a testing quirk:
+    // within the testing environment, the roles field doesn't populate with an array of ints
+    // but rather returns a single boolean. Presumably a problem in the handoff
+    // between React Hooks Form / Chakra UI / testing-library
     const newRoles = [
       ...document.querySelectorAll<HTMLInputElement>(
         "input[type=checkbox]:checked",
@@ -110,6 +121,8 @@ export default function EmployeeModal({
         },
         relationships: {
           skills: {
+            // once bug can be resolved, this should read
+            // data: data.roles?.map
             data: newRoles.map((role: number) => ({
               type: "Skills",
               id: checkedRolesState[role].id,
@@ -120,6 +133,7 @@ export default function EmployeeModal({
     };
     try {
       await onSave(newEmployee);
+      reset();
       onClose();
     } catch (e) {
       setServerError(!serverError);
