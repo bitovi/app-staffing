@@ -6,7 +6,9 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   cleanup,
+  logRoles,
 } from "@testing-library/react";
+import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
 import { employeeSkillsStoreManager } from "../../services/api/employee_skills/mocks";
 import { skillStoreManager } from "../../services/api/skills/mocks";
@@ -100,10 +102,14 @@ describe("Pages/Employees", () => {
   });
 
   it("Deletes employee", async () => {
-    render(<EmployeesWrapper />);
+    render(
+      <SWRConfig value={{ provider: () => new Map() }}>
+        <EmployeesWrapper />
+      </SWRConfig>,
+    );
     expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
     const rosemarieRow = await screen.findByRole("row", {
-      name: "Rosemarie Mitchell 04/30/2021 04/30/2021 React Project Management",
+      name: "Rosemarie Mitchell 05/01/2021 05/01/2021 React Project Management",
       exact: false,
     });
     const deleteMember = await within(rosemarieRow).findByLabelText(
