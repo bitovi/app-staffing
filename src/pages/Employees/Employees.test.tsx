@@ -91,11 +91,9 @@ describe("Pages/Employees", () => {
 
     expect(submitButton).toBeEnabled();
 
-    await waitFor(() => fireEvent.click(submitButton));
-    await waitFor(() => {
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    });
+    fireEvent.click(submitButton);
 
+    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
 
     expect(NewEmployee).toBeInTheDocument();
@@ -120,13 +118,8 @@ describe("Pages/Employees", () => {
     const deleteButton = await screen.findByLabelText(/confirm button/i);
 
     await waitFor(() => fireEvent.click(deleteButton));
-
-    await waitForElementToBeRemoved(deleteModal);
-
-    await waitFor(() =>
-      expect(
-        screen.queryByText("RoseMarie Mitchell", { exact: false }),
-      ).not.toBeInTheDocument(),
+    await waitForElementToBeRemoved(() =>
+      screen.queryAllByText("RoseMarie Mitchell", { exact: false }),
     );
 
     const employeeStore = await employeeStoreManager.store.getListData();
