@@ -1,24 +1,29 @@
 import type { Project } from "../../../../../services/api";
-import Link from "../../../../../components/Link";
-import styles from "./ProjectCard.module.scss";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { Flex, Heading, Text, Link } from "@chakra-ui/react";
 
 const ProjectCard = ({ project }: { project: Project }): JSX.Element => {
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container} data-testid="container">
-        <div className={styles.projectNameWrapper}>
-          <div>
-            <span className={styles.projectName}>{project?.name}</span>
-          </div>
-          <p>{project?.description}</p>
-        </div>
-        <div>
-          <Link className={styles.viewProject} to={`/${project.id}`}>
-            View
-          </Link>
-        </div>
-      </div>
-    </div>
+    <Flex
+      bg="white"
+      p="6"
+      marginBottom="6"
+      alignItems="center"
+      boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
+    >
+      <Heading fontSize="sm" width={400}>
+        {project.name}
+      </Heading>
+      <Text fontSize="xs">{project.description}</Text>
+      <Link
+        as={ReactRouterLink}
+        to={`projects/${project.id}`}
+        color="teal.500"
+        fontWeight="bold"
+      >
+        View
+      </Link>
+    </Flex>
   );
 };
 
