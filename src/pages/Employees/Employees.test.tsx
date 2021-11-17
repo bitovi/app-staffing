@@ -5,6 +5,7 @@ import {
   within,
   waitFor,
   waitForElementToBeRemoved,
+  cleanup,
 } from "@testing-library/react";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
 import { employeeSkillsStoreManager } from "../../services/api/employee_skills/mocks";
@@ -24,6 +25,7 @@ describe("Pages/Employees", () => {
     await employeeSkillsStoreManager.clear();
     await skillStoreManager.clear();
   });
+  afterEach(cleanup);
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
