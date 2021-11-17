@@ -6,7 +6,6 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   cleanup,
-  logRoles,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
@@ -108,6 +107,7 @@ describe("Pages/Employees", () => {
       </SWRConfig>,
     );
     expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
+
     const rosemarieRow = await screen.findByRole("row", {
       name: "Rosemarie Mitchell 05/01/2021 05/01/2021 React Project Management",
       exact: false,
