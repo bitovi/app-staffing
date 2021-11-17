@@ -29,7 +29,7 @@ export default function SideNav(): JSX.Element {
 
   return (
     <div className={styles.wrapper}>
-      <img src={bitoviLogo} alt="Bitovi" className={styles.image} />
+      <img src={bitoviLogo} alt="Bitovi" className={styles.logo} />
 
       {links.map(({ exact, link, label, icon }) => (
         <NavLink
@@ -39,7 +39,7 @@ export default function SideNav(): JSX.Element {
           activeClassName={styles.activeLink}
           className={styles.inactiveLink}
         >
-          <img src={icon} alt={label} className={styles.icon} />
+          <img src={icon} alt={label} className={styles.linkIcon} />
           {label}
         </NavLink>
       ))}

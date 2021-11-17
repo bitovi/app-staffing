@@ -4,21 +4,24 @@
   background-color: #474746;
   display: flex;
   flex-direction: column;
-  align-items: left;
   padding: 20px 0 0 20px;
 }
 
-.image {
-  padding-bottom: 60px;
+.logo {
+  padding-bottom: 30px;
   align-self: flex-start;
 }
 
+.linkIcon {
+  display: inline-block;
+}
+
 .inactiveLink {
-  padding: 20px 0;
+  padding: 10px 0;
   text-decoration: none;
   color: white;
 
-  .icon {
+  .linkIcon {
     margin-right: 5px;
     filter: invert(100%);
   }
@@ -27,7 +30,7 @@
 .activeLink {
   color: rgb(191, 92, 88);
 
-  .icon {
+  .linkicon {
     // https://codepen.io/sosuke/pen/Pjoqqp
     filter: invert(38%) sepia(30%) saturate(1289%) hue-rotate(314deg)
       brightness(104%) contrast(68%);
