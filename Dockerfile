@@ -5,10 +5,12 @@ WORKDIR /usr/src/app
 
 RUN NODE_ENV="production"
 
-COPY . .
+COPY ./package.json ./package-lock.json ./
 RUN npm ci
+COPY . .
 RUN npm run build
 RUN npm run storybook:build
+
 
 FROM nginx:alpine AS production
 
@@ -31,8 +33,8 @@ FROM node:14 as development
 WORKDIR /usr/src/app
 
 # get files && install dependencies
-COPY ./package.json .
-RUN npm install
+COPY ./package.json ./package-lock.json ./
+RUN npm ci
 COPY . .
 
 # expose your ports
