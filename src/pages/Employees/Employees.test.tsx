@@ -6,7 +6,6 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   cleanup,
-  act,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
@@ -126,7 +125,7 @@ describe("Pages/Employees", () => {
 
     await waitFor(() => fireEvent.click(deleteButton));
     await waitForElementToBeRemoved(() =>
-      screen.queryAllByText("RoseMarie Mitchell", { exact: false }),
+      screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
     );
 
     const employeeStore = await employeeStoreManager.store.getListData();
