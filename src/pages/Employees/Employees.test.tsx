@@ -109,7 +109,7 @@ describe("Pages/Employees", () => {
     expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
 
     const rosemarieRow = await screen.findByRole("row", {
-      name: "Rosemarie Mitchell 05/01/2021 05/01/2021 React Project Management",
+      name: /Rosemarie Mitchell/,
       exact: false,
     });
     const deleteMember = await within(rosemarieRow).findByLabelText(
