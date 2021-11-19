@@ -93,9 +93,7 @@ describe("Pages/Employees", () => {
 
     expect(submitButton).toBeEnabled();
 
-    act(() => {
-      fireEvent.click(submitButton);
-    });
+    await waitFor(() => fireEvent.click(submitButton));
 
     await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
@@ -119,9 +117,7 @@ describe("Pages/Employees", () => {
       "Delete Member",
     );
 
-    act(() => {
-      fireEvent.click(deleteMember);
-    });
+    fireEvent.click(deleteMember);
 
     const deleteModal = await screen.findByRole("dialog");
     expect(deleteModal).toBeInTheDocument();
