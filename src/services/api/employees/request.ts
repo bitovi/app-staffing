@@ -91,9 +91,26 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
           );
         }
 
-        await store.destroyData(resourceToDelete);
+        try {
+          const joinTable = await employeeSkillsStoreManager.store.getListData({
+            filter: {
+              employee_id: id,
+            },
+          });
 
-        return res(ctx.status(200), ctx.json({}));
+          await Promise.all(
+            joinTable.data.map((record) => {
+              employeeSkillsStoreManager.store.destroyData(record);
+            }),
+          );
+          await store.destroyData(resourceToDelete);
+
+          return res(ctx.status(200), ctx.json({}));
+        } catch (error) {
+          if (error instanceof Error) {
+            console.error(error.message);
+          }
+        }
       },
     ),
     create: rest.post<JSONAPI<JSONAPIEmployee, null>, MockResponse<Resource>>(

@@ -91,10 +91,26 @@ export default function EmployeeModal({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<IEmployeeData>();
+  } = useForm<IEmployeeData>({
+    defaultValues: {
+      start_date: "",
+      end_date: "",
+      name: "",
+    },
+  });
 
   const submitForm = async (data: IEmployeeData) => {
+    // Currently a fix to manage a testing quirk:
+    // within the testing environment, the roles field doesn't populate with an array of ints
+    // but rather returns a single boolean. Presumably a problem in the handoff
+    // between React Hooks Form / Chakra UI / testing-library
+    const newRoles = [
+      ...document.querySelectorAll<HTMLInputElement>(
+        "input[type=checkbox]:checked",
+      ),
+    ].map((node) => parseInt(node.value));
     const newEmployee: { data: FrontEndEmployee } = {
       data: {
         type: "employees",
@@ -105,7 +121,9 @@ export default function EmployeeModal({
         },
         relationships: {
           skills: {
-            data: data.roles?.map((role: number) => ({
+            // once bug can be resolved, this should read
+            // data: data.roles?.map
+            data: newRoles.map((role: number) => ({
               type: "Skills",
               id: checkedRolesState[role].id,
             })),
@@ -115,6 +133,7 @@ export default function EmployeeModal({
     };
     try {
       await onSave(newEmployee);
+      reset();
       onClose();
     } catch (e) {
       setServerError(!serverError);
@@ -141,6 +160,7 @@ export default function EmployeeModal({
               value={role.value}
               onChange={() => handleRolesChange(index)}
               isChecked={checkedRolesState[index].selected}
+              defaultChecked={true}
             >
               {role.label}
             </Checkbox>
@@ -167,9 +187,9 @@ export default function EmployeeModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mt="14vh">
         <ModalHeader>Add a New Team Member</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -201,6 +221,7 @@ export default function EmployeeModal({
                   })}
                   id="start_date"
                   type="date"
+                  data-testid="start_date"
                 />
               </FormControl>
 
@@ -212,7 +233,9 @@ export default function EmployeeModal({
 
             <FormControl isRequired>
               <FormLabel>Roles</FormLabel>
-              <Flex flexGrow={1}>{renderRolesCheckboxes(roles)}</Flex>
+              <Flex mt={4} mb={11} flexGrow={1}>
+                {renderRolesCheckboxes(roles)}
+              </Flex>
             </FormControl>
           </VStack>
         </ModalBody>

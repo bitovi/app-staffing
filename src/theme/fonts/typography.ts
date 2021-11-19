@@ -15,4 +15,19 @@ export const textStyles = {
       letterSpacing: "0.05em",
     },
   },
+
+  modal: {
+    text: {
+      fontFamily: "Inter",
+      fontWeight: "400",
+      fontSize: "16px",
+      lineHeight: "24px",
+    },
+    button: {
+      fontFamily: "Inter",
+      fontWeight: "600",
+      fontSize: "16px",
+      lineHeight: "24px",
+    },
+  },
 };

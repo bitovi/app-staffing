@@ -55,7 +55,7 @@ export interface EmployeeActions {
     employeeId: string,
     employee: Partial<Employee>,
   ) => Promise<void>;
-  deleteEmployee?: (employeeId: string) => Promise<void>;
+  deleteEmployee: (employeeId: string) => Promise<void>;
   reset: () => void;
 }
 
@@ -69,7 +69,7 @@ export default function useEmployees(
     isLoading,
     handleAdd,
     // handleUpdate,
-    // handleDelete,
+    handleDelete,
     reset,
   } = useRest<JSONAPI<JSONAPIEmployee[], JSONAPISkill[]>>(
     "/api/v1/employees",
@@ -82,7 +82,7 @@ export default function useEmployees(
     error,
     addEmployee: handleAdd,
     // updateEmployee: handleUpdate,
-    // deleteEmployee: handleDelete,
+    deleteEmployee: handleDelete,
     reset,
   };
 }
