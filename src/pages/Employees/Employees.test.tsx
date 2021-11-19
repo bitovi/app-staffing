@@ -6,6 +6,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   cleanup,
+  act,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
@@ -92,7 +93,9 @@ describe("Pages/Employees", () => {
 
     expect(submitButton).toBeEnabled();
 
-    fireEvent.click(submitButton);
+    act(() => {
+      fireEvent.click(submitButton);
+    });
 
     await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
@@ -116,7 +119,9 @@ describe("Pages/Employees", () => {
       "Delete Member",
     );
 
-    fireEvent.click(deleteMember);
+    act(() => {
+      fireEvent.click(deleteMember);
+    });
 
     const deleteModal = await screen.findByRole("dialog");
     expect(deleteModal).toBeInTheDocument();
