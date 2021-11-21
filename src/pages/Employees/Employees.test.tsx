@@ -14,27 +14,21 @@ import { skillStoreManager } from "../../services/api/skills/mocks";
 import EmployeesWrapper from "./Employees";
 
 describe("Pages/Employees", () => {
-  let container: any;
   beforeEach(async () => {
     await employeeStoreManager.load();
     await skillStoreManager.load();
     await employeeSkillsStoreManager.load();
-    container = document.createElement("div");
-    document.body.appendChild(container);
   });
 
   afterEach(async () => {
     await employeeStoreManager.clear();
     await employeeSkillsStoreManager.clear();
     await skillStoreManager.clear();
-    document.body.removeChild(container);
-    container = null;
   });
   afterEach(cleanup);
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
-
     expect(await screen.findByText("Sam Kreiger")).toBeInTheDocument();
   });
 
@@ -63,6 +57,7 @@ describe("Pages/Employees", () => {
   });
 
   it("Creates new employee", async () => {
+    jest.setTimeout(30000);
     render(<EmployeesWrapper />);
     const addButton = await screen.findByRole("button", {
       name: /add team member/i,
