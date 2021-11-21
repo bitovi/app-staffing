@@ -60,13 +60,10 @@ describe("Pages/Employees", () => {
     expect(
       document.body.getElementsByClassName("chakra-skeleton"),
     ).toBeDefined();
-
   });
 
   it("Creates new employee", async () => {
-    act(() => {
-      render(<EmployeesWrapper />, container);
-    });
+    render(<EmployeesWrapper />);
     const addButton = await screen.findByRole("button", {
       name: /add team member/i,
     });
@@ -103,7 +100,6 @@ describe("Pages/Employees", () => {
 
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-
     await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
 
@@ -111,14 +107,11 @@ describe("Pages/Employees", () => {
   });
 
   it("Deletes employee", async () => {
-    act(() => {
-      render(
-        <SWRConfig value={{ provider: () => new Map() }}>
-          <EmployeesWrapper />
-        </SWRConfig>,
-        container,
-      );
-    });
+    render(
+      <SWRConfig value={{ provider: () => new Map() }}>
+        <EmployeesWrapper />
+      </SWRConfig>,
+    );
     expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
 
     const rosemarieRow = await screen.findByRole("row", {
@@ -131,14 +124,12 @@ describe("Pages/Employees", () => {
 
     deleteMember.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-
     const deleteModal = await screen.findByRole("dialog");
     expect(deleteModal).toBeInTheDocument();
 
     const deleteButton = await screen.findByLabelText(/confirm button/i);
 
     deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-
 
     await waitForElementToBeRemoved(() =>
       screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
