@@ -99,7 +99,7 @@ describe("Pages/Employees", () => {
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
 
     expect(NewEmployee).toBeInTheDocument();
-  });
+  }, 30000);
 
   it("Deletes employee", async () => {
     render(
