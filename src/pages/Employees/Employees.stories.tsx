@@ -9,14 +9,21 @@ export default {
   component: Employees,
 } as ComponentMeta<typeof Employees>;
 
+const backgroundColor = "gray.10";
+
 export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
   <Flex height="100%" width="100%" overflow="hidden">
-    <Box backgroundColor="gray.10" flex="1 1" padding="40px" overflow="auto">
+    <Box
+      backgroundColor={backgroundColor}
+      flex="1 1"
+      padding="40px"
+      overflow="auto"
+    >
       <Employees
         {...props}
         useEmployees={employeeMockData}
-        useSkills={(): any => {
-          return { skills };
+        useSkills={() => {
+          return { skills, isLoading: false };
         }}
       />
     </Box>
@@ -25,7 +32,12 @@ export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
 
 export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
   <Flex height="100%" width="100%" overflow="hidden">
-    <Box backgroundColor="gray.10" flex="1 1" padding="40px" overflow="auto">
+    <Box
+      backgroundColor={backgroundColor}
+      flex="1 1"
+      padding="40px"
+      overflow="auto"
+    >
       <Employees
         {...props}
         useEmployees={() => {
@@ -38,8 +50,8 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
             reset: () => undefined,
           };
         }}
-        useSkills={(): any => {
-          return { skills: null };
+        useSkills={() => {
+          return { skills: [], isLoading: false };
         }}
       />
     </Box>
@@ -48,7 +60,12 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
 
 export const Loading: ComponentStory<any> = ({ ...props }) => (
   <Flex height="100%" width="100%" overflow="hidden">
-    <Box backgroundColor="gray.10" flex="1 1" padding="40px" overflow="auto">
+    <Box
+      backgroundColor={backgroundColor}
+      flex="1 1"
+      padding="40px"
+      overflow="auto"
+    >
       <EmployeePageLoadingLayout {...props} />
     </Box>
   </Flex>
