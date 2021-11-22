@@ -4,6 +4,7 @@ import {
   setDay,
   getMonth,
   add,
+  isAfter,
   startOfMonth,
   getQuarter,
   endOfMonth,
@@ -13,6 +14,7 @@ import {
   getWeeksInMonth,
   getWeekOfMonth,
   sub,
+  startOfQuarter,
 } from "date-fns";
 
 export type TimescaleData = {
@@ -26,6 +28,66 @@ export enum TimescaleType {
   month,
   quarter,
 }
+
+const timescaleToDuration = {
+  weeks: TimescaleType.week,
+  months: TimescaleType.month,
+  years: TimescaleType.month,
+  days: TimescaleType.month,
+  hours: TimescaleType.month,
+  minutes: TimescaleType.month,
+  seconds: TimescaleType.month,
+};
+
+const endOfNextMonth = (date: Date) => {
+  return endOfMonth(add(startOfMonth(date), { months: 1 }));
+};
+
+const endOfNextQuarter = (date: Date) => {
+  return endOfQuarter(add(startOfQuarter(date), { months: 3 }));
+};
+
+const gather = (
+  type: keyof Duration,
+  start: Date,
+  end: Date,
+): Array<TimescaleData> => {
+  if (isAfter(start, end)) {
+    return [];
+  }
+
+  return [
+    {
+      startDate: start,
+      endDate: add(start, { [type]: 1 }),
+      type: timescaleToDuration[type],
+    },
+    ...gather(type, add(start, { [type]: 1 }), end),
+  ];
+};
+
+const weekBreakDown = (date: Date) => {
+  const numberWeeksInMonth = getWeeksInMonth(date, { weekStartsOn: 1 });
+  const currentWeekNumber = getWeekOfMonth(date, { weekStartsOn: 1 });
+  const remainingWeeks = numberWeeksInMonth - currentWeekNumber;
+
+  return gather(
+    "weeks",
+    date,
+    remainingWeeks >= 3 ? endOfMonth(date) : endOfNextMonth(date),
+  );
+};
+
+const monthBreakDown = (date: Date) => {
+  // const monthNumber = getMonth(date);
+  // const quarter = getQuarter(date);
+
+  return gather(
+    "months",
+    date,
+    getMonth(date) % 3 ? endOfNextQuarter(date) : endOfQuarter(date),
+  );
+};
 
 const MIN_WEEKS_FOR_MONTH = 3; // min amount of weeks to show for a month.
 const MIN_MONTH_FOR_QUARTER = 2; // min amount of months to show for quarter.
@@ -43,7 +105,7 @@ const MIN_QUARTERS = 2; // min amount of quarters
  * * Always show at least 6 months total. Additional quarters may be needed to complete the display.
  */
 export function getTimescaleData(date: Date): TimescaleData[] {
-  const timescales: TimescaleData[] = [];
+  // const timescales: TimescaleData[] = [];
 
   //  Get week Data.
   let weekStart = startOfWeek(date, { weekStartsOn: 1 });
@@ -53,77 +115,83 @@ export function getTimescaleData(date: Date): TimescaleData[] {
   let weeksForMonth = MIN_WEEKS_FOR_MONTH;
   let currentMonth = getMonth(midWeek); // NB: the month is determined by which ever month midweek falls
   // always show three weeks in a months;
-  while (weeksForMonth > 0) {
-    // loop until we satisfy rule for weeks. ie. we should show at least `3` weeks.
-    // However if we go into a month we should should 3 weeks for that month.
+  const timescales: TimescaleData[] = weekBreakDown(date);
 
-    const columnHeading: TimescaleData = {
-      startDate: weekStart,
-      endDate: weekEnd,
-      type: TimescaleType.week,
-    };
-    timescales.push(columnHeading);
+  const weeks = weekBreakDown(date);
+  const months = monthBreakDown(weeks[weeks.length - 1].endDate);
 
-    // if week falls into next month then reset `weekForMonth` count.
-    const isNewMonth = currentMonth !== getMonth(midWeek);
-    if (isNewMonth) {
-      weeksForMonth =
-        getWeeksInMonth(midWeek, { weekStartsOn: 1 }) -
-        getWeekOfMonth(midWeek, { weekStartsOn: 1 }) +
-        1;
+  return [...weeks, ...months];
+  // while (weeksForMonth > 0) {
+  //   // loop until we satisfy rule for weeks. ie. we should show at least `3` weeks.
+  //   // However if we go into a month we should should 3 weeks for that month.
 
-      currentMonth = getMonth(midWeek); // set to current month;
-    }
-    if (weeksForMonth > 1) {
-      //  go to next week
-      weekStart = add(weekStart, { weeks: 1 });
-      weekEnd = add(weekEnd, { weeks: 1 });
-      midWeek = add(midWeek, { weeks: 1 });
-    }
+  //   const columnHeading: TimescaleData = {
+  //     startDate: weekStart,
+  //     endDate: weekEnd,
+  //     type: TimescaleType.week,
+  //   };
+  //   timescales.push(columnHeading);
 
-    weeksForMonth--;
-  }
+  //   // if week falls into next month then reset `weekForMonth` count.
+  //   const isNewMonth = currentMonth !== getMonth(midWeek);
+  //   if (isNewMonth) {
+  //     weeksForMonth =
+  //       getWeeksInMonth(midWeek, { weekStartsOn: 1 }) -
+  //       getWeekOfMonth(midWeek, { weekStartsOn: 1 }) +
+  //       1;
+
+  //     currentMonth = getMonth(midWeek); // set to current month;
+  //   }
+  //   if (weeksForMonth > 1) {
+  //     //  go to next week
+  //     weekStart = add(weekStart, { weeks: 1 });
+  //     weekEnd = add(weekEnd, { weeks: 1 });
+  //     midWeek = add(midWeek, { weeks: 1 });
+  //   }
+
+  //   weeksForMonth--;
+  // }
 
   // Get months Data
-  let month = add(startOfMonth(weekStart), { months: 1 });
-  let monthsForQuarter = MIN_MONTH_FOR_QUARTER;
-  let currentQuarter = getQuarter(month);
-  while (monthsForQuarter > 0) {
-    const timescale: TimescaleData = {
-      startDate: getStartOfMonth(month),
-      endDate: getEndOfMonth(month),
-      type: TimescaleType.month,
-    };
-    timescales.push(timescale);
+  // let month = add(startOfMonth(weekStart), { months: 1 });
+  // let monthsForQuarter = MIN_MONTH_FOR_QUARTER;
+  // let currentQuarter = getQuarter(month);
+  // while (monthsForQuarter > 0) {
+  //   const timescale: TimescaleData = {
+  //     startDate: getStartOfMonth(month),
+  //     endDate: getEndOfMonth(month),
+  //     type: TimescaleType.month,
+  //   };
+  //   timescales.push(timescale);
 
-    const isNewQuarter = currentQuarter !== getQuarter(month);
-    if (isNewQuarter) {
-      // if the quarter changes then show all the months that quarter.
-      monthsForQuarter = 3;
-      currentQuarter = getQuarter(month);
-    }
+  //   const isNewQuarter = currentQuarter !== getQuarter(month);
+  //   if (isNewQuarter) {
+  //     // if the quarter changes then show all the months that quarter.
+  //     monthsForQuarter = 3;
+  //     currentQuarter = getQuarter(month);
+  //   }
 
-    month = startOfMonth(add(month, { months: 1 }));
-    monthsForQuarter--;
-  }
+  //   month = startOfMonth(add(month, { months: 1 }));
+  //   monthsForQuarter--;
+  // }
 
-  // Get Quarter Data
-  let quarterStart = setQuarter(month, currentQuarter + 1);
-  let quarterEnd = endOfQuarter(quarterStart);
-  let numQuarters = MIN_QUARTERS;
-  while (numQuarters > 0) {
-    // Get Quarter Data; show the new quarter data.
-    const columnHeading: TimescaleData = {
-      startDate: getStartOfMonth(quarterStart),
-      endDate: getEndOfMonth(quarterEnd),
-      type: TimescaleType.quarter,
-    };
-    timescales.push(columnHeading);
+  // // Get Quarter Data
+  // let quarterStart = setQuarter(month, currentQuarter + 1);
+  // let quarterEnd = endOfQuarter(quarterStart);
+  // let numQuarters = MIN_QUARTERS;
+  // while (numQuarters > 0) {
+  //   // Get Quarter Data; show the new quarter data.
+  //   const columnHeading: TimescaleData = {
+  //     startDate: getStartOfMonth(quarterStart),
+  //     endDate: getEndOfMonth(quarterEnd),
+  //     type: TimescaleType.quarter,
+  //   };
+  //   timescales.push(columnHeading);
 
-    quarterStart = addQuarters(quarterStart, 1);
-    quarterEnd = addQuarters(quarterEnd, 1);
-    numQuarters--;
-  }
+  //   quarterStart = addQuarters(quarterStart, 1);
+  //   quarterEnd = addQuarters(quarterEnd, 1);
+  //   numQuarters--;
+  // }
 
   return timescales;
 }
