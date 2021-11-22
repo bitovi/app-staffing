@@ -17,8 +17,11 @@ export default function createStore<Resource>(
   return {
     store,
     load: async () => {
-      const preCheck = await store.getListData();
-      if (!preCheck) await store.updateListData(collection);
+      try {
+        await store.getListData();
+      } catch (_) {
+        await store.updateListData(collection); //if the data isn't loaded, promise rejects and we use fixture data
+      }
     },
     clear: async () => {
       await store.clear();
