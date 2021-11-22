@@ -104,43 +104,28 @@ export default function EmployeeTable({
           <>
             <Box maxHeight="80vh" overflowY="auto">
               <Table>
-                <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10">
+                <Thead
+                  py={4}
+                  position="sticky"
+                  top="0"
+                  zIndex="sticky"
+                  bg="gray.10"
+                >
                   <Tr>
-                    <Th
-                      pt="0px"
-                      pb={4}
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
+                    <Th color="gray.800" textStyle="table.title">
                       EMPLOYEE NAME
                     </Th>
-                    <Th
-                      pt="0px"
-                      pb={4}
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
+                    <Th color="gray.800" textStyle="table.title">
                       START DATE
                     </Th>
-                    <Th
-                      pt="0px"
-                      pb={4}
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
+                    <Th color="gray.800" textStyle="table.title">
                       END DATE
                     </Th>
-                    <Th
-                      pt="0px"
-                      pb={4}
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
+                    <Th color="gray.800" textStyle="table.title">
                       ROLES
                     </Th>
                     <Th
-                      pt="0px"
-                      pb={4}
+                      py={4}
                       pr={12}
                       color="gray.800"
                       textStyle="table.title"
