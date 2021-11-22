@@ -34,7 +34,6 @@ function localStorageProvider() {
   });
   return map;
 }
-console.log(localStorageProvider());
 render(
   <StrictMode>
     <ChakraProvider theme={theme}>
