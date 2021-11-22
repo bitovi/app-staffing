@@ -17,7 +17,8 @@ export default function createStore<Resource>(
   return {
     store,
     load: async () => {
-      await store.updateListData(collection);
+      const preCheck = await store.getListData();
+      if (!preCheck) await store.updateListData(collection);
     },
     clear: async () => {
       await store.clear();

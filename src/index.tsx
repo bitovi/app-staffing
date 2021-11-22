@@ -8,6 +8,7 @@ import mocks from "./services/mocks";
 
 import App from "./App";
 import theme from "./theme";
+import { SWRConfig } from "swr";
 
 // fonts
 import "./theme/fonts/styles.css";
@@ -25,11 +26,22 @@ setupWorker(...mocks).start({
   },
 });
 
+function localStorageProvider() {
+  const map = new Map(JSON.parse(localStorage.getItem("app-cache") || "[]"));
+  window.addEventListener("beforeunload", () => {
+    const appCache = JSON.stringify(Array.from(map.entries()));
+    localStorage.setItem("app-cache", appCache);
+  });
+  return map;
+}
+console.log(localStorageProvider());
 render(
   <StrictMode>
     <ChakraProvider theme={theme}>
       <HashRouter>
-        <App />
+        <SWRConfig value={{ provider: localStorageProvider }}>
+          <App />
+        </SWRConfig>
       </HashRouter>
     </ChakraProvider>
   </StrictMode>,
