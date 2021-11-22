@@ -1,0 +1,27 @@
+{{- if .Values.service }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appname }}
+  labels:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+  annotations:
+    {{- if .Values.service.annotations }}
+    {{- range $key, $val := .Values.service.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: service
+    port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort:  {{ .Values.service.targetPort }}
+
+  selector:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+{{- end }}
