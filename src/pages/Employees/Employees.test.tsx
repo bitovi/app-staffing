@@ -5,7 +5,6 @@ import {
   within,
   waitForElementToBeRemoved,
   cleanup,
-  act,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
@@ -15,28 +14,21 @@ import { skillStoreManager } from "../../services/api/skills/mocks";
 import EmployeesWrapper from "./Employees";
 
 describe("Pages/Employees", () => {
-  let container: any;
   beforeEach(async () => {
     await employeeStoreManager.load();
     await skillStoreManager.load();
     await employeeSkillsStoreManager.load();
-    container = document.createElement("div");
-    document.body.appendChild(container);
   });
 
   afterEach(async () => {
     await employeeStoreManager.clear();
     await employeeSkillsStoreManager.clear();
     await skillStoreManager.clear();
-    document.body.removeChild(container);
-    container = null;
   });
   afterEach(cleanup);
 
   it("renders data in list", async () => {
-    act(() => {
-      render(<EmployeesWrapper />, container);
-    });
+    render(<EmployeesWrapper />);
     expect(await screen.findByText("Sam Kreiger")).toBeInTheDocument();
   });
 
@@ -58,22 +50,19 @@ describe("Pages/Employees", () => {
   // });
 
   it("Displays loading state skeleton", () => {
-    act(() => {
-      render(<EmployeesWrapper />, container);
-    });
-    expect(container.getElementsByClassName("chakra-skeleton")).toBeDefined();
+    render(<EmployeesWrapper />);
+    expect(
+      document.body.getElementsByClassName("chakra-skeleton"),
+    ).toBeDefined();
   });
 
   it("Creates new employee", async () => {
-    act(() => {
-      render(<EmployeesWrapper />, container);
-    });
+    jest.setTimeout(30000);
+    render(<EmployeesWrapper />);
     const addButton = await screen.findByRole("button", {
       name: /add team member/i,
     });
-    act(() => {
-      addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    });
+    addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     const modalNameInput = await screen.findByPlaceholderText(/name/i);
     fireEvent.change(modalNameInput, {
       target: { value: "Johnny Appleseed" },
@@ -104,25 +93,20 @@ describe("Pages/Employees", () => {
 
     expect(submitButton).toBeEnabled();
 
-    act(() => {
-      submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    });
+    submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
 
     expect(NewEmployee).toBeInTheDocument();
-  });
+  }, 30000);
 
   it("Deletes employee", async () => {
-    act(() => {
-      render(
-        <SWRConfig value={{ provider: () => new Map() }}>
-          <EmployeesWrapper />
-        </SWRConfig>,
-        container,
-      );
-    });
+    render(
+      <SWRConfig value={{ provider: () => new Map() }}>
+        <EmployeesWrapper />
+      </SWRConfig>,
+    );
     expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
 
     const rosemarieRow = await screen.findByRole("row", {
@@ -133,18 +117,14 @@ describe("Pages/Employees", () => {
       "Delete Member",
     );
 
-    act(() => {
-      deleteMember.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    });
+    deleteMember.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     const deleteModal = await screen.findByRole("dialog");
     expect(deleteModal).toBeInTheDocument();
 
     const deleteButton = await screen.findByLabelText(/confirm button/i);
 
-    act(() => {
-      deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    });
+    deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     await waitForElementToBeRemoved(() =>
       screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
