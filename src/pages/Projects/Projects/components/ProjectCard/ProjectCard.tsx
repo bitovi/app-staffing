@@ -15,25 +15,33 @@ const ProjectCard = ({
   return (
     <>
       <Tr
-        p="16px"
         alignItems="center"
         backgroundColor="white"
         boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
+        border="2px solid #f2f2f2"
       >
-        <Td>
+        <Td
+          pt="21px"
+          px="25px"
+          pb="34px"
+        >
           <Text
-            color="gray.600"
-            fontWeight="600"
-            fontSize="16px"
-            lineHeight="20px"
-            letterSpacing="0.25px"
+            color="black"
+            fontWeight="700"
+            fontSize="18px"
+            lineHeight="29.5px"
+            letterSpacing="0.33px"
           >
             {project.name}
           </Text>
         </Td>
-        <Td>
+        <Td
+          pt="21px"
+          px="25px"
+          pb="34px"
+        >
           <Text
-            color="gray.600"
+            color="black"
             fontWeight="400"
             fontSize="14px"
             lineHeight="20px"
@@ -42,7 +50,11 @@ const ProjectCard = ({
             {project.description}
           </Text>
         </Td>
-        <Td>
+        <Td
+          pt="21px"
+          px="25px"
+          pb="34px"
+        >
           <Link
             as={ReactRouterLink}
             to={`projects/${project.id}`}

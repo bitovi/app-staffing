@@ -31,7 +31,7 @@ export default function ProjectList({
           key={project.id}
           project={project}
         >
-          {projects.length - 1 !== index && <Tr height={4}></Tr>}
+          {projects.length - 1 !== index && <Tr height={5}></Tr>}
         </ProjectListRow>
       )
     );
@@ -67,12 +67,15 @@ export default function ProjectList({
         {projects && projects.length > 0 && (
           <>
             <Box maxHeight="80vh" overflowY="auto">
-              <Table>
+              <Table
+                variant="unstyled"
+              >
                 <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10">
                   <Tr>
                     <Th
                       pt="0px"
-                      pb={4}
+                      px="25px"
+                      pb="26px"
                       color="gray.800"
                       textStyle="table.title"
                     >
@@ -80,7 +83,8 @@ export default function ProjectList({
                     </Th>
                     <Th
                       pt="0px"
-                      pb={4}
+                      px="25px"
+                      pb="26px"
                       color="gray.800"
                       textStyle="table.title"
                     >
@@ -89,7 +93,8 @@ export default function ProjectList({
                     </Th>
                     <Th
                       pt="0px"
-                      pb={4}
+                      px="25px"
+                      pb="26px"
                       pr={12}
                       color="gray.800"
                       textStyle="table.title"
