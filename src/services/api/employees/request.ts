@@ -279,10 +279,8 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         return res(
           ctx.status(200),
           ctx.json({
-            data: {
-              data: jsonAPIEmployees,
-              included,
-            },
+            data: jsonAPIEmployees,
+            included,
           }),
         );
       },

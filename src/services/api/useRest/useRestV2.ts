@@ -51,7 +51,8 @@ function useRest<T>(
         await mutate(
           key,
           async (addResponse: {
-            data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
+            data: JSONAPIEmployee[];
+            included: JSONAPISkill[];
           }) => {
             const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
               "POST",
@@ -76,7 +77,7 @@ function useRest<T>(
             const skillsToAdd = newItemIncluded.data
               .filter((skill) => {
                 if (
-                  !addResponse.data.included.find(
+                  !addResponse.included.find(
                     (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
                   )
                 ) {
@@ -95,15 +96,13 @@ function useRest<T>(
               }));
 
             //^^^^^^
-
             const newCache = {
-              data: [...addResponse.data.data, newItem],
-              included: [...addResponse.data.included, ...skillsToAdd],
+              data: [...addResponse.data, newItem],
+              included: [...addResponse.included, ...skillsToAdd],
             };
-
             return {
               ...addResponse,
-              data: newCache,
+              ...newCache,
             };
           },
           false,
@@ -123,12 +122,13 @@ function useRest<T>(
       await mutate(
         key,
         async (deleteResponse: {
-          data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
+          data: JSONAPIEmployee[];
+          included: JSONAPISkill[];
         }) => {
           await fetcher("DELETE", `${path}/${collectionItemId}`);
 
           const newData = [
-            ...deleteResponse.data.data.filter(
+            ...deleteResponse.data.filter(
               (item) => item.id !== collectionItemId,
             ),
           ];
@@ -138,7 +138,7 @@ function useRest<T>(
           const newCache = {
             data: newData,
             included: [
-              ...deleteResponse.data.included.filter((skill) => {
+              ...deleteResponse.included.filter((skill) => {
                 if (
                   newData.find(
                     ({
@@ -157,7 +157,7 @@ function useRest<T>(
           //^^^^^^^^^^^^^^^^^^^
           return {
             ...deleteResponse,
-            data: newCache,
+            ...newCache,
           };
         },
         false,
@@ -167,7 +167,7 @@ function useRest<T>(
   );
 
   return {
-    data: response?.data,
+    data: response,
     handleAdd,
     handleDelete,
     error,

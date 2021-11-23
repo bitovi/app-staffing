@@ -136,9 +136,7 @@ export default function requestCreatorSkill<Resource extends Skill>(
         return res(
           ctx.status(200),
           ctx.json({
-            data: {
-              data: jsonAPISkills,
-            },
+            data: jsonAPISkills,
           }),
         );
       },

@@ -1,8 +1,8 @@
 import { Filter } from "can-query-logic";
 export interface APIResponse<T> extends ResponseStatus {
-  data?: T;
+  data?: T | any;
 }
-
+console.log("fix this");
 export interface ResponseStatus {
   isLoading: boolean;
   error?: Error;
