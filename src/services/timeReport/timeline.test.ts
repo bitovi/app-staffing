@@ -1,0 +1,18 @@
+import { getWeeks, TimescaleType } from "./timeline";
+import { weeksFixtures } from "./fixtures";
+
+describe("timeline", () => {
+  it.each(weeksFixtures)(
+    "should get the correct weeks %o",
+    ({ date, weeks }) => {
+      const timeline = getWeeks(date);
+      expect(timeline.length).toBe(weeks.length);
+
+      for (const [index, [start, end]] of weeks.entries()) {
+        expect(timeline[index].startDate).toEqual(start);
+        expect(timeline[index].endDate).toEqual(new Date(end.getTime() - 1)); // minus one milisecond
+        expect(timeline[index].type).toEqual(TimescaleType.week);
+      }
+    },
+  );
+});

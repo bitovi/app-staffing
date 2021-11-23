@@ -89,6 +89,8 @@ const monthBreakDown = (date: Date) => {
   );
 };
 
+/// --------------------------
+
 const MIN_WEEKS_FOR_MONTH = 3; // min amount of weeks to show for a month.
 const MIN_MONTH_FOR_QUARTER = 2; // min amount of months to show for quarter.
 const MIN_QUARTERS = 2; // min amount of quarters
