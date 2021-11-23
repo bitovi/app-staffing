@@ -17,7 +17,12 @@ import {
   startOfQuarter,
 } from "date-fns";
 
-import { getStartOfWeek, getEndOfMonth, endOfNextMonth } from "./utilities";
+import {
+  getStartOfWeek,
+  getEndOfMonth,
+  getEndOfNextMonth,
+  getStartOfMonth,
+} from "./utilities";
 
 export type TimescaleData = {
   startDate: Date;
@@ -72,6 +77,14 @@ export const getWeeks = (date: Date): TimescaleData[] => {
   return gather(
     "weeks",
     getStartOfWeek(date),
-    remainingWeeks >= 3 ? getEndOfMonth(date) : endOfNextMonth(date),
+    remainingWeeks >= 3 ? getEndOfMonth(date) : getEndOfNextMonth(date),
+  );
+};
+
+export const getMonths = (date: Date): TimescaleData[] => {
+  return gather(
+    "months",
+    getStartOfMonth(date),
+    getMonth(date) % 3 ? endOfNextQuarter(date) : endOfQuarter(date),
   );
 };

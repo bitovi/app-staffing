@@ -5,7 +5,6 @@ import {
   add,
   startOfMonth,
   endOfMonth,
-  sub,
 } from "date-fns";
 
 /**
@@ -46,9 +45,18 @@ export function getStartOfMonth(date: Date): Date {
 }
 
 /**
- * Returns date of the first week for the given month.
- * NB: a week belongs to a month if midweek(Wednesday) falls in month.
- * @param date
+ * Determines the last day of the month. This function calculates the end of the month
+ * through the timeline rules described in `timeReport.ts`
+ *
+ * > TL;DR
+ * > a week belongs to the month that exists most in that week.
+ *
+ * **Examples:**
+ *  * The week of March 28, 2021, belongs to March even though April 1, 2021, is on that week as well since the 31st is on a Wednesday.
+ *  * The week of August 29, 2021, belongs to September even though August 31, 2021, is on that week since the 1st is on a Wednesday
+ *
+ * @param date - date value to determine the end of the month
+ * @returns the end date of the last day of the last week of the given dates month
  */
 export function getEndOfMonth(date: Date): Date {
   const lastOfMonth = endOfMonth(date);
@@ -62,18 +70,38 @@ export function getEndOfMonth(date: Date): Date {
   return new Date(beginningOfNextMonth.getTime() - 1);
 }
 
-export const endOfNextMonth = (date: Date): Date => {
-  return getEndOfMonth(add(startOfMonth(date), { months: 1 }));
+/**
+ * Gets the start of the next month following the timeline rules.
+ *
+ * @param date - date value to determine the next month from
+ * @returns The start of the nextMonth
+ */
+export const getNextMonth = (date: Date): Date => {
+  // We can't rely on adding durations since the duration of a month
+  // under the timeline rules vary.
+
+  const MAX_NUMBER_WEEKS_IN_A_MONTH = 5;
+  const currentMonth = getStartOfMonth(date);
+
+  const dateInNextMonth = startOfWeek(
+    add(currentMonth, { weeks: MAX_NUMBER_WEEKS_IN_A_MONTH + 1 }),
+    { weekStartsOn: 1 },
+  );
+
+  return getStartOfMonth(dateInNextMonth);
 };
 
-// export function getEndOfMonth(date: Date): Date {
-//   const lastOfMonth = endOfMonth(date);
-//   const midWeek = setDay(lastOfMonth, 3, { weekStartsOn: 1 });
+/**
+ * A utility function to find the end of the following month given a date and the time
+ * line rules.
+ *
+ * @param date - date to determine the end of the next month from
+ * @returns the end of the following month
+ */
+export const getEndOfNextMonth = (date: Date): Date => {
+  return getEndOfMonth(getNextMonth(date));
+};
 
-//   const beginningOfNextMonth =
-//     getMonth(midWeek) === getMonth(lastOfMonth)
-//       ? startOfWeek(lastOfMonth, { weekStartsOn: 1 })
-//       : startOfWeek(sub(lastOfMonth, { weeks: 1 }), { weekStartsOn: 1 });
+export const getEndOfQuarter = (date: Date): Date => {};
 
-//   return new Date(beginningOfNextMonth.getTime() - 1);
-// }
+export const getEndOfNextQuarter = (date: Date): Date => {};

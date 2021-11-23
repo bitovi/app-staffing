@@ -45,13 +45,26 @@ export const weeksFixtures = [
     ],
   },
   {
-    date: new Date(2022, January, 18),
+    date: new Date(2022, January, 25),
     weeks: [
-      [new Date(2021, January, 17), new Date(2021, January, 24)],
-      [new Date(2021, January, 24), new Date(2021, January, 31)],
-      [new Date(2021, January, 31), new Date(2021, February, 7)],
-      [new Date(2021, February, 7), new Date(2021, February, 14)],
-      [new Date(2021, February, 14), new Date(2021, February, 21)],
+      [new Date(2022, January, 24), new Date(2022, January, 31)],
+      [new Date(2022, January, 31), new Date(2022, February, 7)],
+      [new Date(2022, February, 7), new Date(2022, February, 14)],
+      [new Date(2022, February, 14), new Date(2022, February, 21)],
+      [new Date(2022, February, 21), new Date(2022, February, 28)],
+    ],
+  },
+];
+
+/**
+ * min 2 max 5
+ */
+export const monthFixtures = [
+  {
+    date: new Date(2021, February, 10),
+    months: [
+      [new Date(2021, February, 1), new Date(2021, March, 1)],
+      [new Date(2021, March, 1), new Date(2021, April, 4)],
     ],
   },
 ];
