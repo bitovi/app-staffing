@@ -27,7 +27,7 @@ function useRest<T>(
   const key = `${path}?${param(queryParams)}`;
 
   const { mutate /*, cache*/ } = useSWRConfig();
-  const { data: response, error } = useSWR<{ data: T }, Error>(
+  const { data: response, error } = useSWR<T, Error>(
     key,
     (url) => fetcher("GET", url),
     {
