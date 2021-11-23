@@ -76,6 +76,50 @@ export const employeeMockData = (): ResponseStatus & EmployeeActions => {
         },
       ],
     },
+    {
+      id: "2",
+      name: "Wilma Mueller",
+      startDate: new Date(),
+      endDate: new Date(),
+      skills: [
+        {
+          id: "107",
+          name: "React",
+        },
+        {
+          id: "101",
+          name: "UX",
+        },
+        {
+          id: "106",
+          name: "React",
+        },
+      ],
+    },
+    {
+      id: "2",
+      name: "Clifford Toy",
+      startDate: new Date(),
+      endDate: new Date(),
+      skills: [
+        {
+          id: "105",
+          name: "React",
+        },
+        {
+          id: "102",
+          name: "Angular",
+        },
+        {
+          id: "101",
+          name: "UX",
+        },
+        {
+          id: "108",
+          name: "Project Management",
+        },
+      ],
+    },
   ];
   //////////////////////////////////////////////
   //** Expanded Employee service functionality,
