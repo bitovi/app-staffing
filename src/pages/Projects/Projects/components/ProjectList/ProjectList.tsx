@@ -8,6 +8,7 @@ import {
   Th,
   Thead,
   Tr,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import { Project } from "../../../../../services/api";
@@ -83,7 +84,8 @@ export default function ProjectList({
                       color="gray.800"
                       textStyle="table.title"
                     >
-                      DESCRIPTION
+                      {/* Using <VisuallyHidden> here because although the Figma file doesn't contain this header, I assume it's an accessibility liability to use a blank table header. */}
+                      <VisuallyHidden>DESCRIPTION</VisuallyHidden>
                     </Th>
                     <Th
                       pt="0px"

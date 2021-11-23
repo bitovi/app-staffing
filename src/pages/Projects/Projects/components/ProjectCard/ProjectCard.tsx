@@ -7,13 +7,11 @@ import {
 import type { Project } from "../../../../../services/api";
 import { Link as ReactRouterLink } from "react-router-dom";
 
-interface ProjectCardProps {
-  project: Project;
-}
-
 const ProjectCard = ({
   project
-}: ProjectCardProps): JSX.Element => {
+}: {
+  project: Project
+}): JSX.Element => {
   return (
     <>
       <Tr
