@@ -11,6 +11,11 @@ export const October = 9;
 export const November = 10;
 export const December = 11;
 
+export const Q1 = 1;
+export const Q2 = 2;
+export const Q3 = 3;
+export const Q4 = 4;
+
 /**
  * Weeks must have a minimum of 3 shown. The maximum
  * number of weeks possible to show is 6.
