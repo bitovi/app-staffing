@@ -23,23 +23,19 @@ export default function ProjectList({
   projects,
   ...props
 }: IProjectList): JSX.Element {
-
   const generateRows = useCallback(() => {
     return projects?.map(
       (project, index): JSX.Element => (
-        <ProjectListRow
-          key={project.id}
-          project={project}
-        >
+        <ProjectListRow key={project.id} project={project}>
           {projects.length - 1 !== index && <Tr height={5}></Tr>}
         </ProjectListRow>
-      )
+      ),
     );
   }, [projects]);
 
   return (
     <>
-     <Box {...props}>
+      <Box {...props}>
         {projects && projects.length === 0 && (
           <Flex
             width="100%"
@@ -67,9 +63,7 @@ export default function ProjectList({
         {projects && projects.length > 0 && (
           <>
             <Box maxHeight="80vh" overflowY="auto">
-              <Table
-                variant="unstyled"
-              >
+              <Table variant="unstyled">
                 <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10">
                   <Tr>
                     <Th
@@ -123,10 +117,8 @@ export const ProjectListRow = ({
 }): JSX.Element => {
   return (
     <>
-      <ProjectCard
-        project={project}
-      />
+      <ProjectCard project={project} />
       {children}
     </>
-  )
-}
+  );
+};
