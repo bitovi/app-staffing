@@ -26,14 +26,18 @@ function useRest<T>(
 ): RestActions<T> {
   const key = `${path}?${param(queryParams)}`;
 
-  const { mutate } = useSWRConfig();
-
+  const { mutate, cache } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T }, Error>(
     key,
     (url) => fetcher("GET", url),
-    { suspense: true, use: [deserializeDateMiddleware] },
+    {
+      suspense: true,
+      use: [deserializeDateMiddleware],
+      // fallbackData added with pre-fetched data from localStorage
+      // to provide persistent cache data while revalidate
+      fallbackData: cache.get(key),
+    },
   );
-
   const handleAdd = useCallback<
     (newCollectionItem: {
       data: FrontEndEmployee;
