@@ -41,6 +41,7 @@ describe.only("timeline utilities logic", () => {
     [new Date(2025, January, 15), new Date(2024, December, 30)],
     [new Date(2021, May, 31), new Date(2021, May, 31)],
     [new Date(2022, January, 31), new Date(2022, January, 31)],
+    [new Date(2021, January, 1), new Date(2020, November, 30)],
   ])("finds the start of a month for %s", (date, startOfMonth) => {
     expect(getStartOfMonth(date)).toEqual(startOfMonth);
   });

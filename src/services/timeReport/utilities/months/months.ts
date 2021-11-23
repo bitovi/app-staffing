@@ -7,6 +7,7 @@ import {
   sub,
   endOfMonth,
 } from "date-fns";
+import { December, January } from "../../fixtures";
 
 import { isBegginningOfWeek, isEndOfWeek } from "../weeks";
 
@@ -54,6 +55,14 @@ export function getCannonMonth(date: Date): number {
   return month.getMonth();
 }
 
+function getYear(month: number, cannonMonth: number, year: number): number {
+  if (month === December && cannonMonth === January) return year + 1;
+
+  if (month === January && cannonMonth === December) return year - 1;
+
+  return year;
+}
+
 /**
  * Determines the beginning of the month given a date. This function calculates the
  * beginning of the month through the timeline rules discribed in `timeReport.ts`
@@ -69,8 +78,15 @@ export function getCannonMonth(date: Date): number {
  * @returns the start date of the first day of the first week of the given dates month
  */
 export function getStartOfMonth(date: Date): Date {
-  const _d = new Date(date.getFullYear(), getCannonMonth(date));
-  const firstOfMonth = startOfMonth(_d);
+  const cannonMonth = getCannonMonth(date);
+  const month = getMonth(date);
+
+  const dateInCannonMonth = new Date(
+    getYear(month, cannonMonth, date.getFullYear()),
+    cannonMonth,
+  );
+
+  const firstOfMonth = startOfMonth(dateInCannonMonth);
   const wednesday = setDay(firstOfMonth, 3, { weekStartsOn: 1 });
 
   return getMonth(wednesday) === getMonth(firstOfMonth)
@@ -93,8 +109,15 @@ export function getStartOfMonth(date: Date): Date {
  * @returns the end date of the last day of the last week of the given dates month
  */
 export function getEndOfMonth(date: Date): Date {
-  const _d = new Date(date.getFullYear(), getCannonMonth(date));
-  const lastOfMonth = endOfMonth(_d);
+  const cannonMonth = getCannonMonth(date);
+  const month = getMonth(date);
+
+  const dateInCannonMonth = new Date(
+    getYear(month, cannonMonth, date.getFullYear()),
+    cannonMonth,
+  );
+
+  const lastOfMonth = endOfMonth(dateInCannonMonth);
   const wednesday = setDay(lastOfMonth, 3, { weekStartsOn: 1 });
 
   const beginningOfNextMonth =
