@@ -8,6 +8,18 @@ import {
   endOfMonth,
 } from "date-fns";
 
+/** internal */
+function isBegginningOfWeek(date: Date): boolean {
+  const Wednesday = 3;
+  const Sunday = 0;
+  return date.getDay() > Sunday && date.getDay() <= Wednesday;
+}
+
+/** internal */
+function isEndOfWeek(date: Date): boolean {
+  const Wednesday = 3;
+  return date.getDay() > Wednesday;
+}
 /**
  * Determines the beginning of the week given a date. This functions
  * finds the beginning of the week thorugh the timeline rules described in
@@ -20,6 +32,50 @@ import {
  */
 export function getStartOfWeek(date: Date): Date {
   return setDay(date, 1, { weekStartsOn: 1 });
+}
+
+/**
+ * Determines which month according to the timeline rules a date is in
+ *
+ * @param date date to find the month of
+ * @returns the month number
+ */
+export function getCannonMonth(date: Date): number {
+  const beginningOfFirstWeek = startOfWeek(startOfMonth(date));
+  const endOfFirstWeek = add(beginningOfFirstWeek, { weeks: 1 });
+
+  const beginningOfLastWeek = startOfWeek(endOfMonth(date));
+  const endOfLastWeek = add(beginningOfLastWeek, { weeks: 1 });
+
+  const dateIsInLastWeek =
+    date.getTime() <= endOfLastWeek.getTime() &&
+    date.getTime() >= beginningOfLastWeek.getTime();
+
+  const dateIsInFirstWeek =
+    date.getTime() <= endOfFirstWeek.getTime() &&
+    date.getTime() >= beginningOfFirstWeek.getTime();
+
+  let month = date;
+
+  if (dateIsInLastWeek) {
+    const endOfGMonth = endOfMonth(date);
+    const isBeginning = isBegginningOfWeek(endOfGMonth);
+
+    month = isBeginning
+      ? endOfMonth(add(endOfGMonth, { weeks: 1 }))
+      : endOfGMonth;
+  }
+
+  if (dateIsInFirstWeek) {
+    const startOfGMonth = startOfMonth(date);
+    const isEnd = isEndOfWeek(startOfGMonth);
+
+    month = isEnd
+      ? startOfMonth(sub(startOfGMonth, { weeks: 1 }))
+      : startOfGMonth;
+  }
+
+  return month.getMonth();
 }
 
 /**
@@ -37,53 +93,13 @@ export function getStartOfWeek(date: Date): Date {
  * @returns the start date of the first day of the first week of the given dates month
  */
 export function getStartOfMonth(date: Date): Date {
-  const firstOfMonth = startOfMonth(date);
+  const _d = new Date(date.getFullYear(), getCannonMonth(date));
+  const firstOfMonth = startOfMonth(_d);
   const wednesday = setDay(firstOfMonth, 3, { weekStartsOn: 1 });
 
   return getMonth(wednesday) === getMonth(firstOfMonth)
     ? startOfWeek(firstOfMonth, { weekStartsOn: 1 })
     : startOfWeek(add(firstOfMonth, { weeks: 1 }), { weekStartsOn: 1 });
-}
-
-function isBegginningOfWeek(date: Date): boolean {
-  return date.getDay() > 0 && date.getDay() < 3;
-}
-
-function getCannonMonth(date: Date): number {
-  const beginningOfFirstWeek = getStartOfWeek(startOfMonth(date));
-  const endOfFirstWeek = add(beginningOfFirstWeek, { weeks: 1 });
-
-  const beginningOfLastWeek = getStartOfWeek(endOfMonth(date));
-  const endOfLastWeek = add(beginningOfLastWeek, { weeks: 1 });
-
-  const dateIsInLastWeek =
-    date.getTime() <= endOfLastWeek.getTime() &&
-    date.getTime() >= beginningOfLastWeek.getTime();
-  const dateIsInFirstWeek =
-    date.getTime() <= endOfFirstWeek.getTime() &&
-    date.getTime() >= beginningOfFirstWeek.getTime();
-
-  let month = date;
-
-  if (dateIsInLastWeek) {
-    const endOfGMonth = endOfMonth(date);
-    const isBeginning = isBegginningOfWeek(endOfGMonth);
-
-    month = isBeginning
-      ? endOfMonth(add(endOfGMonth, { weeks: 1 }))
-      : endOfGMonth;
-  }
-
-  if (dateIsInFirstWeek) {
-    const endOfGMonth = endOfMonth(date);
-    const isBeginning = isBegginningOfWeek(endOfGMonth);
-
-    month = !isBeginning
-      ? endOfMonth(sub(endOfGMonth, { weeks: 1 }))
-      : endOfGMonth;
-  }
-
-  return month.getMonth();
 }
 
 /**
@@ -101,18 +117,9 @@ function getCannonMonth(date: Date): number {
  * @returns the end date of the last day of the last week of the given dates month
  */
 export function getEndOfMonth(date: Date): Date {
-  // date jan 31
   const _d = new Date(date.getFullYear(), getCannonMonth(date));
-  const lastOfMonth = endOfMonth(_d); // jan 31 should b 28th of feb
+  const lastOfMonth = endOfMonth(_d);
   const wednesday = setDay(lastOfMonth, 3, { weekStartsOn: 1 });
-
-  // console.log({
-  //   date,
-  //   lastOfMonth,
-  //   wednesday,
-  //   bool: getMonth(wednesday) === getMonth(lastOfMonth),
-  //   math: startOfWeek(lastOfMonth, { weekStartsOn: 1 }),
-  // });
 
   const beginningOfNextMonth =
     getMonth(wednesday) === getMonth(lastOfMonth)
@@ -129,15 +136,18 @@ export function getEndOfMonth(date: Date): Date {
  * @returns The start of the nextMonth
  */
 export const getNextMonth = (date: Date): Date => {
-  // We can't rely on adding durations since the duration of a month
-  // under the timeline rules vary.
+  // to avoid figuring out where the start of the month is just pick
+  // a date in the middle since were going to use the `getStartOfMonth`
+  // function to find the start
+  const DAY_IN_THE_MIDDLE_OF_THE_MONTH = 15;
 
-  const MAX_NUMBER_WEEKS_IN_A_MONTH = 5;
-  const currentMonth = getStartOfMonth(date);
+  const datesYear = date.getFullYear();
+  const currentMonth = getCannonMonth(date);
 
-  const dateInNextMonth = startOfWeek(
-    add(currentMonth, { weeks: MAX_NUMBER_WEEKS_IN_A_MONTH + 1 }),
-    { weekStartsOn: 1 },
+  const dateInNextMonth = new Date(
+    currentMonth == 11 ? datesYear + 1 : datesYear,
+    (currentMonth + 1) % 12,
+    DAY_IN_THE_MIDDLE_OF_THE_MONTH,
   );
 
   return getStartOfMonth(dateInNextMonth);
