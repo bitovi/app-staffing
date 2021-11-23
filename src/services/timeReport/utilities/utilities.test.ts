@@ -40,13 +40,14 @@ describe("timeline utilities logic", () => {
     expect(getStartOfMonth(date)).toEqual(startOfMonth);
   });
 
-  it.each([
+  it.only.each([
+    [new Date(2022, January, 31), new Date(2022, February, 28)],
     [new Date(2021, July, 18), new Date(2021, August, 2)],
     [new Date(2021, June, 18), new Date(2021, July, 5)],
     [new Date(2021, August, 18), new Date(2021, August, 30)],
     [new Date(2021, October, 18), new Date(2021, November, 1)],
     [new Date(2021, May, 18), new Date(2021, May, 31)],
-    [new Date(2021, May, 31), new Date(2021, May, 31)],
+    [new Date(2021, May, 31), new Date(2021, July, 5)],
   ])("finds the end of month for %s", (date, endOfMonth) => {
     expect(getEndOfMonth(date)).toEqual(new Date(endOfMonth.getTime() - 1));
   });
@@ -70,7 +71,7 @@ describe("timeline utilities logic", () => {
     );
   });
 
-  it.skip.each([])("finds end of quarter %s", () => {});
+  // it.skip.each([])("finds end of quarter %s", () => {});
 
-  it.skip.each([])("finds end of next quarter %s", () => {});
+  // it.skip.each([])("finds end of next quarter %s", () => {});
 });
