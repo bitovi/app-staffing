@@ -9,8 +9,10 @@ import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
 // import { skills } from "../skills/fixtures";
 import { skillStoreManager } from "../skills/mocks";
+import { SerializerTypes } from "./getJsonApiSerializer";
 // import { employeeDataFormatter } from "../useEmployees/useEmployees";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
+import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
 
 interface RestActions<T> extends APIResponse<T> {
   handleAdd: (newCollectionItem: {
@@ -22,17 +24,17 @@ interface RestActions<T> extends APIResponse<T> {
 
 function useRest<T>(
   path: string,
+  type: SerializerTypes,
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
   const key = `${path}?${param(queryParams)}`;
-
   const { mutate /*, cache*/ } = useSWRConfig();
   const { data: response, error } = useSWR<T, Error>(
     key,
     (url) => fetcher("GET", url),
     {
       suspense: true,
-      use: [deserializeDateMiddleware],
+      use: [deserializeDateMiddleware, jsonApiMiddleware(type)],
       // fallbackData added with pre-fetched data from localStorage
       // to provide persistent cache data while revalidate
       //**************************************************************************** */

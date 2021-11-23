@@ -12,39 +12,40 @@ const alphabetize = (array: Employee[]): Employee[] =>
     a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
   );
 
-export const employeeDataFormatter = (
-  employee: JSONAPI<JSONAPIEmployee[], JSONAPISkill[]> | undefined,
-): Employee[] | [] => {
-  if (employee) {
-    const { data: unformatedEmployees, included: unformatedSkills } = employee;
-    const formattedEmployees: Employee[] = unformatedEmployees.map(
-      (em: JSONAPIEmployee) => {
-        const { id, relationships } = em;
-        return {
-          id,
-          ...em.attributes,
-          skills:
-            relationships && relationships.skills
-              ? relationships.skills?.data?.map(
-                  (skill: { type: string; id: string }) => {
-                    return {
-                      id: skill.id,
-                      name: unformatedSkills?.find(
-                        (unformatedSkill) => unformatedSkill.id === skill.id,
-                      )?.attributes.name,
-                    };
-                  },
-                )
-              : [],
-        };
-      },
-    );
+// export const employeeDataFormatter = (
+//   employee: JSONAPI<JSONAPIEmployee[], JSONAPISkill[]> | undefined,
+// ): Employee[] | [] => {
+//   console.log("employe", employee);
+//   if (employee) {
+//     const { data: unformatedEmployees, included: unformatedSkills } = employee;
+//     const formattedEmployees: Employee[] = unformatedEmployees.map(
+//       (em: JSONAPIEmployee) => {
+//         const { id, relationships } = em;
+//         return {
+//           id,
+//           ...em.attributes,
+//           skills:
+//             relationships && relationships.skills
+//               ? relationships.skills?.data?.map(
+//                   (skill: { type: string; id: string }) => {
+//                     return {
+//                       id: skill.id,
+//                       name: unformatedSkills?.find(
+//                         (unformatedSkill) => unformatedSkill.id === skill.id,
+//                       )?.attributes.name,
+//                     };
+//                   },
+//                 )
+//               : [],
+//         };
+//       },
+//     );
 
-    return formattedEmployees;
-  }
+//     return formattedEmployees;
+//   }
 
-  return [];
-};
+//   return [];
+// };
 
 export interface EmployeeActions {
   employees?: Employee[];
@@ -73,11 +74,12 @@ export default function useEmployees(
     reset,
   } = useRest<JSONAPI<JSONAPIEmployee[], JSONAPISkill[]>>(
     "/api/v1/employees",
+    "employees",
     queryParams,
   );
 
   return {
-    employees: alphabetize(employeeDataFormatter(employees)),
+    employees: alphabetize(employees as unknown as Employee[]),
     isLoading,
     error,
     addEmployee: handleAdd,
