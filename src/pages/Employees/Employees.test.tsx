@@ -5,6 +5,7 @@ import {
   within,
   waitForElementToBeRemoved,
   cleanup,
+  waitFor,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
@@ -63,6 +64,11 @@ describe("Pages/Employees", () => {
       name: /add team member/i,
     });
     addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    const modal = await screen.findByRole("dialog");
+    const submitButton = within(modal).getByText(/Add & Close/i);
+    expect(submitButton).toBeDisabled();
+
     const modalNameInput = await screen.findByPlaceholderText(/name/i);
     fireEvent.change(modalNameInput, {
       target: { value: "Johnny Appleseed" },
@@ -75,9 +81,7 @@ describe("Pages/Employees", () => {
     });
     expect(modalStartDateInput).toHaveValue("1993-01-24");
 
-    const modal = await screen.findByRole("dialog");
-    const submitButton = within(modal).getByText(/Add & Close/i);
-    expect(submitButton).toBeDisabled();
+    await waitFor(() => expect(submitButton).toBeEnabled());
 
     const angularCheckBox = within(modal).getByLabelText("Angular");
     const designCheckBox = within(modal).getByLabelText("Design");
@@ -90,8 +94,6 @@ describe("Pages/Employees", () => {
 
     expect(angularCheckBox).toBeChecked();
     expect(designCheckBox).toBeChecked();
-
-    expect(submitButton).toBeEnabled();
 
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 

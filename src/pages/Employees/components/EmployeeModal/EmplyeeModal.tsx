@@ -22,7 +22,7 @@ import {
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Skill } from "../../../../services/api";
 import { FrontEndEmployee } from "../../../../services/api/employees/interfaces";
 import { useForm } from "react-hook-form";
@@ -70,8 +70,17 @@ export default function EmployeeModal({
   const [checkedRolesState, setCheckedRolesState] = useState<RoleState[]>([]);
   const [serverError, setServerError] = useState(false);
 
+  // Ref added to prevent revalidation of stale skills data from useSWR,
+  // which causes a state update to roles, from clearing checkbox data
+  // on browser tab blur due to unnecessary rerender
+
+  // issue avoided if we choose to set SWR revalidateIfStale to false
+
+  const skillsRef = useRef<Skill[] | boolean>(false);
+
   useEffect(() => {
-    if (skills) {
+    if (skills && !skillsRef.current) {
+      skillsRef.current = skills;
       //stateful value for mapping out checkbox inputs
       //value corresponds to index value within checkedRolesState
       setRoles(
@@ -92,13 +101,14 @@ export default function EmployeeModal({
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<IEmployeeData>({
     defaultValues: {
       start_date: "",
       end_date: "",
       name: "",
     },
+    mode: "onChange",
   });
 
   const submitForm = async (data: IEmployeeData) => {
@@ -135,6 +145,9 @@ export default function EmployeeModal({
       await onSave(newEmployee);
       reset();
       onClose();
+      setCheckedRolesState((prevState) =>
+        prevState.map((skill) => ({ ...skill, selected: false })),
+      );
     } catch (e) {
       setServerError(!serverError);
     }
@@ -160,7 +173,6 @@ export default function EmployeeModal({
               value={role.value}
               onChange={() => handleRolesChange(index)}
               isChecked={checkedRolesState[index].selected}
-              defaultChecked={true}
             >
               {role.label}
             </Checkbox>
@@ -231,7 +243,7 @@ export default function EmployeeModal({
               </FormControl>
             </HStack>
 
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel>Roles</FormLabel>
               <Flex mt={4} mb={11} flexGrow={1}>
                 {renderRolesCheckboxes(roles)}
@@ -270,14 +282,8 @@ export default function EmployeeModal({
             Cancel
           </Button>
           <Button
-            variant={
-              !checkedRolesState.some((role) => role.selected === true)
-                ? "primaryDisabled"
-                : "primary"
-            }
-            isDisabled={
-              !checkedRolesState.some((role) => role.selected === true)
-            }
+            variant={!isValid ? "primaryDisabled" : "primary"}
+            isDisabled={!isValid}
             onClick={handleSubmit((data) => submitForm(data))}
           >
             Add & Close
