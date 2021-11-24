@@ -3,7 +3,8 @@ import { add, setDay } from "date-fns";
 /**
  * Determines the beginning of the week given a date. This functions
  * finds the beginning of the week thorugh the timeline rules described in
- * `timeReport.ts`
+ * `rules.md`
+ *
  * > TL;DR
  * > weeks begin on monday
  *
@@ -25,13 +26,13 @@ export function addWeek(date: Date): Date {
   return add(date, { weeks: 1 });
 }
 
+/** Determines if the day of a date is wednesday or before */
 export function isBeginningOfWeek(date: Date): boolean {
   const Wednesday = 3;
-  const Sunday = 0;
-  return date.getDay() > Sunday && date.getDay() <= Wednesday;
+  return date.getDay() <= Wednesday;
 }
 
+/** Determines if the day of a date is after wednesday */
 export function isEndOfWeek(date: Date): boolean {
-  const Wednesday = 3;
-  return date.getDay() > Wednesday;
+  return !isBeginningOfWeek(date);
 }
