@@ -2,14 +2,14 @@ import {
   startOfWeek,
   setDay,
   getMonth,
-  add,
   startOfMonth,
   sub,
   endOfMonth,
 } from "date-fns";
+
 import { December, January, MONTHS_IN_YEAR } from "../../constants";
 
-import { isBegginningOfWeek, isEndOfWeek } from "../weeks";
+import { isBegginningOfWeek, isEndOfWeek, addWeek } from "../weeks";
 
 /**
  * Determines which month according to the timeline rules a date is in
@@ -19,10 +19,10 @@ import { isBegginningOfWeek, isEndOfWeek } from "../weeks";
  */
 export function getCannonMonth(date: Date): number {
   const beginningOfFirstWeek = startOfWeek(startOfMonth(date));
-  const endOfFirstWeek = add(beginningOfFirstWeek, { weeks: 1 });
+  const endOfFirstWeek = addWeek(beginningOfFirstWeek);
 
   const beginningOfLastWeek = startOfWeek(endOfMonth(date));
-  const endOfLastWeek = add(beginningOfLastWeek, { weeks: 1 });
+  const endOfLastWeek = addWeek(beginningOfLastWeek);
 
   const dateIsInLastWeek =
     date.getTime() <= endOfLastWeek.getTime() &&
@@ -38,9 +38,7 @@ export function getCannonMonth(date: Date): number {
     const endOfGMonth = endOfMonth(date);
     const isBeginning = isBegginningOfWeek(endOfGMonth);
 
-    month = isBeginning
-      ? endOfMonth(add(endOfGMonth, { weeks: 1 }))
-      : endOfGMonth;
+    month = isBeginning ? endOfMonth(addWeek(endOfGMonth)) : endOfGMonth;
   }
 
   if (dateIsInFirstWeek) {
@@ -91,7 +89,7 @@ export function getStartOfMonth(date: Date): Date {
 
   return getMonth(wednesday) === getMonth(firstOfMonth)
     ? startOfWeek(firstOfMonth, { weekStartsOn: 1 })
-    : startOfWeek(add(firstOfMonth, { weeks: 1 }), { weekStartsOn: 1 });
+    : startOfWeek(addWeek(firstOfMonth), { weekStartsOn: 1 });
 }
 
 /**
@@ -122,7 +120,7 @@ export function getEndOfMonth(date: Date): Date {
 
   const beginningOfNextMonth =
     getMonth(wednesday) === getMonth(lastOfMonth)
-      ? startOfWeek(add(lastOfMonth, { weeks: 1 }), { weekStartsOn: 1 })
+      ? startOfWeek(addWeek(lastOfMonth), { weekStartsOn: 1 })
       : startOfWeek(lastOfMonth, { weekStartsOn: 1 });
 
   return new Date(beginningOfNextMonth.getTime() - 1);
@@ -144,8 +142,8 @@ export const getNextMonth = (date: Date): Date => {
   const currentMonth = getCannonMonth(date);
 
   const dateInNextMonth = new Date(
-    currentMonth == 11 ? datesYear + 1 : datesYear,
-    (currentMonth + 1) % 12,
+    currentMonth == December ? datesYear + 1 : datesYear,
+    (currentMonth + 1) % MONTHS_IN_YEAR,
     DAY_IN_THE_MIDDLE_OF_THE_MONTH,
   );
 
