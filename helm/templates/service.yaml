@@ -20,6 +20,12 @@ spec:
     port: {{ .Values.service.port }}
     protocol: TCP
     targetPort:  {{ .Values.service.targetPort }}
+  {{- if .Values.local.websocketPort.enabled }}
+  - name: websocket
+    port: 35729
+    protocol: TCP
+    targetPort:  35729
+  {{- end }}
 
   selector:
     app: {{ .Values.appname }}
