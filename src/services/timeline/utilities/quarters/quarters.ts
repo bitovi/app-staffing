@@ -44,7 +44,7 @@ const getMiddleOfQuarter = (quarter: number): number => {
   return middle;
 };
 
-export const getCannonQuarter = (date: Date): number => {
+export const getCanonQuarter = (date: Date): number => {
   const time = date.getTime();
 
   const startOfFirstWeekOfQuarter = startOfWeek(startOfQuarter(date));
@@ -82,24 +82,24 @@ export const getCannonQuarter = (date: Date): number => {
   return getQuarter(quarter);
 };
 
-function getYear(quarter: number, cannonQuarter: number, year: number): number {
-  if (quarter === Q4 && cannonQuarter == Q1) return year + 1;
+function getYear(quarter: number, canonQuarter: number, year: number): number {
+  if (quarter === Q4 && canonQuarter == Q1) return year + 1;
 
-  if (quarter === Q1 && cannonQuarter == Q4) return year - 1;
+  if (quarter === Q1 && canonQuarter == Q4) return year - 1;
 
   return year;
 }
 
 export const getStartOfQuarter = (date: Date): Date => {
-  const cannonQuarter = getCannonQuarter(date);
+  const canonQuarter = getCanonQuarter(date);
   const quarter = getQuarter(date);
 
-  const dateInCannonQuarter = new Date(
-    getYear(quarter, cannonQuarter, date.getFullYear()),
-    getMiddleOfQuarter(getCannonQuarter(date)),
+  const dateInCanonQuarter = new Date(
+    getYear(quarter, canonQuarter, date.getFullYear()),
+    getMiddleOfQuarter(getCanonQuarter(date)),
   );
 
-  const firstOfQuarter = startOfQuarter(dateInCannonQuarter);
+  const firstOfQuarter = startOfQuarter(dateInCanonQuarter);
   const wednesday = setDay(firstOfQuarter, 3, { weekStartsOn: 1 });
 
   const start =
@@ -117,7 +117,7 @@ export const getNextQuarter = (date: Date): Date => {
   const DAY_IN_THE_MIDDLE_OF_THE_MONTH = 15;
 
   const datesYear = date.getFullYear();
-  const currentQuarter = getCannonQuarter(date);
+  const currentQuarter = getCanonQuarter(date);
 
   const nextQuarter = (currentQuarter % NUMBER_OF_QUARTERS) + 1;
 
@@ -131,15 +131,15 @@ export const getNextQuarter = (date: Date): Date => {
 };
 
 export const getEndOfQuarter = (date: Date): Date => {
-  const cannonQuarter = getCannonQuarter(date);
+  const canonQuarter = getCanonQuarter(date);
   const quarter = getQuarter(date);
 
-  const dateInCannonQuarter = new Date(
-    getYear(quarter, cannonQuarter, date.getFullYear()),
-    getMiddleOfQuarter(cannonQuarter),
+  const dateInCanonQuarter = new Date(
+    getYear(quarter, canonQuarter, date.getFullYear()),
+    getMiddleOfQuarter(canonQuarter),
   );
 
-  const lastOfQuarter = endOfQuarter(dateInCannonQuarter);
+  const lastOfQuarter = endOfQuarter(dateInCanonQuarter);
   const wednesday = setDay(lastOfQuarter, 3, { weekStartsOn: 1 });
 
   const beginningOfNextMonth =

@@ -17,7 +17,7 @@ import { isBeginningOfWeek, isEndOfWeek, addWeek } from "../weeks";
  * @param date date to find the month of
  * @returns the month number
  */
-export function getCannonMonth(date: Date): number {
+export function getCanonMonth(date: Date): number {
   const beginningOfFirstWeek = startOfWeek(startOfMonth(date));
   const endOfFirstWeek = addWeek(beginningOfFirstWeek);
 
@@ -53,10 +53,13 @@ export function getCannonMonth(date: Date): number {
   return month.getMonth();
 }
 
-function getYear(month: number, cannonMonth: number, year: number): number {
-  if (month === December && cannonMonth === January) return year + 1;
+/**
+ * internal. Gets the correct year for the month.
+ */
+function getCanonYear(month: number, canonMonth: number, year: number): number {
+  if (month === December && canonMonth === January) return year + 1;
 
-  if (month === January && cannonMonth === December) return year - 1;
+  if (month === January && canonMonth === December) return year - 1;
 
   return year;
 }
@@ -76,15 +79,15 @@ function getYear(month: number, cannonMonth: number, year: number): number {
  * @returns the start date of the first day of the first week of the given dates month
  */
 export function getStartOfMonth(date: Date): Date {
-  const cannonMonth = getCannonMonth(date);
+  const canonMonth = getCanonMonth(date);
   const month = getMonth(date);
 
-  const dateInCannonMonth = new Date(
-    getYear(month, cannonMonth, date.getFullYear()),
-    cannonMonth,
+  const dateInCanonMonth = new Date(
+    getCanonYear(month, canonMonth, date.getFullYear()),
+    canonMonth,
   );
 
-  const firstOfMonth = startOfMonth(dateInCannonMonth);
+  const firstOfMonth = startOfMonth(dateInCanonMonth);
   const wednesday = setDay(firstOfMonth, 3, { weekStartsOn: 1 });
 
   return getMonth(wednesday) === getMonth(firstOfMonth)
@@ -107,15 +110,15 @@ export function getStartOfMonth(date: Date): Date {
  * @returns the end date of the last day of the last week of the given dates month
  */
 export function getEndOfMonth(date: Date): Date {
-  const cannonMonth = getCannonMonth(date);
+  const canonMonth = getCanonMonth(date);
   const month = getMonth(date);
 
-  const dateInCannonMonth = new Date(
-    getYear(month, cannonMonth, date.getFullYear()),
-    cannonMonth,
+  const dateInCanonMonth = new Date(
+    getCanonYear(month, canonMonth, date.getFullYear()),
+    canonMonth,
   );
 
-  const lastOfMonth = endOfMonth(dateInCannonMonth);
+  const lastOfMonth = endOfMonth(dateInCanonMonth);
   const wednesday = setDay(lastOfMonth, 3, { weekStartsOn: 1 });
 
   const beginningOfNextMonth =
@@ -139,7 +142,7 @@ export const getNextMonth = (date: Date): Date => {
   const DAY_IN_THE_MIDDLE_OF_THE_MONTH = 15;
 
   const datesYear = date.getFullYear();
-  const currentMonth = getCannonMonth(date);
+  const currentMonth = getCanonMonth(date);
 
   const dateInNextMonth = new Date(
     currentMonth == December ? datesYear + 1 : datesYear,
@@ -162,14 +165,20 @@ export const getEndOfNextMonth = (date: Date): Date => {
 };
 
 // https://stackoverflow.com/a/2536445
+/**
+ * Gets the number of months between two
+ * @param firstDate
+ * @param secondDate
+ * @returns
+ */
 export function getNumberMonthsBetween(
   firstDate: Date,
   secondDate: Date,
 ): number {
   let months =
     (firstDate.getFullYear() - secondDate.getFullYear()) * MONTHS_IN_YEAR;
-  months -= getCannonMonth(firstDate);
-  months += getCannonMonth(secondDate);
+  months -= getCanonMonth(firstDate);
+  months += getCanonMonth(secondDate);
 
   return months <= 0 ? 0 : months;
 }

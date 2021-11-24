@@ -17,7 +17,7 @@ import {
 } from "../../constants";
 
 import {
-  getCannonQuarter,
+  getCanonQuarter,
   getStartOfQuarter,
   getNextQuarter,
   getEndOfQuarter,
@@ -37,7 +37,7 @@ describe("quarters utilities", () => {
     [new Date(2025, March, 31), Q2],
     [new Date(2024, December, 31), Q1],
   ])("finds cannon quarter for %s to be %s", (date, quarter) => {
-    expect(getCannonQuarter(date)).toBe(quarter);
+    expect(getCanonQuarter(date)).toBe(quarter);
   });
 
   it.each([

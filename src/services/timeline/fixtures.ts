@@ -8,6 +8,8 @@ import {
   July,
   August,
   October,
+  November,
+  December,
 } from "./constants";
 /**
  * Weeks must have a minimum of 3 shown. The maximum
@@ -102,7 +104,7 @@ export const timeLineFixtures = [
     ],
   },
   {
-    date: new Date(new Date(2018, January, 22)),
+    date: new Date(2018, January, 22),
     weeks: [
       [new Date(2018, January, 22), new Date(2018, January, 29)],
       [new Date(2018, January, 29), new Date(2018, February, 5)],
@@ -118,5 +120,25 @@ export const timeLineFixtures = [
       [new Date(2018, June, 4), new Date(2018, July, 2)],
     ],
     quarters: [[new Date(2018, July, 2), new Date(2018, October, 1)]],
+  },
+  {
+    date: new Date(2021, November, 24),
+    weeks: [
+      [new Date(2021, November, 22), new Date(2021, November, 29)],
+      [new Date(2021, November, 29), new Date(2021, December, 6)],
+      [new Date(2021, December, 6), new Date(2021, December, 13)],
+      [new Date(2021, December, 13), new Date(2021, December, 20)],
+      [new Date(2021, December, 20), new Date(2021, December, 27)],
+      [new Date(2021, December, 27), new Date(2022, January, 3)],
+    ],
+    months: [
+      [new Date(2022, January, 3), new Date(2022, January, 31)],
+      [new Date(2022, January, 31), new Date(2022, February, 28)],
+      [new Date(2022, February, 28), new Date(2022, April, 4)],
+    ],
+    quarters: [
+      [new Date(2022, April, 4), new Date(2022, July, 4)],
+      [new Date(2022, July, 4), new Date(2022, October, 3)],
+    ],
   },
 ];

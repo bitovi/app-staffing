@@ -26,11 +26,11 @@ import {
   getEndOfQuarter,
   getEndOfNextQuarter,
   getNextMonth,
-  getCannonMonth,
+  getCanonMonth,
   getStartOfQuarter,
   getNumberMonthsBetween,
   addWeek,
-  getCannonQuarter,
+  getCanonQuarter,
 } from "./utilities";
 
 export const getWeeks = (date: Date): TimescaleData[] => {
@@ -64,7 +64,7 @@ export const getWeeks = (date: Date): TimescaleData[] => {
 // being displayed breaks
 // into the next quarter then show the entire wuarter broken down into months
 export const getMonths = (date: Date): TimescaleData[] => {
-  const currentMonth = getCannonMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
+  const currentMonth = getCanonMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
 
   const numberMonthsRemainingInQuarter =
     NUMBER_MONTHS_IN_QUARTERS - currentMonth;
@@ -131,19 +131,19 @@ export const getTimeScaleDescription = ({
   switch (type) {
     case TimescaleType.week:
       const month = format(
-        setMonth(new Date(), getCannonMonth(startDate)),
+        setMonth(new Date(), getCanonMonth(startDate)),
         "MMM",
       ).toUpperCase();
 
       return `${month} ${format(startDate, "do")}`;
     case TimescaleType.month:
       return format(
-        setMonth(new Date(), getCannonMonth(startDate)),
+        setMonth(new Date(), getCanonMonth(startDate)),
         "MMM",
       ).toUpperCase();
 
     case TimescaleType.quarter:
-      return `Q${getCannonQuarter(startDate)} ${startDate.getFullYear()}`;
+      return `Q${getCanonQuarter(startDate)} ${startDate.getFullYear()}`;
     default:
       return format(startDate, "MMM do");
   }

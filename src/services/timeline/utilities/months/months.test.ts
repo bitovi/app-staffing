@@ -3,7 +3,7 @@ import {
   getEndOfMonth,
   getEndOfNextMonth,
   getNextMonth,
-  getCannonMonth,
+  getCanonMonth,
 } from "./months";
 
 import {
@@ -31,7 +31,7 @@ describe("month utilities", () => {
     [new Date(2021, December, 1), December],
     [new Date(2021, October, 1), September],
   ])("should get cannon month %s", (date, month) => {
-    expect(getCannonMonth(date)).toBe(month);
+    expect(getCanonMonth(date)).toBe(month);
   });
 
   it.each([
