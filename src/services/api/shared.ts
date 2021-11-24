@@ -1,5 +1,6 @@
 import { Filter } from "can-query-logic";
 import { SerializerTypes } from "./useRest/getJsonApiSerializer";
+import hydrateObject from "./useRest/hydrateObject";
 import jsonApiMiddleware from "./useRest/middlewares/jsonApiMiddleware";
 export interface APIResponse<T> extends ResponseStatus {
   data?: T;
@@ -29,6 +30,7 @@ export async function fetcher<T>(
       "Content-Type": "application/json",
     },
   });
+
   const response = await jsonResponse.json();
   // "undefined" is a temporary measure to avoid breaking endpoints which haven't
   // converted to JSON API fully; otherwise, the deserializer omits much of the
@@ -38,6 +40,20 @@ export async function fetcher<T>(
     // as the response from fetch sets the shape of the SWR cache;
     // therefore, deserializing here allows us to have a localStorage SWR cache in the shape
     // of the frontend
-    return jsonApiMiddleware(response, type);
+
+    const [deserialized, relationships] = jsonApiMiddleware(response, type);
+
+    if ((method === "POST" || "PUT") && relationships.length > 0) {
+      // implementing possible solution for endpoint specific mutation based
+      // HTTP requests (POST, DELETE) to move them out of useRest and keep it
+      // generic -- hydrateObject()
+
+      const hydratedDeserialized = await hydrateObject(
+        deserialized,
+        relationships,
+      );
+      return hydratedDeserialized;
+    }
+    return deserialized;
   } else return response;
 }

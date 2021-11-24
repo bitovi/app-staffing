@@ -13,16 +13,25 @@ const jsonApiMiddleware = (
   type: SerializerTypes,
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 ): any => {
+  const relationshipFields: string[] = [];
+  if (typeof response.data === "object" && response.data !== null) {
+    for (const key in response.data.relationships) {
+      if (!relationshipFields.includes(key)) relationshipFields.push(key);
+    }
+  }
   const deserializedData = getJsonApiSerializer().deserialize(
     type,
     response ?? {},
   );
-  return Object.assign(
-    {},
-    {
-      data: deserializedData,
-    },
-  );
+  return [
+    Object.assign(
+      {},
+      {
+        data: deserializedData,
+      },
+    ),
+    relationshipFields,
+  ];
 };
 
 export default jsonApiMiddleware;

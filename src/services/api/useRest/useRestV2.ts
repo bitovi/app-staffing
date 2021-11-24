@@ -3,7 +3,6 @@ import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
-import { skillStoreManager } from "../skills/mocks";
 import { SerializerTypes } from "./getJsonApiSerializer";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 interface RestActions<T, K> extends APIResponse<T[]> {
@@ -46,16 +45,6 @@ function useRest<T extends { id?: string }, K>(
               newCollectionItem,
             );
             newId = newItem.id;
-
-            // Need to either put this somewhere Employees specific
-            // OR make it generic for all endpoints
-            const includedSkills = await skillStoreManager.store.getListData({
-              filter: {
-                id: newItem.skills,
-              },
-            });
-            newItem.skills = includedSkills.data;
-
             return {
               ...addResponse,
               data: [...addResponse.data, newItem],

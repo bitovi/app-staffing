@@ -172,6 +172,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
               await employeeSkillsStoreManager.store.createData(skillJoin);
             }),
           );
+
           await store.createData(newEmployeeTableEntry);
 
           return res(
@@ -275,7 +276,6 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
             name: skill.name,
           },
         }));
-
         return res(
           ctx.status(200),
           ctx.json({
