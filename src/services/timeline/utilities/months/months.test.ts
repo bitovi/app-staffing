@@ -17,7 +17,7 @@ import {
   October,
   November,
   December,
-} from "../../fixtures";
+} from "../../constants";
 
 describe("month utilities", () => {
   it.each([

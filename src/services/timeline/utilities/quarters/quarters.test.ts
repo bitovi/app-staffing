@@ -1,4 +1,3 @@
-import { getEndOfNextQuarter } from ".";
 import {
   January,
   February,
@@ -15,16 +14,17 @@ import {
   Q2,
   Q3,
   Q4,
-} from "../../fixtures";
+} from "../../constants";
 
 import {
   getCannonQuarter,
   getStartOfQuarter,
   getNextQuarter,
   getEndOfQuarter,
+  getEndOfNextQuarter,
 } from "./quarters";
 
-describe("timeline utilities logic", () => {
+describe("quarters utilities", () => {
   it.each([
     [new Date(2021, February, 4), Q1],
     [new Date(2021, May, 4), Q2],

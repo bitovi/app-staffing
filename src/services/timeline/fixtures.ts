@@ -1,21 +1,14 @@
-export const January = 0;
-export const February = 1;
-export const March = 2;
-export const April = 3;
-export const May = 4;
-export const June = 5;
-export const July = 6;
-export const August = 7;
-export const September = 8;
-export const October = 9;
-export const November = 10;
-export const December = 11;
-
-export const Q1 = 1;
-export const Q2 = 2;
-export const Q3 = 3;
-export const Q4 = 4;
-
+import {
+  January,
+  February,
+  March,
+  April,
+  May,
+  June,
+  July,
+  August,
+  October,
+} from "./constants";
 /**
  * Weeks must have a minimum of 3 shown. The maximum
  * number of weeks possible to show is 6.
@@ -94,8 +87,36 @@ export const monthFixtures = [
 export const timeLineFixtures = [
   {
     date: new Date(2018, January, 15),
-    weeks: [],
-    months: [],
-    quarters: [],
+    weeks: [
+      [new Date(2018, January, 15), new Date(2018, January, 22)],
+      [new Date(2018, January, 22), new Date(2018, January, 29)],
+      [new Date(2018, January, 29), new Date(2018, February, 5)],
+    ],
+    months: [
+      [new Date(2018, February, 5), new Date(2018, March, 5)],
+      [new Date(2018, March, 5), new Date(2018, April, 2)],
+    ],
+    quarters: [
+      [new Date(2018, April, 2), new Date(2018, July, 2)],
+      [new Date(2018, July, 2), new Date(2018, October, 1)],
+    ],
+  },
+  {
+    date: new Date(new Date(2018, January, 22)),
+    weeks: [
+      [new Date(2018, January, 22), new Date(2018, January, 29)],
+      [new Date(2018, January, 29), new Date(2018, February, 5)],
+      [new Date(2018, February, 5), new Date(2018, February, 12)],
+      [new Date(2018, February, 12), new Date(2018, February, 19)],
+      [new Date(2018, February, 19), new Date(2018, February, 26)],
+      [new Date(2018, February, 26), new Date(2018, March, 5)],
+    ],
+    months: [
+      [new Date(2018, March, 5), new Date(2018, April, 2)],
+      [new Date(2018, April, 2), new Date(2018, April, 30)],
+      [new Date(2018, April, 30), new Date(2018, June, 4)],
+      [new Date(2018, June, 4), new Date(2018, July, 2)],
+    ],
+    quarters: [[new Date(2018, July, 2), new Date(2018, October, 1)]],
   },
 ];

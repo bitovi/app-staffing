@@ -25,7 +25,7 @@ export function addWeek(date: Date): Date {
   return add(date, { weeks: 1 });
 }
 
-export function isBegginningOfWeek(date: Date): boolean {
+export function isBeginningOfWeek(date: Date): boolean {
   const Wednesday = 3;
   const Sunday = 0;
   return date.getDay() > Sunday && date.getDay() <= Wednesday;

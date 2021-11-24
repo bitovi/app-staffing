@@ -9,7 +9,7 @@ import {
 
 import { December, January, MONTHS_IN_YEAR } from "../../constants";
 
-import { isBegginningOfWeek, isEndOfWeek, addWeek } from "../weeks";
+import { isBeginningOfWeek, isEndOfWeek, addWeek } from "../weeks";
 
 /**
  * Determines which month according to the timeline rules a date is in
@@ -36,7 +36,7 @@ export function getCannonMonth(date: Date): number {
 
   if (dateIsInLastWeek) {
     const endOfGMonth = endOfMonth(date);
-    const isBeginning = isBegginningOfWeek(endOfGMonth);
+    const isBeginning = isBeginningOfWeek(endOfGMonth);
 
     month = isBeginning ? endOfMonth(addWeek(endOfGMonth)) : endOfGMonth;
   }

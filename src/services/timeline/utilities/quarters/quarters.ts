@@ -8,14 +8,41 @@ import {
   getQuarter,
   setDay,
 } from "date-fns";
-import { August, February, May, November, Q4, Q1 } from "../../constants";
 
 import {
-  isBegginningOfWeek,
+  August,
+  February,
+  May,
+  November,
+  Q4,
+  Q1,
+  Q2,
+  Q3,
+  NUMBER_OF_QUARTERS,
+  MILLISECOND,
+} from "../../constants";
+
+import {
+  isBeginningOfWeek,
   isEndOfWeek,
   addWeek,
   getStartOfWeek,
 } from "../weeks";
+
+const getMiddleOfQuarter = (quarter: number): number => {
+  const middle = {
+    [Q1]: February,
+    [Q2]: May,
+    [Q3]: August,
+    [Q4]: November,
+  }[quarter];
+
+  if (!middle) {
+    throw new Error("Invalid Quarter");
+  }
+
+  return middle;
+};
 
 export const getCannonQuarter = (date: Date): number => {
   const time = date.getTime();
@@ -38,7 +65,7 @@ export const getCannonQuarter = (date: Date): number => {
 
   if (dateIsInLastWeek) {
     const endOfGMonth = endOfQuarter(date);
-    const isBeginning = isBegginningOfWeek(endOfGMonth);
+    const isBeginning = isBeginningOfWeek(endOfGMonth);
 
     quarter = isBeginning ? endOfMonth(addWeek(endOfGMonth)) : endOfGMonth;
   }
@@ -64,20 +91,12 @@ function getYear(quarter: number, cannonQuarter: number, year: number): number {
 }
 
 export const getStartOfQuarter = (date: Date): Date => {
-  const middleOfQuarter = {
-    1: February,
-    2: May,
-    3: August,
-    4: November,
-  };
-
   const cannonQuarter = getCannonQuarter(date);
   const quarter = getQuarter(date);
 
   const dateInCannonQuarter = new Date(
     getYear(quarter, cannonQuarter, date.getFullYear()),
-    // @ts-ignore
-    middleOfQuarter[getCannonQuarter(date)],
+    getMiddleOfQuarter(getCannonQuarter(date)),
   );
 
   const firstOfQuarter = startOfQuarter(dateInCannonQuarter);
@@ -97,22 +116,14 @@ export const getNextQuarter = (date: Date): Date => {
   // function to find the start
   const DAY_IN_THE_MIDDLE_OF_THE_MONTH = 15;
 
-  const middleOfQuarter = {
-    1: February,
-    2: May,
-    3: August,
-    4: November,
-  };
-
   const datesYear = date.getFullYear();
   const currentQuarter = getCannonQuarter(date);
 
-  const nextQuarter = (currentQuarter % 4) + 1;
+  const nextQuarter = (currentQuarter % NUMBER_OF_QUARTERS) + 1;
 
   const dateInNextMonth = new Date(
     currentQuarter == Q4 ? datesYear + 1 : datesYear,
-    // @ts-ignore
-    middleOfQuarter[nextQuarter || nextQuarter + 1],
+    getMiddleOfQuarter(nextQuarter || nextQuarter + 1),
     DAY_IN_THE_MIDDLE_OF_THE_MONTH,
   );
 
@@ -120,20 +131,12 @@ export const getNextQuarter = (date: Date): Date => {
 };
 
 export const getEndOfQuarter = (date: Date): Date => {
-  const middleOfQuarter = {
-    1: February,
-    2: May,
-    3: August,
-    4: November,
-  };
-
   const cannonQuarter = getCannonQuarter(date);
   const quarter = getQuarter(date);
 
   const dateInCannonQuarter = new Date(
     getYear(quarter, cannonQuarter, date.getFullYear()),
-    //@ts-ignore
-    middleOfQuarter[cannonQuarter],
+    getMiddleOfQuarter(cannonQuarter),
   );
 
   const lastOfQuarter = endOfQuarter(dateInCannonQuarter);
@@ -144,9 +147,7 @@ export const getEndOfQuarter = (date: Date): Date => {
       ? startOfWeek(addWeek(lastOfQuarter), { weekStartsOn: 1 })
       : startOfWeek(lastOfQuarter, { weekStartsOn: 1 });
 
-  const next = new Date(beginningOfNextMonth.getTime() - 1);
-
-  return next;
+  return new Date(beginningOfNextMonth.getTime() - MILLISECOND);
 };
 
 export const getEndOfNextQuarter = (date: Date): Date => {

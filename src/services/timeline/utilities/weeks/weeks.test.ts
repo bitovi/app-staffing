@@ -1,8 +1,8 @@
 import { getStartOfWeek } from ".";
 
-import { February, March, April, May } from "../../fixtures";
+import { February, March, April, May } from "../../constants";
 
-describe.only("timeline utilities logic", () => {
+describe.only("week utilities", () => {
   it.each([
     [new Date(2021, February, 18), new Date(2021, February, 15)],
     [new Date(2021, March, 15), new Date(2021, March, 15)],

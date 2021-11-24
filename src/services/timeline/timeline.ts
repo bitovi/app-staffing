@@ -1,4 +1,8 @@
+import type { TimescaleData } from "./interfaces";
+
 import { getWeeksInMonth, getWeekOfMonth, isBefore } from "date-fns";
+
+import { TimescaleType } from "./interfaces";
 
 import {
   MILLISECOND,
@@ -21,18 +25,6 @@ import {
   getNumberMonthsBetween,
   addWeek,
 } from "./utilities";
-
-export type TimescaleData = {
-  startDate: Date;
-  endDate: Date;
-  type: TimescaleType;
-};
-
-export enum TimescaleType {
-  week,
-  month,
-  quarter,
-}
 
 export const getWeeks = (date: Date): TimescaleData[] => {
   const numberWeeksInMonth = getWeeksInMonth(date, { weekStartsOn: 1 });

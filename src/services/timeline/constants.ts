@@ -23,3 +23,4 @@ export const NUMBER_MONTHS_IN_QUARTERS = 3;
 
 export const MONTHS_IN_YEAR = 12;
 export const MILLISECOND = 1;
+export const NUMBER_OF_QUARTERS = 4;

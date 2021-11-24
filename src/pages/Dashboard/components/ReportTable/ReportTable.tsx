@@ -1,15 +1,19 @@
+import type {
+  TimescaleData,
+  TimescaleType,
+  ProjectedData,
+} from "../../../../services/timeline";
+
 import React, { useMemo } from "react";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Center, Text, VStack } from "@chakra-ui/react";
+import { format, setMonth } from "date-fns";
+
 import {
   getMonthForWeek,
   getTimescaleData,
-  TimescaleData,
-  TimescaleType,
-} from "../../../../services/timeReport/timesReport";
-import { format, setMonth } from "date-fns";
+} from "../../../../services/timeline";
 import TableRow from "./TableRow";
-import { ProjectedData } from "../../../../services/timeReport/interfaces";
 
 interface IProps {
   reportDate: Date;
