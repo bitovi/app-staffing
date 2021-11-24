@@ -29,6 +29,7 @@ import {
   getStartOfWeek,
 } from "../weeks";
 
+/** Internal. Gets the month in the middle of the quarter */
 const getMiddleOfQuarter = (quarter: number): number => {
   const middle = {
     [Q1]: February,
@@ -44,7 +45,18 @@ const getMiddleOfQuarter = (quarter: number): number => {
   return middle;
 };
 
-export const getCanonQuarter = (date: Date): number => {
+/**
+ * Finds which Staffing Quarter a date is in through the rules described in
+ * `rules.md`.
+ *
+ * >TL;DR
+ * > A week belongs to the month, quarter, and year that matches its earliest
+ * > middle workday. (For a week starting on Monday, that would be Wednesday.
+ *
+ * @param date The date to find a quarter for
+ * @returns the current staffing quarter
+ */
+export const getStaffingQuarter = (date: Date): number => {
   const time = date.getTime();
 
   const startOfFirstWeekOfQuarter = startOfWeek(startOfQuarter(date));
@@ -64,82 +76,103 @@ export const getCanonQuarter = (date: Date): number => {
   let quarter = date;
 
   if (dateIsInLastWeek) {
-    const endOfGMonth = endOfQuarter(date);
-    const isBeginning = isBeginningOfWeek(endOfGMonth);
+    const endOfRegularQuarter = endOfQuarter(date);
+    const isBeginning = isBeginningOfWeek(endOfRegularQuarter);
 
-    quarter = isBeginning ? endOfMonth(addWeek(endOfGMonth)) : endOfGMonth;
+    quarter = isBeginning
+      ? endOfMonth(addWeek(endOfRegularQuarter))
+      : endOfRegularQuarter;
   }
 
   if (dateIsInFirstWeek) {
-    const startOfGMonth = startOfQuarter(date);
-    const isEnd = isEndOfWeek(startOfGMonth);
+    const startOfRegularQuarter = startOfQuarter(date);
+    const isEnd = isEndOfWeek(startOfRegularQuarter);
 
     quarter = isEnd
-      ? startOfMonth(sub(startOfGMonth, { weeks: 1 }))
-      : startOfGMonth;
+      ? startOfMonth(sub(startOfRegularQuarter, { weeks: 1 }))
+      : startOfRegularQuarter;
   }
 
   return getQuarter(quarter);
 };
 
-function getYear(quarter: number, canonQuarter: number, year: number): number {
-  if (quarter === Q4 && canonQuarter == Q1) return year + 1;
+/** Internal. Finds the correct year for the staffing quarter */
+function getStaffingQuarterYear(
+  quarter: number,
+  staffingQuarter: number,
+  year: number,
+): number {
+  if (quarter === Q4 && staffingQuarter == Q1) return year + 1;
 
-  if (quarter === Q1 && canonQuarter == Q4) return year - 1;
+  if (quarter === Q1 && staffingQuarter == Q4) return year - 1;
 
   return year;
 }
 
+/**
+ * Determines the beginning of the quarter given a date. This function calculates the
+ * beginning of the quarter through the timeline rules discribed in `rules.md`
+ *
+ * @param date - date value to determine the start of the quarter
+ * @returns the start date of the first day of the first week of the given dates quarter
+ */
 export const getStartOfQuarter = (date: Date): Date => {
-  const canonQuarter = getCanonQuarter(date);
+  const staffingQuarter = getStaffingQuarter(date);
   const quarter = getQuarter(date);
 
-  const dateInCanonQuarter = new Date(
-    getYear(quarter, canonQuarter, date.getFullYear()),
-    getMiddleOfQuarter(getCanonQuarter(date)),
+  const dateInStaffingQuarter = new Date(
+    getStaffingQuarterYear(quarter, staffingQuarter, date.getFullYear()),
+    getMiddleOfQuarter(getStaffingQuarter(date)),
   );
 
-  const firstOfQuarter = startOfQuarter(dateInCanonQuarter);
+  const firstOfQuarter = startOfQuarter(dateInStaffingQuarter);
   const wednesday = setDay(firstOfQuarter, 3, { weekStartsOn: 1 });
 
-  const start =
-    getQuarter(wednesday) === getQuarter(firstOfQuarter)
-      ? getStartOfWeek(firstOfQuarter)
-      : getStartOfWeek(addWeek(firstOfQuarter));
-
-  return start;
+  return getQuarter(wednesday) === getQuarter(firstOfQuarter)
+    ? getStartOfWeek(firstOfQuarter)
+    : getStartOfWeek(addWeek(firstOfQuarter));
 };
 
+/**
+ * Gets the start of the next quarter following the timeline rules described
+ * in `rules.md`.
+ *
+ * @param date - date value to determine the next quarter from
+ * @returns The start of the next quarter
+ */
 export const getNextQuarter = (date: Date): Date => {
-  // to avoid figuring out where the start of the month is just pick
-  // a date in the middle since were going to use the `getStartOfMonth`
-  // function to find the start
-  const DAY_IN_THE_MIDDLE_OF_THE_MONTH = 15;
-
   const datesYear = date.getFullYear();
-  const currentQuarter = getCanonQuarter(date);
+  const currentQuarter = getStaffingQuarter(date);
 
   const nextQuarter = (currentQuarter % NUMBER_OF_QUARTERS) + 1;
+  const nextQuarterYear = currentQuarter == Q4 ? datesYear + 1 : datesYear;
 
-  const dateInNextMonth = new Date(
-    currentQuarter == Q4 ? datesYear + 1 : datesYear,
-    getMiddleOfQuarter(nextQuarter || nextQuarter + 1),
-    DAY_IN_THE_MIDDLE_OF_THE_MONTH,
+  const dateInNextQuarter = new Date(
+    nextQuarterYear,
+    getMiddleOfQuarter(nextQuarter),
   );
 
-  return getStartOfQuarter(dateInNextMonth);
+  return getStartOfQuarter(dateInNextQuarter);
 };
 
+/**
+ * Determines the last day of the quarter. This function calculates the end of the quarter
+ * through the timeline rules described in `rules.md`. The return value will be 1 millisecond
+ * away from the next week.
+ *
+ * @param date - date value to determine the end of the quarter
+ * @returns the end of the last day of the last week of the given dates quarter.
+ */
 export const getEndOfQuarter = (date: Date): Date => {
-  const canonQuarter = getCanonQuarter(date);
+  const staffingQuarter = getStaffingQuarter(date);
   const quarter = getQuarter(date);
 
-  const dateInCanonQuarter = new Date(
-    getYear(quarter, canonQuarter, date.getFullYear()),
-    getMiddleOfQuarter(canonQuarter),
+  const dateInStaffingQuarter = new Date(
+    getStaffingQuarterYear(quarter, staffingQuarter, date.getFullYear()),
+    getMiddleOfQuarter(staffingQuarter),
   );
 
-  const lastOfQuarter = endOfQuarter(dateInCanonQuarter);
+  const lastOfQuarter = endOfQuarter(dateInStaffingQuarter);
   const wednesday = setDay(lastOfQuarter, 3, { weekStartsOn: 1 });
 
   const beginningOfNextMonth =
@@ -150,6 +183,12 @@ export const getEndOfQuarter = (date: Date): Date => {
   return new Date(beginningOfNextMonth.getTime() - MILLISECOND);
 };
 
+/**
+ * Helper function to get the end of the following quarter.
+ *
+ * @param date
+ * @returns the end of the last day of the last week of the given dates next quarter.
+ */
 export const getEndOfNextQuarter = (date: Date): Date => {
   return getEndOfQuarter(getNextQuarter(date));
 };
