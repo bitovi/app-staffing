@@ -8,7 +8,7 @@ import {
   getQuarter,
   setDay,
 } from "date-fns";
-import { August, February, May, November, Q4, Q1 } from "../../fixtures";
+import { August, February, May, November, Q4, Q1 } from "../../constants";
 
 import {
   isBegginningOfWeek,

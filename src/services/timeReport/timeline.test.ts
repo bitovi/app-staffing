@@ -1,5 +1,5 @@
-import { getMonths, getWeeks, TimescaleType } from "./timeline";
-import { weeksFixtures, monthFixtures } from "./fixtures";
+import { getMonths, getTimeline, getWeeks, TimescaleType } from "./timeline";
+import { weeksFixtures, monthFixtures, timeLineFixtures } from "./fixtures";
 
 describe("timeline", () => {
   it.each(weeksFixtures)(
@@ -20,7 +20,6 @@ describe("timeline", () => {
     "should get the correct months %s",
     ({ date, months }) => {
       const timeline = getMonths(date);
-      console.log(timeline);
       expect(timeline.length).toBe(months.length);
 
       for (const [index, [start, end]] of months.entries()) {
@@ -30,4 +29,10 @@ describe("timeline", () => {
       }
     },
   );
+
+  it.each(timeLineFixtures)("should get timeline", ({ date }) => {
+    getTimeline(date).forEach(({ startDate, endDate }) => {
+      console.log(`from: ${startDate.toString()} to: ${endDate.toString()}`);
+    });
+  });
 });

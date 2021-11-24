@@ -90,3 +90,12 @@ export const monthFixtures = [
     ],
   },
 ];
+
+export const timeLineFixtures = [
+  {
+    date: new Date(2018, January, 15),
+    weeks: [],
+    months: [],
+    quarters: [],
+  },
+];

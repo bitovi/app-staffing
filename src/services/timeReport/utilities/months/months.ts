@@ -7,7 +7,7 @@ import {
   sub,
   endOfMonth,
 } from "date-fns";
-import { December, January } from "../../fixtures";
+import { December, January, MONTHS_IN_YEAR } from "../../constants";
 
 import { isBegginningOfWeek, isEndOfWeek } from "../weeks";
 
@@ -162,3 +162,16 @@ export const getNextMonth = (date: Date): Date => {
 export const getEndOfNextMonth = (date: Date): Date => {
   return getEndOfMonth(getNextMonth(date));
 };
+
+// https://stackoverflow.com/a/2536445
+export function getNumberMonthsBetween(
+  firstDate: Date,
+  secondDate: Date,
+): number {
+  let months =
+    (firstDate.getFullYear() - secondDate.getFullYear()) * MONTHS_IN_YEAR;
+  months -= getCannonMonth(firstDate);
+  months += getCannonMonth(secondDate);
+
+  return months <= 0 ? 0 : months;
+}

@@ -1,22 +1,12 @@
+import { getWeeksInMonth, getWeekOfMonth, isBefore } from "date-fns";
+
 import {
-  startOfWeek,
-  lastDayOfWeek,
-  setDay,
-  getMonth,
-  add,
-  isAfter,
-  startOfMonth,
-  getQuarter,
-  endOfMonth,
-  addQuarters,
-  endOfQuarter,
-  setQuarter,
-  getWeeksInMonth,
-  getWeekOfMonth,
-  sub,
-  startOfQuarter,
-  isBefore,
-} from "date-fns";
+  MILLISECOND,
+  MIN_AMOUNT_MONTHS_SHOWN,
+  MIN_AMOUNT_WEEKS_SHOWN,
+  MIN_NUMBER_TOTAL_MONTHS,
+  NUMBER_MONTHS_IN_QUARTERS,
+} from "./constants";
 
 import {
   getStartOfWeek,
@@ -27,6 +17,9 @@ import {
   getEndOfNextQuarter,
   getNextMonth,
   getCannonMonth,
+  getStartOfQuarter,
+  getNumberMonthsBetween,
+  addWeek,
 } from "./utilities";
 
 export type TimescaleData = {
@@ -41,59 +34,45 @@ export enum TimescaleType {
   quarter,
 }
 
-const timescaleToDuration = {
-  weeks: TimescaleType.week,
-  months: TimescaleType.month,
-  years: TimescaleType.month,
-  days: TimescaleType.month,
-  hours: TimescaleType.month,
-  minutes: TimescaleType.month,
-  seconds: TimescaleType.month,
-};
-
-const gather = (
-  type: keyof Duration,
-  start: Date,
-  end: Date,
-): Array<TimescaleData> => {
-  if (isAfter(start, end)) {
-    return [];
-  }
-
-  return [
-    {
-      startDate: start,
-      endDate: new Date(add(start, { [type]: 1 }).getTime() - 1), // minus one milisecond to line up times
-      type: timescaleToDuration[type],
-    },
-    ...gather(type, add(start, { [type]: 1 }), end),
-  ];
-};
-
 export const getWeeks = (date: Date): TimescaleData[] => {
   const numberWeeksInMonth = getWeeksInMonth(date, { weekStartsOn: 1 });
   const currentWeekNumber = getWeekOfMonth(date, { weekStartsOn: 1 });
-  const remainingWeeks = numberWeeksInMonth - currentWeekNumber;
+  const remainingWeeks = numberWeeksInMonth - (currentWeekNumber - 1); // minus one to count the current week
 
-  return gather(
-    "weeks",
-    getStartOfWeek(date),
-    remainingWeeks >= 3 ? getEndOfMonth(date) : getEndOfNextMonth(date),
-  );
+  let start = getStartOfWeek(date);
+  const end =
+    remainingWeeks >= MIN_AMOUNT_WEEKS_SHOWN
+      ? getEndOfMonth(date)
+      : getEndOfNextMonth(date);
+
+  const time: TimescaleData[] = [];
+  while (isBefore(start, end)) {
+    const startOfNextWeek = addWeek(start);
+
+    time.push({
+      startDate: start,
+      endDate: new Date(startOfNextWeek.getTime() - MILLISECOND),
+      type: TimescaleType.week,
+    });
+
+    start = startOfNextWeek;
+  }
+
+  return time;
 };
 
 // always show at least two full months that aren't broken down. if the last month
 // being displayed breaks
 // into the next quarter then show the entire wuarter broken down into months
 export const getMonths = (date: Date): TimescaleData[] => {
-  const numberOfMonthsInQuarter = 3;
-  const currentMonth = getCannonMonth(date) % numberOfMonthsInQuarter;
+  const currentMonth = getCannonMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
 
-  const numberMonthsRemainingInQuarter = numberOfMonthsInQuarter - currentMonth;
+  const numberMonthsRemainingInQuarter =
+    NUMBER_MONTHS_IN_QUARTERS - currentMonth;
 
   let start = getStartOfMonth(date);
   const end =
-    numberMonthsRemainingInQuarter >= 2
+    numberMonthsRemainingInQuarter >= MIN_AMOUNT_MONTHS_SHOWN
       ? getEndOfQuarter(date)
       : getEndOfNextQuarter(date);
 
@@ -109,4 +88,39 @@ export const getMonths = (date: Date): TimescaleData[] => {
   }
 
   return time;
+};
+
+export const getQuarter = (date: Date): TimescaleData => {
+  return {
+    startDate: getStartOfQuarter(date),
+    endDate: getEndOfQuarter(date),
+    type: TimescaleType.quarter,
+  };
+};
+
+export const getTimeline = (date: Date): TimescaleData[] => {
+  const weeks = getWeeks(date);
+
+  const months = getMonths(
+    new Date(weeks[weeks.length - 1].endDate.getTime() + MILLISECOND),
+  );
+
+  const quarters = [
+    getQuarter(
+      new Date(months[months.length - 1].endDate.getTime() + MILLISECOND),
+    ),
+  ];
+
+  if (
+    getNumberMonthsBetween(weeks[0].startDate, quarters[0].endDate) <=
+    MIN_NUMBER_TOTAL_MONTHS
+  ) {
+    quarters.push(
+      getQuarter(
+        new Date(quarters[quarters.length - 1].endDate.getTime() + MILLISECOND),
+      ),
+    );
+  }
+
+  return [...weeks, ...months, ...quarters];
 };
