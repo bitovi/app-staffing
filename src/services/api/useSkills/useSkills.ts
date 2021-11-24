@@ -4,7 +4,7 @@ import type { ResponseStatus } from "../shared";
 import useRest from "../useRest/useRestV2";
 
 export default function useSkills(): ResponseStatus & {
-  skills: Skill[] | [];
+  skills: Skill[] | undefined;
 } {
   const {
     data: skills,
@@ -13,7 +13,7 @@ export default function useSkills(): ResponseStatus & {
   } = useRest<Skill, JSONAPISkill>("/api/v1/skills", "skills");
 
   return {
-    skills: skills as unknown as Skill[],
+    skills: skills,
     error,
     isLoading,
   };
