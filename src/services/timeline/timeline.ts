@@ -1,4 +1,4 @@
-import type { TimelineData } from "./interfaces";
+import type { TimelineData, TimelineConfiguration } from "./interfaces";
 
 import {
   getWeeksInMonth,
@@ -38,7 +38,10 @@ import {
  * Gets a minimum of two weeks. If the second week breaks into the next month, all of
  * the following months weeks will be returned as well
  */
-export const getWeeks = (date: Date): TimelineData[] => {
+export const getWeeks = (
+  date: Date,
+  minimumWeeksShown = MIN_AMOUNT_WEEKS_SHOWN,
+): TimelineData[] => {
   const numberWeeksInMonth = getWeeksInMonth(date, { weekStartsOn: Monday });
   const currentWeekNumber = getWeekOfMonth(date, { weekStartsOn: Monday });
   const remainingWeeks = numberWeeksInMonth - (currentWeekNumber - 1); // minus one to count the current week
@@ -47,7 +50,7 @@ export const getWeeks = (date: Date): TimelineData[] => {
 
   let start = getStartOfWeek(date);
   const end =
-    remainingWeeks >= MIN_AMOUNT_WEEKS_SHOWN
+    remainingWeeks >= minimumWeeksShown
       ? getEndOfMonth(date)
       : getEndOfNextMonth(date);
 
@@ -70,7 +73,10 @@ export const getWeeks = (date: Date): TimelineData[] => {
  * Gets at least two months. If the last month breaks into the next quarter then
  * all of the following quarters months will be returned as well
  */
-export const getMonths = (date: Date): TimelineData[] => {
+export const getMonths = (
+  date: Date,
+  minimumMonthsShown = MIN_AMOUNT_MONTHS_SHOWN,
+): TimelineData[] => {
   const currentMonth = getStaffingMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
 
   const numberMonthsRemainingInQuarter =
@@ -80,7 +86,7 @@ export const getMonths = (date: Date): TimelineData[] => {
 
   let start = getStartOfMonth(date);
   const end =
-    numberMonthsRemainingInQuarter >= MIN_AMOUNT_MONTHS_SHOWN
+    numberMonthsRemainingInQuarter >= minimumMonthsShown
       ? getEndOfQuarter(date)
       : getEndOfNextQuarter(date);
 
@@ -125,11 +131,16 @@ export const getQuarter = (date: Date): TimelineData => {
  * @param date The date to create the timeline from
  * @returns The timeline data
  */
-export const getTimeline = (date: Date): TimelineData[] => {
-  const weeks = getWeeks(date);
+export const getTimeline = (
+  date: Date,
+  { minimumMonthsShown, minimumWeeksShown }: TimelineConfiguration = {},
+): TimelineData[] => {
+  console.log({ minimumMonthsShown, minimumWeeksShown });
+  const weeks = getWeeks(date, minimumWeeksShown);
 
   const months = getMonths(
     new Date(weeks[weeks.length - 1].endDate.getTime() + MILLISECOND),
+    minimumMonthsShown,
   );
 
   const quarters = [

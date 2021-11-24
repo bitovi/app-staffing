@@ -21,6 +21,7 @@ import {
   NUMBER_OF_QUARTERS,
   MILLISECOND,
   Monday,
+  Wednesday,
 } from "../../constants";
 
 import {
@@ -127,7 +128,7 @@ export const getStartOfQuarter = (date: Date): Date => {
   );
 
   const firstOfQuarter = startOfQuarter(dateInStaffingQuarter);
-  const wednesday = setDay(firstOfQuarter, 3, { weekStartsOn: Monday });
+  const wednesday = setDay(firstOfQuarter, Wednesday, { weekStartsOn: Monday });
 
   return getQuarter(wednesday) === getQuarter(firstOfQuarter)
     ? getStartOfWeek(firstOfQuarter)
@@ -174,7 +175,7 @@ export const getEndOfQuarter = (date: Date): Date => {
   );
 
   const lastOfQuarter = endOfQuarter(dateInStaffingQuarter);
-  const wednesday = setDay(lastOfQuarter, 3, { weekStartsOn: Monday });
+  const wednesday = setDay(lastOfQuarter, Wednesday, { weekStartsOn: Monday });
 
   const beginningOfNextMonth =
     getQuarter(wednesday) === getQuarter(lastOfQuarter)

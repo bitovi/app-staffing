@@ -26,3 +26,8 @@ export interface TimeReportData {
   dates: TimelineData[];
   data: ProjectedData[];
 }
+
+export interface TimelineConfiguration {
+  minimumWeeksShown?: number;
+  minimumMonthsShown?: number;
+}
