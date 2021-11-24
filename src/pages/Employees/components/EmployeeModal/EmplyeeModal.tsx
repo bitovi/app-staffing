@@ -24,11 +24,13 @@ import { Button } from "@chakra-ui/button";
 
 import { useEffect, useRef, useState } from "react";
 import { Skill } from "../../../../services/api";
-import { FrontEndEmployee } from "../../../../services/api/employees/interfaces";
+import { JSONAPIEmployee } from "../../../../services/api/employees/interfaces";
 import { useForm } from "react-hook-form";
 import { ServiceError } from "../../../../components/ServiceError";
 interface IEmployeeModal {
-  onSave: (employee: { data: FrontEndEmployee }) => Promise<string | undefined>;
+  onSave: (employee: {
+    data: Omit<JSONAPIEmployee, "id">;
+  }) => Promise<string | undefined>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[] | [];
@@ -121,13 +123,13 @@ export default function EmployeeModal({
         "input[type=checkbox]:checked",
       ),
     ].map((node) => parseInt(node.value));
-    const newEmployee: { data: FrontEndEmployee } = {
+    const newEmployee: { data: Omit<JSONAPIEmployee, "id"> } = {
       data: {
         type: "employees",
         attributes: {
           name: data.name,
-          startDate: data.start_date,
-          endDate: data.end_date,
+          startDate: new Date(data.start_date),
+          endDate: new Date(data.end_date),
         },
         relationships: {
           skills: {

@@ -17,13 +17,11 @@ export default function createStore<Resource>(
   return {
     store,
     load: async () => {
-      //**************************************************************************** */
-      //commenting out during dev on branch to more easily test mock server responses
-      // try {
-      //   await store.getListData();
-      // } catch (_) {
-      await store.updateListData(collection); //if the data isn't loaded, promise rejects and we use fixture data
-      // }
+      try {
+        await store.getListData();
+      } catch (_) {
+        await store.updateListData(collection); //if the data isn't loaded, promise rejects and we use fixture data
+      }
     },
     clear: async () => {
       await store.clear();
