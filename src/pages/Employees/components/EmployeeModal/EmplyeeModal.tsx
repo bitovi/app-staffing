@@ -33,7 +33,7 @@ interface IEmployeeModal {
   }) => Promise<string | undefined>;
   onClose: () => void;
   isOpen: boolean;
-  skills: Skill[] | [];
+  skills: Skill[] | undefined;
 }
 
 interface IRole {
