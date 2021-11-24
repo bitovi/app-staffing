@@ -15,6 +15,7 @@ import {
   getWeekOfMonth,
   sub,
   startOfQuarter,
+  isBefore,
 } from "date-fns";
 
 import {
@@ -22,6 +23,10 @@ import {
   getEndOfMonth,
   getEndOfNextMonth,
   getStartOfMonth,
+  getEndOfQuarter,
+  getEndOfNextQuarter,
+  getNextMonth,
+  getCannonMonth,
 } from "./utilities";
 
 export type TimescaleData = {
@@ -44,10 +49,6 @@ const timescaleToDuration = {
   hours: TimescaleType.month,
   minutes: TimescaleType.month,
   seconds: TimescaleType.month,
-};
-
-const endOfNextQuarter = (date: Date) => {
-  return endOfQuarter(add(startOfQuarter(date), { months: 3 }));
 };
 
 const gather = (
@@ -81,10 +82,31 @@ export const getWeeks = (date: Date): TimescaleData[] => {
   );
 };
 
+// always show at least two full months that aren't broken down. if the last month
+// being displayed breaks
+// into the next quarter then show the entire wuarter broken down into months
 export const getMonths = (date: Date): TimescaleData[] => {
-  return gather(
-    "months",
-    getStartOfMonth(date),
-    getMonth(date) % 3 ? endOfNextQuarter(date) : endOfQuarter(date),
-  );
+  const numberOfMonthsInQuarter = 3;
+  const currentMonth = getCannonMonth(date) % numberOfMonthsInQuarter;
+
+  const numberMonthsRemainingInQuarter = numberOfMonthsInQuarter - currentMonth;
+
+  let start = getStartOfMonth(date);
+  const end =
+    numberMonthsRemainingInQuarter >= 2
+      ? getEndOfQuarter(date)
+      : getEndOfNextQuarter(date);
+
+  const time: TimescaleData[] = [];
+  while (isBefore(start, end)) {
+    time.push({
+      startDate: start,
+      endDate: getEndOfMonth(start),
+      type: TimescaleType.month,
+    });
+
+    start = getNextMonth(start);
+  }
+
+  return time;
 };
