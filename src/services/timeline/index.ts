@@ -1,1 +1,3 @@
-export { getTimeline } from "./timeline";
+export { getTimeline, getTimeScaleDescription } from "./timeline";
+
+export * from "./interfaces";

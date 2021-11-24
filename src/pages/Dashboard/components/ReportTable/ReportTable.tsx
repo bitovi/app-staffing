@@ -1,18 +1,19 @@
 import type {
   TimescaleData,
-  TimescaleType,
   ProjectedData,
 } from "../../../../services/timeline";
 
 import React, { useMemo } from "react";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Center, Text, VStack } from "@chakra-ui/react";
-import { format, setMonth } from "date-fns";
+import { format } from "date-fns";
 
 import {
-  getMonthForWeek,
-  getTimescaleData,
+  getTimeline,
+  TimescaleType,
+  getTimeScaleDescription,
 } from "../../../../services/timeline";
+
 import TableRow from "./TableRow";
 
 interface IProps {
@@ -444,27 +445,11 @@ const projectedData: ProjectedData[] = [
 
 export function ReportTable({ reportDate }: IProps): JSX.Element {
   const timeFrames: TimescaleData[] = useMemo(
-    () => getTimescaleData(reportDate),
+    () => getTimeline(reportDate),
     [reportDate],
   );
 
-  const columnHeading: string[] = timeFrames.map((item) => {
-    switch (item.type) {
-      case TimescaleType.week:
-        return `${format(item.startDate, "MMM").toUpperCase()} ${format(
-          item.startDate,
-          "do",
-        )}`;
-      case TimescaleType.month:
-        const monthNum = getMonthForWeek(item.startDate);
-        const monthDate = setMonth(new Date(), monthNum);
-        return format(monthDate, "MMMM").toUpperCase();
-      case TimescaleType.quarter:
-        return `Q${format(item.startDate, "Q yyyy")}`;
-      default:
-        return format(item.startDate, "MMM do");
-    }
-  });
+  const columnHeading: string[] = timeFrames.map(getTimeScaleDescription);
 
   return (
     <Flex flexDirection="column">

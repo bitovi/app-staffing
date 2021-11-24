@@ -1,9 +1,11 @@
+import type { ProjectedData } from "../../../../../services/timeline";
+
 import React, { useState } from "react";
-import { ProjectedData } from "../../../../../services/timeReport/interfaces";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Center, Divider } from "@chakra-ui/react";
-import { SkillName } from "../../../../../services/api";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+
+import { SkillName } from "../../../../../services/api";
 import Badge from "../../../../../components/Badge";
 
 type TableRowProps = {
