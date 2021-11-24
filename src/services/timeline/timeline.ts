@@ -1,6 +1,12 @@
 import type { TimescaleData } from "./interfaces";
 
-import { getWeeksInMonth, getWeekOfMonth, isBefore } from "date-fns";
+import {
+  getWeeksInMonth,
+  getWeekOfMonth,
+  isBefore,
+  format,
+  setMonth,
+} from "date-fns";
 
 import { TimescaleType } from "./interfaces";
 
@@ -24,6 +30,7 @@ import {
   getStartOfQuarter,
   getNumberMonthsBetween,
   addWeek,
+  getCannonQuarter,
 } from "./utilities";
 
 export const getWeeks = (date: Date): TimescaleData[] => {
@@ -117,20 +124,27 @@ export const getTimeline = (date: Date): TimescaleData[] => {
   return [...weeks, ...months, ...quarters];
 };
 
-export const getTimeScaleDescription = (timescale: TimescaleData): string => {
-  switch (timescale.type) {
+export const getTimeScaleDescription = ({
+  type,
+  startDate,
+}: TimescaleData): string => {
+  switch (type) {
     case TimescaleType.week:
-      return `${format(timescale.startDate, "MMM").toUpperCase()} ${format(
-        timescale.startDate,
-        "do",
-      )}`;
+      const month = format(
+        setMonth(new Date(), getCannonMonth(startDate)),
+        "MMM",
+      ).toUpperCase();
+
+      return `${month} ${format(startDate, "do")}`;
     case TimescaleType.month:
-      const monthNum = //getMonthForWeek(timescale.startDate);
-      const monthDate = //setMonth(new Date(), monthNum);
-      return format(monthDate, "MMMM").toUpperCase();
+      return format(
+        setMonth(new Date(), getCannonMonth(startDate)),
+        "MMM",
+      ).toUpperCase();
+
     case TimescaleType.quarter:
-      return `Q${format(timescale.startDate, "Q yyyy")}`;
+      return `Q${getCannonQuarter(startDate)} ${startDate.getFullYear()}`;
     default:
-      return format(timescale.startDate, "MMM do");
+      return format(startDate, "MMM do");
   }
 };

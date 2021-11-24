@@ -17,7 +17,7 @@ import {
 import TableRow from "./TableRow";
 
 interface IProps {
-  reportDate: Date;
+  reportDate?: Date;
 }
 
 const projectedData: ProjectedData[] = [
@@ -443,7 +443,7 @@ const projectedData: ProjectedData[] = [
   },
 ];
 
-export function ReportTable({ reportDate }: IProps): JSX.Element {
+export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
   const timeFrames: TimescaleData[] = useMemo(
     () => getTimeline(reportDate),
     [reportDate],
