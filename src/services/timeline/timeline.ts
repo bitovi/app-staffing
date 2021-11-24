@@ -1,4 +1,4 @@
-import type { TimescaleData } from "./interfaces";
+import type { TimelineData } from "./interfaces";
 
 import {
   getWeeksInMonth,
@@ -15,6 +15,7 @@ import {
   MIN_AMOUNT_MONTHS_SHOWN,
   MIN_AMOUNT_WEEKS_SHOWN,
   MIN_NUMBER_TOTAL_MONTHS,
+  Monday,
   NUMBER_MONTHS_IN_QUARTERS,
 } from "./constants";
 
@@ -26,17 +27,23 @@ import {
   getEndOfQuarter,
   getEndOfNextQuarter,
   getNextMonth,
-  getCanonMonth,
+  getStaffingMonth,
   getStartOfQuarter,
   getNumberMonthsBetween,
   addWeek,
-  getCanonQuarter,
+  getStaffingQuarter,
 } from "./utilities";
 
-export const getWeeks = (date: Date): TimescaleData[] => {
-  const numberWeeksInMonth = getWeeksInMonth(date, { weekStartsOn: 1 });
-  const currentWeekNumber = getWeekOfMonth(date, { weekStartsOn: 1 });
+/**
+ * Gets a minimum of two weeks. If the second week breaks into the next month, all of
+ * the following months weeks will be returned as well
+ */
+export const getWeeks = (date: Date): TimelineData[] => {
+  const numberWeeksInMonth = getWeeksInMonth(date, { weekStartsOn: Monday });
+  const currentWeekNumber = getWeekOfMonth(date, { weekStartsOn: Monday });
   const remainingWeeks = numberWeeksInMonth - (currentWeekNumber - 1); // minus one to count the current week
+
+  const timeline: TimelineData[] = [];
 
   let start = getStartOfWeek(date);
   const end =
@@ -44,11 +51,10 @@ export const getWeeks = (date: Date): TimescaleData[] => {
       ? getEndOfMonth(date)
       : getEndOfNextMonth(date);
 
-  const time: TimescaleData[] = [];
   while (isBefore(start, end)) {
     const startOfNextWeek = addWeek(start);
 
-    time.push({
+    timeline.push({
       startDate: start,
       endDate: new Date(startOfNextWeek.getTime() - MILLISECOND),
       type: TimescaleType.week,
@@ -57,17 +63,20 @@ export const getWeeks = (date: Date): TimescaleData[] => {
     start = startOfNextWeek;
   }
 
-  return time;
+  return timeline;
 };
 
-// always show at least two full months that aren't broken down. if the last month
-// being displayed breaks
-// into the next quarter then show the entire wuarter broken down into months
-export const getMonths = (date: Date): TimescaleData[] => {
-  const currentMonth = getCanonMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
+/**
+ * Gets at least two months. If the last month breaks into the next quarter then
+ * all of the following quarters months will be returned as well
+ */
+export const getMonths = (date: Date): TimelineData[] => {
+  const currentMonth = getStaffingMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
 
   const numberMonthsRemainingInQuarter =
     NUMBER_MONTHS_IN_QUARTERS - currentMonth;
+
+  const timeline: TimelineData[] = [];
 
   let start = getStartOfMonth(date);
   const end =
@@ -75,9 +84,8 @@ export const getMonths = (date: Date): TimescaleData[] => {
       ? getEndOfQuarter(date)
       : getEndOfNextQuarter(date);
 
-  const time: TimescaleData[] = [];
   while (isBefore(start, end)) {
-    time.push({
+    timeline.push({
       startDate: start,
       endDate: getEndOfMonth(start),
       type: TimescaleType.month,
@@ -86,10 +94,11 @@ export const getMonths = (date: Date): TimescaleData[] => {
     start = getNextMonth(start);
   }
 
-  return time;
+  return timeline;
 };
 
-export const getQuarter = (date: Date): TimescaleData => {
+/** Gets one full quarter */
+export const getQuarter = (date: Date): TimelineData => {
   return {
     startDate: getStartOfQuarter(date),
     endDate: getEndOfQuarter(date),
@@ -97,7 +106,26 @@ export const getQuarter = (date: Date): TimescaleData => {
   };
 };
 
-export const getTimeline = (date: Date): TimescaleData[] => {
+/**
+ * Generates a timeline given a date. The rules for generating a timeline are as follows:
+ *
+ * 1. A unit of time may not be displayed in partial. A displayed month always represents all the weeks in it,
+ *    a displayed quarter always represents all the months in it, etc.
+ * 2. A week begins on Monday and ends on Sunday.
+ * 3. A week belongs to the month, quarter, and year that matches its earliest middle workday.
+ *    (For a week starting on Monday, that would be Wednesday. The effect of this is that it belongs
+ *    to the month with the most days in that week.)
+ * 4. Always show at least three weeks. If the last week being displayed breaks into the next month, then show the
+ *    entire month broken down into weeks.
+ * 5. Always show at least two full months that aren't broken down. If the last month being displayed breaks into the
+ *    next quarter, then show the entire quarter broken down into months.
+ * 6. Always show at least one full quarter that is not broken down.
+ * 7. Always show at least 6 months total. Additional quarters may be needed to complete the display.
+ *
+ * @param date The date to create the timeline from
+ * @returns The timeline data
+ */
+export const getTimeline = (date: Date): TimelineData[] => {
   const weeks = getWeeks(date);
 
   const months = getMonths(
@@ -124,26 +152,29 @@ export const getTimeline = (date: Date): TimescaleData[] => {
   return [...weeks, ...months, ...quarters];
 };
 
-export const getTimeScaleDescription = ({
+/** creates and formats a description for the timeline data */
+export const getTimelineDataDescription = ({
   type,
   startDate,
-}: TimescaleData): string => {
+}: TimelineData): string => {
   switch (type) {
     case TimescaleType.week:
       const month = format(
-        setMonth(new Date(), getCanonMonth(startDate)),
+        setMonth(new Date(), getStaffingMonth(startDate)),
         "MMM",
       ).toUpperCase();
 
       return `${month} ${format(startDate, "do")}`;
+
     case TimescaleType.month:
       return format(
-        setMonth(new Date(), getCanonMonth(startDate)),
+        setMonth(new Date(), getStaffingMonth(startDate)),
         "MMM",
       ).toUpperCase();
 
     case TimescaleType.quarter:
-      return `Q${getCanonQuarter(startDate)} ${startDate.getFullYear()}`;
+      return `Q${getStaffingQuarter(startDate)} ${startDate.getFullYear()}`;
+
     default:
       return format(startDate, "MMM do");
   }

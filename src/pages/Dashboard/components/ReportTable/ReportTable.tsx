@@ -1,5 +1,5 @@
 import type {
-  TimescaleData,
+  TimelineData,
   ProjectedData,
 } from "../../../../services/timeline";
 
@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import {
   getTimeline,
   TimescaleType,
-  getTimeScaleDescription,
+  getTimelineDataDescription,
 } from "../../../../services/timeline";
 
 import TableRow from "./TableRow";
@@ -444,12 +444,12 @@ const projectedData: ProjectedData[] = [
 ];
 
 export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
-  const timeFrames: TimescaleData[] = useMemo(
+  const timeFrames: TimelineData[] = useMemo(
     () => getTimeline(reportDate),
     [reportDate],
   );
 
-  const columnHeading: string[] = timeFrames.map(getTimeScaleDescription);
+  const columnHeading: string[] = timeFrames.map(getTimelineDataDescription);
 
   return (
     <Flex flexDirection="column">

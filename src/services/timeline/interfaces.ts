@@ -11,7 +11,7 @@ export interface ProjectedData {
   projections: RoleProjection[];
 }
 
-export type TimescaleData = {
+export type TimelineData = {
   startDate: Date;
   endDate: Date;
   type: TimescaleType;
@@ -23,6 +23,6 @@ export enum TimescaleType {
   quarter,
 }
 export interface TimeReportData {
-  dates: TimescaleData[];
+  dates: TimelineData[];
   data: ProjectedData[];
 }

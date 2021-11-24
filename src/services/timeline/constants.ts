@@ -11,6 +11,9 @@ export const October = 9;
 export const November = 10;
 export const December = 11;
 
+export const Monday = 1;
+export const Wednesday = 3;
+
 export const Q1 = 1;
 export const Q2 = 2;
 export const Q3 = 3;

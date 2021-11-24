@@ -1,4 +1,5 @@
 import { add, setDay } from "date-fns";
+import { Monday, Wednesday } from "../../constants";
 
 /**
  * Determines the beginning of the week given a date. This functions
@@ -12,7 +13,7 @@ import { add, setDay } from "date-fns";
  * @returns the begginning of the week
  */
 export function getStartOfWeek(date: Date): Date {
-  return setDay(date, 1, { weekStartsOn: 1 });
+  return setDay(date, Monday, { weekStartsOn: Monday });
 }
 
 /**
@@ -28,7 +29,6 @@ export function addWeek(date: Date): Date {
 
 /** Determines if the day of a date is wednesday or before */
 export function isBeginningOfWeek(date: Date): boolean {
-  const Wednesday = 3;
   return date.getDay() <= Wednesday;
 }
 

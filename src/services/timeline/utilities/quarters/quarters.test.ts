@@ -14,6 +14,7 @@ import {
   Q2,
   Q3,
   Q4,
+  MILLISECOND,
 } from "../../constants";
 
 import {
@@ -76,7 +77,9 @@ describe("quarters utilities", () => {
     [new Date(2025, March, 31), new Date(2025, June, 30)],
     [new Date(2024, December, 31), new Date(2025, March, 31)],
   ])("finds end of quarter %s", (date, endOfQuarter) => {
-    expect(getEndOfQuarter(date)).toEqual(new Date(endOfQuarter.getTime() - 1));
+    expect(getEndOfQuarter(date)).toEqual(
+      new Date(endOfQuarter.getTime() - MILLISECOND),
+    );
   });
 
   it.each([
@@ -86,7 +89,7 @@ describe("quarters utilities", () => {
     [new Date(2021, November, 4), new Date(2022, April, 4)],
   ])("finds end of next quarter %s", (date, endOfNextQuarter) => {
     expect(getEndOfNextQuarter(date)).toEqual(
-      new Date(endOfNextQuarter.getTime() - 1),
+      new Date(endOfNextQuarter.getTime() - MILLISECOND),
     );
   });
 });

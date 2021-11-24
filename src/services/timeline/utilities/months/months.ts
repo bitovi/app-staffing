@@ -7,7 +7,7 @@ import {
   endOfMonth,
 } from "date-fns";
 
-import { December, January, MONTHS_IN_YEAR } from "../../constants";
+import { December, January, Monday, MONTHS_IN_YEAR } from "../../constants";
 
 import { isBeginningOfWeek, isEndOfWeek, addWeek } from "../weeks";
 
@@ -97,11 +97,11 @@ export function getStartOfMonth(date: Date): Date {
   );
 
   const firstOfMonth = startOfMonth(dateInCanonMonth);
-  const wednesday = setDay(firstOfMonth, 3, { weekStartsOn: 1 });
+  const wednesday = setDay(firstOfMonth, 3, { weekStartsOn: Monday });
 
   return getMonth(wednesday) === getMonth(firstOfMonth)
-    ? startOfWeek(firstOfMonth, { weekStartsOn: 1 })
-    : startOfWeek(addWeek(firstOfMonth), { weekStartsOn: 1 });
+    ? startOfWeek(firstOfMonth, { weekStartsOn: Monday })
+    : startOfWeek(addWeek(firstOfMonth), { weekStartsOn: Monday });
 }
 
 /**
@@ -150,12 +150,12 @@ export function getEndOfMonth(date: Date): Date {
   );
 
   const lastOfMonth = endOfMonth(dateInCanonMonth);
-  const wednesday = setDay(lastOfMonth, 3, { weekStartsOn: 1 });
+  const wednesday = setDay(lastOfMonth, 3, { weekStartsOn: Monday });
 
   const beginningOfNextMonth =
     getMonth(wednesday) === getMonth(lastOfMonth)
-      ? startOfWeek(addWeek(lastOfMonth), { weekStartsOn: 1 })
-      : startOfWeek(lastOfMonth, { weekStartsOn: 1 });
+      ? startOfWeek(addWeek(lastOfMonth), { weekStartsOn: Monday })
+      : startOfWeek(lastOfMonth, { weekStartsOn: Monday });
 
   return new Date(beginningOfNextMonth.getTime() - 1);
 }

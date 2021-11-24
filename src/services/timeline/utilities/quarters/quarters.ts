@@ -20,6 +20,7 @@ import {
   Q3,
   NUMBER_OF_QUARTERS,
   MILLISECOND,
+  Monday,
 } from "../../constants";
 
 import {
@@ -126,7 +127,7 @@ export const getStartOfQuarter = (date: Date): Date => {
   );
 
   const firstOfQuarter = startOfQuarter(dateInStaffingQuarter);
-  const wednesday = setDay(firstOfQuarter, 3, { weekStartsOn: 1 });
+  const wednesday = setDay(firstOfQuarter, 3, { weekStartsOn: Monday });
 
   return getQuarter(wednesday) === getQuarter(firstOfQuarter)
     ? getStartOfWeek(firstOfQuarter)
@@ -173,12 +174,12 @@ export const getEndOfQuarter = (date: Date): Date => {
   );
 
   const lastOfQuarter = endOfQuarter(dateInStaffingQuarter);
-  const wednesday = setDay(lastOfQuarter, 3, { weekStartsOn: 1 });
+  const wednesday = setDay(lastOfQuarter, 3, { weekStartsOn: Monday });
 
   const beginningOfNextMonth =
     getQuarter(wednesday) === getQuarter(lastOfQuarter)
-      ? startOfWeek(addWeek(lastOfQuarter), { weekStartsOn: 1 })
-      : startOfWeek(lastOfQuarter, { weekStartsOn: 1 });
+      ? startOfWeek(addWeek(lastOfQuarter), { weekStartsOn: Monday })
+      : startOfWeek(lastOfQuarter, { weekStartsOn: Monday });
 
   return new Date(beginningOfNextMonth.getTime() - MILLISECOND);
 };

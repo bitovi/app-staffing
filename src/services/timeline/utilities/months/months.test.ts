@@ -17,6 +17,7 @@ import {
   October,
   November,
   December,
+  MILLISECOND,
 } from "../../constants";
 
 describe("month utilities", () => {
@@ -55,7 +56,9 @@ describe("month utilities", () => {
     [new Date(2021, May, 18), new Date(2021, May, 31)],
     [new Date(2021, May, 31), new Date(2021, July, 5)],
   ])("finds the end of month for %s", (date, endOfMonth) => {
-    expect(getEndOfMonth(date)).toEqual(new Date(endOfMonth.getTime() - 1));
+    expect(getEndOfMonth(date)).toEqual(
+      new Date(endOfMonth.getTime() - MILLISECOND),
+    );
   });
 
   it.each([
@@ -74,7 +77,7 @@ describe("month utilities", () => {
     [new Date(2021, September, 18), new Date(2021, November, 1)],
   ])("finds end of next month %s", (date, endOfNextMonth) => {
     expect(getEndOfNextMonth(date)).toEqual(
-      new Date(endOfNextMonth.getTime() - 1),
+      new Date(endOfNextMonth.getTime() - MILLISECOND),
     );
   });
 
