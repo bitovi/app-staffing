@@ -10,7 +10,12 @@ import {
 } from "date-fns";
 import { August, February, May, November, Q4, Q1 } from "../../fixtures";
 
-import { isBegginningOfWeek, isEndOfWeek, addWeek } from "../weeks";
+import {
+  isBegginningOfWeek,
+  isEndOfWeek,
+  addWeek,
+  getStartOfWeek,
+} from "../weeks";
 
 export const getCannonQuarter = (date: Date): number => {
   const time = date.getTime();
@@ -80,12 +85,70 @@ export const getStartOfQuarter = (date: Date): Date => {
 
   const start =
     getQuarter(wednesday) === getQuarter(firstOfQuarter)
-      ? startOfWeek(firstOfQuarter, { weekStartsOn: 1 })
-      : startOfWeek(addWeek(firstOfQuarter), { weekStartsOn: 1 });
+      ? getStartOfWeek(firstOfQuarter)
+      : getStartOfWeek(addWeek(firstOfQuarter));
 
   return start;
 };
 
-export const getEndOfQuarter = (date: Date): Date => {};
+export const getNextQuarter = (date: Date): Date => {
+  // to avoid figuring out where the start of the month is just pick
+  // a date in the middle since were going to use the `getStartOfMonth`
+  // function to find the start
+  const DAY_IN_THE_MIDDLE_OF_THE_MONTH = 15;
 
-export const getEndOfNextQuarter = (date: Date): Date => {};
+  const middleOfQuarter = {
+    1: February,
+    2: May,
+    3: August,
+    4: November,
+  };
+
+  const datesYear = date.getFullYear();
+  const currentQuarter = getCannonQuarter(date);
+
+  const nextQuarter = (currentQuarter % 4) + 1;
+
+  const dateInNextMonth = new Date(
+    currentQuarter == Q4 ? datesYear + 1 : datesYear,
+    // @ts-ignore
+    middleOfQuarter[nextQuarter || nextQuarter + 1],
+    DAY_IN_THE_MIDDLE_OF_THE_MONTH,
+  );
+
+  return getStartOfQuarter(dateInNextMonth);
+};
+
+export const getEndOfQuarter = (date: Date): Date => {
+  const middleOfQuarter = {
+    1: February,
+    2: May,
+    3: August,
+    4: November,
+  };
+
+  const cannonQuarter = getCannonQuarter(date);
+  const quarter = getQuarter(date);
+
+  const dateInCannonQuarter = new Date(
+    getYear(quarter, cannonQuarter, date.getFullYear()),
+    //@ts-ignore
+    middleOfQuarter[cannonQuarter],
+  );
+
+  const lastOfQuarter = endOfQuarter(dateInCannonQuarter);
+  const wednesday = setDay(lastOfQuarter, 3, { weekStartsOn: 1 });
+
+  const beginningOfNextMonth =
+    getQuarter(wednesday) === getQuarter(lastOfQuarter)
+      ? startOfWeek(addWeek(lastOfQuarter), { weekStartsOn: 1 })
+      : startOfWeek(lastOfQuarter, { weekStartsOn: 1 });
+
+  const next = new Date(beginningOfNextMonth.getTime() - 1);
+
+  return next;
+};
+
+export const getEndOfNextQuarter = (date: Date): Date => {
+  return getEndOfQuarter(getNextQuarter(date));
+};

@@ -19,7 +19,7 @@ import {
   December,
 } from "../../fixtures";
 
-describe.only("timeline utilities logic", () => {
+describe("month utilities", () => {
   it.each([
     [new Date(2021, May, 31), June],
     [new Date(2022, January, 31), February],
