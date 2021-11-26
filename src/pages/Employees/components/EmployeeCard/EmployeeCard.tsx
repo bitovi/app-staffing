@@ -1,4 +1,3 @@
-import { Text } from "@chakra-ui/layout";
 import {
   Flex,
   Skeleton,
@@ -10,21 +9,25 @@ import {
   Tbody,
   Th,
   Thead,
+  Text,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { Dispatch } from "react";
 import { Tag } from "../../../../components/Tag";
 import type { Employee } from "../../../../services/api";
 import { TrashIcon, EditIcon } from "../../../assets";
+
 interface EmployeeCardProps {
   employee: Employee;
-  setEmployeeToDelete: Dispatch<Employee | null>;
+  handleEditEmployee: (employee: Employee) => void;
+  handleDeleteEmployee: (employee: Employee) => void;
 }
+
 // I think deleteEmployee should be deconstructed from the useEmployee hook inside the EmployeeCard component
 // need to determine how to update relevant tests for the asynchronous rendering that would cause
 export default function EmployeeCard({
   employee,
-  setEmployeeToDelete,
+  handleEditEmployee,
+  handleDeleteEmployee,
 }: EmployeeCardProps): JSX.Element {
   return (
     <>
@@ -91,6 +94,7 @@ export default function EmployeeCard({
               aria-label="Edit Member"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
+              onClick={() => handleEditEmployee(employee)}
             />
             <IconButton
               ml="8px"
@@ -98,7 +102,7 @@ export default function EmployeeCard({
               aria-label="Delete Member"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
-              onClick={() => setEmployeeToDelete(employee)}
+              onClick={() => handleDeleteEmployee(employee)}
             />
           </Flex>
         </Td>
