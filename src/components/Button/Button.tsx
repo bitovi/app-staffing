@@ -1,7 +1,14 @@
 import { Button as ChakraButton } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-export type ButtonVariant = "primary" | "secondary" | "danger" | "link";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "danger"
+  | "link"
+  | "deleteAction"
+  | "modalCancel"
+  | "modalConfirm";
 interface ButtonProps extends React.ComponentProps<typeof ChakraButton> {
   children: ReactNode;
   variant?: ButtonVariant;

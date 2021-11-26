@@ -1,4 +1,4 @@
-import { Employee, SkillName } from "../api";
+import { Employee, Skill } from "../api";
 
 export interface RoleProjection {
   needed: Array<{ projectName: string; projectedConfidence: number }>;
@@ -7,7 +7,7 @@ export interface RoleProjection {
 }
 
 export interface ProjectedData {
-  role: SkillName;
+  role: Skill;
   projections: RoleProjection[];
 }
 

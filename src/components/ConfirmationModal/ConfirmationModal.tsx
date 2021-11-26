@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/layout";
+import { HStack, Text } from "@chakra-ui/layout";
 import {
   Modal,
   ModalBody,
@@ -21,6 +21,8 @@ interface IConfirmationModalProps {
   error?: string;
   isLoading?: boolean;
   confirmButtonVariant?: ButtonVariant;
+  modalSize?: string;
+  isCentered?: boolean;
 }
 
 export default function ConfirmationModal({
@@ -34,11 +36,18 @@ export default function ConfirmationModal({
   error,
   isLoading,
   confirmButtonVariant = "primary",
+  modalSize = "md",
+  isCentered = false,
 }: IConfirmationModalProps): JSX.Element {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size={modalSize}
+      isCentered={isCentered}
+    >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mt="14vh">
         <ModalCloseButton />
         <ModalHeader>{title}</ModalHeader>
         <ModalBody>
@@ -48,21 +57,27 @@ export default function ConfirmationModal({
               {error}
             </Text>
           )}
-          <Text>{message}</Text>
+          <Text textStyle="modal.text">{message}</Text>
         </ModalBody>
         <ModalFooter>
-          <Flex flexGrow={1} justifyContent="space-between">
-            <Button disabled={isLoading} onClick={onClose} variant="secondary">
+          <HStack flexGrow={1} justifyContent="flex-end">
+            <Button
+              isDisabled={isLoading}
+              onClick={onClose}
+              variant="modalCancel"
+            >
               {closeText}
             </Button>
             <Button
               isLoading={isLoading}
+              isDisabled={isLoading}
               onClick={onConfirm}
               variant={confirmButtonVariant}
+              aria-label="confirm button"
             >
               {confirmText}
             </Button>
-          </Flex>
+          </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>

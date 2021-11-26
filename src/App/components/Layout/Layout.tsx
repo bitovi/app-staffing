@@ -1,6 +1,5 @@
+import { Box, Flex } from "@chakra-ui/react";
 import SideNav from "./components/SideNav";
-
-import styles from "./Layout.module.scss";
 
 export default function Layout({
   children,
@@ -8,10 +7,12 @@ export default function Layout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <div className={styles.wrapper}>
+    <Flex height="100%" width="100%" overflow="hidden">
       <SideNav />
 
-      <div className={styles.content}>{children}</div>
-    </div>
+      <Box backgroundColor="gray.10" flex="1 1" padding="40px" overflow="auto">
+        {children}
+      </Box>
+    </Flex>
   );
 }

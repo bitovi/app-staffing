@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { projects } from "../../../../../services/api/projects/fixtures";
 import ProjectList from "./ProjectList";
@@ -7,31 +7,18 @@ describe("Components/Layout", () => {
   it("renders", () => {
     render(
       <MemoryRouter>
-        <ProjectList projects={projects} onAddNew={() => null} />
+        <ProjectList projects={projects} />
       </MemoryRouter>,
     );
 
-    const projectContainer = screen.getByText(/Add Project/i);
-    expect(projectContainer.tagName).toBe("BUTTON");
     const viewCount = screen.getAllByText("View");
     expect(viewCount.length).toEqual(projects.length);
   });
 
-  it("calls 'onAddNew' on button click", () => {
-    const onClick = jest.fn();
-    const { getByText } = render(
-      <MemoryRouter>
-        <ProjectList projects={projects} onAddNew={onClick} />
-      </MemoryRouter>,
-    );
-
-    fireEvent.click(getByText(/Add Project/i));
-    expect(onClick).toHaveBeenCalled();
-  });
   it("checks if the second project exists", async () => {
     render(
       <MemoryRouter>
-        <ProjectList projects={projects} onAddNew={() => null} />
+        <ProjectList projects={projects} />
       </MemoryRouter>,
     );
 

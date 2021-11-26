@@ -5,7 +5,7 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Center, Divider } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-import { SkillName } from "../../../../../services/api";
+import { Skill } from "../../../../../services/api";
 import Badge from "../../../../../components/Badge";
 
 type TableRowProps = {
@@ -15,7 +15,7 @@ type TableRowProps = {
 function TableRow({ rowData }: TableRowProps): JSX.Element {
   const [isExpanded, setExpanded] = useState<boolean>(false);
 
-  const badgeForRole = (role: SkillName): JSX.Element => {
+  const badgeForRole = (role: Skill): JSX.Element => {
     const ANGULAR_BADGE_COLOR = "#876363";
     const DESIGN_BADGE_COLOR = "#435BAE";
     const DEVOPS_BADGE_COLOR = "#5FAE43";
@@ -23,42 +23,42 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
     const UX_BADGE_COLOR = "#AE436A";
     const REACT_BADGE_COLOR = "#61D0D7";
 
-    switch (role) {
+    switch (role?.name) {
       case "Angular":
         return (
           <Badge size="sm" background={ANGULAR_BADGE_COLOR}>
-            {role}
+            {role?.name}
           </Badge>
         );
       case "Design":
         return (
           <Badge size="sm" background={DESIGN_BADGE_COLOR}>
-            {role}
+            {role?.name}
           </Badge>
         );
       case "DevOps":
         return (
           <Badge size="sm" background={DEVOPS_BADGE_COLOR}>
-            {role}
+            {role?.name}
           </Badge>
         );
       case "Node":
         return (
           <Badge size="sm" background={NODE_BADGE_COLOR}>
-            {role}
+            {role?.name}
           </Badge>
         );
       case "UX":
         return (
           <Badge size="sm" background={UX_BADGE_COLOR}>
-            {role}
+            {role?.name}
           </Badge>
         );
       case "React":
       default:
         return (
           <Badge size="sm" background={REACT_BADGE_COLOR}>
-            {role}
+            {role?.name}
           </Badge>
         );
     }
@@ -186,8 +186,7 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
 
         <Center w={28} cursor="pointer" onClick={handleRowClick}>
           <Text userSelect="none" color="#3171D0">
-            {" "}
-            Details{" "}
+            Details
           </Text>
           <ChevronDownIcon ml={2} color="#3171D0" />
         </Center>

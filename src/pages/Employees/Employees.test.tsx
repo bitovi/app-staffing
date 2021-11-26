@@ -1,59 +1,139 @@
-import { Suspense } from "react";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-
-import { employees } from "../../services/api/employees/fixtures";
+import {
+  fireEvent,
+  render,
+  screen,
+  within,
+  waitForElementToBeRemoved,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
+import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/employees/mocks";
+import { employeeSkillsStoreManager } from "../../services/api/employee_skills/mocks";
+import { skillStoreManager } from "../../services/api/skills/mocks";
 
-import Employees from "./Employees";
+import EmployeesWrapper from "./Employees";
 
 describe("Pages/Employees", () => {
   beforeEach(async () => {
     await employeeStoreManager.load();
+    await skillStoreManager.load();
+    await employeeSkillsStoreManager.load();
   });
 
   afterEach(async () => {
     await employeeStoreManager.clear();
+    await employeeSkillsStoreManager.clear();
+    await skillStoreManager.clear();
+  });
+  afterEach(cleanup);
+
+  it("renders data in list", async () => {
+    render(<EmployeesWrapper />);
+    expect(await screen.findByText("Sam Kreiger")).toBeInTheDocument();
   });
 
-  it("works", async () => {
+  // it("filters by name", async () => {
+  //   render(<Employees />);
+
+  //   // wait for the first row
+  //   expect(
+  //     await screen.findByDisplayValue(employees[0].name),
+  //   ).toBeInTheDocument();
+
+  //   // Filter by Sally
+  //   userEvent.type(screen.getByPlaceholderText(/Filter/i), "Sally");
+
+  //   // Make sure Tom is no longer visible
+  //   expect(
+  //     screen.queryByDisplayValue(employees[0].name),
+  //   ).not.toBeInTheDocument();
+  // });
+
+  it("Displays loading state skeleton", () => {
+    render(<EmployeesWrapper />);
+    expect(
+      document.body.getElementsByClassName("chakra-skeleton"),
+    ).toBeDefined();
+  });
+
+  it("Creates new employee", async () => {
+    jest.setTimeout(30000);
+    render(<EmployeesWrapper />);
+    const addButton = await screen.findByRole("button", {
+      name: /add team member/i,
+    });
+    addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    const modal = await screen.findByRole("dialog");
+    const submitButton = within(modal).getByText(/Add & Close/i);
+    expect(submitButton).toBeDisabled();
+
+    const modalNameInput = await screen.findByPlaceholderText(/name/i);
+    fireEvent.change(modalNameInput, {
+      target: { value: "Johnny Appleseed" },
+    });
+    expect(modalNameInput).toHaveValue("Johnny Appleseed");
+
+    const modalStartDateInput = await screen.findByTestId(/start_date/i);
+    fireEvent.change(modalStartDateInput, {
+      target: { value: "1993-01-24" },
+    });
+    expect(modalStartDateInput).toHaveValue("1993-01-24");
+
+    await waitFor(() => expect(submitButton).toBeEnabled());
+
+    const angularCheckBox = within(modal).getByLabelText("Angular");
+    const designCheckBox = within(modal).getByLabelText("Design");
+
+    expect(angularCheckBox).not.toBeChecked();
+    expect(designCheckBox).not.toBeChecked();
+
+    fireEvent.click(angularCheckBox);
+    fireEvent.click(designCheckBox);
+
+    expect(angularCheckBox).toBeChecked();
+    expect(designCheckBox).toBeChecked();
+
+    submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+    const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
+
+    expect(NewEmployee).toBeInTheDocument();
+  }, 30000);
+
+  it("Deletes employee", async () => {
     render(
-      <Suspense fallback={<div>Loading...</div>}>
-        <Employees />
-      </Suspense>,
+      <SWRConfig value={{ provider: () => new Map() }}>
+        <EmployeesWrapper />
+      </SWRConfig>,
+    );
+    expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
+
+    const rosemarieRow = await screen.findByRole("row", {
+      name: /Rosemarie Mitchell/,
+      exact: false,
+    });
+    const deleteMember = await within(rosemarieRow).findByLabelText(
+      "Delete Member",
     );
 
-    expect(await screen.findByText("Team")).toBeInTheDocument();
-  });
+    deleteMember.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-  it("shows names", async () => {
-    render(<Employees />);
+    const deleteModal = await screen.findByRole("dialog");
+    expect(deleteModal).toBeInTheDocument();
 
-    // wait for the first row
-    expect(
-      await screen.findByDisplayValue(employees[0].name),
-    ).toBeInTheDocument();
+    const deleteButton = await screen.findByLabelText(/confirm button/i);
 
-    // check the rest of the rows
-    expect(screen.getByDisplayValue(employees[1].name)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(employees[2].name)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(employees[3].name)).toBeInTheDocument();
-  });
+    deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-  it("filters by name", async () => {
-    render(<Employees />);
+    await waitForElementToBeRemoved(() =>
+      screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
+    );
 
-    // wait for the first row
-    expect(
-      await screen.findByDisplayValue(employees[0].name),
-    ).toBeInTheDocument();
+    const employeeStore = await employeeStoreManager.store.getListData();
 
-    // Filter by Sally
-    userEvent.type(screen.getByPlaceholderText(/Filter/i), "Sally");
-
-    // Make sure Tom is no longer visible
-    expect(
-      screen.queryByDisplayValue(employees[0].name),
-    ).not.toBeInTheDocument();
+    expect(employeeStore.data).toHaveLength(4);
   });
 });

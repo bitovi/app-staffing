@@ -16,7 +16,7 @@ export default function SideNav(): JSX.Element {
       icon: homeIcon,
     },
     {
-      link: "/employees",
+      link: "/team-members",
       label: "Employees",
       icon: userIcon,
     },
