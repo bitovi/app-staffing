@@ -1,7 +1,7 @@
 import { Heading as ChakraHeading } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-interface HeadingProps {
+interface HeadingProps extends React.ComponentProps<typeof ChakraHeading> {
   "data-testid"?: string;
   className?: string;
   children: ReactNode;

@@ -4,7 +4,7 @@ import { select as selectEvent } from "react-select-event";
 import { projects } from "../../../../services/api/projects/fixtures";
 import RoleDate from "./RoleDate";
 
-describe.only("Pages/Projects/components/RoleDates", () => {
+describe("Pages/Projects/components/RoleDates", () => {
   it("works", async () => {
     const change = jest.fn();
 

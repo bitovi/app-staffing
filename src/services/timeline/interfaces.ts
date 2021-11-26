@@ -1,5 +1,4 @@
 import { Employee, SkillName } from "../api";
-import { TimescaleData } from "./timesReport";
 
 export interface RoleProjection {
   needed: Array<{ projectName: string; projectedConfidence: number }>;
@@ -12,7 +11,23 @@ export interface ProjectedData {
   projections: RoleProjection[];
 }
 
+export type TimelineData = {
+  startDate: Date;
+  endDate: Date;
+  type: TimescaleType;
+};
+
+export enum TimescaleType {
+  week,
+  month,
+  quarter,
+}
 export interface TimeReportData {
-  dates: TimescaleData[];
+  dates: TimelineData[];
   data: ProjectedData[];
+}
+
+export interface TimelineConfiguration {
+  minimumWeeksShown?: number;
+  minimumMonthsShown?: number;
 }
