@@ -13,9 +13,21 @@ import {
 } from "./constants";
 /**
  * Weeks must have a minimum of 3 shown. The maximum
- * number of weeks possible to show is 6.
+ * number of weeks possible to show is 7.
  */
 export const weeksFixtures = [
+  {
+    date: new Date(2021, November, 15),
+    weeks: [
+      [new Date(2021, November, 15), new Date(2021, November, 22)],
+      [new Date(2021, November, 22), new Date(2021, November, 29)],
+      [new Date(2021, November, 29), new Date(2021, December, 6)],
+      [new Date(2021, December, 6), new Date(2021, December, 13)],
+      [new Date(2021, December, 13), new Date(2021, December, 20)],
+      [new Date(2021, December, 20), new Date(2021, December, 27)],
+      [new Date(2021, December, 27), new Date(2022, January, 3)],
+    ],
+  },
   {
     date: new Date(2021, January, 6),
     weeks: [

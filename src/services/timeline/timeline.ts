@@ -1,12 +1,6 @@
 import type { TimelineData, TimelineConfiguration } from "./interfaces";
 
-import {
-  getWeeksInMonth,
-  getWeekOfMonth,
-  isBefore,
-  format,
-  setMonth,
-} from "date-fns";
+import { isBefore, format, setMonth } from "date-fns";
 
 import { TimescaleType } from "./interfaces";
 
@@ -15,7 +9,6 @@ import {
   MIN_AMOUNT_MONTHS_SHOWN,
   MIN_AMOUNT_WEEKS_SHOWN,
   MIN_NUMBER_TOTAL_MONTHS,
-  Monday,
   NUMBER_MONTHS_IN_QUARTERS,
 } from "./constants";
 
@@ -32,6 +25,8 @@ import {
   getNumberMonthsBetween,
   addWeek,
   getStaffingQuarter,
+  getNumberOfStaffingWeeksInMonth,
+  getStaffingWeekNumber,
 } from "./utilities";
 
 /**
@@ -42,9 +37,9 @@ export const getWeeks = (
   date: Date,
   minimumWeeksShown = MIN_AMOUNT_WEEKS_SHOWN,
 ): TimelineData[] => {
-  const numberWeeksInMonth = getWeeksInMonth(date, { weekStartsOn: Monday });
-  const currentWeekNumber = getWeekOfMonth(date, { weekStartsOn: Monday });
-  const remainingWeeks = numberWeeksInMonth - (currentWeekNumber - 1); // minus one to count the current week
+  const numberWeeksInMonth = getNumberOfStaffingWeeksInMonth(date);
+  const currentWeekNumber = getStaffingWeekNumber(date);
+  const remainingWeeks = numberWeeksInMonth - (currentWeekNumber - 1);
 
   const timeline: TimelineData[] = [];
 
@@ -135,7 +130,6 @@ export const getTimeline = (
   date: Date,
   { minimumMonthsShown, minimumWeeksShown }: TimelineConfiguration = {},
 ): TimelineData[] => {
-  console.log({ minimumMonthsShown, minimumWeeksShown });
   const weeks = getWeeks(date, minimumWeeksShown);
 
   const months = getMonths(
