@@ -12,7 +12,7 @@ const jsonApiMiddleware = (
   response: any,
   type: SerializerTypes,
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-): any => {
+): [any, string[]] => {
   const relationshipFields: string[] = [];
   if (typeof response.data === "object" && response.data !== null) {
     for (const key in response.data.relationships) {

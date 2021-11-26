@@ -1,5 +1,5 @@
 import type { Employee } from "../employees";
-import { JSONAPIEmployee } from "../employees/interfaces";
+import { EmployeeJSON } from "../employees/interfaces";
 import type { ResponseStatus, QueriableList } from "../shared";
 
 import useRest from "../useRest/useRestV2";
@@ -16,7 +16,7 @@ const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
 export interface EmployeeActions {
   employees?: Employee[] | undefined;
   addEmployee: (employee: {
-    data: Omit<JSONAPIEmployee, "id">;
+    data: Omit<EmployeeJSON, "id">;
   }) => Promise<string | undefined>;
   updateEmployee?: (
     employeeId: string,
@@ -42,7 +42,7 @@ export default function useEmployees(
     // the backend data shape of Employees
     // and the frontend data shape of Employees
     // useRest operates as the switchboard between the two.
-  } = useRest<Employee, JSONAPIEmployee>(
+  } = useRest<Employee, EmployeeJSON>(
     "/api/v1/employees",
     "employees",
     queryParams,

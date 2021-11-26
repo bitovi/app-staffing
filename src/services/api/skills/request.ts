@@ -6,7 +6,7 @@ import { CanLocalStore } from "can-local-store";
 //import type { QueriableList } from "../shared";
 
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
-import { JSONAPISkill, Skill } from "../skills/interfaces";
+import { JSONSkill, Skill } from "../skills/interfaces";
 
 export default function requestCreatorSkill<Resource extends Skill>(
   resourcePath: string,
@@ -105,7 +105,7 @@ export default function requestCreatorSkill<Resource extends Skill>(
       },
     ),
 
-    getAll: rest.get<JSONAPI<JSONAPISkill[], void>>(
+    getAll: rest.get<JSONAPI<JSONSkill[], void>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
         const {
@@ -124,8 +124,8 @@ export default function requestCreatorSkill<Resource extends Skill>(
           },
         });
 
-        const jsonAPISkills: JSONAPISkill[] = skills.map(
-          (skill: Skill): JSONAPISkill => ({
+        const jsonAPISkills: JSONSkill[] = skills.map(
+          (skill: Skill): JSONSkill => ({
             type: "skills",
             id: skill.id,
             attributes: {

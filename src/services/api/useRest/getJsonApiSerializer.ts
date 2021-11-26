@@ -11,7 +11,9 @@ export type SerializerTypes =
   | "undefined";
 
 const getJsonApiSerializer = (): JsonApiSerializer => {
-  const Serializer = new JsonApiSerializer({ unconvertCase: "camelCase" });
+  const Serializer = new JsonApiSerializer({
+    unconvertCase: "camelCase",
+  });
   Serializer.register("skills", {
     id: "id",
   });

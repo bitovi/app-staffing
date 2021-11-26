@@ -48,7 +48,7 @@ export async function fetcher<T>(
       // HTTP requests (POST, DELETE) to move them out of useRest and keep it
       // generic -- hydrateObject()
 
-      const hydratedDeserialized = await hydrateObject(
+      const hydratedDeserialized = await hydrateObject<T>(
         deserialized,
         relationships,
       );

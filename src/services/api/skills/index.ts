@@ -1,2 +1,2 @@
 // Interfaces
-export type { Skill, JSONAPISkill } from "./interfaces";
+export type { Skill, JSONSkill } from "./interfaces";
