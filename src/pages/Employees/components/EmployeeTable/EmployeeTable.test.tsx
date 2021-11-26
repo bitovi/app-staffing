@@ -57,9 +57,10 @@ describe("Components/Layout", () => {
   it("has an 'empty' state", async () => {
     render(
       <EmployeeTable
+        updateEmployee={() => Promise.resolve()}
         deleteEmployee={(id) => new Promise((resolve) => resolve())}
         employees={[]}
-        onEdit={() => null}
+        skills={[]}
       />,
     );
 
@@ -69,9 +70,10 @@ describe("Components/Layout", () => {
   it("shows employees", async () => {
     render(
       <EmployeeTable
+        updateEmployee={() => Promise.resolve()}
         deleteEmployee={(id) => new Promise((resolve) => resolve())}
         employees={mockData}
-        onEdit={() => null}
+        skills={[]}
       />,
     );
 
