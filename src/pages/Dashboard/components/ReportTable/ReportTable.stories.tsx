@@ -1,10 +1,10 @@
-import { Flex } from "@chakra-ui/layout";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { useState } from "react";
+import { Flex } from "@chakra-ui/layout";
+
 import { DatePicker } from "../../../../components/DatePicker";
 import Text from "../../../../components/Typography/Heading";
-
 import { ReportTable } from "./ReportTable";
 
 export default {
@@ -20,7 +20,6 @@ export const Basic: ComponentStory<typeof ReportTable> = (args) => {
       <Text variant="h2" my="6">
         Select a Date to Change the Timeline.
       </Text>
-
       <DatePicker label="Pick a date" selectedDate={date} onChange={setDate} />
       <Flex my="6" />
       <hr />
