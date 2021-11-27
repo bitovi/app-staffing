@@ -36,12 +36,12 @@ import {
 export const getWeeks = (
   date: Date,
   minimumWeeksShown = MIN_AMOUNT_WEEKS_SHOWN,
-): TimelineData[] => {
+): Array<Omit<TimelineData, "title">> => {
   const numberWeeksInMonth = getNumberOfStaffingWeeksInMonth(date);
   const currentWeekNumber = getStaffingWeekNumber(date);
   const remainingWeeks = numberWeeksInMonth - (currentWeekNumber - 1);
 
-  const timeline: TimelineData[] = [];
+  const timeline: Omit<TimelineData, "title">[] = [];
 
   let start = getStartOfWeek(date);
   const end =
@@ -71,13 +71,13 @@ export const getWeeks = (
 export const getMonths = (
   date: Date,
   minimumMonthsShown = MIN_AMOUNT_MONTHS_SHOWN,
-): TimelineData[] => {
+): Array<Omit<TimelineData, "title">> => {
   const currentMonth = getStaffingMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
 
   const numberMonthsRemainingInQuarter =
     NUMBER_MONTHS_IN_QUARTERS - currentMonth;
 
-  const timeline: TimelineData[] = [];
+  const timeline: Omit<TimelineData, "title">[] = [];
 
   let start = getStartOfMonth(date);
   const end =
@@ -99,7 +99,7 @@ export const getMonths = (
 };
 
 /** Gets one full quarter */
-export const getQuarter = (date: Date): TimelineData => {
+export const getQuarter = (date: Date): Omit<TimelineData, "title"> => {
   return {
     startDate: getStartOfQuarter(date),
     endDate: getEndOfQuarter(date),
@@ -154,33 +154,37 @@ export const getTimeline = (
     );
   }
 
-  return [...weeks, ...months, ...quarters];
+  return getTimelineDescriptions([...weeks, ...months, ...quarters]);
 };
 
-/** creates and formats a description for the timeline data */
-export const getTimelineDataDescription = ({
-  type,
-  startDate,
-}: TimelineData): string => {
-  switch (type) {
-    case TimescaleType.week:
-      const month = format(
-        setMonth(new Date(), getStaffingMonth(startDate)),
-        "MMM",
-      ).toUpperCase();
+/** gets the title to displays */
+const getTimelineDescriptions = (
+  timeline: Array<Omit<TimelineData, "title">>,
+): TimelineData[] => {
+  return timeline.map((data, i) => {
+    let title = "";
+    switch (data.type) {
+      case TimescaleType.week:
+        title = `Week ${i + 1}`;
+        break;
+      case TimescaleType.month:
+        title = format(
+          setMonth(new Date(), getStaffingMonth(data.startDate)),
+          "MMM",
+        ).toUpperCase();
+        break;
+      case TimescaleType.quarter:
+        title = `Q${getStaffingQuarter(
+          data.startDate,
+        )} ${data.startDate.getFullYear()}`;
+        break;
+      default:
+        title = format(data.startDate, "MMM do");
+    }
 
-      return `${month} ${format(startDate, "do")}`;
-
-    case TimescaleType.month:
-      return format(
-        setMonth(new Date(), getStaffingMonth(startDate)),
-        "MMM",
-      ).toUpperCase();
-
-    case TimescaleType.quarter:
-      return `Q${getStaffingQuarter(startDate)} ${startDate.getFullYear()}`;
-
-    default:
-      return format(startDate, "MMM do");
-  }
+    return {
+      ...data,
+      title,
+    };
+  });
 };

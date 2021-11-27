@@ -1,4 +1,7 @@
-import type { ProjectedData } from "../../../../../services/timeline";
+import type {
+  ProjectedData,
+  ProjectionAction,
+} from "../../../../../services/projection";
 
 import React, { useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
@@ -13,7 +16,7 @@ type TableRowProps = {
 };
 
 function TableRow({ rowData }: TableRowProps): JSX.Element {
-  const [isExpanded, setExpanded] = useState<boolean>(false);
+  const [isExpanded, setExpanded] = useState(false);
 
   const badgeForRole = (role: Skill): JSX.Element => {
     const ANGULAR_BADGE_COLOR = "#876363";
@@ -23,94 +26,66 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
     const UX_BADGE_COLOR = "#AE436A";
     const REACT_BADGE_COLOR = "#61D0D7";
 
+    let background = REACT_BADGE_COLOR;
+
     switch (role?.name) {
       case "Angular":
-        return (
-          <Badge size="sm" background={ANGULAR_BADGE_COLOR}>
-            {role?.name}
-          </Badge>
-        );
+        background = ANGULAR_BADGE_COLOR;
+        break;
       case "Design":
-        return (
-          <Badge size="sm" background={DESIGN_BADGE_COLOR}>
-            {role?.name}
-          </Badge>
-        );
+        background = DESIGN_BADGE_COLOR;
+        break;
       case "DevOps":
-        return (
-          <Badge size="sm" background={DEVOPS_BADGE_COLOR}>
-            {role?.name}
-          </Badge>
-        );
+        background = DEVOPS_BADGE_COLOR;
+        break;
       case "Node":
-        return (
-          <Badge size="sm" background={NODE_BADGE_COLOR}>
-            {role?.name}
-          </Badge>
-        );
+        background = NODE_BADGE_COLOR;
+        break;
       case "UX":
-        return (
-          <Badge size="sm" background={UX_BADGE_COLOR}>
-            {role?.name}
-          </Badge>
-        );
+        background = UX_BADGE_COLOR;
+        break;
       case "React":
       default:
-        return (
-          <Badge size="sm" background={REACT_BADGE_COLOR}>
-            {role?.name}
-          </Badge>
-        );
+        background = REACT_BADGE_COLOR;
     }
+
+    return (
+      <Badge size="sm" background={background}>
+        {role?.name}
+      </Badge>
+    );
   };
 
-  const getRowHighlight = (
-    action: "Ok" | "Hire" | "Sell" | "Assign",
-  ): string => {
+  const getRowColors = (
+    action: ProjectionAction,
+  ): { highlight: string; background: string; text: string } => {
     switch (action) {
       case "Assign":
-        return "rgba(9, 240, 4, 0.27)";
+        return {
+          highlight: "rgba(9, 240, 4, 0.27)",
+          background: "rgba(9, 240, 4, 0.27)",
+          text: "#38A169",
+        };
       case "Hire":
-        return "#FFF5F7";
+        return { highlight: "#FFF5F7", background: "#FC8181", text: "#63171B" };
       case "Sell":
-        return "rgba(252, 208, 142, 0.32)";
+        return {
+          highlight: "rgba(252, 208, 142, 0.32)",
+          background: "rgba(252, 208, 142, 0.32)",
+          text: "#DD6B20",
+        };
       case "Ok":
       default:
-        return "";
+        return {
+          highlight: "",
+          background: "",
+          text: "",
+        };
     }
   };
 
-  const getRowBackground = (
-    action: "Ok" | "Hire" | "Sell" | "Assign",
-  ): string => {
-    switch (action) {
-      case "Assign":
-        return "rgba(9, 240, 4, 0.27)";
-      case "Hire":
-        return "#FC8181";
-      case "Sell":
-        return "rgba(252, 208, 142, 0.32)";
-      case "Ok":
-      default:
-        return "";
-    }
-  };
-
-  const getTextColor = (action: "Ok" | "Hire" | "Sell" | "Assign"): string => {
-    switch (action) {
-      case "Assign":
-        return "#38A169";
-      case "Hire":
-        return "#63171B";
-      case "Sell":
-        return "#DD6B20";
-      case "Ok":
-      default:
-        return "";
-    }
-  };
-
-  const isLabelBold = (length: number): string => (length < 1 ? "#9DA8B7" : "");
+  const getLabelColor = (length: number): string =>
+    length < 1 ? "#9DA8B7" : "";
 
   const handleRowClick = () => {
     setExpanded(!isExpanded);
@@ -138,45 +113,33 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
           </Flex>
         </Center>
 
-        {rowData.projections.map((item, index) => {
+        {rowData.roleProjection.map(({ action, needed, bench }, index) => {
+          const { highlight, background, text } = getRowColors(action);
+
           return (
             <Flex
               key={index}
               flex={1}
               alignItems="end"
               flexDirection="column"
-              background={getRowHighlight(item.action)}
+              background={highlight}
             >
               <Flex w="100%" h="100%" flexDirection="column">
-                <Flex flex={1} px={4} justifyContent="end">
-                  <Text
-                    color={isLabelBold(item.needed.length)}
-                    textStyle="normal"
-                  >
-                    {item.needed.length}
+                <Flex flex={1} px={3} justifyContent="end">
+                  <Text color={getLabelColor(needed.length)} textStyle="normal">
+                    {needed.length}
                   </Text>
                 </Flex>
                 <Divider border={1} orientation="horizontal" />
                 <Flex flex={1} px={3} justifyContent="end">
-                  <Text
-                    color={isLabelBold(item.bench.length)}
-                    textStyle="normal"
-                  >
-                    {item.bench.length}
+                  <Text color={getLabelColor(bench.length)} textStyle="normal">
+                    {bench.length}
                   </Text>
                 </Flex>
                 <Divider border={1} orientation="horizontal" />
-                <Center
-                  flex={1}
-                  px={3}
-                  background={getRowBackground(item.action)}
-                >
-                  <Text
-                    textStyle="bold"
-                    fontWeight={800}
-                    color={getTextColor(item.action)}
-                  >
-                    {item.action}
+                <Center flex={1} px={3} background={background}>
+                  <Text textStyle="bold" fontWeight={800} color={text}>
+                    {action}
                   </Text>
                 </Center>
               </Flex>

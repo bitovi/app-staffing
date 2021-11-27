@@ -1,31 +1,18 @@
-import type { TimelineData } from "../../../../services/timeline";
-
-import React, { useMemo } from "react";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Center, Text, VStack } from "@chakra-ui/react";
 import { format } from "date-fns";
 
-import {
-  getTimeline,
-  TimescaleType,
-  getTimelineDataDescription,
-} from "../../../../services/timeline";
+import { TimescaleType } from "../../../../services/timeline";
 
 import TableRow from "./TableRow";
-import { useProjection } from "../../../../services/api/useProjection";
+import { useProjection } from "../../../../services/projection/useProjection";
 
 interface IProps {
   reportDate?: Date;
 }
 
 export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
-  const timeFrames: TimelineData[] = useMemo(
-    () => getTimeline(reportDate),
-    [reportDate],
-  );
-
-  const { projectedData } = useProjection();
-  const columnHeading: string[] = timeFrames.map(getTimelineDataDescription);
+  const { projections, timeline } = useProjection();
 
   return (
     <Flex flexDirection="column">
@@ -35,7 +22,7 @@ export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
         </Center>
 
         {/* Table Heading */}
-        {columnHeading.map((item, index) => {
+        {timeline.map(({ title, type, startDate }, index) => {
           return (
             <Center
               flex={1}
@@ -44,15 +31,13 @@ export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
               flexDirection="column"
             >
               <Center height={4} flex={1}>
-                <Text textStyle="tableHead">{item}</Text>
+                <Text textStyle="tableHead">{title}</Text>
               </Center>
 
               {/* Sub Heading */}
               <Center height={4} flex={1} justifyContent="start">
-                {timeFrames[index].type === TimescaleType.month && (
-                  <Text color={"#718096"}>
-                    {format(timeFrames[index].startDate, "MMM do")}
-                  </Text>
+                {type === TimescaleType.month && (
+                  <Text color={"#718096"}>{format(startDate, "MMM do")}</Text>
                 )}
               </Center>
             </Center>
@@ -62,7 +47,7 @@ export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
       </Flex>
 
       <VStack spacing={4} align="stretch">
-        {projectedData.map((item) => (
+        {projections.map((item) => (
           <TableRow key={item.role.id} rowData={item} />
         ))}
       </VStack>
