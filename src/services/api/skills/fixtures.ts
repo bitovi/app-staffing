@@ -1,14 +1,12 @@
 import { Skill } from ".";
 
-let skillId = 100;
-
 export const skills: Array<Skill> = [
-  { id: `${++skillId}`, name: "Angular" },
-  { id: `${++skillId}`, name: "Design" },
-  { id: `${++skillId}`, name: "DevOps" },
-  { id: `${++skillId}`, name: "Node" },
-  { id: `${++skillId}`, name: "React" },
-  { id: `${++skillId}`, name: "UX Designer" },
-  { id: `${++skillId}`, name: "UI Designer" },
-  { id: `${++skillId}`, name: "Project Management" },
+  { id: "100", name: "Angular" },
+  { id: "101", name: "Design" },
+  { id: "102", name: "DevOps" },
+  { id: "103", name: "Node" },
+  { id: "104", name: "React" },
+  { id: "105", name: "UX Designer" },
+  { id: "106", name: "UI Designer" },
+  { id: "107", name: "Project Management" },
 ];

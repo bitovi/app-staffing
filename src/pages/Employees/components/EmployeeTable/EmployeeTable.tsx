@@ -1,3 +1,4 @@
+import { useState, Dispatch, SetStateAction } from "react";
 import {
   Box,
   BoxProps,
@@ -10,26 +11,31 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
-import type { Employee } from "../../../../services/api";
+import { isEmpty } from "lodash";
+import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
-import { Dispatch, useState, useCallback } from "react";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
+import EmployeeModal from "../EmployeeModal";
+import { FrontEndEmployee } from "../../../../services/api/employees/interfaces";
 
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
+  skills: Skill[];
+  updateEmployee: ({ data }: { data: FrontEndEmployee }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
-  onEdit: (id: string, employee: Employee) => void;
 }
 
 export default function EmployeeTable({
   employees,
+  updateEmployee,
   deleteEmployee,
-  onEdit,
+  skills,
   ...props
 }: IEmployeeTable): JSX.Element {
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null,
   );
+  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
 
   const removeEmployee = async () => {
     if (employeeToDelete) {
@@ -42,29 +48,17 @@ export default function EmployeeTable({
     }
   };
 
-  const generateRows = useCallback(() => {
-    return employees?.map(
-      (employee, index): JSX.Element => (
-        <EmployeeTableRow
-          setEmployeeToDelete={setEmployeeToDelete}
-          key={employee.id}
-          employee={employee}
-        >
-          {employees.length - 1 !== index && <Tr height={4}></Tr>}
-        </EmployeeTableRow>
-      ),
-    );
-  }, [employees]);
-
-  const closeModal = () => {
-    setEmployeeToDelete(null);
-  };
+  const lastEmployeeIndex = Array.isArray(employees)
+    ? employees.length - 1
+    : -1;
 
   return (
     <>
       <ConfirmationModal
-        isOpen={employeeToDelete ? true : false}
-        onClose={() => closeModal()}
+        isOpen={!isEmpty(employeeToDelete)}
+        onClose={() => {
+          setEmployeeToDelete(null);
+        }}
         onConfirm={removeEmployee}
         title="Delete Team Member"
         message={`You are about to remove ${
@@ -74,6 +68,13 @@ export default function EmployeeTable({
         confirmText="Delete Team Member"
         confirmButtonVariant="modalConfirm"
         modalSize="lg"
+      />
+      <EmployeeModal
+        isOpen={!isEmpty(employeeToEdit)}
+        onClose={() => setEmployeeToEdit(null)}
+        onSave={updateEmployee}
+        skills={skills}
+        employee={employeeToEdit ? employeeToEdit : undefined}
       />
       <Box {...props}>
         {employees && employees.length === 0 && (
@@ -135,7 +136,17 @@ export default function EmployeeTable({
                     </Th>
                   </Tr>
                 </Thead>
-                <Tbody>{generateRows()}</Tbody>
+                <Tbody>
+                  {employees.map((employee, index) => (
+                    <EmployeeTableRow
+                      key={employee.id}
+                      handleEditEmployee={setEmployeeToEdit}
+                      handleDeleteEmployee={setEmployeeToDelete}
+                      employee={employee}
+                      lastChild={lastEmployeeIndex === index}
+                    />
+                  ))}
+                </Tbody>
               </Table>
             </Box>
           </>
@@ -145,22 +156,26 @@ export default function EmployeeTable({
   );
 }
 
-export const EmployeeTableRow = ({
+function EmployeeTableRow({
   employee,
-  children,
-  setEmployeeToDelete,
+  handleEditEmployee,
+  handleDeleteEmployee,
+  lastChild = false,
 }: {
   employee: Employee;
-  children: JSX.Element | boolean;
-  setEmployeeToDelete: Dispatch<Employee | null>;
-}): JSX.Element => {
+  handleEditEmployee: Dispatch<SetStateAction<Employee | null>>;
+  handleDeleteEmployee: Dispatch<SetStateAction<Employee | null>>;
+  lastChild: boolean;
+}) {
   return (
     <>
       <EmployeeCard
-        setEmployeeToDelete={setEmployeeToDelete}
         employee={employee}
+        handleEditEmployee={handleEditEmployee}
+        handleDeleteEmployee={handleDeleteEmployee}
       />
-      {children}
+      {/* add space between rows */}
+      {!lastChild && <Tr height={4} />}
     </>
   );
-};
+}
