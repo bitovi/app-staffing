@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
-  const { projections, timeline } = useProjection();
+  const { projections, timeline } = useProjection(reportDate);
 
   return (
     <Flex flexDirection="column">

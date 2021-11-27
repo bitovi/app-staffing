@@ -1,4 +1,10 @@
+import { Flex } from "@chakra-ui/layout";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
+
+import { useState } from "react";
+import { DatePicker } from "../../../../components/DatePicker";
+import Text from "../../../../components/Typography/Heading";
+
 import { ReportTable } from "./ReportTable";
 
 export default {
@@ -6,26 +12,20 @@ export default {
   component: ReportTable,
 } as ComponentMeta<typeof ReportTable>;
 
-export const Basic: ComponentStory<typeof ReportTable> = (args) => (
-  <ReportTable {...args} />
-);
+export const Basic: ComponentStory<typeof ReportTable> = (args) => {
+  const [date, setDate] = useState(new Date());
 
-Basic.args = {
-  reportDate: new Date(),
-};
+  return (
+    <>
+      <Text variant="h2" my="6">
+        Select a Date to Change the Timeline.
+      </Text>
 
-export const WorstCase: ComponentStory<typeof ReportTable> = (args) => (
-  <ReportTable {...args} />
-);
-
-WorstCase.args = {
-  reportDate: new Date(2019, 1, 18),
-};
-
-export const BestCase: ComponentStory<typeof ReportTable> = (args) => (
-  <ReportTable {...args} />
-);
-
-BestCase.args = {
-  reportDate: new Date(2019, 0, 1),
+      <DatePicker label="Pick a date" selectedDate={date} onChange={setDate} />
+      <Flex my="6" />
+      <hr />
+      <Flex my="6" />
+      <ReportTable reportDate={date} />
+    </>
+  );
 };

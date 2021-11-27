@@ -2,13 +2,13 @@ import type {
   ProjectedData,
   ProjectionAction,
 } from "../../../../../services/projection";
+import type { Skill } from "../../../../../services/api";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Center, Divider } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-import { Skill } from "../../../../../services/api";
 import Badge from "../../../../../components/Badge";
 
 type TableRowProps = {
