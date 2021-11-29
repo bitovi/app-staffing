@@ -8,7 +8,6 @@ import {
 } from "../../../employees/fixtures";
 import { employeeStoreManager } from "../../../employees/mocks";
 import { employeeSkillsStoreManager } from "../../../employee_skills/mocks";
-import { projectStoreManager } from "../../../projects/mocks";
 import { skillStoreManager } from "../../../skills/mocks";
 import useEmployees from "../../../useEmployees";
 import hydrateObject from "../../hydrateObject";
@@ -16,18 +15,16 @@ import { wrapper } from "../../useRest.test";
 import jsonApiMiddleware from "./jsonApiMiddleware";
 
 describe("json-api-deserializer middleware", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await employeeStoreManager.load();
-    await projectStoreManager.load();
     await skillStoreManager.load();
     await employeeSkillsStoreManager.load();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await employeeStoreManager.clear();
-    await projectStoreManager.clear();
-    await skillStoreManager.clear();
     await employeeSkillsStoreManager.clear();
+    await skillStoreManager.clear();
   });
 
   it("works", async () => {
@@ -53,7 +50,7 @@ describe("json-api-deserializer middleware", () => {
         type: "employees",
         id: "100",
         attributes: {
-          name: "Johnny Appleseed",
+          name: "Test Person",
           startDate: new Date(),
           endDate: "",
         },
@@ -90,7 +87,7 @@ describe("json-api-deserializer middleware", () => {
         type: "employees",
         id: "100",
         attributes: {
-          name: "Johnny Appleseed",
+          name: "Test Person",
           startDate: new Date(),
           endDate: "",
         },
@@ -138,7 +135,7 @@ describe("json-api-deserializer middleware", () => {
       data: {
         type: "employees",
         attributes: {
-          name: "Johnny Appleseed",
+          name: "Test Person",
           startDate: new Date(),
           endDate: new Date(),
         },
@@ -163,7 +160,7 @@ describe("json-api-deserializer middleware", () => {
     await waitFor(() =>
       expect(
         result.current.employees
-          ?.filter((employee) => employee.name === "Johnny Appleseed")
+          ?.filter((employee) => employee.name === "Test Person")
           .map((employee) => employee.skills)[0],
       ).toEqual([
         { id: "101", name: "Angular" },
