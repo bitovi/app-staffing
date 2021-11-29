@@ -48,13 +48,8 @@ export const employeeDataFormatter = (
 
 export interface EmployeeActions {
   employees?: Employee[];
-  addEmployee: (employee: {
-    data: FrontEndEmployee;
-  }) => Promise<string | undefined>;
-  updateEmployee?: (
-    employeeId: string,
-    employee: Partial<Employee>,
-  ) => Promise<void>;
+  addEmployee: (employee: { data: FrontEndEmployee }) => Promise<string | void>;
+  updateEmployee: ({ data }: { data: FrontEndEmployee }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
   reset: () => void;
 }
@@ -81,7 +76,9 @@ export default function useEmployees(
     isLoading,
     error,
     addEmployee: handleAdd,
-    // updateEmployee: handleUpdate,
+    updateEmployee({ data }: { data: FrontEndEmployee }) {
+      return Promise.resolve();
+    },
     deleteEmployee: handleDelete,
     reset,
   };

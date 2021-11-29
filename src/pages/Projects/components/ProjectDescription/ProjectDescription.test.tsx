@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { projects } from "../../../../services/api/projects/fixtures";
 import ProjectDescription from "./ProjectDescription";
 
-describe.only("Pages/Projects/components/ProjectDescriptions", () => {
+describe("Pages/Projects/components/ProjectDescriptions", () => {
   it("works", () => {
     const onEditMock = jest.fn();
 

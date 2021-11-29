@@ -1,1 +1,1 @@
-export { default } from "./EmplyeeModal";
+export { default } from "./EmployeeModal";

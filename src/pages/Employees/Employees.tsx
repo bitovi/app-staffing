@@ -59,7 +59,8 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { employees, addEmployee, deleteEmployee } = useEmployees();
+  const { employees, addEmployee, deleteEmployee, updateEmployee } =
+    useEmployees();
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
@@ -94,9 +95,10 @@ export function Employees({
 
       <EmployeeTable
         mt="48px"
+        updateEmployee={updateEmployee}
         deleteEmployee={deleteEmployee}
         employees={employees}
-        onEdit={() => undefined}
+        skills={skills}
       />
     </Box>
   );

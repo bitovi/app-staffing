@@ -25,30 +25,13 @@ describe("Pages/Employees", () => {
     await employeeStoreManager.clear();
     await employeeSkillsStoreManager.clear();
     await skillStoreManager.clear();
+    cleanup();
   });
-  afterEach(cleanup);
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
     expect(await screen.findByText("Sam Kreiger")).toBeInTheDocument();
   });
-
-  // it("filters by name", async () => {
-  //   render(<Employees />);
-
-  //   // wait for the first row
-  //   expect(
-  //     await screen.findByDisplayValue(employees[0].name),
-  //   ).toBeInTheDocument();
-
-  //   // Filter by Sally
-  //   userEvent.type(screen.getByPlaceholderText(/Filter/i), "Sally");
-
-  //   // Make sure Tom is no longer visible
-  //   expect(
-  //     screen.queryByDisplayValue(employees[0].name),
-  //   ).not.toBeInTheDocument();
-  // });
 
   it("Displays loading state skeleton", () => {
     render(<EmployeesWrapper />);
@@ -81,8 +64,6 @@ describe("Pages/Employees", () => {
     });
     expect(modalStartDateInput).toHaveValue("1993-01-24");
 
-    await waitFor(() => expect(submitButton).toBeEnabled());
-
     const angularCheckBox = within(modal).getByLabelText("Angular");
     const designCheckBox = within(modal).getByLabelText("Design");
 
@@ -95,6 +76,7 @@ describe("Pages/Employees", () => {
     expect(angularCheckBox).toBeChecked();
     expect(designCheckBox).toBeChecked();
 
+    await waitFor(() => expect(submitButton).toBeEnabled());
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));

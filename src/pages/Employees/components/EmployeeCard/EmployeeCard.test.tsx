@@ -24,12 +24,10 @@ describe("Components/Layout", () => {
             <tbody>
               {employees && (
                 <EmployeeCard
-                  setEmployeeToDelete={() =>
-                    new Promise((resolve) => resolve(null))
-                  }
+                  handleEditEmployee={() => Promise.resolve()}
+                  handleDeleteEmployee={() => Promise.resolve()}
                   key={employees[0].id}
                   employee={employees[0]}
-                  //onSave={() => null}
                 />
               )}
             </tbody>

@@ -127,8 +127,9 @@ export const employeeMockData = (): ResponseStatus & EmployeeActions => {
   /////////////////////////////////////////////
   return {
     employees,
-    addEmployee: (employee) => new Promise((resolve) => resolve("")),
-    deleteEmployee: (id) => new Promise((resolve) => resolve()),
+    addEmployee: (employee) => Promise.resolve(""),
+    updateEmployee: () => Promise.resolve(),
+    deleteEmployee: (id) => Promise.resolve(),
     isLoading: false,
     reset: () => undefined,
   };

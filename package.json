@@ -14,6 +14,7 @@
     "clean": "rm -rf build coverage",
     "dev": "react-scripts start",
     "test": "react-scripts test",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook -s public -o build/storybook",
@@ -22,9 +23,13 @@
   "eslintConfig": {
     "root": true,
     "extends": "@hmudesign",
+    "plugins": [
+      "no-only-tests"
+    ],
     "rules": {
       "jsx-a11y/no-onchange": "off",
-      "import/no-extraneous-dependencies": "off"
+      "import/no-extraneous-dependencies": "off",
+      "no-only-tests/no-only-tests": "error"
     },
     "overrides": [
       {
@@ -106,7 +111,7 @@
     "@storybook/node-logger": "^6.3.7",
     "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.7",
-    "@testing-library/dom": "^8.1.0",
+    "@testing-library/dom": "^8.11.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/react-hooks": "^7.0.2",
@@ -127,6 +132,7 @@
     "chai-dom": "^1.9.0",
     "chai-spies": "^1.0.0",
     "depcheck": "^1.4.2",
+    "eslint-plugin-no-only-tests": "^2.6.0",
     "prettier": "^2.3.2",
     "react-scripts": "4.0.3",
     "react-select-event": "^5.3.0",
