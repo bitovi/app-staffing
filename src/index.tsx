@@ -8,10 +8,10 @@ import mocks from "./services/mocks";
 
 import App from "./App";
 import theme from "./theme";
-import { SWRConfig } from "swr";
 
 // fonts
 import "./theme/fonts/styles.css";
+import { SWRConfig } from "swr";
 
 if (process.env.PUBLIC_URL) {
   if (!window.location.pathname.startsWith(`${process.env.PUBLIC_URL}/`)) {

@@ -1,5 +1,5 @@
 export type { ResponseStatus } from "./shared";
-export type { Skill, JSONAPISkill } from "./skills";
+export type { Skill, JSONSkill } from "./skills";
 export type { Project, NewProject } from "./projects";
 export type { Role, EstimatedDate } from "./roles";
 export type { Employee, NewEmployee, AssignedEmployee } from "./employees";

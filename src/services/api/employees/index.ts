@@ -1,1 +1,6 @@
-export type { Employee, NewEmployee, AssignedEmployee } from "./interfaces";
+export type {
+  Employee,
+  NewEmployee,
+  AssignedEmployee,
+  EmployeeJSON,
+} from "./interfaces";

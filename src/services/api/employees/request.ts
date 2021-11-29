@@ -8,8 +8,8 @@ import { CanLocalStore } from "can-local-store";
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import { skillStoreManager } from "../skills/mocks";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
-import { EmployeeTable, JSONAPIEmployee } from "./interfaces";
-import { JSONAPISkill } from "../skills/interfaces";
+import { EmployeeTable, EmployeeJSON } from "./interfaces";
+import { JSONSkill } from "../skills/interfaces";
 
 export default function requestCreatorEmployee<Resource extends EmployeeTable>(
   resourcePath: string,
@@ -113,21 +113,17 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         }
       },
     ),
-    create: rest.post<JSONAPI<JSONAPIEmployee, null>, MockResponse<Resource>>(
+    create: rest.post<JSONAPI<EmployeeJSON, null>, MockResponse<Resource>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
-        const {
-          attributes,
-          relationships: {
-            skills: { data: skillData },
-          },
-        } = req.body.data;
+        const { attributes } = req.body.data;
+        const skillData = req.body.data.relationships?.skills?.data;
         const item = {
           data: {
             id,
             type: "employees",
-            attributes: req.body.data.attributes,
+            attributes,
             relationships: {
               skills: {
                 data: skillData,
@@ -153,26 +149,29 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         ////////////////////////////////
         //** Updates the Employee store
         ////////////////////////////////
-        const newEmployeeTableEntry = {
+        const newEmployeeTableEntry: EmployeeTable = {
           name: attributes.name,
           id,
           startDate: attributes.startDate,
           endDate: attributes.endDate,
-        } as unknown as Resource;
+        };
 
-        const employeeSkillsTableJoins = skillData.map((skill) => ({
+        const employeeSkillsTableJoins = skillData?.map((skill) => ({
           id: (Math.floor(Math.random() * 1000) + 1).toString(),
           employee_id: id,
           skill_id: skill.id,
         }));
 
         try {
-          await Promise.all(
-            employeeSkillsTableJoins.map(async (skillJoin) => {
-              await employeeSkillsStoreManager.store.createData(skillJoin);
-            }),
-          );
-          await store.createData(newEmployeeTableEntry);
+          if (employeeSkillsTableJoins) {
+            await Promise.all(
+              employeeSkillsTableJoins.map(async (skillJoin) => {
+                await employeeSkillsStoreManager.store.createData(skillJoin);
+              }),
+            );
+
+            await store.createData(newEmployeeTableEntry as Resource);
+          }
 
           return res(
             ctx.status(201),
@@ -190,7 +189,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
     //////////////////////////////
     //**  Changed parameter typing to suit response object in JSON API format
     /////////////////////////////
-    getAll: rest.get<JSONAPI<JSONAPIEmployee[], JSONAPISkill[]>>(
+    getAll: rest.get<JSONAPI<EmployeeJSON[], JSONSkill[]>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
         const {
@@ -212,7 +211,6 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
             end: page * count - 1,
           },
         });
-
         /////////////////////////////////////////////
         // ** JSON API formatting each employee for response
         // ** finding relevant skill IDs with the "join table" employeeSkillsStore
@@ -223,9 +221,9 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         //!! This jsonAPIEmployee Promise.All is currently breaking the useEmployees test
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         const includedSkills: string[] = [];
-        const jsonAPIEmployees: JSONAPIEmployee[] = await Promise.all(
+        const jsonAPIEmployees: EmployeeJSON[] = await Promise.all(
           employees.map(
-            async (employee: EmployeeTable): Promise<JSONAPIEmployee> => {
+            async (employee: EmployeeTable): Promise<EmployeeJSON> => {
               const { data: employeeSkills } =
                 await employeeSkillsStoreManager.store.getListData({
                   filter: {
@@ -262,7 +260,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         // ** Filtering the skillStoreManager to join
         // ** the skill id to its skill object
         /////////////////////////////////////////////
-        const included: JSONAPISkill[] = (
+        const included: JSONSkill[] = (
           await skillStoreManager.store.getListData({
             filter: {
               id: includedSkills,
@@ -275,14 +273,11 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
             name: skill.name,
           },
         }));
-
         return res(
           ctx.status(200),
           ctx.json({
-            data: {
-              data: jsonAPIEmployees,
-              included,
-            },
+            data: jsonAPIEmployees,
+            included,
           }),
         );
       },

@@ -1,105 +1,78 @@
 import param from "can-param";
 import { useCallback } from "react";
-//import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { JSONAPISkill, Skill } from "..";
-//import { JSONAPI } from "../baseMocks/interfaces";
-import { FrontEndEmployee, JSONAPIEmployee } from "../employees/interfaces";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
-// import { skills } from "../skills/fixtures";
-import { skillStoreManager } from "../skills/mocks";
-// import { employeeDataFormatter } from "../useEmployees/useEmployees";
+import { SerializerTypes } from "./getJsonApiSerializer";
+import hydrateObject from "./hydrateObject";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
-
-interface RestActions<T> extends APIResponse<T> {
+import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
+interface RestActions<T, K> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: {
-    data: FrontEndEmployee;
-  }) => Promise<string | void>;
+    data: Omit<K, "id">;
+  }) => Promise<string | undefined>;
   reset: () => void;
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
 
-function useRest<T>(
+function useRest<T extends { id?: string }, K>(
   path: string,
-  queryParams?: QueriableList<T>,
-): RestActions<T> {
+  type: SerializerTypes,
+  queryParams?: QueriableList<K>,
+): RestActions<T, K> {
   const key = `${path}?${param(queryParams)}`;
-
   const { mutate, cache } = useSWRConfig();
-  const { data: response, error } = useSWR<{ data: T }, Error>(
+  const { data: response, error } = useSWR<{ data: T[] }, Error>(
     key,
-    (url) => fetcher("GET", url),
+    (url) => fetcher("GET", type, url),
     {
       suspense: true,
       use: [deserializeDateMiddleware],
-      // fallbackData added with pre-fetched data from localStorage
-      // to provide persistent cache data while revalidate
       fallbackData: cache.get(key),
     },
   );
   const handleAdd = useCallback<
-    (newCollectionItem: { data: FrontEndEmployee }) => Promise<string | void>
+    (newCollectionItem: { data: Omit<K, "id"> }) => Promise<string | undefined>
   >(
-    async (newCollectionItem: { data: FrontEndEmployee }) => {
+    async (newCollectionItem: { data: Omit<K, "id"> }) => {
       let newId = "";
       try {
         await mutate(
           key,
-          async (addResponse: {
-            data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
-          }) => {
-            const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
+          async (addResponse: { data: T[] }) => {
+            let { data: newItem } = await fetcher(
               "POST",
+              type,
               path,
               newCollectionItem,
             );
             newId = newItem.id;
 
-            // Employee specific, ideally needs to be move outside of the useRest function
-            // Fetches the skills by id for new employee & checks them
-            // against the skills already in the included field of the cache
-            // if the skill has no match, add it to cache; if it does
-            // ignore it  V V.
+            //----------------------------------------------
+            // a temporary measure until all endpoints are in JSON API format
+            // otherwise the deserializer will flatten out object and erase information
+            if (type !== "undefined") {
+              const [deserializedItem, relationships] = jsonApiMiddleware(
+                { data: newItem },
+                type,
+              );
+              newItem = deserializedItem.data;
 
-            const newItemIncluded = await skillStoreManager.store.getListData({
-              filter: {
-                id: newItem.relationships.skills.data.map(
-                  (skill: Skill) => skill.id,
-                ),
-              },
-            });
-            const skillsToAdd = newItemIncluded.data
-              .filter((skill) => {
-                if (
-                  !addResponse.data.included.find(
-                    (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
-                  )
-                ) {
-                  return skill;
-                }
-              })
-              // only maps those skills not already in the cache into the appropriate
-              // data shape
-
-              .map((skill) => ({
-                type: "skills",
-                id: skill.id,
-                attributes: {
-                  name: skill.name,
-                },
-              }));
-
-            //^^^^^^
-
-            const newCache = {
-              data: [...addResponse.data.data, newItem],
-              included: [...addResponse.data.included, ...skillsToAdd],
-            };
+              // if the return object had relationship fields, they need to be hydrated
+              // otherwise they are in the format [ {type: string, id: string} ]
+              if (relationships.length > 0) {
+                const hydratedDeserialized = await hydrateObject<{ data: T }>(
+                  deserializedItem,
+                  relationships,
+                );
+                newItem = hydratedDeserialized.data;
+              }
+            }
+            // -----------------------------------------------
 
             return {
               ...addResponse,
-              data: newCache,
+              data: [...addResponse.data, newItem],
             };
           },
           false,
@@ -111,57 +84,27 @@ function useRest<T>(
         }
       }
     },
-    [path, key, mutate],
+    [path, key, mutate, type],
   );
 
   const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
         key,
-        async (deleteResponse: {
-          data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
-        }) => {
-          await fetcher("DELETE", `${path}/${collectionItemId}`);
-
-          const newData = [
-            ...deleteResponse.data.data.filter(
-              (item) => item.id !== collectionItemId,
-            ),
-          ];
-          //Employee specific, ideally needs to be moved outside of the useRest
-          //function. Checks, after a delete, whether all the skills in "included"
-          //are still connected to at least one employee. VV
-          const newCache = {
-            data: newData,
-            included: [
-              ...deleteResponse.data.included.filter((skill) => {
-                if (
-                  newData.find(
-                    ({
-                      relationships: {
-                        skills: { data: employeeSkill },
-                      },
-                    }) =>
-                      employeeSkill.some((eSkill) => eSkill.id === skill.id),
-                  )
-                ) {
-                  return skill;
-                }
-              }),
-            ],
-          };
-          //^^^^^^^^^^^^^^^^^^^
+        async (deleteResponse: { data: T[] }) => {
+          await fetcher("DELETE", type, `${path}/${collectionItemId}`);
           return {
             ...deleteResponse,
-            data: newCache,
+            data: deleteResponse.data.filter(
+              (item) => item.id !== collectionItemId,
+            ),
           };
         },
         false,
       );
     },
-    [path, key, mutate],
+    [path, key, mutate, type],
   );
-
   return {
     data: response?.data,
     handleAdd,
