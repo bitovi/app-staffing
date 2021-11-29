@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Modal,
   ModalBody,
@@ -17,194 +18,88 @@ import {
   Flex,
   FormErrorMessage,
   Box,
-  // FormErrorMessage,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
+import { useForm, Controller } from "react-hook-form";
+import { isEmpty, pickBy } from "lodash";
+import format from "date-fns/format";
 
-import { useEffect, useRef, useState } from "react";
-import { Skill } from "../../../../services/api";
+import { Employee, Skill } from "../../../../services/api";
 import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
-import { useForm } from "react-hook-form";
 import { ServiceError } from "../../../../components/ServiceError";
-interface IEmployeeModal {
-  onSave: (employee: {
-    data: Omit<EmployeeJSON, "id">;
-  }) => Promise<string | undefined>;
-  onClose: () => void;
-  isOpen: boolean;
-  skills: Skill[] | undefined;
-}
 
-interface IRole {
-  label: string;
-  value: number;
-}
-
-interface IEmployeeData {
+interface EmployeeFormData {
   name: string;
   start_date: string;
   end_date: string;
-  roles?: number[];
+  roles?: Record<string, boolean>;
 }
 
-interface RoleState {
-  selected: boolean;
-  id: string;
-  roles?: string[] | undefined;
+interface EmployeeModalProps {
+  onSave: (employee: {
+    data: Omit<EmployeeJSON, "id">;
+  }) => Promise<string | void>;
+  onClose: () => void;
+  isOpen: boolean;
+  skills?: Skill[];
+  employee?: Employee;
 }
-
-// const ErrorText = ({ children }: { children?: string }): JSX.Element => (
-//   <Text color="red.600">{children}</Text>
-// );
 
 export default function EmployeeModal({
   onSave,
   onClose,
   isOpen,
   skills,
-}: IEmployeeModal): JSX.Element {
-  //////////////////////////////////////////
-  //** Removed stateful data for new employee
-  //** handled through react-form-hook
-  //////////////////////////////////////////
-  const [roles, setRoles] = useState<IRole[]>([]);
-  const [checkedRolesState, setCheckedRolesState] = useState<RoleState[]>([]);
+  employee,
+}: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
-
-  // Ref added to prevent revalidation of stale skills data from useSWR,
-  // which causes a state update to roles, from clearing checkbox data
-  // on browser tab blur due to unnecessary rerender
-
-  // issue avoided if we choose to set SWR revalidateIfStale to false
-
-  const skillsRef = useRef<Skill[] | boolean>(false);
-
-  useEffect(() => {
-    if (skills && !skillsRef.current) {
-      skillsRef.current = skills;
-      //stateful value for mapping out checkbox inputs
-      //value corresponds to index value within checkedRolesState
-      setRoles(
-        skills.map((skill, index) => ({
-          label: skill.name as string,
-          value: index as number,
-        })),
-      );
-      //stateful value containing skill.id's
-      //connects to roles state through index value
-      setCheckedRolesState(
-        skills.map((skill) => ({ selected: false, id: skill.id })),
-      );
-    }
-  }, [skills]);
-
+  const employeeData = employee ? toEmployeeFormData(employee) : undefined;
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
-  } = useForm<IEmployeeData>({
-    defaultValues: {
-      start_date: "",
-      end_date: "",
-      name: "",
-    },
-    mode: "onChange",
+    watch,
+    control,
+    formState: { errors, isDirty: formIsDirty },
+  } = useForm<EmployeeFormData>({
+    defaultValues: employeeData,
   });
 
-  const submitForm = async (data: IEmployeeData) => {
-    // Currently a fix to manage a testing quirk:
-    // within the testing environment, the roles field doesn't populate with an array of ints
-    // but rather returns a single boolean. Presumably a problem in the handoff
-    // between React Hooks Form / Chakra UI / testing-library
-    const newRoles = [
-      ...document.querySelectorAll<HTMLInputElement>(
-        "input[type=checkbox]:checked",
-      ),
-    ].map((node) => parseInt(node.value));
-    const newEmployee: { data: Omit<EmployeeJSON, "id"> } = {
-      data: {
-        type: "employees",
-        attributes: {
-          name: data.name,
-          startDate: new Date(data.start_date),
-          endDate: new Date(data.end_date),
-        },
-        relationships: {
-          skills: {
-            // once bug can be resolved, this should read
-            // data: data.roles?.map
-            data: newRoles.map((role: number) => ({
-              type: "skills",
-              id: checkedRolesState[role].id,
-            })),
-          },
-        },
-      },
-    };
+  const isNewEmployee = isEmpty(employeeData);
+  const selectedRolesMap = watch("roles");
+  const selectedRoles = getSelectedRoles(selectedRolesMap);
+
+  // allow form submit if at least one role is selected for a new employee OR
+  // any of the inputs has been modified when editing an existing employee
+  const canSubmitForm =
+    (isNewEmployee && !isEmpty(selectedRoles)) ||
+    (!isNewEmployee && formIsDirty);
+
+  const submitForm = async (data: EmployeeFormData) => {
     try {
-      await onSave(newEmployee);
+      await onSave({ data: formatEmployeeData(data) });
       reset();
       onClose();
-      setCheckedRolesState((prevState) =>
-        prevState.map((skill) => ({ ...skill, selected: false })),
-      );
     } catch (e) {
       setServerError(!serverError);
     }
   };
 
-  const handleRolesChange = (index: number) => {
-    setCheckedRolesState(
-      checkedRolesState.map((item, i) =>
-        i === index ? { ...item, selected: !item.selected } : item,
-      ),
-    );
-  };
-
-  const renderRolesCheckboxes = (rolesToRender: IRole[]) => {
-    const half = Math.ceil(rolesToRender.length / 2);
-    return (
-      <>
-        <VStack display="flex" flex={1} alignItems="start">
-          {rolesToRender.slice(0, half).map((role: IRole, index: number) => (
-            <Checkbox
-              {...register("roles")}
-              key={role.label}
-              value={role.value}
-              onChange={() => handleRolesChange(index)}
-              isChecked={checkedRolesState[index].selected}
-            >
-              {role.label}
-            </Checkbox>
-          ))}
-        </VStack>
-
-        <VStack display="flex" flex={1} alignItems="start">
-          {rolesToRender
-            .slice(half, rolesToRender.length)
-            .map((role: IRole, index: number) => (
-              <Checkbox
-                {...register("roles")}
-                key={role.label}
-                value={role.value}
-                onChange={() => handleRolesChange(index + half)}
-                isChecked={checkedRolesState[index + half].selected}
-              >
-                {role.label}
-              </Checkbox>
-            ))}
-        </VStack>
-      </>
-    );
-  };
+  useEffect(() => {
+    if (employee) {
+      reset(toEmployeeFormData(employee));
+    }
+  }, [employee, reset]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />
       <ModalContent mt="14vh">
-        <ModalHeader>Add a New Team Member</ModalHeader>
+        <ModalHeader>
+          {isNewEmployee ? "Add a New Team Member" : "Edit Team Member"}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack spacing="16px">
@@ -217,7 +112,6 @@ export default function EmployeeModal({
                     name.split(" ").length >= 2 || "Full name required",
                 })}
                 id="name"
-                // focusBorderColor={errors.name ? "red.600" : "currentColor"}
                 placeholder="name"
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
@@ -245,14 +139,33 @@ export default function EmployeeModal({
               </FormControl>
             </HStack>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel>Roles</FormLabel>
               <Flex mt={4} mb={11} flexGrow={1}>
-                {renderRolesCheckboxes(roles)}
+                <SimpleGrid columns={2}>
+                  {skills?.map((skill) => (
+                    <Controller
+                      key={skill.id}
+                      control={control}
+                      name={`roles.${skill.id}`}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Checkbox
+                          value={skill.id}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          isChecked={value}
+                        >
+                          {skill.name}
+                        </Checkbox>
+                      )}
+                    />
+                  ))}
+                </SimpleGrid>
               </Flex>
             </FormControl>
           </VStack>
         </ModalBody>
+
         {serverError && (
           <Flex justifyContent="center" width="100%">
             <ServiceError
@@ -279,19 +192,60 @@ export default function EmployeeModal({
             </ServiceError>
           </Flex>
         )}
+
         <ModalFooter>
           <Button variant="outline" mr="8px" onClick={onClose}>
             Cancel
           </Button>
           <Button
-            variant={!isValid ? "primaryDisabled" : "primary"}
-            isDisabled={!isValid}
+            variant={canSubmitForm ? "primary" : "primaryDisabled"}
+            isDisabled={!canSubmitForm}
             onClick={handleSubmit((data) => submitForm(data))}
           >
-            Add & Close
+            {isNewEmployee ? "Add & Close" : "Save & Close"}
           </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
   );
+}
+
+function getSelectedRoles(map: undefined | Record<string, boolean>) {
+  return isEmpty(map) ? [] : Object.keys(pickBy(map, (checked) => !!checked));
+}
+
+function formatEmployeeData(data: EmployeeFormData): Omit<EmployeeJSON, "id"> {
+  const selectedRoles = getSelectedRoles(data.roles);
+
+  return {
+    type: "employees",
+    attributes: {
+      name: data.name,
+      startDate: new Date(data.start_date),
+      endDate: new Date(data.end_date),
+    },
+    relationships: {
+      skills: {
+        data: selectedRoles.map((role) => ({
+          type: "skills",
+          id: role,
+        })),
+      },
+    },
+  };
+}
+
+function toEmployeeFormData(data: Employee): EmployeeFormData {
+  const roles: Record<string, boolean> = {};
+
+  data.skills.forEach((skill) => {
+    roles[skill.id] = true;
+  });
+
+  return {
+    name: data.name,
+    start_date: format(data.startDate, "yyyy-MM-dd"),
+    end_date: data.endDate ? format(data.endDate, "yyyy-MM-dd") : "",
+    roles,
+  };
 }

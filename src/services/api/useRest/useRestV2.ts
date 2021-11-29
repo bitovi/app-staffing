@@ -1,6 +1,7 @@
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
+import { EmployeeJSON } from "../employees";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
 import { SerializerTypes } from "./getJsonApiSerializer";
@@ -11,10 +12,10 @@ interface RestActions<T, K> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: {
     data: Omit<K, "id">;
   }) => Promise<string | undefined>;
+  handleUpdate: (employee: { data: Omit<EmployeeJSON, "id"> }) => Promise<void>;
   reset: () => void;
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
-
 function useRest<T extends { id?: string }, K>(
   path: string,
   type: SerializerTypes,
@@ -86,7 +87,7 @@ function useRest<T extends { id?: string }, K>(
     },
     [path, key, mutate, type],
   );
-
+  const handleUpdate = async () => Promise.resolve();
   const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
@@ -108,11 +109,11 @@ function useRest<T extends { id?: string }, K>(
   return {
     data: response?.data,
     handleAdd,
+    handleUpdate,
     handleDelete,
     error,
     isLoading: !response && !error,
     reset: () => mutate(key, (v: T) => v, false),
   };
 }
-
 export default useRest;

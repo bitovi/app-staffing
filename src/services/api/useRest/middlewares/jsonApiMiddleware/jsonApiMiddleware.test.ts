@@ -96,11 +96,11 @@ describe("json-api-deserializer middleware", () => {
             data: [
               {
                 type: "skills",
-                id: "101",
+                id: "100",
               },
               {
                 type: "skills",
-                id: "102",
+                id: "101",
               },
             ],
           },
@@ -120,8 +120,8 @@ describe("json-api-deserializer middleware", () => {
     // field
     expect(hydratedDeserialized.data.skills).toHaveLength(2);
     expect(hydratedDeserialized.data.skills).toEqual([
-      { id: "101", name: "Angular" },
-      { id: "102", name: "Design" },
+      { id: "100", name: "Angular" },
+      { id: "101", name: "Design" },
     ]);
   });
 
@@ -144,11 +144,11 @@ describe("json-api-deserializer middleware", () => {
             data: [
               {
                 type: "skills",
-                id: "101",
+                id: "100",
               },
               {
                 type: "skills",
-                id: "102",
+                id: "101",
               },
             ],
           },
@@ -163,8 +163,8 @@ describe("json-api-deserializer middleware", () => {
           ?.filter((employee) => employee.name === "Test Person")
           .map((employee) => employee.skills)[0],
       ).toEqual([
-        { id: "101", name: "Angular" },
-        { id: "102", name: "Design" },
+        { id: "100", name: "Angular" },
+        { id: "101", name: "Design" },
       ]),
     );
   });

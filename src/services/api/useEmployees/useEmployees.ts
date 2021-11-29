@@ -18,10 +18,9 @@ export interface EmployeeActions {
   addEmployee: (employee: {
     data: Omit<EmployeeJSON, "id">;
   }) => Promise<string | undefined>;
-  // updateEmployee?: (
-  //   employeeId: string,
-  //   employee: Partial<Employee>,
-  // ) => Promise<void>;
+  updateEmployee: (employee: {
+    data: Omit<EmployeeJSON, "id">;
+  }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
   reset: () => void;
 }
@@ -35,7 +34,7 @@ export default function useEmployees(
     error,
     isLoading,
     handleAdd,
-    // handleUpdate,
+    handleUpdate,
     handleDelete,
     reset,
     // two interfaces passed to useRest now,
@@ -53,9 +52,7 @@ export default function useEmployees(
     isLoading,
     error,
     addEmployee: handleAdd,
-    // updateEmployee({ data }: { data: FrontEndEmployee }) {
-    //   return Promise.resolve();
-    // },
+    updateEmployee: handleUpdate,
     deleteEmployee: handleDelete,
     reset,
   };
