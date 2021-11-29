@@ -4,7 +4,9 @@ import useSWR, { useSWRConfig } from "swr";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
 import { SerializerTypes } from "./getJsonApiSerializer";
+import hydrateObject from "./hydrateObject";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
+import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
 interface RestActions<T, K> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: {
     data: Omit<K, "id">;
@@ -38,13 +40,36 @@ function useRest<T extends { id?: string }, K>(
         await mutate(
           key,
           async (addResponse: { data: T[] }) => {
-            const { data: newItem } = await fetcher(
+            let { data: newItem } = await fetcher(
               "POST",
               type,
               path,
               newCollectionItem,
             );
             newId = newItem.id;
+
+            //----------------------------------------------
+            // a temporary measure until all endpoints are in JSON API format
+            // otherwise the deserializer will flatten out object and erase information
+            if (type !== "undefined") {
+              const [deserializedItem, relationships] = jsonApiMiddleware(
+                { data: newItem },
+                type,
+              );
+              newItem = deserializedItem.data;
+
+              // if the return object had relationship fields, they need to be hydrated
+              // otherwise they are in the format [ {type: string, id: string} ]
+              if (relationships.length > 0) {
+                const hydratedDeserialized = await hydrateObject<{ data: T }>(
+                  deserializedItem,
+                  relationships,
+                );
+                newItem = hydratedDeserialized.data;
+              }
+            }
+            // -----------------------------------------------
+
             return {
               ...addResponse,
               data: [...addResponse.data, newItem],

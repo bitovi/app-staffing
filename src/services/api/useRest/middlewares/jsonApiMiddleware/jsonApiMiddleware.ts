@@ -24,6 +24,7 @@ const jsonApiMiddleware = (
       if (!relationshipFields.includes(key)) relationshipFields.push(key);
     }
   }
+
   const deserializedData = getJsonApiSerializer().deserialize(
     type,
     response ?? {},
