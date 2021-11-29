@@ -1,8 +1,12 @@
+import { useState } from "react";
 import type { Project, Role } from "../../../../services/api";
 
 import { cloneDeep } from "lodash";
 import RoleDetails from "../RoleDetails";
 import Button from "../../../../components/Button";
+import RoleModal from "../../components/RoleModal";
+import { useSkills } from "../../../../services/api";
+import { useRoles } from "../../../../services/api";
 
 import styles from "./RoleList.module.scss";
 
@@ -13,21 +17,26 @@ export default function RoleList({
   project: Project;
   onEdit: (project: Project) => void;
 }): JSX.Element {
-  const createNewRole = (): Role => {
-    return {
-      id: Math.floor(Math.random() * 1000).toString(),
-      skill: { name: "Node", id: "" },
-      startDate: {
-        date: undefined,
-        confidence: "",
-      },
-      endDate: {
-        date: undefined,
-        confidence: "",
-      },
-      employees: [],
-    };
-  };
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const { skills } = useSkills();
+  const { addRole } = useRoles();
+
+  // const createNewRole = (role: Role) => {
+  //   return {
+  //     id: Math.floor(Math.random() * 1000).toString(),
+  //     skill: { name: "Node", id: "" },
+  //     startDate: {
+  //       date: undefined,
+  //       confidence: "",
+  //     },
+  //     endDate: {
+  //       date: undefined,
+  //       confidence: "",
+  //     },
+  //     employees: [],
+  //     projectId: ""
+  //   };
+  // };
 
   const editRole = (role: Role) => {
     const roles = cloneDeep(project.roles);
@@ -49,9 +58,16 @@ export default function RoleList({
 
   return (
     <>
+      <RoleModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        onSave={addRole}
+        skills={skills}
+        projectId={project.id}
+      />
       <Button
         onClick={() =>
-          onEdit({ ...project, roles: [createNewRole(), ...project.roles] })
+          setOpenModal(true)
         }
       >
         Add Role

@@ -36,6 +36,7 @@ export function makeRole(role?: Partial<Role>): Role {
     startDate,
     endDate,
     employees: assignedEmployees,
+    projectId: "",
     ...role,
   };
 }

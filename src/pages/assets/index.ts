@@ -1,1 +1,1 @@
-export { TrashIcon, EditIcon } from "./Icons";
+export { TrashIcon, EditIcon, AddIcon } from "./Icons";

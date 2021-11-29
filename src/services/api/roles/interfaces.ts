@@ -11,7 +11,52 @@ export interface Role {
   skill: Skill;
   startDate: EstimatedDate;
   endDate: EstimatedDate;
-  employees: AssignedEmployee[];
+  employees?: AssignedEmployee[];
+  projectId: string,
+}
+
+export interface RoleTable {
+  id: string;
+  startDate: EstimatedDate;
+  endDate: EstimatedDate;
+  projectId: string;
 }
 
 export type NewRole = Omit<Role, "id">;
+
+export interface JSONAPIRole {
+  type: string;
+  id: string;
+  attributes: {
+    startDate: EstimatedDate;
+    endDate: EstimatedDate;
+    projectId: string;
+  };
+  relationships: {
+    skills: {
+      data: {
+        type: string;
+        id: string;
+      };
+    };
+  }
+}
+
+export interface FrontEndRole
+  extends Omit<JSONAPIRole, "id" | "attributes" | "relationships"> {
+  attributes: {
+    startDate: string | null;
+    startConfidence: number | null;
+    endDate: string | null;
+    endConfidence: number | null;
+    projectId: string;
+  };
+  relationships: {
+    skills: {
+      data: {
+        type: string;
+        id: string;
+      };
+    }
+  }
+}

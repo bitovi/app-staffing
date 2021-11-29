@@ -7,6 +7,8 @@ interface RoleActions {
   roles?: Role[];
   addRole: (role: NewRole) => Promise<string>;
   updateRole: (roleId: string, role: Partial<Role>) => Promise<void>;
+  deleteRole: (roleId: string) => Promise<void>;
+  reset: () => void;
 }
 
 /** Hook for getting a list of the roles */
@@ -19,7 +21,12 @@ export default function useRoles(
     isLoading,
     handleAdd,
     handleUpdate,
-  } = useRest<Role>("/api/v1/roles", queryParams);
+    handleDelete,
+    reset,
+  } = useRest<Role>(
+    "/api/v1/roles",
+    queryParams,
+    );
 
   return {
     roles,
@@ -27,5 +34,7 @@ export default function useRoles(
     error,
     addRole: handleAdd,
     updateRole: handleUpdate,
+    deleteRole: handleDelete,
+    reset,
   };
 }

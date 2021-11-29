@@ -1,4 +1,5 @@
 import { createIcon } from "@chakra-ui/icons";
+import { Folder } from "./FolderIcon"
 
 export const TrashIcon = createIcon({
   displayName: "trashIcon",
@@ -15,3 +16,20 @@ export const EditIcon = createIcon({
     <path d="M4.50518 15.9981H0.208008V11.7551L11.789 0.32013C11.9789 0.132659 12.2365 0.0273437 12.505 0.0273438C12.7736 0.0273437 13.0311 0.132659 13.221 0.32013L16.0862 3.14913C16.276 3.33666 16.3827 3.59097 16.3827 3.85613C16.3827 4.12129 16.276 4.3756 16.0862 4.56313L4.50518 15.9981ZM0.208008 17.9981H18.4378V19.9981H0.208008V17.9981Z" />
   ),
 });
+
+export const AddIcon = createIcon({
+  displayName: "addIcon",
+  viewBox: "0 0 14 14",
+  path: (
+    <path d="M6 6V0H8V6H14V8H8V14H6V8H0V6H6Z" fill="#2D3748"/>
+  )
+})
+
+export const FolderIcon = createIcon({
+  displayName: "folderIcon",
+  viewBox: "0 0 77 64",
+  path: (
+    <Folder />
+  )
+})
+

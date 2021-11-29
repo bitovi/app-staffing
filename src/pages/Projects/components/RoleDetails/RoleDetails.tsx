@@ -58,7 +58,8 @@ export default function RoleDetails({
   };
 
   const editAssignedEmployee = (assignedEmployee: AssignedEmployee) => {
-    const employees = cloneDeep(role.employees);
+    const employees = role.employees ? cloneDeep(role.employees) : [];
+
     const index = employees.findIndex(
       ({ employee: { id } }: { employee: { id: string } }) =>
         id === assignedEmployee.employee.id,
@@ -76,7 +77,7 @@ export default function RoleDetails({
     previousId: string,
     newAssignedEmployee: AssignedEmployee,
   ) => {
-    const employees = cloneDeep(role.employees);
+    const employees = role.employees ? cloneDeep(role.employees) : [];
     const index = employees.findIndex(
       ({ employee: { id } }: { employee: { id: string } }) => id === previousId,
     );
@@ -96,7 +97,7 @@ export default function RoleDetails({
           <Select<Skill>
             label="Role"
             name="roleSkill"
-            disabled={role.employees.length > 0}
+            disabled={!role.employees || role.employees.length > 0}
             onChange={(skill?: Skill) => skill && editRole({ ...role, skill })}
             value={role.skill}
             options={skills.map((skill) => ({
@@ -121,7 +122,7 @@ export default function RoleDetails({
       <div className={styles.employees}>
         Assigned Employees
         {employees &&
-          role.employees.map(
+          role.employees && role.employees.map(
             (assignedEmployee: AssignedEmployee, index: number) => (
               <AssignedEmployeeDetails
                 key={assignedEmployee.employee.id + role.id + index}
@@ -139,7 +140,7 @@ export default function RoleDetails({
           onClick={() =>
             editRole({
               ...role,
-              employees: [...role.employees, createUnassignedEmployee()],
+              employees: [...role.employees ?? [], createUnassignedEmployee()],
             })
           }
         >
