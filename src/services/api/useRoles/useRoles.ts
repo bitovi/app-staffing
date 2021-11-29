@@ -25,7 +25,7 @@ export default function useRoles(
     reset,
   } = useRest<Role>(
     "/api/v1/roles",
-    queryParams,
+    queryParams
     );
 
   return {

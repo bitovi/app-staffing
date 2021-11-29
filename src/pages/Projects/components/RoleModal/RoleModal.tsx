@@ -176,7 +176,7 @@ export default function RoleModal({
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="lg">
             <ModalOverlay />
-            <ModalContent maxWidth="748px" height="631px">
+            <ModalContent maxWidth="748px" min-height="631px">
                 <ModalHeader>Add a New Role</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>

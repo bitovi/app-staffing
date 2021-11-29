@@ -5,7 +5,7 @@ import deparam from "can-deparam";
 
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import { rolesSkillsStoreManager } from "../role_skills/mocks";
-import { RoleTable, JSONAPIRole, Role } from "./interfaces";
+import { RoleTable, JSONAPIRole } from "./interfaces";
 import { JSONAPISkill } from "../skills/interfaces";
 import { skillStoreManager } from "../skills/mocks";
 
@@ -158,7 +158,6 @@ export default function requestCreatorEmployee<Resource extends RoleTable>(
           page = 1,
           count = 25,
         } = deparam(req.url.searchParams.toString());
-
         const { data: roles } = await store.getListData({
           filter,
           sort,
@@ -167,19 +166,16 @@ export default function requestCreatorEmployee<Resource extends RoleTable>(
             end: page * count - 1,
           },
         });
-
         const includedSkills: string[] = [];
         const jsonAPIRoles: JSONAPIRole[] = await Promise.all(
           roles.map(
             async (role: RoleTable): Promise<JSONAPIRole> => {
-              console.log("getting lists")
               const { data: roleSkills } =
                 await rolesSkillsStoreManager.store.getListData({
                   filter: {
                     role_id: role.id,
                   },
                 });
-                console.log("getting list")
               return {
                 type: "roles",
                 id: role.id,
@@ -197,7 +193,7 @@ export default function requestCreatorEmployee<Resource extends RoleTable>(
                 relationships: {
                   skills: {
                     data: {
-                        id: role.id,
+                        id: roleSkills[0].role_id,
                         type: "skills",
                       }
                   }
