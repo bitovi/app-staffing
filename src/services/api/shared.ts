@@ -32,6 +32,7 @@ export async function fetcher<T>(
   });
 
   const response = await jsonResponse.json();
+
   // "undefined" is a temporary measure to avoid breaking endpoints which haven't
   // converted to JSON API fully; otherwise, the deserializer omits much of the
   // REST formatted data in its response object.
@@ -42,7 +43,6 @@ export async function fetcher<T>(
     // of the frontend
 
     const [deserialized, relationships] = jsonApiMiddleware(response, type);
-
     if ((method === "POST" || "PUT") && relationships.length > 0) {
       // implementing possible solution for endpoint specific mutation based
       // HTTP requests (POST, DELETE) to move them out of useRest and keep it
@@ -52,6 +52,7 @@ export async function fetcher<T>(
         deserialized,
         relationships,
       );
+
       return hydratedDeserialized;
     }
     return deserialized;
