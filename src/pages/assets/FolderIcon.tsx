@@ -1,4 +1,6 @@
-export const Folder = () => {
+import React from "react";
+
+export const Folder = (): React.ReactElement => {
   return (
     <svg
       width="77"

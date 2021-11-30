@@ -2,7 +2,6 @@ import { fireEvent, render, screen, act } from "@testing-library/react";
 import { Role } from "../../../../services/api";
 
 import RoleModal from ".";
-import { resolve } from "dns";
 
 const skills = [
   {
