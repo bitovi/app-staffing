@@ -34,7 +34,7 @@ export default function Projects({
           Add Project
         </Button>
       </Flex>
-      
+
       {isLoading ? (
         <LoadingProjectList />
       ) : error ? (
