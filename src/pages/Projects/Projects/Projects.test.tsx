@@ -6,6 +6,23 @@ describe("Pages/Projects", () => {
   beforeEach(async () => await projectStoreManager.load());
   afterEach(async () => await projectStoreManager.clear());
 
+  it("displays the header", async () => {
+    render(
+      <Projects
+        useProjects={() => ({
+          isLoading: true,
+          error: undefined,
+          addProject: () => Promise.resolve(""),
+          updateProject: () => Promise.resolve(),
+          deleteProject: () => Promise.resolve(),
+          reset: () => undefined,
+        })}
+      />,
+    );
+    expect( await screen.findByText("Projects")).toBeInTheDocument();
+    expect( await screen.findByText("Add Project")).toBeInTheDocument();
+  });
+
   it("displays loading component while fetching projects from api", () => {
     render(
       <Projects
