@@ -19,8 +19,8 @@ describe("Pages/Projects", () => {
         })}
       />,
     );
-    expect( await screen.findByText("Projects")).toBeInTheDocument();
-    expect( await screen.findByText("Add Project")).toBeInTheDocument();
+    expect(await screen.findByText("Projects")).toBeInTheDocument();
+    expect(await screen.findByText("Add Project")).toBeInTheDocument();
   });
 
   it("displays loading component while fetching projects from api", () => {

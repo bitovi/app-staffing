@@ -28,7 +28,7 @@ export default function Projects({
         <Button
           size="lg"
           variant="primary"
-          onClick={() => null}// TODO need to pass in an actual function here
+          onClick={() => null} // TODO need to pass in an actual function here
           arialabel="Add Employee"
         >
           Add Project
