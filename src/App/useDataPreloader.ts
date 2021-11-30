@@ -4,6 +4,7 @@ import { employeeStoreManager } from "../services/api/employees/mocks";
 import { projectStoreManager } from "../services/api/projects/mocks";
 import { skillStoreManager } from "../services/api/skills/mocks";
 import { employeeSkillsStoreManager } from "../services/api/employee_skills/mocks";
+import { rolesStoreManager } from "../services/api/roles/mocks";
 
 export default function useDataPreloader(): void {
   useEffect(() => {
@@ -11,5 +12,6 @@ export default function useDataPreloader(): void {
     projectStoreManager.load();
     skillStoreManager.load();
     employeeSkillsStoreManager.load();
+    rolesStoreManager.load();
   }, []);
 }

@@ -65,13 +65,7 @@ export default function RoleList({
         skills={skills}
         projectId={project.id}
       />
-      <Button
-        onClick={() =>
-          setOpenModal(true)
-        }
-      >
-        Add Role
-      </Button>
+      <Button onClick={() => setOpenModal(true)}>Add Role</Button>
       <div className={styles.skillFilter}>
         {[].map((s) => (
           <p key={s}>{s}</p>

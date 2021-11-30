@@ -12,7 +12,7 @@ export interface Role {
   startDate: EstimatedDate;
   endDate: EstimatedDate;
   employees?: AssignedEmployee[];
-  projectId: string,
+  projectId: string;
 }
 
 export interface RoleTable {
@@ -39,7 +39,7 @@ export interface JSONAPIRole {
         id: string;
       };
     };
-  }
+  };
 }
 
 export interface FrontEndRole
@@ -57,6 +57,6 @@ export interface FrontEndRole
         type: string;
         id: string;
       };
-    }
-  }
+    };
+  };
 }

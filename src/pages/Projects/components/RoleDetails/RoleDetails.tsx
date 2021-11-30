@@ -122,7 +122,8 @@ export default function RoleDetails({
       <div className={styles.employees}>
         Assigned Employees
         {employees &&
-          role.employees && role.employees.map(
+          role.employees &&
+          role.employees.map(
             (assignedEmployee: AssignedEmployee, index: number) => (
               <AssignedEmployeeDetails
                 key={assignedEmployee.employee.id + role.id + index}
@@ -140,7 +141,10 @@ export default function RoleDetails({
           onClick={() =>
             editRole({
               ...role,
-              employees: [...role.employees ?? [], createUnassignedEmployee()],
+              employees: [
+                ...(role.employees ?? []),
+                createUnassignedEmployee(),
+              ],
             })
           }
         >

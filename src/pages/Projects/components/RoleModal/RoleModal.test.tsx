@@ -4,19 +4,16 @@ import RoleModal from ".";
 
 const skills = [
   {
-    id: '101',
-    name: 'Angular',
+    id: "101",
+    name: "Angular",
   },
   {
-    id: '102',
-    name: 'Design',
+    id: "102",
+    name: "Design",
   },
-]
-
-
+];
 
 describe("Components/RoleModal", () => {
-
   it("works", async () => {
     const onCancel = jest.fn();
     const onSave = jest.fn();
@@ -30,22 +27,21 @@ describe("Components/RoleModal", () => {
       />,
     );
 
-    const roleSelection = screen.getByRole('radio', {name: "Angular"});
+    const roleSelection = screen.getByRole("radio", { name: "Angular" });
     const startDate = screen.getByTitle("StartDate");
     const startConfidence = screen.getByTitle("StartConfidence");
     const saveButton = screen.getByTitle("SaveButton");
     const cancelButton = screen.getByText("Cancel");
 
-    await act(async() => {
+    await act(async () => {
       fireEvent.click(roleSelection);
-      fireEvent.change(startDate, { target: { value: new Date()}});
-      fireEvent.change(startConfidence, { target: {value: "20%" }});
+      fireEvent.change(startDate, { target: { value: new Date() } });
+      fireEvent.change(startConfidence, { target: { value: "20%" } });
       fireEvent.click(saveButton);
       fireEvent.click(cancelButton);
     });
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onCancel).toHaveBeenCalledTimes(1);
-    
   });
 
   it("If role is empty, disabled save button", async () => {

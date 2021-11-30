@@ -6,8 +6,5 @@ module.exports = {
     "@storybook/preset-create-react-app",
     "@snek-at/storybook-addon-chakra-ui",
   ],
-  stories: [
-    "../src/**/*.stories.mdx",
-    "../src/**/*.stories.@(ts|tsx)",
-  ],
+  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(ts|tsx)"],
 };

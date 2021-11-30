@@ -168,39 +168,37 @@ export default function requestCreatorEmployee<Resource extends RoleTable>(
         });
         const includedSkills: string[] = [];
         const jsonAPIRoles: JSONAPIRole[] = await Promise.all(
-          roles.map(
-            async (role: RoleTable): Promise<JSONAPIRole> => {
-              const { data: roleSkills } =
-                await rolesSkillsStoreManager.store.getListData({
-                  filter: {
-                    role_id: role.id,
-                  },
-                });
-              return {
-                type: "roles",
-                id: role.id,
-                attributes: {
-                  startDate: {
-                    date: role.startDate.date,
-                    confidence: role.startDate.confidence,
-                  },
-                  endDate: {
-                    date: role.endDate.date,
-                    confidence: role.endDate.confidence,
-                  },
-                  projectId: role.projectId,
+          roles.map(async (role: RoleTable): Promise<JSONAPIRole> => {
+            const { data: roleSkills } =
+              await rolesSkillsStoreManager.store.getListData({
+                filter: {
+                  role_id: role.id,
                 },
-                relationships: {
-                  skills: {
-                    data: {
-                        id: roleSkills[0].role_id,
-                        type: "skills",
-                      }
-                  }
+              });
+            return {
+              type: "roles",
+              id: role.id,
+              attributes: {
+                startDate: {
+                  date: role.startDate.date,
+                  confidence: role.startDate.confidence,
                 },
-              };
-            },
-          ),
+                endDate: {
+                  date: role.endDate.date,
+                  confidence: role.endDate.confidence,
+                },
+                projectId: role.projectId,
+              },
+              relationships: {
+                skills: {
+                  data: {
+                    id: roleSkills[0].role_id,
+                    type: "skills",
+                  },
+                },
+              },
+            };
+          }),
         );
         const included: JSONAPISkill[] = (
           await skillStoreManager.store.getListData({
@@ -227,6 +225,5 @@ export default function requestCreatorEmployee<Resource extends RoleTable>(
         );
       },
     ),
-
   };
 }

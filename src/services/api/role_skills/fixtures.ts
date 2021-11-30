@@ -41,7 +41,4 @@ const populateJoinTable = (
   return role_skill_table;
 };
 
-export const rolesSkills: RoleSkillTable[] = populateJoinTable(
-  skills,
-  roles,
-);
+export const rolesSkills: RoleSkillTable[] = populateJoinTable(skills, roles);

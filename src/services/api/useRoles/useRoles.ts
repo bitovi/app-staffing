@@ -23,10 +23,7 @@ export default function useRoles(
     handleUpdate,
     handleDelete,
     reset,
-  } = useRest<Role>(
-    "/api/v1/roles",
-    queryParams
-    );
+  } = useRest<Role>("/api/v1/roles", queryParams);
 
   return {
     roles,
