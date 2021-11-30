@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
+import { StylesProvider } from "@chakra-ui/system";
 import { MemoryRouter } from "react-router-dom";
 
+import theme from "../../../../../theme";
 import ProjectCard from "./ProjectCard";
 import { projects } from "../../../../../services/api/projects/fixtures";
 
@@ -10,7 +12,9 @@ describe("Components/Layout", () => {
   it("renders project info and view link", () => {
     render(
       <MemoryRouter>
-        <ProjectCard key={project.id} project={project} />
+        <StylesProvider value={theme}>
+          <ProjectCard key={project.id} project={project} />
+        </StylesProvider>
       </MemoryRouter>,
     );
 
