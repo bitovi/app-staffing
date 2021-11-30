@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
+import { Role } from "../../../../services/api";
 
 import RoleModal from ".";
+import { resolve } from "dns";
 
 const skills = [
   {
@@ -15,13 +17,26 @@ const skills = [
 
 describe("Components/RoleModal", () => {
   it("works", async () => {
+    const newRole: Role = {
+      id: "1",
+      skill: skills[0],
+      startDate: {
+        date: new Date(),
+        confidence: "50%",
+      },
+      endDate: {
+        date: new Date(),
+        confidence: "50%",
+      },
+      projectId: "1001",
+    };
     const onCancel = jest.fn();
     const onSave = jest.fn();
     render(
       <RoleModal
         isOpen={true}
         onClose={onCancel}
-        onSave={onSave}
+        onSave={onSave(newRole)}
         skills={skills}
         projectId={"1001"}
       />,
@@ -30,16 +45,17 @@ describe("Components/RoleModal", () => {
     const roleSelection = screen.getByRole("radio", { name: "Angular" });
     const startDate = screen.getByTitle("StartDate");
     const startConfidence = screen.getByTitle("StartConfidence");
-    const saveButton = screen.getByTitle("SaveButton");
+    const saveButton = screen.getByText("Save & Close");
     const cancelButton = screen.getByText("Cancel");
 
+    fireEvent.click(roleSelection);
+    fireEvent.change(startDate, { target: { value: new Date() } });
+    fireEvent.change(startConfidence, { target: { value: "20%" } });
     await act(async () => {
-      fireEvent.click(roleSelection);
-      fireEvent.change(startDate, { target: { value: new Date() } });
-      fireEvent.change(startConfidence, { target: { value: "20%" } });
       fireEvent.click(saveButton);
       fireEvent.click(cancelButton);
     });
+
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
