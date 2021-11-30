@@ -31,7 +31,7 @@ export default function Projects({
           onClick={() => null} // Need to pass in an actual function here
           arialabel="Add Employee"
         >
-          Add Project
+          Add A Project
         </Button>
       </Flex>
 
