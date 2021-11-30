@@ -5,8 +5,7 @@ import { cloneDeep } from "lodash";
 import RoleDetails from "../RoleDetails";
 import Button from "../../../../components/Button";
 import RoleModal from "../../components/RoleModal";
-import { useSkills } from "../../../../services/api";
-import { useRoles } from "../../../../services/api";
+import { useSkills, useRoles } from "../../../../services/api";
 
 import styles from "./RoleList.module.scss";
 
