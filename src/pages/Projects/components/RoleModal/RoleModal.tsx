@@ -144,6 +144,7 @@ export default function RoleModal({
                 <RadioGroup
                     onChange={value => handleRolesChange(value)} 
                     value={selectedRole}
+                    title="RoleSelect"
                 >
                     <HStack>
                         <VStack display="flex" flex={1} alignItems="start">
@@ -202,6 +203,8 @@ export default function RoleModal({
                                     focusBorderColor={errors.start_date ? "red.600" : "currentColor"}
                                     type="date"
                                     data-testid="start_date"
+                                    aria-label="start date input"
+                                    title="StartDate"
                                     mb={errors?.start_confidence && !errors.start_date ? "40px" : errors?.start_confidence && errors.start_date ? "0px" : !errors?.start_confidence && errors.start_date ? "0px" : "29px"}
                                 />
                                 <FormErrorMessage fontSize="12px">{errors?.start_date?.message}</FormErrorMessage>
@@ -219,6 +222,8 @@ export default function RoleModal({
                                     onChange={(ev)=>setStartConfidence(ev.target.value)}
                                     value={startConfidence}
                                     placeholder=""
+                                    title="StartConfidence"
+                                    aria-label="start confidence input"
                                     focusBorderColor={errors.start_date ? "red.600" : "currentColor"}
                                 >
                                     <option value=""></option>
@@ -325,6 +330,8 @@ export default function RoleModal({
                         onClick={handleSubmit((data) => {
                             submitForm(data)
                         })}
+                        title="SaveButton"
+                        aria-label="save button"
                     >
                         Save & Close
                     </Button>
