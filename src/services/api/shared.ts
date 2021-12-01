@@ -17,7 +17,7 @@ export interface QueriableList<T> {
 }
 
 export async function fetcher<T>(
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
   type: SerializerTypes,
   url: string,
   body?: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any

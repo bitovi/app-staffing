@@ -23,8 +23,10 @@ interface IEmployeeTable extends BoxProps {
   skills?: Skill[];
   updateEmployee: ({
     data,
+    id,
   }: {
     data: Omit<EmployeeJSON, "id">;
+    id?: string;
   }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
 }

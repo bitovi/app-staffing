@@ -5,11 +5,17 @@ import { CanLocalStore } from "can-local-store";
 
 //import type { QueriableList } from "../shared";
 
-import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
+import { MockResponse, JSONAPI, JSONData } from "../baseMocks/interfaces";
 import { skillStoreManager } from "../skills/mocks";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
 import { EmployeeTable, EmployeeJSON } from "./interfaces";
 import { JSONSkill } from "../skills/interfaces";
+
+interface EmployeeSkillsEntry {
+  id: string;
+  employee_id: string;
+  skill_id: string;
+}
 
 export default function requestCreatorEmployee<Resource extends EmployeeTable>(
   resourcePath: string,
@@ -41,41 +47,91 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         );
       },
     ),
-    update: rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
-      async (req, res, ctx) => {
-        const id = req.params.id;
-        // const index = collection.findIndex((item) => item.id === id);
-        const itemExists = await store.getData({ id });
+    update: rest.patch<
+      Partial<Resource>,
+      MockResponse<Resource>,
+      { id: string }
+      // Need to clean up this any Type and likely the Typing in general in this file, opening a ticket
+      // to address this at STAF-138
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+    >(`${basePath}${resourcePath}/:id`, async (req: any, res, ctx) => {
+      const id = req.params.id;
 
-        if (!itemExists) {
-          return res(
-            ctx.status(404),
-            ctx.json({
-              error: `Resource ${id} not found.`,
-            }),
-          );
-        }
-
-        const updatedItem = await store.updateData({ ...req.body, id });
-
-        if (!updatedItem) {
-          return res(
-            ctx.status(400),
-            ctx.json({
-              error: `Could not update Resource with id: ${id}`,
-            }),
-          );
-        }
-
+      // const index = collection.findIndex((item) => item.id === id);
+      const itemExists = await store.getData({ id });
+      if (!itemExists) {
         return res(
-          ctx.status(201),
+          ctx.status(404),
           ctx.json({
-            data: updatedItem,
+            error: `Resource ${id} not found.`,
           }),
         );
-      },
-    ),
+      }
+      const employeeTableEntry = { ...req.body.attributes, id };
+      const updatedItem = await store.updateData(
+        employeeTableEntry as unknown as Resource,
+      );
+
+      if (!updatedItem) {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            error: `Could not update Resource with id: ${id}`,
+          }),
+        );
+      }
+
+      try {
+        const joinTable = await employeeSkillsStoreManager.store.getListData({
+          filter: {
+            employee_id: id,
+          },
+        });
+        // add all new skills to employeeSkills join table
+        await Promise.all(
+          req.body.relationships.skills.data.map(
+            async (req: JSONData<"skills">) => {
+              if (
+                !joinTable.data.find(
+                  (jReq: EmployeeSkillsEntry) => jReq.skill_id === req.id,
+                )
+              ) {
+                await employeeSkillsStoreManager.store.createData({
+                  id: (Math.floor(Math.random() * 1000) + 1).toString(),
+                  employee_id: id,
+                  skill_id: req.id,
+                });
+              }
+            },
+          ),
+        );
+        //remove any no longer applicable skills from employeeSkills join table
+        await Promise.all(
+          joinTable.data.map(async (joinEntry: EmployeeSkillsEntry) => {
+            if (
+              !req.body.relationships.skills.data.find(
+                (req: JSONData<"skills">) => req.id === joinEntry.skill_id,
+              )
+            ) {
+              await employeeSkillsStoreManager.store.destroyData(joinEntry);
+            }
+          }),
+        );
+      } catch (_) {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            error: `Could not update Resource with id: ${id}`,
+          }),
+        );
+      }
+      return res(
+        ctx.status(201),
+        ctx.json({
+          data: { ...req.body, id },
+        }),
+      );
+    }),
     delete: rest.delete<undefined, MockResponse, { id: string }>(
       `${basePath}${resourcePath}/:id`,
       async (req, res, ctx) => {

@@ -17,7 +17,7 @@ export interface JSONAPI<D, M = undefined> {
   error?: string;
 }
 
-export interface JSONData<T, K, M> {
+export interface JSONData<T, K = undefined, M = undefined> {
   type: T;
   id: string;
   attributes: K;

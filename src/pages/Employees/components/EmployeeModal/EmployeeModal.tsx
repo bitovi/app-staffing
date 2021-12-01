@@ -40,6 +40,7 @@ interface EmployeeFormData {
 interface EmployeeModalProps {
   onSave: (employee: {
     data: Omit<EmployeeJSON, "id">;
+    id?: string;
   }) => Promise<string | void>;
   onClose: () => void;
   isOpen: boolean;
@@ -79,7 +80,11 @@ export default function EmployeeModal({
 
   const submitForm = async (data: EmployeeFormData) => {
     try {
-      await onSave({ data: formatEmployeeData(data) });
+      // added the Employee ID property for PATCH request as specified in JSON API PATCH specs
+      await onSave({
+        data: formatEmployeeData(data),
+        id: employee ? employee.id : undefined,
+      });
       reset();
       onClose();
     } catch (e) {
@@ -92,7 +97,6 @@ export default function EmployeeModal({
       reset(toEmployeeFormData(employee));
     }
   }, [employee, reset]);
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />
