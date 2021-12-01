@@ -85,6 +85,47 @@ describe("Pages/Employees", () => {
     expect(NewEmployee).toBeInTheDocument();
   }, 30000);
 
+  it("Edits employee", async () => {
+    render(
+      <SWRConfig value={{ provider: () => new Map() }}>
+        <EmployeesWrapper />
+      </SWRConfig>,
+    );
+
+    const rosemarieRow = await screen.findByRole("row", {
+      name: /Rosemarie Mitchell/,
+      exact: false,
+    });
+    const editMember = await within(rosemarieRow).findByLabelText(
+      "Edit Member",
+    );
+    //before we edit Employee to add this skill, they do not have it.
+    expect(within(rosemarieRow).queryByText("Design")).not.toBeInTheDocument();
+
+    fireEvent.click(editMember);
+    const editModal = await screen.findByRole("dialog");
+    await screen.findByText("Edit Team Member");
+
+    const reactCheckBox = within(editModal).getByLabelText("React");
+    const projectManagementCheckbox =
+      within(editModal).getByLabelText("Project Management");
+
+    expect(reactCheckBox).toBeChecked();
+    expect(projectManagementCheckbox).toBeChecked();
+
+    const submitButton = within(editModal).getByText(/Save & Close/i);
+    expect(submitButton).toBeDisabled();
+
+    fireEvent.click(within(editModal).getByLabelText("Design"));
+    await waitFor(() => expect(submitButton).toBeEnabled());
+
+    fireEvent.click(submitButton);
+    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+
+    //we now check for the same skill, and the Employee has it
+    expect(await within(rosemarieRow).findByText("Design")).toBeInTheDocument();
+  });
+
   it("Deletes employee", async () => {
     render(
       <SWRConfig value={{ provider: () => new Map() }}>
