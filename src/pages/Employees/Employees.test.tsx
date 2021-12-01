@@ -87,11 +87,7 @@ describe("Pages/Employees", () => {
 
   it("Edits employee", async () => {
     jest.setTimeout(30000);
-    render(
-      <SWRConfig value={{ provider: () => new Map() }}>
-        <EmployeesWrapper />
-      </SWRConfig>,
-    );
+    render(<EmployeesWrapper />);
 
     const rosemarieRow = await screen.findByRole("row", {
       name: /Rosemarie Mitchell/,
@@ -122,9 +118,9 @@ describe("Pages/Employees", () => {
 
     fireEvent.click(submitButton);
     await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
-
+    const editedEmployee = await within(rosemarieRow).findByText("Design");
     //we now check for the same skill, and the Employee has it
-    expect(await within(rosemarieRow).findByText("Design")).toBeInTheDocument();
+    expect(editedEmployee).toBeInTheDocument();
   });
 
   it("Deletes employee", async () => {
