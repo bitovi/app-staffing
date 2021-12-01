@@ -86,6 +86,7 @@ describe("Pages/Employees", () => {
   }, 30000);
 
   it("Edits employee", async () => {
+    jest.setTimeout(30000);
     render(
       <SWRConfig value={{ provider: () => new Map() }}>
         <EmployeesWrapper />
