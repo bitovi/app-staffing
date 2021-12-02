@@ -3,7 +3,7 @@
 #prepping image tag variable
 IMAGE_TAG="latest"
 
-
+PROD_TARGET_STAGE_NAME="production"
 
 #Defining the Image name variable
 IMAGE_NAME=$(echo $GITHUB_REPOSITORY | sed 's/^.*\///')
@@ -19,8 +19,9 @@ BRANCH_NAME=$(echo $GITHUB_REF | awk -F"  +|/" '{print $5, $NF}')
 #Defining the Default branch variable
 DEFAULT_BRANCH="main"
 
+
 #Building the docker image...
-docker build -f Dockerfile.dev -t ${IMAGE_NAME} .
+docker build --target=${PROD_TARGET_STAGE_NAME}  -t ${IMAGE_NAME} -f Dockerfile
 
 
 
