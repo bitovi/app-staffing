@@ -79,7 +79,8 @@ describe("Pages/Employees", () => {
     await waitFor(() => expect(submitButton).toBeEnabled());
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+    // await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+    await waitFor(() => expect(modal).not.toBeInTheDocument());
     const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
 
     expect(NewEmployee).toBeInTheDocument();
@@ -117,7 +118,8 @@ describe("Pages/Employees", () => {
     await waitFor(() => expect(submitButton).toBeEnabled());
 
     fireEvent.click(submitButton);
-    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+    await waitFor(() => expect(editModal).not.toBeInTheDocument());
+    // await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     const editedEmployee = await within(rosemarieRow).findByText("Design");
     //we now check for the same skill, and the Employee has it
     expect(editedEmployee).toBeInTheDocument();
@@ -148,9 +150,10 @@ describe("Pages/Employees", () => {
 
     deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    await waitForElementToBeRemoved(() =>
-      screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
-    );
+    // await waitForElementToBeRemoved(() =>
+    //   screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
+    // );
+    await waitFor(() => expect(rosemarieRow).not.toBeInTheDocument());
 
     const employeeStore = await employeeStoreManager.store.getListData();
 
