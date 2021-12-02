@@ -121,7 +121,7 @@ describe("Pages/Employees", () => {
     const editedEmployee = await within(rosemarieRow).findByText("Design");
     //we now check for the same skill, and the Employee has it
     expect(editedEmployee).toBeInTheDocument();
-  });
+  }, 30000);
 
   it("Deletes employee", async () => {
     render(
