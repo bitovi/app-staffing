@@ -23,11 +23,29 @@ export const textStyles = {
       fontSize: "16px",
       lineHeight: "24px",
     },
+    title: {
+      fontFamily: "Inter",
+      fontWeight: "700",
+      fontSize: "18px",
+      lineHeight: "28px",
+    },
     button: {
       fontFamily: "Inter",
       fontWeight: "600",
       fontSize: "16px",
       lineHeight: "24px",
+    },
+    label: {
+      fontFamily: "Inter",
+      fontWeight: "500",
+      lineHeight: "24px",
+      fontSize: "16px",
+    },
+    checkboxLabel: {
+      fontFamily: "Inter",
+      fontWeight: "400",
+      lineHeight: "16px",
+      color: "#000000",
     },
   },
 };

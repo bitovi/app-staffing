@@ -19,6 +19,7 @@ import {
   FormErrorMessage,
   Box,
   SimpleGrid,
+  Divider,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
@@ -98,17 +99,18 @@ export default function EmployeeModal({
     }
   }, [employee, reset]);
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} size="md" variant="team_modal">
       <ModalOverlay />
       <ModalContent mt="14vh">
-        <ModalHeader>
+        <ModalHeader textStyle="modal.title" pt={6} pl={6}>
           {isNewEmployee ? "Add a New Team Member" : "Edit Team Member"}
         </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <VStack spacing="16px">
+        <ModalCloseButton mt={2} />
+        <Divider pt={2} />
+        <ModalBody pt={4}>
+          <VStack spacing="16px" pb={6}>
             <FormControl isRequired isInvalid={errors.name ? true : false}>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>Full Name</FormLabel>
               <Input
                 {...register("name", {
                   required: "Name not filled out",
@@ -145,8 +147,8 @@ export default function EmployeeModal({
 
             <FormControl isRequired>
               <FormLabel>Roles</FormLabel>
-              <Flex mt={4} mb={11} flexGrow={1}>
-                <SimpleGrid columns={2}>
+              <Flex mt={4} flexGrow={1}>
+                <SimpleGrid columns={2} spacingX={24} spacingY={4}>
                   {skills?.map((skill) => (
                     <Controller
                       key={skill.id}
@@ -158,6 +160,7 @@ export default function EmployeeModal({
                           onChange={onChange}
                           onBlur={onBlur}
                           isChecked={value}
+                          textStyle="modal.checkboxLabel"
                         >
                           {skill.name}
                         </Checkbox>
@@ -173,7 +176,6 @@ export default function EmployeeModal({
         {serverError && (
           <Flex justifyContent="center" width="100%">
             <ServiceError
-              mt="40px"
               mb="25px"
               bg="red.100"
               color="gray.700"
@@ -196,6 +198,7 @@ export default function EmployeeModal({
             </ServiceError>
           </Flex>
         )}
+        <Divider pt={1} />
 
         <ModalFooter>
           <Button variant="outline" mr="8px" onClick={onClose}>
