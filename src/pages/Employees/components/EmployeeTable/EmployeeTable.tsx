@@ -9,6 +9,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import { isEmpty } from "lodash";
@@ -17,6 +18,7 @@ import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
 import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
+import ToastBox from "../../../../components/Toast";
 
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
@@ -42,11 +44,22 @@ export default function EmployeeTable({
     null,
   );
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
-
+  const toast = useToast();
   const removeEmployee = async () => {
     if (employeeToDelete) {
       try {
         await deleteEmployee(employeeToDelete.id);
+        toast({
+          render: () => (
+            <ToastBox
+              title={"Deleted team member"}
+              description={`${employeeToDelete.name} was successfully deleted!`}
+            />
+          ),
+          duration: 5000,
+          isClosable: false,
+          position: "bottom-right",
+        });
         setEmployeeToDelete(null);
       } catch (e) {
         //ERROR HANDLING
@@ -81,6 +94,7 @@ export default function EmployeeTable({
         onSave={updateEmployee}
         skills={skills}
         employee={employeeToEdit ? employeeToEdit : undefined}
+        toastTitle={"Team member updated"}
       />
       <Box {...props}>
         {employees && employees.length === 0 && (

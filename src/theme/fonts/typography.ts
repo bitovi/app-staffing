@@ -48,4 +48,21 @@ export const textStyles = {
       color: "#000000",
     },
   },
+
+  toastBox: {
+    title: {
+      fontFamily: "Inter",
+      fontWeight: "700",
+      fontSize: "16px",
+      lineHeight: "24px",
+      color: "gray.700",
+    },
+    description: {
+      fontFamily: "Inter",
+      fontWeight: "400",
+      fontSize: "16px",
+      lineHeight: "24px",
+      color: "gray.700",
+    },
+  },
 };

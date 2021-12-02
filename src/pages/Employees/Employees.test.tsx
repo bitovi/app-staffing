@@ -14,6 +14,10 @@ import { skillStoreManager } from "../../services/api/skills/mocks";
 import EmployeesWrapper from "./Employees";
 
 describe("Pages/Employees", () => {
+  jest.setTimeout(30000);
+  jest.useFakeTimers();
+  jest.runAllTimers();
+
   beforeEach(async () => {
     await employeeStoreManager.load();
     await skillStoreManager.load();
@@ -40,7 +44,6 @@ describe("Pages/Employees", () => {
   });
 
   it("Creates new employee", async () => {
-    jest.setTimeout(30000);
     render(<EmployeesWrapper />);
     const addButton = await screen.findByRole("button", {
       name: /add team member/i,
@@ -78,15 +81,26 @@ describe("Pages/Employees", () => {
     await waitFor(() => expect(submitButton).toBeEnabled());
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    // await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     await waitFor(() => expect(modal).not.toBeInTheDocument());
-    const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
 
-    expect(NewEmployee).toBeInTheDocument();
-  }, 30000);
+    // check for toast message
+    const toastMessage = await screen.findByLabelText("toast confirmation", {
+      exact: false,
+    });
+    expect(toastMessage).toHaveTextContent(
+      "Johnny Appleseed was successfully added!",
+    );
+    await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
+
+    // check for new table row for employee
+    const newEmployeeRow = await screen.findByRole("row", {
+      name: /Johnny Appleseed/,
+      exact: false,
+    });
+    expect(newEmployeeRow).toBeInTheDocument();
+  });
 
   it("Edits employee", async () => {
-    jest.setTimeout(30000);
     render(<EmployeesWrapper />);
 
     const rosemarieRow = await screen.findByRole("row", {
@@ -118,11 +132,20 @@ describe("Pages/Employees", () => {
 
     fireEvent.click(submitButton);
     await waitFor(() => expect(editModal).not.toBeInTheDocument());
-    // await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+
+    // check for toast message
+    const toastMessage = await screen.findByLabelText("toast confirmation", {
+      exact: false,
+    });
+    expect(toastMessage).toHaveTextContent(
+      "Rosemarie Mitchell was successfully edited!",
+    );
+    await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
+
     const editedEmployee = await within(rosemarieRow).findByText("Design");
     //we now check for the same skill, and the Employee has it
     expect(editedEmployee).toBeInTheDocument();
-  }, 30000);
+  });
 
   it("Deletes employee", async () => {
     render(
@@ -149,10 +172,15 @@ describe("Pages/Employees", () => {
 
     deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    // await waitForElementToBeRemoved(() =>
-    //   screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
-    // );
-    await waitFor(() => expect(rosemarieRow).not.toBeInTheDocument());
+    const toastMessage = await screen.findByLabelText("toast confirmation", {
+      exact: false,
+    });
+    expect(toastMessage).toHaveTextContent(
+      "Rosemarie Mitchell was successfully deleted!",
+    );
+    await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
+
+    expect(rosemarieRow).not.toBeInTheDocument;
 
     const employeeStore = await employeeStoreManager.store.getListData();
 

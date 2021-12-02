@@ -67,6 +67,7 @@ export function Employees({
   return (
     <Box maxHeight="100%">
       <EmployeeModal
+        toastTitle="New team member"
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
         onSave={addEmployee}

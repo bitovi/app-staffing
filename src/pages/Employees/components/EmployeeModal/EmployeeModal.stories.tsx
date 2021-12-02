@@ -12,6 +12,7 @@ export default {
 export const works: ComponentStory<typeof EmployeeModal> = () => {
   return (
     <EmployeeModal
+      toastTitle={"New team member"}
       onSave={() => Promise.resolve("")}
       onClose={() => true}
       isOpen={true}
@@ -23,6 +24,7 @@ export const works: ComponentStory<typeof EmployeeModal> = () => {
 export const serverError: ComponentStory<typeof EmployeeModal> = () => {
   return (
     <EmployeeModal
+      toastTitle={"New team member"}
       onSave={() => {
         throw new Error("DOES NOT WORK");
       }}
@@ -38,6 +40,7 @@ export const EditEmployee: ComponentStory<typeof EmployeeModal> = () => {
 
   return (
     <EmployeeModal
+      toastTitle={"Team member updated"}
       onSave={() => Promise.resolve("")}
       onClose={() => true}
       isOpen={true}

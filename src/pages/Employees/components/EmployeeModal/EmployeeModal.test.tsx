@@ -11,6 +11,7 @@ describe("EmployeeModal", () => {
   it("renders 'new employee' UI when 'employee' prop is not set", () => {
     const { getByText, getByRole, getAllByRole } = render(
       <EmployeeModal
+        toastTitle="New team member"
         onSave={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
@@ -42,6 +43,7 @@ describe("EmployeeModal", () => {
   it("renders 'edit employee' UI when 'employee' prop is set", () => {
     const { getByText, getByDisplayValue, getByRole, getAllByRole } = render(
       <EmployeeModal
+        toastTitle="Edit team member"
         onSave={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}

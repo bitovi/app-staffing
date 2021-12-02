@@ -20,6 +20,7 @@ import {
   Box,
   SimpleGrid,
   Divider,
+  useToast,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
@@ -30,6 +31,7 @@ import format from "date-fns/format";
 import { Employee, Skill } from "../../../../services/api";
 import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 import { ServiceError } from "../../../../components/ServiceError";
+import ToastBox from "../../../../components/Toast";
 
 interface EmployeeFormData {
   name: string;
@@ -47,6 +49,7 @@ interface EmployeeModalProps {
   isOpen: boolean;
   skills?: Skill[];
   employee?: Employee;
+  toastTitle: string;
 }
 
 export default function EmployeeModal({
@@ -55,6 +58,7 @@ export default function EmployeeModal({
   isOpen,
   skills,
   employee,
+  toastTitle,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const employeeData = employee ? toEmployeeFormData(employee) : undefined;
@@ -68,6 +72,7 @@ export default function EmployeeModal({
   } = useForm<EmployeeFormData>({
     defaultValues: employeeData,
   });
+  const toast = useToast();
 
   const isNewEmployee = isEmpty(employeeData);
   const selectedRolesMap = watch("roles");
@@ -87,6 +92,19 @@ export default function EmployeeModal({
         id: employee ? employee.id : undefined,
       });
       reset();
+      toast({
+        render: () => (
+          <ToastBox
+            title={toastTitle}
+            description={` ${data.name} was successfully ${
+              employee ? "edited" : "added"
+            }!`}
+          />
+        ),
+        duration: 5000,
+        isClosable: false,
+        position: "bottom-right",
+      });
       onClose();
     } catch (e) {
       setServerError(!serverError);
