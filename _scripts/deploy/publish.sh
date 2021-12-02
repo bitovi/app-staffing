@@ -21,7 +21,7 @@ DEFAULT_BRANCH="main"
 
 
 #Building the docker image...
-docker build --target=${PROD_TARGET_STAGE_NAME}  -t ${IMAGE_NAME} -f Dockerfile
+docker build --target=${PROD_TARGET_STAGE_NAME}  -t ${IMAGE_NAME} .
 
 
 
