@@ -12,7 +12,6 @@ const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
   }
   return [];
 };
-
 export interface EmployeeActions {
   employees?: Employee[] | undefined;
   addEmployee: (employee: {
@@ -21,7 +20,6 @@ export interface EmployeeActions {
   updateEmployee: (employee: {
     data: Omit<EmployeeJSON, "id">;
     id?: string;
-
   }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
   reset: () => void;
