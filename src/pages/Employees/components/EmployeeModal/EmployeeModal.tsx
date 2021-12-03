@@ -31,7 +31,6 @@ import format from "date-fns/format";
 import { Employee, Skill } from "../../../../services/api";
 import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 import { ServiceError } from "../../../../components/ServiceError";
-import ToastBox from "../../../../components/Toast";
 
 interface EmployeeFormData {
   name: string;
@@ -93,17 +92,15 @@ export default function EmployeeModal({
       });
       reset();
       toast({
-        render: () => (
-          <ToastBox
-            title={toastTitle}
-            description={` ${data.name} was successfully ${
-              employee ? "edited" : "added"
-            }!`}
-          />
-        ),
+        title: toastTitle,
+        description: ` ${data.name} was successfully ${
+          employee ? "edited" : "added"
+        }!`,
         duration: 5000,
         isClosable: false,
         position: "bottom-right",
+        variant: "left-accent",
+        status: "success",
       });
       onClose();
     } catch (e) {

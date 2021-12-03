@@ -84,12 +84,10 @@ describe("Pages/Employees", () => {
     await waitFor(() => expect(modal).not.toBeInTheDocument());
 
     // check for toast message
-    const toastMessage = await screen.findByLabelText("toast confirmation", {
+    const toastMessage = await screen.findByText("New team member", {
       exact: false,
     });
-    expect(toastMessage).toHaveTextContent(
-      "Johnny Appleseed was successfully added!",
-    );
+
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
 
     // check for new table row for employee
@@ -134,12 +132,10 @@ describe("Pages/Employees", () => {
     await waitFor(() => expect(editModal).not.toBeInTheDocument());
 
     // check for toast message
-    const toastMessage = await screen.findByLabelText("toast confirmation", {
+    const toastMessage = await screen.findByText("Team member updated", {
       exact: false,
     });
-    expect(toastMessage).toHaveTextContent(
-      "Rosemarie Mitchell was successfully edited!",
-    );
+
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
 
     const editedEmployee = await within(rosemarieRow).findByText("Design");
@@ -172,12 +168,10 @@ describe("Pages/Employees", () => {
 
     deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    const toastMessage = await screen.findByLabelText("toast confirmation", {
+    const toastMessage = await screen.findByText("Team member deleted", {
       exact: false,
     });
-    expect(toastMessage).toHaveTextContent(
-      "Rosemarie Mitchell was successfully deleted!",
-    );
+
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
 
     expect(rosemarieRow).not.toBeInTheDocument;

@@ -1,33 +1,34 @@
-import { Box, Flex, Text } from "@chakra-ui/layout";
-import { CheckCircleIcon } from "@chakra-ui/icons";
+import { useToast, ChakraProvider, Button } from "@chakra-ui/react";
+import theme from "../../theme";
 
 type ToastBoxProps = {
   title: string;
   description: string;
 };
 
-function ToastBox({ title, description }: ToastBoxProps): JSX.Element {
+// used for Stories visualization
+// toast implementation in production is the toast call within the component
+const ToastBox = ({ title, description }: ToastBoxProps): JSX.Element => {
+  const toast = useToast();
   return (
-    <Box
-      bg="green.100"
-      borderLeftWidth="4px"
-      borderLeftColor="green.500"
-      borderRadius="6px"
-      variant="solid"
-      color="white"
-      mb="42px"
-      mr="38px"
-      aria-label="toast confirmation"
-    >
-      <Flex p={2} pr={8}>
-        <CheckCircleIcon color="green.500" mt={1} />
-        <Box pl={3.5}>
-          <Text textStyle="toastBox.title">{title}</Text>
-          <Text textStyle="toastBox.description">{description}</Text>
-        </Box>
-      </Flex>
-    </Box>
+    <ChakraProvider theme={theme}>
+      <Button
+        onClick={() =>
+          toast({
+            title,
+            description,
+            duration: 5000,
+            isClosable: false,
+            position: "bottom-right",
+            variant: "left-accent",
+            status: "success",
+          })
+        }
+      >
+        Test Toast
+      </Button>
+    </ChakraProvider>
   );
-}
+};
 
 export default ToastBox;

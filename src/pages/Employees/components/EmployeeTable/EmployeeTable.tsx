@@ -18,7 +18,6 @@ import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
 import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
-import ToastBox from "../../../../components/Toast";
 
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
@@ -50,15 +49,13 @@ export default function EmployeeTable({
       try {
         await deleteEmployee(employeeToDelete.id);
         toast({
-          render: () => (
-            <ToastBox
-              title={"Deleted team member"}
-              description={`${employeeToDelete.name} was successfully deleted!`}
-            />
-          ),
+          title: "Team member deleted",
+          description: ` ${employeeToDelete.name} was successfully deleted!`,
           duration: 5000,
           isClosable: false,
           position: "bottom-right",
+          status: "success",
+          variant: "left-accent",
         });
         setEmployeeToDelete(null);
       } catch (e) {
