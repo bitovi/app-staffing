@@ -9,6 +9,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import { isEmpty } from "lodash";
@@ -23,8 +24,10 @@ interface IEmployeeTable extends BoxProps {
   skills?: Skill[];
   updateEmployee: ({
     data,
+    id,
   }: {
     data: Omit<EmployeeJSON, "id">;
+    id?: string;
   }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
 }
@@ -40,11 +43,20 @@ export default function EmployeeTable({
     null,
   );
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
-
+  const toast = useToast();
   const removeEmployee = async () => {
     if (employeeToDelete) {
       try {
         await deleteEmployee(employeeToDelete.id);
+        toast({
+          title: "Team member deleted",
+          description: ` ${employeeToDelete.name} was successfully deleted!`,
+          duration: 5000,
+          isClosable: false,
+          position: "bottom-right",
+          status: "success",
+          variant: "left-accent",
+        });
         setEmployeeToDelete(null);
       } catch (e) {
         //ERROR HANDLING
@@ -79,6 +91,7 @@ export default function EmployeeTable({
         onSave={updateEmployee}
         skills={skills}
         employee={employeeToEdit ? employeeToEdit : undefined}
+        toastTitle={"Team member updated"}
       />
       <Box {...props}>
         {employees && employees.length === 0 && (

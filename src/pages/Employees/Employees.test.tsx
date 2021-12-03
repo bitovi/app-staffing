@@ -3,7 +3,6 @@ import {
   render,
   screen,
   within,
-  waitForElementToBeRemoved,
   cleanup,
   waitFor,
 } from "@testing-library/react";
@@ -15,6 +14,10 @@ import { skillStoreManager } from "../../services/api/skills/mocks";
 import EmployeesWrapper from "./Employees";
 
 describe("Pages/Employees", () => {
+  jest.setTimeout(30000);
+  jest.useFakeTimers();
+  jest.runAllTimers();
+
   beforeEach(async () => {
     await employeeStoreManager.load();
     await skillStoreManager.load();
@@ -41,7 +44,6 @@ describe("Pages/Employees", () => {
   });
 
   it("Creates new employee", async () => {
-    jest.setTimeout(30000);
     render(<EmployeesWrapper />);
     const addButton = await screen.findByRole("button", {
       name: /add team member/i,
@@ -79,11 +81,67 @@ describe("Pages/Employees", () => {
     await waitFor(() => expect(submitButton).toBeEnabled());
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
-    const NewEmployee = await screen.findByText(/Johnny Appleseed/i);
+    await waitFor(() => expect(modal).not.toBeInTheDocument());
 
-    expect(NewEmployee).toBeInTheDocument();
-  }, 30000);
+    // check for toast message
+    const toastMessage = await screen.findByText("New team member", {
+      exact: false,
+    });
+
+    await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
+
+    // check for new table row for employee
+    const newEmployeeRow = await screen.findByRole("row", {
+      name: /Johnny Appleseed/,
+      exact: false,
+    });
+    expect(newEmployeeRow).toBeInTheDocument();
+  });
+
+  it("Edits employee", async () => {
+    render(<EmployeesWrapper />);
+
+    const rosemarieRow = await screen.findByRole("row", {
+      name: /Rosemarie Mitchell/,
+      exact: false,
+    });
+    const editMember = await within(rosemarieRow).findByLabelText(
+      "Edit Member",
+    );
+    //before we edit Employee to add this skill, they do not have it.
+    expect(within(rosemarieRow).queryByText("Design")).not.toBeInTheDocument();
+
+    fireEvent.click(editMember);
+    const editModal = await screen.findByRole("dialog");
+    await screen.findByText("Edit Team Member");
+
+    const reactCheckBox = within(editModal).getByLabelText("React");
+    const projectManagementCheckbox =
+      within(editModal).getByLabelText("Project Management");
+
+    expect(reactCheckBox).toBeChecked();
+    expect(projectManagementCheckbox).toBeChecked();
+
+    const submitButton = within(editModal).getByText(/Save & Close/i);
+    expect(submitButton).toBeDisabled();
+
+    fireEvent.click(within(editModal).getByLabelText("Design"));
+    await waitFor(() => expect(submitButton).toBeEnabled());
+
+    fireEvent.click(submitButton);
+    await waitFor(() => expect(editModal).not.toBeInTheDocument());
+
+    // check for toast message
+    const toastMessage = await screen.findByText("Team member updated", {
+      exact: false,
+    });
+
+    await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
+
+    const editedEmployee = await within(rosemarieRow).findByText("Design");
+    //we now check for the same skill, and the Employee has it
+    expect(editedEmployee).toBeInTheDocument();
+  });
 
   it("Deletes employee", async () => {
     render(
@@ -110,9 +168,13 @@ describe("Pages/Employees", () => {
 
     deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    await waitForElementToBeRemoved(() =>
-      screen.queryAllByText("Rosemarie Mitchell", { exact: false }),
-    );
+    const toastMessage = await screen.findByText("Team member deleted", {
+      exact: false,
+    });
+
+    await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
+
+    expect(rosemarieRow).not.toBeInTheDocument;
 
     const employeeStore = await employeeStoreManager.store.getListData();
 

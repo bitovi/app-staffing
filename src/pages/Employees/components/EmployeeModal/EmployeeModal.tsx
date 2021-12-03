@@ -19,6 +19,8 @@ import {
   FormErrorMessage,
   Box,
   SimpleGrid,
+  Divider,
+  useToast,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
@@ -40,11 +42,13 @@ interface EmployeeFormData {
 interface EmployeeModalProps {
   onSave: (employee: {
     data: Omit<EmployeeJSON, "id">;
+    id?: string;
   }) => Promise<string | void>;
   onClose: () => void;
   isOpen: boolean;
   skills?: Skill[];
   employee?: Employee;
+  toastTitle: string;
 }
 
 export default function EmployeeModal({
@@ -53,6 +57,7 @@ export default function EmployeeModal({
   isOpen,
   skills,
   employee,
+  toastTitle,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const employeeData = employee ? toEmployeeFormData(employee) : undefined;
@@ -66,6 +71,7 @@ export default function EmployeeModal({
   } = useForm<EmployeeFormData>({
     defaultValues: employeeData,
   });
+  const toast = useToast();
 
   const isNewEmployee = isEmpty(employeeData);
   const selectedRolesMap = watch("roles");
@@ -79,8 +85,23 @@ export default function EmployeeModal({
 
   const submitForm = async (data: EmployeeFormData) => {
     try {
-      await onSave({ data: formatEmployeeData(data) });
+      // added the Employee ID property for PATCH request as specified in JSON API PATCH specs
+      await onSave({
+        data: formatEmployeeData(data),
+        id: employee ? employee.id : undefined,
+      });
       reset();
+      toast({
+        title: toastTitle,
+        description: ` ${data.name} was successfully ${
+          employee ? "edited" : "added"
+        }!`,
+        duration: 5000,
+        isClosable: false,
+        position: "bottom-right",
+        variant: "left-accent",
+        status: "success",
+      });
       onClose();
     } catch (e) {
       setServerError(!serverError);
@@ -92,19 +113,19 @@ export default function EmployeeModal({
       reset(toEmployeeFormData(employee));
     }
   }, [employee, reset]);
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} size="md" variant="team_modal">
       <ModalOverlay />
       <ModalContent mt="14vh">
-        <ModalHeader>
+        <ModalHeader textStyle="modal.title" pt={6} pl={6}>
           {isNewEmployee ? "Add a New Team Member" : "Edit Team Member"}
         </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <VStack spacing="16px">
+        <ModalCloseButton mt={2} />
+        <Divider pt={2} />
+        <ModalBody pt={4}>
+          <VStack spacing="16px" pb={6}>
             <FormControl isRequired isInvalid={errors.name ? true : false}>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>Full Name</FormLabel>
               <Input
                 {...register("name", {
                   required: "Name not filled out",
@@ -141,8 +162,8 @@ export default function EmployeeModal({
 
             <FormControl isRequired>
               <FormLabel>Roles</FormLabel>
-              <Flex mt={4} mb={11} flexGrow={1}>
-                <SimpleGrid columns={2}>
+              <Flex mt={4} flexGrow={1}>
+                <SimpleGrid columns={2} spacingX={24} spacingY={4}>
                   {skills?.map((skill) => (
                     <Controller
                       key={skill.id}
@@ -154,6 +175,7 @@ export default function EmployeeModal({
                           onChange={onChange}
                           onBlur={onBlur}
                           isChecked={value}
+                          textStyle="modal.checkboxLabel"
                         >
                           {skill.name}
                         </Checkbox>
@@ -169,7 +191,6 @@ export default function EmployeeModal({
         {serverError && (
           <Flex justifyContent="center" width="100%">
             <ServiceError
-              mt="40px"
               mb="25px"
               bg="red.100"
               color="gray.700"
@@ -192,6 +213,7 @@ export default function EmployeeModal({
             </ServiceError>
           </Flex>
         )}
+        <Divider pt={1} />
 
         <ModalFooter>
           <Button variant="outline" mr="8px" onClick={onClose}>

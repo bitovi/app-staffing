@@ -1,7 +1,6 @@
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { EmployeeJSON } from "../employees";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
 import { SerializerTypes } from "./getJsonApiSerializer";
@@ -12,7 +11,13 @@ interface RestActions<T, K> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: {
     data: Omit<K, "id">;
   }) => Promise<string | undefined>;
-  handleUpdate: (employee: { data: Omit<EmployeeJSON, "id"> }) => Promise<void>;
+  handleUpdate: ({
+    data,
+    id,
+  }: {
+    data: Omit<K, "id">;
+    id?: string;
+  }) => Promise<void>;
   reset: () => void;
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
@@ -87,7 +92,58 @@ function useRest<T extends { id?: string }, K>(
     },
     [path, key, mutate, type],
   );
-  const handleUpdate = async () => Promise.resolve();
+  const handleUpdate = useCallback<
+    ({ data, id }: { data: Omit<K, "id">; id?: string }) => Promise<void>
+  >(
+    async ({
+      data: updatedCollectionItem,
+      id,
+    }: {
+      data: Omit<K, "id">;
+      id?: string;
+    }) => {
+      await mutate(
+        key,
+        async (cachedData: { data: T[] }) => {
+          let { data: updatedItem } = await fetcher<{ data: T }>(
+            "PATCH",
+            type,
+            `${path}/${id}`,
+            updatedCollectionItem,
+          );
+          //----------------------------------------------
+          // a temporary measure until all endpoints are in JSON API format
+          // otherwise the deserializer will flatten out object and erase information
+          if (type !== "undefined") {
+            const [deserializedItem, relationships] = jsonApiMiddleware(
+              { data: updatedItem },
+              type,
+            );
+            updatedItem = deserializedItem.data;
+
+            // if the return object had relationship fields, they need to be hydrated
+            // otherwise they are in the format [ {type: string, id: string} ]
+            if (relationships.length > 0) {
+              const hydratedDeserialized = await hydrateObject<{ data: T }>(
+                deserializedItem,
+                relationships,
+              );
+              updatedItem = hydratedDeserialized.data;
+            }
+          }
+          // -----------------------------------------------
+          return {
+            ...cachedData,
+            data: (cachedData?.data ?? []).map((item) =>
+              item.id === updatedItem.id ? updatedItem : item,
+            ),
+          };
+        },
+        false,
+      );
+    },
+    [path, key, mutate, type],
+  );
   const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(

@@ -9,6 +9,7 @@ import Tag from "./components/tag";
 import Heading from "./components/heading";
 import { fonts, textStyles } from "./fonts";
 import DatePicker from "./components/date-picker";
+import Divider from "./components/divider";
 
 const theme = extendTheme({
   fonts,
@@ -21,6 +22,7 @@ const theme = extendTheme({
     DatePicker,
     Tag,
     FormLabel,
+    Divider,
   },
 });
 
