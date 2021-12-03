@@ -21,6 +21,7 @@ export interface EmployeeActions {
   updateEmployee: (employee: {
     data: Omit<EmployeeJSON, "id">;
     id?: string;
+
   }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
   reset: () => void;
