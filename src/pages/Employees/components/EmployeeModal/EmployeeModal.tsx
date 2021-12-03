@@ -27,7 +27,7 @@ import { isEmpty, pickBy } from "lodash";
 import format from "date-fns/format";
 
 import { Employee, Skill } from "../../../../services/api";
-import { FrontEndEmployee } from "../../../../services/api/employees/interfaces";
+import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 import { ServiceError } from "../../../../components/ServiceError";
 
 interface EmployeeFormData {
@@ -38,10 +38,12 @@ interface EmployeeFormData {
 }
 
 interface EmployeeModalProps {
-  onSave: (employee: { data: FrontEndEmployee }) => Promise<string | void>;
+  onSave: (employee: {
+    data: Omit<EmployeeJSON, "id">;
+  }) => Promise<string | void>;
   onClose: () => void;
   isOpen: boolean;
-  skills: Skill[];
+  skills?: Skill[];
   employee?: Employee;
 }
 
@@ -141,7 +143,7 @@ export default function EmployeeModal({
               <FormLabel>Roles</FormLabel>
               <Flex mt={4} mb={11} flexGrow={1}>
                 <SimpleGrid columns={2}>
-                  {skills.map((skill) => (
+                  {skills?.map((skill) => (
                     <Controller
                       key={skill.id}
                       control={control}
@@ -212,20 +214,20 @@ function getSelectedRoles(map: undefined | Record<string, boolean>) {
   return isEmpty(map) ? [] : Object.keys(pickBy(map, (checked) => !!checked));
 }
 
-function formatEmployeeData(data: EmployeeFormData): FrontEndEmployee {
+function formatEmployeeData(data: EmployeeFormData): Omit<EmployeeJSON, "id"> {
   const selectedRoles = getSelectedRoles(data.roles);
 
   return {
     type: "employees",
     attributes: {
       name: data.name,
-      startDate: data.start_date,
-      endDate: data.end_date,
+      startDate: new Date(data.start_date),
+      endDate: new Date(data.end_date),
     },
     relationships: {
       skills: {
         data: selectedRoles.map((role) => ({
-          type: "Skills",
+          type: "skills",
           id: role,
         })),
       },

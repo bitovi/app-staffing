@@ -16,12 +16,16 @@ import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
-import { FrontEndEmployee } from "../../../../services/api/employees/interfaces";
+import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
-  skills: Skill[];
-  updateEmployee: ({ data }: { data: FrontEndEmployee }) => Promise<void>;
+  skills?: Skill[];
+  updateEmployee: ({
+    data,
+  }: {
+    data: Omit<EmployeeJSON, "id">;
+  }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
 }
 

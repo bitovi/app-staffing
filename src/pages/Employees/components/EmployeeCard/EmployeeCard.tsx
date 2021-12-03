@@ -73,7 +73,7 @@ export default function EmployeeCard({
         <Td>
           <Wrap spacing="8px">
             {employee.skills.map((skill) => (
-              <Tag variant="primary" key={skill.name}>
+              <Tag variant="primary" key={skill.id}>
                 <Text
                   fontFamily="Inter"
                   fontStyle="normal"

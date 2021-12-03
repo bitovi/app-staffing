@@ -1,84 +1,58 @@
 import type { Employee } from "../employees";
+import { EmployeeJSON } from "../employees/interfaces";
 import type { ResponseStatus, QueriableList } from "../shared";
 
 import useRest from "../useRest/useRestV2";
 
-import { JSONAPI } from "../baseMocks/interfaces";
-import { JSONAPISkill } from "../skills/interfaces";
-import { FrontEndEmployee, JSONAPIEmployee } from "../employees/interfaces";
-
-const alphabetize = (array: Employee[]): Employee[] =>
-  array.sort((a, b) =>
-    a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
-  );
-
-export const employeeDataFormatter = (
-  employee: JSONAPI<JSONAPIEmployee[], JSONAPISkill[]> | undefined,
-): Employee[] | [] => {
-  if (employee) {
-    const { data: unformatedEmployees, included: unformatedSkills } = employee;
-    const formattedEmployees: Employee[] = unformatedEmployees.map(
-      (em: JSONAPIEmployee) => {
-        const { id, relationships } = em;
-        return {
-          id,
-          ...em.attributes,
-          skills:
-            relationships && relationships.skills
-              ? relationships.skills?.data?.map(
-                  (skill: { type: string; id: string }) => {
-                    return {
-                      id: skill.id,
-                      name: unformatedSkills?.find(
-                        (unformatedSkill) => unformatedSkill.id === skill.id,
-                      )?.attributes.name,
-                    };
-                  },
-                )
-              : [],
-        };
-      },
+const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
+  if (array) {
+    return array.sort((a, b) =>
+      a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
     );
-
-    return formattedEmployees;
   }
-
   return [];
 };
 
 export interface EmployeeActions {
-  employees?: Employee[];
-  addEmployee: (employee: { data: FrontEndEmployee }) => Promise<string | void>;
-  updateEmployee: ({ data }: { data: FrontEndEmployee }) => Promise<void>;
+  employees?: Employee[] | undefined;
+  addEmployee: (employee: {
+    data: Omit<EmployeeJSON, "id">;
+  }) => Promise<string | undefined>;
+  updateEmployee: (employee: {
+    data: Omit<EmployeeJSON, "id">;
+  }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
   reset: () => void;
 }
 
 /** Hook for getting a list of the employees */
 export default function useEmployees(
-  queryParams?: QueriableList<JSONAPI<JSONAPIEmployee[], JSONAPISkill[]>>,
+  queryParams?: QueriableList<Employee>,
 ): ResponseStatus & EmployeeActions {
   const {
     data: employees,
     error,
     isLoading,
     handleAdd,
-    // handleUpdate,
+    handleUpdate,
     handleDelete,
     reset,
-  } = useRest<JSONAPI<JSONAPIEmployee[], JSONAPISkill[]>>(
+    // two interfaces passed to useRest now,
+    // the backend data shape of Employees
+    // and the frontend data shape of Employees
+    // useRest operates as the switchboard between the two.
+  } = useRest<Employee, EmployeeJSON>(
     "/api/v1/employees",
+    "employees",
     queryParams,
   );
 
   return {
-    employees: alphabetize(employeeDataFormatter(employees)),
+    employees: alphabetizeByName(employees),
     isLoading,
     error,
     addEmployee: handleAdd,
-    updateEmployee({ data }: { data: FrontEndEmployee }) {
-      return Promise.resolve();
-    },
+    updateEmployee: handleUpdate,
     deleteEmployee: handleDelete,
     reset,
   };
