@@ -4,12 +4,13 @@ import parseISO from "date-fns/parseISO";
 
 import EmployeeModal from "./EmployeeModal";
 import { skills } from "../../../../services/api/skills/fixtures";
+import { fireEvent } from "@testing-library/dom";
 
 describe("EmployeeModal", () => {
   afterEach(cleanup);
 
-  it("renders 'new employee' UI when 'employee' prop is not set", () => {
-    const { getByText, getByRole, getAllByRole } = render(
+  it("renders 'new employee' UI when 'employee' prop is not set", async () => {
+    const { getByText, getByRole, getAllByRole, getByPlaceholderText } = render(
       <EmployeeModal
         toastTitle="New team member"
         onSave={() => Promise.resolve("")}
@@ -31,13 +32,18 @@ describe("EmployeeModal", () => {
     const skillsIds = skills.map((skill) => skill.id);
     expect(skillsIds).toStrictEqual(onScreenIds);
 
-    // Add & Close button becomes enabled when at least one role is selected
     userEvent.click(checkboxes[0]);
-    expect(getAddButton()).toBeEnabled();
 
-    // Add & Close becomes disabled if no roles are selected
-    userEvent.click(checkboxes[0]);
+    // Add & Close button still disabled when at least one role is selected
+    // but name is not inputed
     expect(getAddButton()).toBeDisabled();
+
+    fireEvent.change(getByPlaceholderText("name"), {
+      target: { value: "Johnny Appleseed" },
+    });
+
+    // With name inputed, Add & Close button is enabled
+    expect(getAddButton()).toBeEnabled();
   });
 
   it("renders 'edit employee' UI when 'employee' prop is set", () => {

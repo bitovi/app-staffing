@@ -146,15 +146,10 @@ export default function EmployeeModal({
             </FormControl>
 
             <HStack spacing="8px" width="100%">
-              <FormControl
-                isRequired
-                isInvalid={errors.start_date ? true : false}
-              >
+              <FormControl isInvalid={errors.start_date ? true : false}>
                 <FormLabel>Start Date</FormLabel>
                 <Input
-                  {...register("start_date", {
-                    required: true,
-                  })}
+                  {...register("start_date")}
                   id="start_date"
                   type="date"
                   data-testid="start_date"
@@ -167,7 +162,7 @@ export default function EmployeeModal({
               </FormControl>
             </HStack>
 
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel>Roles</FormLabel>
               <Flex mt={4} flexGrow={1}>
                 <SimpleGrid columns={2} spacingX={24} spacingY={4}>
@@ -273,7 +268,7 @@ function toEmployeeFormData(data: Employee): EmployeeFormData {
 
   return {
     name: data.name,
-    start_date: format(data.startDate, "yyyy-MM-dd"),
+    start_date: data.startDate ? format(data.startDate, "yyyy-MM-dd") : "",
     end_date: data.endDate ? format(data.endDate, "yyyy-MM-dd") : "",
     roles,
   };
