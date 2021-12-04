@@ -120,7 +120,23 @@ export default function EmployeeTable({
 
         {employees && employees.length > 0 && (
           <>
-            <Box maxHeight="80vh" overflowY="auto">
+            <Box
+              maxHeight="80vh"
+              overflowY="scroll"
+              css={{
+                "&::-webkit-scrollbar": {
+                  width: 0,
+                  background: "transparent",
+                },
+                "&::-webkit-scrollbar-track": {
+                  width: 0,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  background: "transparent",
+                  width: 0,
+                },
+              }}
+            >
               <Table>
                 <Thead
                   py={4}
