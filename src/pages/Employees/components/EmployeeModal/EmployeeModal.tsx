@@ -74,14 +74,17 @@ export default function EmployeeModal({
   const toast = useToast();
 
   const isNewEmployee = isEmpty(employeeData);
-  const selectedRolesMap = watch("roles");
-  const selectedRoles = getSelectedRoles(selectedRolesMap);
+  const employeeName = watch("name");
 
-  // allow form submit if at least one role is selected for a new employee OR
+  const fullNameProvided = (name: string): boolean =>
+    name ? name.trim().split(" ").length >= 2 : false;
+
+  // allow form submit if at least full name is entered for a new employee OR
   // any of the inputs has been modified when editing an existing employee
+  // and name still exists
   const canSubmitForm =
-    (isNewEmployee && !isEmpty(selectedRoles)) ||
-    (!isNewEmployee && formIsDirty);
+    (isNewEmployee && fullNameProvided(employeeName)) ||
+    (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
     try {
@@ -134,7 +137,7 @@ export default function EmployeeModal({
                 {...register("name", {
                   required: "Name not filled out",
                   validate: (name) =>
-                    name.split(" ").length >= 2 || "Full name required",
+                    name.trim().split(" ").length >= 2 || "Full name required",
                 })}
                 id="name"
                 placeholder="name"
