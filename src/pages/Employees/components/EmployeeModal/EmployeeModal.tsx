@@ -90,7 +90,11 @@ export default function EmployeeModal({
         data: formatEmployeeData(data),
         id: employee ? employee.id : undefined,
       });
-      reset();
+      reset({
+        name: "",
+        start_date: "",
+        end_date: "",
+      });
       toast({
         title: toastTitle,
         description: ` ${data.name} was successfully ${

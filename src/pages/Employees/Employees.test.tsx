@@ -96,6 +96,14 @@ describe("Pages/Employees", () => {
       exact: false,
     });
     expect(newEmployeeRow).toBeInTheDocument();
+
+    // Reopen the form and make sure the information has been cleared
+    addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(await screen.findByPlaceholderText(/name/i)).toHaveValue("");
+    expect(await screen.findByTestId(/start_date/i)).toHaveValue("");
+    expect(await screen.findByLabelText("Angular")).not.toBeChecked();
+    expect(await screen.findByLabelText("Design")).not.toBeChecked();
   });
 
   it("Edits employee", async () => {
