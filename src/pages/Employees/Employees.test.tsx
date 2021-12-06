@@ -60,6 +60,9 @@ describe("Pages/Employees", () => {
     });
     expect(modalNameInput).toHaveValue("Johnny Appleseed");
 
+    // Name is the only required field in form
+    await waitFor(() => expect(submitButton).toBeEnabled());
+
     const modalStartDateInput = await screen.findByTestId(/start_date/i);
     fireEvent.change(modalStartDateInput, {
       target: { value: "1993-01-24" },
@@ -78,7 +81,6 @@ describe("Pages/Employees", () => {
     expect(angularCheckBox).toBeChecked();
     expect(designCheckBox).toBeChecked();
 
-    await waitFor(() => expect(submitButton).toBeEnabled());
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     await waitFor(() => expect(modal).not.toBeInTheDocument());
@@ -96,6 +98,14 @@ describe("Pages/Employees", () => {
       exact: false,
     });
     expect(newEmployeeRow).toBeInTheDocument();
+
+    // Reopen the form and make sure the information has been cleared
+    addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(await screen.findByPlaceholderText(/name/i)).toHaveValue("");
+    expect(await screen.findByTestId(/start_date/i)).toHaveValue("");
+    expect(await screen.findByLabelText("Angular")).not.toBeChecked();
+    expect(await screen.findByLabelText("Design")).not.toBeChecked();
   });
 
   it("Edits employee", async () => {

@@ -56,7 +56,7 @@ export default function EmployeeCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {format(employee.startDate, "MM/dd/yyyy")}
+            {employee.startDate && format(employee.startDate, "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>

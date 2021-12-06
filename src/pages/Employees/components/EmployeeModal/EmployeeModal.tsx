@@ -74,14 +74,17 @@ export default function EmployeeModal({
   const toast = useToast();
 
   const isNewEmployee = isEmpty(employeeData);
-  const selectedRolesMap = watch("roles");
-  const selectedRoles = getSelectedRoles(selectedRolesMap);
+  const employeeName = watch("name");
 
-  // allow form submit if at least one role is selected for a new employee OR
+  const fullNameProvided = (name: string): boolean =>
+    name ? name.trim().split(" ").length >= 2 : false;
+
+  // allow form submit if at least full name is entered for a new employee OR
   // any of the inputs has been modified when editing an existing employee
+  // and name still exists
   const canSubmitForm =
-    (isNewEmployee && !isEmpty(selectedRoles)) ||
-    (!isNewEmployee && formIsDirty);
+    (isNewEmployee && fullNameProvided(employeeName)) ||
+    (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
     try {
@@ -90,7 +93,11 @@ export default function EmployeeModal({
         data: formatEmployeeData(data),
         id: employee ? employee.id : undefined,
       });
-      reset();
+      reset({
+        name: "",
+        start_date: "",
+        end_date: "",
+      });
       toast({
         title: toastTitle,
         description: ` ${data.name} was successfully ${
@@ -130,7 +137,7 @@ export default function EmployeeModal({
                 {...register("name", {
                   required: "Name not filled out",
                   validate: (name) =>
-                    name.split(" ").length >= 2 || "Full name required",
+                    name.trim().split(" ").length >= 2 || "Full name required",
                 })}
                 id="name"
                 placeholder="name"
@@ -139,15 +146,10 @@ export default function EmployeeModal({
             </FormControl>
 
             <HStack spacing="8px" width="100%">
-              <FormControl
-                isRequired
-                isInvalid={errors.start_date ? true : false}
-              >
+              <FormControl isInvalid={errors.start_date ? true : false}>
                 <FormLabel>Start Date</FormLabel>
                 <Input
-                  {...register("start_date", {
-                    required: true,
-                  })}
+                  {...register("start_date")}
                   id="start_date"
                   type="date"
                   data-testid="start_date"
@@ -160,7 +162,7 @@ export default function EmployeeModal({
               </FormControl>
             </HStack>
 
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel>Roles</FormLabel>
               <Flex mt={4} flexGrow={1}>
                 <SimpleGrid columns={2} spacingX={24} spacingY={4}>
@@ -266,7 +268,7 @@ function toEmployeeFormData(data: Employee): EmployeeFormData {
 
   return {
     name: data.name,
-    start_date: format(data.startDate, "yyyy-MM-dd"),
+    start_date: data.startDate ? format(data.startDate, "yyyy-MM-dd") : "",
     end_date: data.endDate ? format(data.endDate, "yyyy-MM-dd") : "",
     roles,
   };
