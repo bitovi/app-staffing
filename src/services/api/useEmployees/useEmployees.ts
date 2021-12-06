@@ -19,7 +19,6 @@ export interface EmployeeActions {
 }
 
 /** Hook for getting a list of the employees */
-console.log("fix this");
 export default function useEmployees(): ResponseStatus & EmployeeActions {
   // *** do we still need to call query params here?
   // queryParams?: QueriableList<Employee>,

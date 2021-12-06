@@ -86,6 +86,7 @@ export default function EmployeeModal({
         start_date: "",
         end_date: "",
       });
+      onClose();
     } catch (e) {
       setServerError(!serverError);
     }

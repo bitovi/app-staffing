@@ -137,6 +137,9 @@ export default function restBuilder<
       (id: string, data: { data: Omit<JSONShape, "id"> }) => Promise<void>
     >(
       async (id: string, data: { data: Omit<JSONShape, "id"> }) => {
+        console.log("PATCH");
+        console.log({ id });
+        console.log("data", data);
         let { data: updatedItem } = await fetcher<{ data: FrontEndShape }>(
           "PATCH",
           type,

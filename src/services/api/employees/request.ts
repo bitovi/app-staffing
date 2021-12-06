@@ -56,9 +56,9 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
     >(`${basePath}${resourcePath}/:id`, async (req: any, res, ctx) => {
       const id = req.params.id;
-
       // const index = collection.findIndex((item) => item.id === id);
       const itemExists = await store.getData({ id });
+
       if (!itemExists) {
         return res(
           ctx.status(404),
@@ -67,7 +67,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
           }),
         );
       }
-      const employeeTableEntry = { ...req.body.attributes, id };
+      const employeeTableEntry = { ...req.body.data.attributes, id };
       const updatedItem = await store.updateData(
         employeeTableEntry as unknown as Resource,
       );
@@ -89,7 +89,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         });
         // add all new skills to employeeSkills join table
         await Promise.all(
-          req.body.relationships.skills.data.map(
+          req.body.data.relationships.skills.data.map(
             async (req: JSONData<"skills">) => {
               if (
                 !joinTable.data.find(
@@ -105,11 +105,12 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
             },
           ),
         );
+
         //remove any no longer applicable skills from employeeSkills join table
         await Promise.all(
           joinTable.data.map(async (joinEntry: EmployeeSkillsEntry) => {
             if (
-              !req.body.relationships.skills.data.find(
+              !req.body.data.relationships.skills.data.find(
                 (req: JSONData<"skills">) => req.id === joinEntry.skill_id,
               )
             ) {
@@ -128,7 +129,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
       return res(
         ctx.status(201),
         ctx.json({
-          data: { ...req.body, id },
+          data: { ...req.body.data, id },
         }),
       );
     }),

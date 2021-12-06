@@ -11,6 +11,7 @@ import theme from "./theme";
 
 // fonts
 import "./theme/fonts/styles.css";
+import { SWRConfig } from "swr";
 
 if (process.env.PUBLIC_URL) {
   if (!window.location.pathname.startsWith(`${process.env.PUBLIC_URL}/`)) {
@@ -26,21 +27,21 @@ setupWorker(...mocks).start({
 });
 
 // Causing production errors?
-// function localStorageProvider() {
-//   const map = new Map(JSON.parse(localStorage.getItem("app-cache") || "[]"));
-//   window.addEventListener("beforeunload", () => {
-//     const appCache = JSON.stringify(Array.from(map.entries()));
-//     localStorage.setItem("app-cache", appCache);
-//   });
-//   return map;
-// }
+function localStorageProvider() {
+  const map = new Map(JSON.parse(localStorage.getItem("app-cache") || "[]"));
+  window.addEventListener("beforeunload", () => {
+    const appCache = JSON.stringify(Array.from(map.entries()));
+    localStorage.setItem("app-cache", appCache);
+  });
+  return map;
+}
 render(
   <StrictMode>
     <ChakraProvider theme={theme}>
       <HashRouter>
-        {/* <SWRConfig value={{ provider: localStorageProvider }}> */}
-        <App />
-        {/* </SWRConfig> */}
+        <SWRConfig value={{ provider: localStorageProvider }}>
+          <App />
+        </SWRConfig>
       </HashRouter>
     </ChakraProvider>
   </StrictMode>,
