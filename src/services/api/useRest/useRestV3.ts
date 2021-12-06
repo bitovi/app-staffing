@@ -8,21 +8,27 @@ import hydrateObject from "./hydrateObject";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
 
-interface RestActions<JSONShape> {
+interface RestActions<T> {
   handleAdd: (newCollectionItem: {
-    data: Omit<JSONShape, "id">;
+    data: Omit<T, "id">;
   }) => Promise<string | undefined>;
-  handleUpdate: (
-    id: string,
-    data: { data: Omit<JSONShape, "id"> },
-  ) => Promise<void>;
+  handleUpdate: (id: string, data: { data: Omit<T, "id"> }) => Promise<void>;
   handleDelete: (collectionItemId: string) => Promise<void>;
+}
+
+interface restBuilderActions<T, K> {
+  useRestOne: (id: string) => APIResponse<T>;
+  useRestList: () => APIResponse<T[]>;
+  useRestActions: () => RestActions<K>;
 }
 
 export default function restBuilder<
   FrontEndShape extends { id?: string },
   JSONShape,
->(path: string, type: SerializerTypes) {
+>(
+  path: string,
+  type: SerializerTypes,
+): restBuilderActions<FrontEndShape, JSONShape> {
   function useRestList(
     queryParams?: QueriableList<JSONShape>,
   ): APIResponse<FrontEndShape[]> {
@@ -125,7 +131,7 @@ export default function restBuilder<
           }
         }
       },
-      [path, mutate, type],
+      [mutate],
     );
     const handleUpdate = useCallback<
       (id: string, data: { data: Omit<JSONShape, "id"> }) => Promise<void>
@@ -184,7 +190,7 @@ export default function restBuilder<
           false,
         );
       },
-      [path, mutate, type],
+      [mutate],
     );
 
     const handleDelete = useCallback(
@@ -216,7 +222,7 @@ export default function restBuilder<
           false,
         );
       },
-      [path, mutate, type],
+      [mutate],
     );
     return {
       handleAdd,
