@@ -165,7 +165,7 @@ const getTimelineDescriptions = (
     let title = "";
     switch (data.type) {
       case TimescaleType.week:
-        title = `Week ${i + 1}`;
+        title = format(data.startDate, "MMM do");
         break;
       case TimescaleType.month:
         title = format(
