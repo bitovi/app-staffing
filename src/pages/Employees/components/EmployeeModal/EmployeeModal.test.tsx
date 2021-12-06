@@ -1,10 +1,12 @@
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import parseISO from "date-fns/parseISO";
 
 import EmployeeModal from "./EmployeeModal";
 import { skills } from "../../../../services/api/skills/fixtures";
 import { fireEvent } from "@testing-library/dom";
+
+
 
 describe("EmployeeModal", () => {
   afterEach(cleanup);
@@ -46,7 +48,7 @@ describe("EmployeeModal", () => {
     expect(getAddButton()).toBeEnabled();
   });
 
-  it("renders 'edit employee' UI when 'employee' prop is set", () => {
+  it("renders 'edit employee' UI when 'employee' prop is set", async () => {
     const { getByText, getByDisplayValue, getByRole, getAllByRole } = render(
       <EmployeeModal
         toastTitle="Edit team member"
@@ -87,6 +89,14 @@ describe("EmployeeModal", () => {
     const nameInput = getNameInput();
     userEvent.click(nameInput);
     userEvent.type(nameInput, "Het Masteen");
+
     expect(getSaveButton()).toBeEnabled();
-  });
+    fireEvent.click(getSaveButton());
+
+    // Save button will be in "pending" state when clicked
+    await waitFor(() => {
+      expect(getByText("Saving")).toBeInTheDocument();
+    });
+    // Default timeout is 5000ms, this test needed more time to complete
+  }, 6000);
 });
