@@ -27,14 +27,15 @@ function useRest<T extends { id?: string }, K>(
   queryParams?: QueriableList<K>,
 ): RestActions<T, K> {
   const key = `${path}?${param(queryParams)}`;
-  const { mutate, cache } = useSWRConfig();
+  const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     key,
     (url) => fetcher("GET", type, url),
     {
       suspense: true,
       use: [deserializeDateMiddleware],
-      fallbackData: cache.get(key),
+      // removed localStorage persistance causing production break ?
+      // fallbackData: cache.get(key),
     },
   );
   const handleAdd = useCallback<
