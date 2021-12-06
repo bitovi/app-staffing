@@ -1,59 +1,41 @@
 import type { Employee } from "../employees";
 import { EmployeeJSON } from "../employees/interfaces";
-import type { ResponseStatus, QueriableList } from "../shared";
+import type { ResponseStatus, APIResponse } from "../shared";
 
-import useRest from "../useRest/useRestV2";
+import useRest, { RestActions } from "../useRest/useRestV3";
 
-const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
-  if (array) {
-    return array.sort((a, b) =>
-      a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
-    );
-  }
-  return [];
-};
+// const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
+//   if (array) {
+//     return array.sort((a, b) =>
+//       a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
+//     );
+//   }
+//   return [];
+// };
 export interface EmployeeActions {
-  employees?: Employee[] | undefined;
-  addEmployee: (employee: {
-    data: Omit<EmployeeJSON, "id">;
-  }) => Promise<string | undefined>;
-  updateEmployee: (employee: {
-    data: Omit<EmployeeJSON, "id">;
-    id?: string;
-  }) => Promise<void>;
-  deleteEmployee: (employeeId: string) => Promise<void>;
-  reset: () => void;
+  getEmployee: (id: string) => APIResponse<Employee>;
+  getEmployeeList: () => APIResponse<Employee[]>;
+  getEmployeeActions: () => RestActions<EmployeeJSON>;
 }
 
 /** Hook for getting a list of the employees */
-export default function useEmployees(
-  queryParams?: QueriableList<Employee>,
-): ResponseStatus & EmployeeActions {
+console.log("fix this");
+export default function useEmployees(): ResponseStatus & EmployeeActions {
+  // *** do we still need to call query params here?
+  // queryParams?: QueriableList<Employee>,
   const {
-    data: employees,
-    error,
-    isLoading,
-    handleAdd,
-    handleUpdate,
-    handleDelete,
-    reset,
+    useRestOne,
+    useRestList,
+    useRestActions,
     // two interfaces passed to useRest now,
     // the backend data shape of Employees
     // and the frontend data shape of Employees
     // useRest operates as the switchboard between the two.
-  } = useRest<Employee, EmployeeJSON>(
-    "/api/v1/employees",
-    "employees",
-    queryParams,
-  );
+  } = useRest<Employee, EmployeeJSON>("/api/v1/employees", "employees");
 
   return {
-    employees: alphabetizeByName(employees),
-    isLoading,
-    error,
-    addEmployee: handleAdd,
-    updateEmployee: handleUpdate,
-    deleteEmployee: handleDelete,
-    reset,
+    getEmployee: useRestOne,
+    getEmployeeList: useRestList,
+    getEmployeeActions: useRestActions,
   };
 }

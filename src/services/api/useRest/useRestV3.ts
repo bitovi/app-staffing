@@ -8,15 +8,15 @@ import hydrateObject from "./hydrateObject";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
 
-interface RestActions<T> {
+export interface RestActions<K> {
   handleAdd: (newCollectionItem: {
-    data: Omit<T, "id">;
+    data: Omit<K, "id">;
   }) => Promise<string | undefined>;
-  handleUpdate: (id: string, data: { data: Omit<T, "id"> }) => Promise<void>;
+  handleUpdate: (id: string, data: { data: Omit<K, "id"> }) => Promise<void>;
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
 
-interface restBuilderActions<T, K> {
+export interface RestBuilderActions<T, K> {
   useRestOne: (id: string) => APIResponse<T>;
   useRestList: () => APIResponse<T[]>;
   useRestActions: () => RestActions<K>;
@@ -28,7 +28,7 @@ export default function restBuilder<
 >(
   path: string,
   type: SerializerTypes,
-): restBuilderActions<FrontEndShape, JSONShape> {
+): RestBuilderActions<FrontEndShape, JSONShape> {
   function useRestList(
     queryParams?: QueriableList<JSONShape>,
   ): APIResponse<FrontEndShape[]> {

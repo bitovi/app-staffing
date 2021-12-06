@@ -20,7 +20,6 @@ import {
   Box,
   SimpleGrid,
   Divider,
-  useToast,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
@@ -38,17 +37,12 @@ interface EmployeeFormData {
   end_date: string;
   roles?: Record<string, boolean>;
 }
-
 interface EmployeeModalProps {
-  onSave: (employee: {
-    data: Omit<EmployeeJSON, "id">;
-    id?: string;
-  }) => Promise<string | void>;
+  onSave: (data: Omit<EmployeeJSON, "id">) => Promise<void>;
   onClose: () => void;
   isOpen: boolean;
   skills?: Skill[];
   employee?: Employee;
-  toastTitle: string;
 }
 
 export default function EmployeeModal({
@@ -57,7 +51,6 @@ export default function EmployeeModal({
   isOpen,
   skills,
   employee,
-  toastTitle,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const employeeData = employee ? toEmployeeFormData(employee) : undefined;
@@ -71,7 +64,6 @@ export default function EmployeeModal({
   } = useForm<EmployeeFormData>({
     defaultValues: employeeData,
   });
-  const toast = useToast();
 
   const isNewEmployee = isEmpty(employeeData);
   const employeeName = watch("name");
@@ -88,28 +80,12 @@ export default function EmployeeModal({
 
   const submitForm = async (data: EmployeeFormData) => {
     try {
-      // added the Employee ID property for PATCH request as specified in JSON API PATCH specs
-      await onSave({
-        data: formatEmployeeData(data),
-        id: employee ? employee.id : undefined,
-      });
+      await onSave(formatEmployeeData(data));
       reset({
         name: "",
         start_date: "",
         end_date: "",
       });
-      toast({
-        title: toastTitle,
-        description: ` ${data.name} was successfully ${
-          employee ? "edited" : "added"
-        }!`,
-        duration: 5000,
-        isClosable: false,
-        position: "bottom-right",
-        variant: "left-accent",
-        status: "success",
-      });
-      onClose();
     } catch (e) {
       setServerError(!serverError);
     }

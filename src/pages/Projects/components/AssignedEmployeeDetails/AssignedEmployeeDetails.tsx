@@ -21,7 +21,8 @@ export default function AssignedEmployeeDetails({
   ) => void;
   onChange: (assignedEmployee: AssignedEmployee) => void;
 }): JSX.Element {
-  const { employees } = useEmployees();
+  const { getEmployeeList } = useEmployees();
+  const { data: employees } = getEmployeeList();
 
   const updateEmployee = (newName: string) => {
     const newEmployee = employees?.find(({ name }) => name === newName);

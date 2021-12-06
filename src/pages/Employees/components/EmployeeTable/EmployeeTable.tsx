@@ -22,13 +22,10 @@ import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   skills?: Skill[];
-  updateEmployee: ({
-    data,
-    id,
-  }: {
-    data: Omit<EmployeeJSON, "id">;
-    id?: string;
-  }) => Promise<void>;
+  updateEmployee: (
+    id: string,
+    data: { data: Omit<EmployeeJSON, "id"> },
+  ) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
 }
 
@@ -44,6 +41,7 @@ export default function EmployeeTable({
   );
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
   const toast = useToast();
+
   const removeEmployee = async () => {
     if (employeeToDelete) {
       try {
@@ -61,6 +59,23 @@ export default function EmployeeTable({
       } catch (e) {
         //ERROR HANDLING
       }
+    }
+  };
+
+  const submitUpdateEmployee = async (
+    employeeToUpdate: Omit<EmployeeJSON, "id">,
+  ) => {
+    if (employeeToEdit) {
+      await updateEmployee(employeeToEdit.id, { data: employeeToUpdate });
+      toast({
+        title: "Team member updated",
+        description: ` ${employeeToUpdate.attributes.name} was successfully edited!`,
+        duration: 5000,
+        isClosable: false,
+        position: "bottom-right",
+        variant: "left-accent",
+        status: "success",
+      });
     }
   };
 
@@ -88,10 +103,9 @@ export default function EmployeeTable({
       <EmployeeModal
         isOpen={!isEmpty(employeeToEdit)}
         onClose={() => setEmployeeToEdit(null)}
-        onSave={updateEmployee}
+        onSave={submitUpdateEmployee}
         skills={skills}
         employee={employeeToEdit ? employeeToEdit : undefined}
-        toastTitle={"Team member updated"}
       />
       <Box {...props}>
         {employees && employees.length === 0 && (

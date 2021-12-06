@@ -7,8 +7,8 @@ export default {
 } as Meta<{ id: string }>;
 
 export const Basic: Story<{ id: string }> = (args) => {
-  const { employees } = useEmployees();
-
+  const { getEmployeeList } = useEmployees();
+  const { data: employees } = getEmployeeList();
   return (
     <ul>
       {employees?.map(({ id, name }) => (

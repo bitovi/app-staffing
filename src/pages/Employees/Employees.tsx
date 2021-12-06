@@ -8,6 +8,8 @@ import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
+import { EmployeeJSON } from "../../services/api/employees";
+import { useToast } from "@chakra-ui/toast";
 
 interface IEmployees {
   useEmployees: typeof useEmployeesDefault;
@@ -59,18 +61,38 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { employees, addEmployee, deleteEmployee, updateEmployee } =
-    useEmployees();
+  const { getEmployeeList, getEmployeeActions } = useEmployees();
+  const {
+    handleAdd: addEmployee,
+    handleUpdate: updateEmployee,
+    handleDelete: deleteEmployee,
+  } = getEmployeeActions();
+  const { data: employees } = getEmployeeList();
+
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
+
+  const toast = useToast();
+
+  const addNewEmployee = async (data: Omit<EmployeeJSON, "id">) => {
+    await addEmployee({ data });
+    toast({
+      title: "Team member added",
+      description: ` ${data.attributes.name} was successfully added!`,
+      duration: 5000,
+      isClosable: false,
+      position: "bottom-right",
+      variant: "left-accent",
+      status: "success",
+    });
+  };
 
   return (
     <Box maxHeight="100%">
       <EmployeeModal
-        toastTitle="New team member"
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
-        onSave={addEmployee}
+        onSave={addNewEmployee}
         skills={skills}
       />
 
