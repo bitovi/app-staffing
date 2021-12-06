@@ -8,77 +8,134 @@ import hydrateObject from "./hydrateObject";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
 import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
 
-interface RestActions<K> {
+interface RestActions<JSONShape> {
   handleAdd: (newCollectionItem: {
-    data: Omit<K, "id">;
+    data: Omit<JSONShape, "id">;
   }) => Promise<string | undefined>;
-  handleUpdate: ({
-    data,
-    id,
-  }: {
-    data: Omit<K, "id">;
-    id?: string;
-  }) => Promise<void>;
+  handleUpdate: (
+    id: string,
+    data: { data: Omit<JSONShape, "id"> },
+  ) => Promise<void>;
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
 
-function useRestList<T, K>(
-  path: string,
-  type: SerializerTypes,
-  queryParams?: QueriableList<K>,
-): APIResponse<T[]> {
-  const { data: response, error } = useSWR<{ data: T[] }, Error>(
-    path,
-    (path) => fetcher("GET", type, `${path}?${param(queryParams)}`),
-    {
-      suspense: true,
-      use: [deserializeDateMiddleware],
-    },
-  );
-  return {
-    data: response?.data,
-    error,
-    isLoading: !response && !error,
-  };
-}
+export default function restBuilder<
+  FrontEndShape extends { id?: string },
+  JSONShape,
+>(path: string, type: SerializerTypes) {
+  function useRestList(
+    queryParams?: QueriableList<JSONShape>,
+  ): APIResponse<FrontEndShape[]> {
+    const { data: response, error } = useSWR<{ data: FrontEndShape[] }, Error>(
+      path,
+      (path) => fetcher("GET", type, `${path}?${param(queryParams)}`),
+      {
+        suspense: true,
+        use: [deserializeDateMiddleware],
+      },
+    );
+    return {
+      data: response?.data,
+      error,
+    };
+  }
 
-function useRestOne<T>(
-  path: string,
-  type: SerializerTypes,
-  id: string,
-): APIResponse<T> {
-  const key = `${path}/${id}`;
-  const { data: response, error } = useSWR<{ data: T }, Error>(
-    key,
-    (key) => fetcher("GET", type, key),
-    {
-      suspense: true,
-      use: [deserializeDateMiddleware],
-    },
-  );
-  return {
-    data: response?.data,
-    error,
-    isLoading: !response && !error,
-  };
-}
+  function useRestOne(id: string): APIResponse<FrontEndShape> {
+    const key = `${path}/${id}`;
+    const { data: response, error } = useSWR<{ data: FrontEndShape }, Error>(
+      key,
+      (key) => fetcher("GET", type, key),
+      {
+        suspense: true,
+        use: [deserializeDateMiddleware],
+      },
+    );
+    return {
+      data: response?.data,
+      error,
+    };
+  }
 
-function useRestActions<T extends { id?: string }, K>(
-  path: string,
-  type: SerializerTypes,
-): RestActions<K> {
-  const { mutate } = useSWRConfig();
-  const handleAdd = useCallback<
-    (newCollectionItem: { data: Omit<K, "id"> }) => Promise<string | undefined>
-  >(
-    async (newCollectionItem: { data: Omit<K, "id"> }) => {
-      let newId = "";
-      try {
-        let { data: newItem } = await fetcher(
-          "POST",
+  function useRestActions(): RestActions<JSONShape> {
+    const { mutate } = useSWRConfig();
+    const handleAdd = useCallback<
+      (newCollectionItem: {
+        data: Omit<JSONShape, "id">;
+      }) => Promise<string | undefined>
+    >(
+      async (newCollectionItem: { data: Omit<JSONShape, "id"> }) => {
+        let newId = "";
+        try {
+          let { data: newItem } = await fetcher(
+            "POST",
+            type,
+            path,
+            newCollectionItem,
+          );
+
+          //----------------------------------------------
+          // a temporary measure until all endpoints are in JSON API format
+          // otherwise the deserializer will flatten out object and erase information
+          if (type !== "undefined") {
+            const [deserializedItem, relationships] = jsonApiMiddleware(
+              { data: newItem },
+              type,
+            );
+            newItem = deserializedItem.data;
+
+            // if the return object had relationship fields, they need to be hydrated
+            // otherwise they are in the format [ {type: string, id: string} ]
+            if (relationships.length > 0) {
+              const hydratedDeserialized = await hydrateObject<{
+                data: FrontEndShape;
+              }>(deserializedItem, relationships);
+              newItem = hydratedDeserialized.data;
+            }
+          }
+          // -----------------------------------------------
+
+          // mutate list data
+          await mutate(
+            path,
+            async (addResponse: { data: FrontEndShape[] }) => {
+              newId = newItem.id;
+
+              return {
+                ...addResponse,
+                data: [...addResponse.data, newItem],
+              };
+            },
+            false,
+          );
+
+          // mutate individual resource cache key
+          await mutate(
+            `${path}/${newItem.id}`,
+            async (updateCollectionItem: { data: FrontEndShape }) => {
+              return {
+                data: { ...updateCollectionItem, ...newItem },
+              };
+            },
+            false,
+          );
+          return newId;
+        } catch (error) {
+          if (error instanceof Error) {
+            //console.log(error.message);
+          }
+        }
+      },
+      [path, mutate, type],
+    );
+    const handleUpdate = useCallback<
+      (id: string, data: { data: Omit<JSONShape, "id"> }) => Promise<void>
+    >(
+      async (id: string, data: { data: Omit<JSONShape, "id"> }) => {
+        let { data: updatedItem } = await fetcher<{ data: FrontEndShape }>(
+          "PATCH",
           type,
-          path,
-          newCollectionItem,
+          `${path}/${id}`,
+          data,
         );
 
         //----------------------------------------------
@@ -86,19 +143,18 @@ function useRestActions<T extends { id?: string }, K>(
         // otherwise the deserializer will flatten out object and erase information
         if (type !== "undefined") {
           const [deserializedItem, relationships] = jsonApiMiddleware(
-            { data: newItem },
+            { data: updatedItem },
             type,
           );
-          newItem = deserializedItem.data;
+          updatedItem = deserializedItem.data;
 
           // if the return object had relationship fields, they need to be hydrated
           // otherwise they are in the format [ {type: string, id: string} ]
           if (relationships.length > 0) {
-            const hydratedDeserialized = await hydrateObject<{ data: T }>(
-              deserializedItem,
-              relationships,
-            );
-            newItem = hydratedDeserialized.data;
+            const hydratedDeserialized = await hydrateObject<{
+              data: FrontEndShape;
+            }>(deserializedItem, relationships);
+            updatedItem = hydratedDeserialized.data;
           }
         }
         // -----------------------------------------------
@@ -106,12 +162,12 @@ function useRestActions<T extends { id?: string }, K>(
         // mutate list data
         await mutate(
           path,
-          async (addResponse: { data: T[] }) => {
-            newId = newItem.id;
-
+          async (cachedData: { data: FrontEndShape[] }) => {
             return {
-              ...addResponse,
-              data: [...addResponse.data, newItem],
+              ...cachedData,
+              data: (cachedData?.data ?? []).map((item) =>
+                item?.id === updatedItem.id ? updatedItem : item,
+              ),
             };
           },
           false,
@@ -119,128 +175,54 @@ function useRestActions<T extends { id?: string }, K>(
 
         // mutate individual resource cache key
         await mutate(
-          `${path}/${newItem.id}`,
-          async (updateCollectionItem: { data: T }) => {
+          `${path}/${id}`,
+          async (updateCollectionItem: { data: FrontEndShape }) => {
             return {
-              data: { ...updateCollectionItem, ...newItem },
+              data: { ...updateCollectionItem, ...updatedItem },
             };
           },
           false,
         );
-        return newId;
-      } catch (error) {
-        if (error instanceof Error) {
-          //console.log(error.message);
-        }
-      }
-    },
-    [path, mutate, type],
-  );
-  const handleUpdate = useCallback<
-    ({ data, id }: { data: Omit<K, "id">; id?: string }) => Promise<void>
-  >(
-    async ({
-      data: updatedCollectionItem,
-      id,
-    }: {
-      data: Omit<K, "id">;
-      id?: string;
-    }) => {
-      let { data: updatedItem } = await fetcher<{ data: T }>(
-        "PATCH",
-        type,
-        `${path}/${id}`,
-        updatedCollectionItem,
-      );
+      },
+      [path, mutate, type],
+    );
 
-      //----------------------------------------------
-      // a temporary measure until all endpoints are in JSON API format
-      // otherwise the deserializer will flatten out object and erase information
-      if (type !== "undefined") {
-        const [deserializedItem, relationships] = jsonApiMiddleware(
-          { data: updatedItem },
-          type,
+    const handleDelete = useCallback(
+      async (collectionItemId: string) => {
+        await fetcher("DELETE", type, `${path}/${collectionItemId}`);
+
+        // mutate list data
+        await mutate(
+          path,
+          async (deleteResponse: { data: FrontEndShape[] }) => {
+            return {
+              ...deleteResponse,
+              data: deleteResponse.data.filter(
+                (item) => item.id !== collectionItemId,
+              ),
+            };
+          },
+          false,
         );
-        updatedItem = deserializedItem.data;
 
-        // if the return object had relationship fields, they need to be hydrated
-        // otherwise they are in the format [ {type: string, id: string} ]
-        if (relationships.length > 0) {
-          const hydratedDeserialized = await hydrateObject<{ data: T }>(
-            deserializedItem,
-            relationships,
-          );
-          updatedItem = hydratedDeserialized.data;
-        }
-      }
-      // -----------------------------------------------
-
-      // mutate list data
-      await mutate(
-        path,
-        async (cachedData: { data: T[] }) => {
-          return {
-            ...cachedData,
-            data: (cachedData?.data ?? []).map((item) =>
-              item?.id === updatedItem.id ? updatedItem : item,
-            ),
-          };
-        },
-        false,
-      );
-
-      // mutate individual resource cache key
-      await mutate(
-        `${path}/${id}`,
-        async (updateCollectionItem: { data: T }) => {
-          return {
-            data: { ...updateCollectionItem, ...updatedItem },
-          };
-        },
-        false,
-      );
-    },
-    [path, mutate, type],
-  );
-
-  const handleDelete = useCallback(
-    async (collectionItemId: string) => {
-      await fetcher("DELETE", type, `${path}/${collectionItemId}`);
-
-      // mutate list data
-      await mutate(
-        path,
-        async (deleteResponse: { data: T[] }) => {
-          return {
-            ...deleteResponse,
-            data: deleteResponse.data.filter(
-              (item) => item.id !== collectionItemId,
-            ),
-          };
-        },
-        false,
-      );
-
-      // mutate individual resource cache key
-      await mutate(
-        `${path}/${collectionItemId}`,
-        async (_deleteResponse: { data: T }) => {
-          return {
-            data: {},
-          };
-        },
-        false,
-      );
-    },
-    [path, mutate, type],
-  );
-  return {
-    handleAdd,
-    handleUpdate,
-    handleDelete,
-  };
+        // mutate individual resource cache key
+        await mutate(
+          `${path}/${collectionItemId}`,
+          async (_deleteResponse: { data: FrontEndShape }) => {
+            return {
+              data: {},
+            };
+          },
+          false,
+        );
+      },
+      [path, mutate, type],
+    );
+    return {
+      handleAdd,
+      handleUpdate,
+      handleDelete,
+    };
+  }
+  return { useRestOne, useRestList, useRestActions };
 }
-
-export default () => {
-  return { useRestList, useRestOne, useRestActions };
-};
