@@ -51,7 +51,7 @@ interface EmployeeModalProps {
   toastTitle: string;
 }
 
-export type ModalSaveStatus = "idle" | "pending";
+type SaveButtonStatus = "idle" | "pending";
 
 export default function EmployeeModal({
   onSave,
@@ -62,8 +62,8 @@ export default function EmployeeModal({
   toastTitle,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
+  const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const employeeData = employee ? toEmployeeFormData(employee) : undefined;
-  const [status, setStatus] = useState<ModalSaveStatus>("idle");
   const {
     register,
     handleSubmit,

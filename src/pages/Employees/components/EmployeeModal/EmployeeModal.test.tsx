@@ -6,8 +6,6 @@ import EmployeeModal from "./EmployeeModal";
 import { skills } from "../../../../services/api/skills/fixtures";
 import { fireEvent } from "@testing-library/dom";
 
-
-
 describe("EmployeeModal", () => {
   afterEach(cleanup);
 
