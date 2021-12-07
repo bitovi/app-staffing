@@ -31,11 +31,11 @@ setupWorker(...mocks).start({
 render(
   <StrictMode>
     <ChakraProvider theme={theme}>
-      <HashRouter>
+      <BrowserRouter>
         {/* <SWRConfig value={{ provider: localStorageProvider }}> */}
         <App />
         {/* </SWRConfig> */}
-      </HashRouter>
+      </BrowserRouter>
     </ChakraProvider>
   </StrictMode>,
   document.getElementById("root"),
