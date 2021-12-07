@@ -1,6 +1,12 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+} from "@chakra-ui/react";
+import { ChevronRightIcon } from "@chakra-ui/icons";
+import { Link , useParams } from "react-router-dom";
 import { Box } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import type { Project } from "../../../services/api";
 import { useProjects } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
@@ -29,6 +35,20 @@ export default function ProjectDetail(): JSX.Element {
     <div>
       {projectData && (
         <>
+        <Breadcrumb fontWeight="medium" fontSize="sm" separator={<ChevronRightIcon/>}>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={Link} to={"/"}>Home</BreadcrumbLink>
+        </BreadcrumbItem>
+      
+        <BreadcrumbItem>
+          <BreadcrumbLink as={Link} to={"/projects"}>Projects</BreadcrumbLink>
+        </BreadcrumbItem>
+      
+        <BreadcrumbItem isCurrentPage>
+          <BreadcrumbLink as={Link} to={"#"}>{projectData.name}</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
+
           <ProjectDescription onEdit={onSave} project={projectData} />
           <RoleList onEdit={onSave} project={projectData} />
           <Box mt={10}>
