@@ -16,7 +16,7 @@ export const parameters = {
 
 const pathPrefix =
   process.env.NODE_ENV === "production"
-    ? "/app-staffing/storybook"
+    ? "/storybook"
     : window.location.origin;
 
 setupWorker(...mocks).start({

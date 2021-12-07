@@ -1,0 +1,62 @@
+{{- if .Values.service }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appname }}
+  labels:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+  annotations:
+    {{- if .Values.service.annotations }}
+    {{- range $key, $val := .Values.service.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: service
+    port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort:  {{ .Values.service.targetPort }}
+  {{- if .Values.local.websocketPort.enabled }}
+  - name: websocket
+    port: {{ .Values.local.websocketPort.port }}
+    protocol: TCP
+    targetPort:  {{ .Values.local.websocketPort.targetPort }}
+  {{- end }}
+
+  selector:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+{{- end }}
+
+
+{{- range $index, $item := .Values.extraServices }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $item.name }}
+  labels:
+    app: {{ $.Values.appname }}
+    chart: {{ $.Chart.Name }}
+  annotations:
+    {{- if $item.annotations }}
+    {{- range $key, $val := $item.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+spec:
+  type: {{ $item.type }}
+  ports:
+  - name: service
+    port: {{ $item.port }}
+    protocol: TCP
+    targetPort:  {{ $item.targetPort }}
+  selector:
+    app: {{ $.Values.appname }}
+    chart: {{ $.Chart.Name }}
+
+{{- end}}
