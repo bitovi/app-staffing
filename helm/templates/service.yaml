@@ -22,12 +22,41 @@ spec:
     targetPort:  {{ .Values.service.targetPort }}
   {{- if .Values.local.websocketPort.enabled }}
   - name: websocket
-    port: 35729
+    port: {{ .Values.local.websocketPort.port }}
     protocol: TCP
-    targetPort:  35729
+    targetPort:  {{ .Values.local.websocketPort.targetPort }}
   {{- end }}
 
   selector:
     app: {{ .Values.appname }}
     chart: {{ .Chart.Name }}
 {{- end }}
+
+
+{{- range $index, $item := .Values.extraServices }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $item.name }}
+  labels:
+    app: {{ $.Values.appname }}
+    chart: {{ $.Chart.Name }}
+  annotations:
+    {{- if $item.annotations }}
+    {{- range $key, $val := $item.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+spec:
+  type: {{ $item.type }}
+  ports:
+  - name: service
+    port: {{ $item.port }}
+    protocol: TCP
+    targetPort:  {{ $item.targetPort }}
+  selector:
+    app: {{ $.Values.appname }}
+    chart: {{ $.Chart.Name }}
+
+{{- end}}

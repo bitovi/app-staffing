@@ -33,6 +33,8 @@ ingress: []
 local:
   websocketPort:
     enabled: false
+    port: 35729
+    targetPort: 35729
 
 cacheBusting:
   timestamp: false

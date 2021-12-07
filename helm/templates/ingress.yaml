@@ -1,6 +1,11 @@
 {{- range $index, $item := .Values.ingress }}
 ---
+{{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+{{- else }}
 apiVersion: networking.k8s.io/v1
+{{- end }}
+
 kind: Ingress
 metadata:
   {{- if .name }}
@@ -37,6 +42,12 @@ spec:
   {{- end }}
       paths:
       {{- range $item.paths }}
+      {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+        - path: "{{ .path }}"
+          backend:
+            serviceName: {{ .service }}
+            servicePort: {{ .port }}
+      {{- else }}
         - path: "{{ .path }}"
           pathType: "{{ .pathType }}"
           backend:
@@ -44,5 +55,6 @@ spec:
               name: {{ .service }}
               port:
                 number: {{ .port }}
+      {{- end }}
       {{- end}}
 {{- end}}
