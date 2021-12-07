@@ -2,7 +2,6 @@ import type {
   ProjectedData,
   ProjectionAction,
 } from "../../../../../services/projection";
-import type { Skill } from "../../../../../services/api";
 
 import { useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
@@ -10,6 +9,7 @@ import { Center, Divider } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
+import { SkillColors } from "../../../../../services/api/skills/interfaces";
 
 type TableRowProps = {
   rowData: ProjectedData;
@@ -18,43 +18,7 @@ type TableRowProps = {
 function TableRow({ rowData }: TableRowProps): JSX.Element {
   const [isExpanded, setExpanded] = useState(false);
 
-  const badgeForRole = (role: Skill): JSX.Element => {
-    const ANGULAR_BADGE_COLOR = "#876363";
-    const DESIGN_BADGE_COLOR = "#435BAE";
-    const DEVOPS_BADGE_COLOR = "#5FAE43";
-    const NODE_BADGE_COLOR = "#805AD5";
-    const UX_BADGE_COLOR = "#AE436A";
-    const REACT_BADGE_COLOR = "#61D0D7";
-
-    let background = REACT_BADGE_COLOR;
-
-    switch (role?.name) {
-      case "Angular":
-        background = ANGULAR_BADGE_COLOR;
-        break;
-      case "Design":
-        background = DESIGN_BADGE_COLOR;
-        break;
-      case "DevOps":
-        background = DEVOPS_BADGE_COLOR;
-        break;
-      case "Node":
-        background = NODE_BADGE_COLOR;
-        break;
-      case "UX":
-        background = UX_BADGE_COLOR;
-        break;
-      case "React":
-      default:
-        background = REACT_BADGE_COLOR;
-    }
-
-    return (
-      <Badge size="sm" background={background}>
-        {role?.name}
-      </Badge>
-    );
-  };
+  const skillBackgrounds: { [key: string]: string } = SkillColors;
 
   const getRowColors = (
     action: ProjectionAction,
@@ -97,7 +61,12 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
         {/* Department Column*/}
         <Center width="3xs" px={3} minH={24}>
           <Flex flex={1} ml={1}>
-            {badgeForRole(rowData.role)}
+            <Badge
+              size="sm"
+              background={skillBackgrounds[rowData.role.name || "React"]}
+            >
+              {rowData.role.name}
+            </Badge>
           </Flex>
 
           <Flex h="100%" flexDirection="column">
