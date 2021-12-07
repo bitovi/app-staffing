@@ -1,13 +1,10 @@
-name: Publish
+name: Build and Publish
 
 on:
-  # push:
-    # branches: [ main ]
   push:
-    branches: [ dockerize-test ]
-    # branches: [ main ]
+    branches: [ main ]
   pull_request:
-    branches: [ dockerize-test ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -44,8 +41,7 @@ jobs:
 
 
   publish:
-    # TODO: uncomment before merge
-    # needs: [ build ]
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
