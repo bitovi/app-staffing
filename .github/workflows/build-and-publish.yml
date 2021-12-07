@@ -77,12 +77,16 @@ jobs:
         OPERATIONS_REPO_ORG: bitovi
         OPERATIONS_REPO_BRANCH: main
         OPERATIONS_REPO_WORKFLOW: deploy-dev.yaml
-        GITHUB_EVENT: ${{ github.event }}
-        GITHUB_EVENT_NAME: ${{ github.event_name }}
       with:
         github-token: ${{ secrets.OPERATIONS_REPO_TOKEN }}
         script: |
           console.log("debugging")
-          console.log(process.env.GITHUB_EVENT_NAME)
-          console.log(process.env.GITHUB_EVENT)
-          
+          console.log(context)
+          /*
+          await github.rest.actions.createWorkflowDispatch({
+            owner: process.env.OPERATIONS_REPO_ORG,
+            repo: process.env.OPERATIONS_REPO,
+            workflow_id: process.env.OPERATIONS_REPO_WORKFLOW,
+            ref: process.env.OPERATIONS_REPO_BRANCH
+          });
+          */
