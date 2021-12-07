@@ -77,10 +77,15 @@ jobs:
         OPERATIONS_REPO_ORG: bitovi
         OPERATIONS_REPO_BRANCH: main
         OPERATIONS_REPO_WORKFLOW: deploy-dev.yaml
+        GITHUB_EVENT_NAME: ${{ github.event_name }}
       with:
         github-token: ${{ secrets.OPERATIONS_REPO_TOKEN }}
         script: |
           console.log("debugging")
+          console.log("GITHUB_EVENT_NAME")
+          console.log(process.env.GITHUB_EVENT_NAME)
+
+          console.log("context")
           console.log(context)
           if(context.eventName == "pull_request"){
             console.log("Pull request. not triggering deployment")
