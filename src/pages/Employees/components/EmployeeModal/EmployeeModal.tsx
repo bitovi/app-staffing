@@ -71,9 +71,6 @@ export default function EmployeeModal({
   const fullNameProvided = (name: string): boolean =>
     name ? name.trim().split(" ").length >= 2 : false;
 
-  // allow form submit if at least full name is entered for a new employee OR
-  // any of the inputs has been modified when editing an existing employee
-  // and name still exists
   const canSubmitForm =
     (isNewEmployee && fullNameProvided(employeeName)) ||
     (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
