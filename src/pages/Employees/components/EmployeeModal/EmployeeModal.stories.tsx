@@ -49,3 +49,15 @@ export const EditEmployee: ComponentStory<typeof EmployeeModal> = () => {
     />
   );
 };
+
+export const savePending: ComponentStory<typeof EmployeeModal> = () => {
+  return (
+    <EmployeeModal
+      toastTitle={"New team member"}
+      onSave={() => new Promise(() => true)}
+      onClose={() => true}
+      isOpen={true}
+      skills={skills}
+    />
+  );
+};
