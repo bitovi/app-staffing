@@ -82,11 +82,17 @@ jobs:
         script: |
           console.log("debugging")
           console.log(context)
-          /*
-          await github.rest.actions.createWorkflowDispatch({
-            owner: process.env.OPERATIONS_REPO_ORG,
-            repo: process.env.OPERATIONS_REPO,
-            workflow_id: process.env.OPERATIONS_REPO_WORKFLOW,
-            ref: process.env.OPERATIONS_REPO_BRANCH
-          });
-          */
+          if(context.eventName == "pull_request"){
+            console.log("Pull request. not triggering deployment")
+
+          }else{
+            console.log("Not a pull request. Triggering deployment")
+            /*
+            await github.rest.actions.createWorkflowDispatch({
+              owner: process.env.OPERATIONS_REPO_ORG,
+              repo: process.env.OPERATIONS_REPO,
+              workflow_id: process.env.OPERATIONS_REPO_WORKFLOW,
+              ref: process.env.OPERATIONS_REPO_BRANCH
+            });
+            */
+          }
