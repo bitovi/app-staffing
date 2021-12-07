@@ -4,14 +4,17 @@
 </div>
 
 ## Staffing App
-------
- A tool to view and manage current and future resourcing needs.
+
+---
+
+A tool to view and manage current and future resourcing needs.
+
 > Mission
 > To have more accurate and responsive staffing decisions.
 
 ## 🔗 Quick Links
 
-- [Deployed site (also in about)](bitovi.github.io/app-staffing/)
+- [Deployed site (also in about)](https://bitovi.github.io/app-staffing/)
 
 - [Storybook](https://bitovi.github.io/app-staffing/storybook/)
 - [Project WIKI](https://github.com/bitovi/app-staffing/wiki)
@@ -20,9 +23,9 @@
 
 ## 🏗 Build Status
 
-------
+---
 
-*TBD: Project build status if any*
+_TBD: Project build status if any_
 
 ## 🗂 Tech Stack & Project Dependencies
 
@@ -36,53 +39,51 @@ Tech Stack/Libraries
 
 Dependencies
 
-- [API]()
-
+- [API](https://github.com/bitovi/app-staffing-api)
 
 [comment]: <> (- [])
-
 
 ## 🔧 Project Setup
 
 Follow these steps for setting up this project on ur local machine.
 
 - **Running the project.**
-     1. Run `npm install` to install packages 
-     2. Run `npm run dev` to start the app in the development mode.
-     3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  1.  Run `npm install` to install packages
+  2.  Run `npm run dev` to start the app in the development mode.
+  3.  Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## 📜 Documentation
 
 Components are documented using [storybook](https://storybook.js.org/docs/react/writing-stories/introduction).
 
 ```tsx
-/** 
+/**
  * task.stories.tsx
  * Documenting the different states for a Task component
  */
 export default {
-    component: Task,
-    title: 'Task',
+  component: Task,
+  title: "Task",
 };
 
-const Template = args => <Task {...args} />;
+const Template = (args) => <Task {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-    task: {
-        id: '1',
-        title: 'Test Task',
-        state: 'TASK_INBOX',
-        updatedAt: new Date(2021, 0, 1, 9, 0),
-    },
+  task: {
+    id: "1",
+    title: "Test Task",
+    state: "TASK_INBOX",
+    updatedAt: new Date(2021, 0, 1, 9, 0),
+  },
 };
 
 export const Pinned = Template.bind({});
 Pinned.args = {
-    task: {
-        ...Default.args.task,
-        state: 'TASK_PINNED',
-    },
+  task: {
+    ...Default.args.task,
+    state: "TASK_PINNED",
+  },
 };
 ```
 
@@ -97,10 +98,9 @@ Pinned.args = {
       │   ├── components              # Reusable components.
       │   ├── pages                   # Indvidual Pages accrocess the application
       │   ├── services                # Service layer
-      │   ├── app.tsx                 # Main layout 
+      │   ├── app.tsx                 # Main layout
       │   └── index.tsx               # Application entry point
       └── README.md
-
 
 ### Guidelines
 
@@ -108,7 +108,7 @@ Pinned.args = {
 
 ## 🚀 Deployment
 
-*TBD: Any deployment guideline.*
+_TBD: Any deployment guideline._
 
 ## 🧪 Tests
 

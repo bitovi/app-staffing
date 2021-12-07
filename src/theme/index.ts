@@ -3,22 +3,26 @@ import { colors } from "./colors";
 
 import Button from "./components/button";
 import { Checkbox } from "./components/checkbox";
-import { textStyles } from "./fonts/typography";
-import DatePicker from "./components/date-picker";
+
+import { FormLabel } from "./components/form-label";
 import Tag from "./components/tag";
+import Heading from "./components/heading";
+import { fonts, textStyles } from "./fonts";
+import DatePicker from "./components/date-picker";
+import Divider from "./components/divider";
 
 const theme = extendTheme({
-  fonts: {
-    headers: "Inter",
-    body: "Montserrat",
-  },
-  colors,
+  fonts,
   textStyles,
+  colors,
   components: {
     Checkbox,
     Button,
+    Heading,
     DatePicker,
     Tag,
+    FormLabel,
+    Divider,
   },
 });
 

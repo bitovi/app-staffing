@@ -19,7 +19,7 @@ export default function useRoles(
     isLoading,
     handleAdd,
     handleUpdate,
-  } = useRest<Role>("/api/v1/roles", queryParams);
+  } = useRest<Role>("/api/v1/roles", "undefined", queryParams);
 
   return {
     roles,

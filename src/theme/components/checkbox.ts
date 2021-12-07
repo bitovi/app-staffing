@@ -1,4 +1,6 @@
-export const Checkbox = {
+import { StyleConfig } from "@chakra-ui/theme-tools";
+
+export const Checkbox: StyleConfig = {
   // const parts = ["container", "control", "label", "icon"]
   baseStyle: {
     control: {
@@ -10,6 +12,11 @@ export const Checkbox = {
           borderColor: "primary",
         },
       },
+    },
+  },
+  sizes: {
+    md: {
+      label: { fontSize: "12px" },
     },
   },
 };

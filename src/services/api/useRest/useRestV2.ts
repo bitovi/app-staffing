@@ -1,107 +1,176 @@
 import param from "can-param";
 import { useCallback } from "react";
-//import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { JSONAPISkill, Skill } from "..";
-//import { JSONAPI } from "../baseMocks/interfaces";
-import { FrontEndEmployee, JSONAPIEmployee } from "../employees/interfaces";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
-// import { skills } from "../skills/fixtures";
-import { skillStoreManager } from "../skills/mocks";
-// import { employeeDataFormatter } from "../useEmployees/useEmployees";
+import { SerializerTypes } from "./getJsonApiSerializer";
+import hydrateObject from "./hydrateObject";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
-
-///////////////////////////////////////////////////////////////////
-// ** V2 is still not abstracted enough for consumption by all endpoints
-// ** Currently implementing TypeScript unions to check for specific types
-// ** for example in the interface below
-///////////////////////////////////////////////////////////////////
-interface RestActions<T> extends APIResponse<T> {
-  handleAdd: (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>;
+import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
+interface RestActions<T, K> extends APIResponse<T[]> {
+  handleAdd: (newCollectionItem: {
+    data: Omit<K, "id">;
+  }) => Promise<string | undefined>;
+  handleUpdate: ({
+    data,
+    id,
+  }: {
+    data: Omit<K, "id">;
+    id?: string;
+  }) => Promise<void>;
   reset: () => void;
+  handleDelete: (collectionItemId: string) => Promise<void>;
 }
-
-function useRest<T>(
+function useRest<T extends { id?: string }, K>(
   path: string,
-  queryParams?: QueriableList<T>,
-): RestActions<T> {
+  type: SerializerTypes,
+  queryParams?: QueriableList<K>,
+): RestActions<T, K> {
   const key = `${path}?${param(queryParams)}`;
-
   const { mutate } = useSWRConfig();
-
-  const { data: response, error } = useSWR<{ data: T }, Error>(
+  const { data: response, error } = useSWR<{ data: T[] }, Error>(
     key,
-    (url) => fetcher("GET", url),
-    { suspense: true, use: [deserializeDateMiddleware] },
+    (url) => fetcher("GET", type, url),
+    {
+      suspense: true,
+      use: [deserializeDateMiddleware],
+      // removed localStorage persistance causing production break ?
+      // fallbackData: cache.get(key),
+    },
   );
-
   const handleAdd = useCallback<
-    (newCollectionItem: { data: FrontEndEmployee }) => Promise<string>
+    (newCollectionItem: { data: Omit<K, "id"> }) => Promise<string | undefined>
   >(
-    async (newCollectionItem: { data: FrontEndEmployee }) => {
+    async (newCollectionItem: { data: Omit<K, "id"> }) => {
       let newId = "";
+      try {
+        await mutate(
+          key,
+          async (addResponse: { data: T[] }) => {
+            let { data: newItem } = await fetcher(
+              "POST",
+              type,
+              path,
+              newCollectionItem,
+            );
+            newId = newItem.id;
+
+            //----------------------------------------------
+            // a temporary measure until all endpoints are in JSON API format
+            // otherwise the deserializer will flatten out object and erase information
+            if (type !== "undefined") {
+              const [deserializedItem, relationships] = jsonApiMiddleware(
+                { data: newItem },
+                type,
+              );
+              newItem = deserializedItem.data;
+
+              // if the return object had relationship fields, they need to be hydrated
+              // otherwise they are in the format [ {type: string, id: string} ]
+              if (relationships.length > 0) {
+                const hydratedDeserialized = await hydrateObject<{ data: T }>(
+                  deserializedItem,
+                  relationships,
+                );
+                newItem = hydratedDeserialized.data;
+              }
+            }
+            // -----------------------------------------------
+
+            return {
+              ...addResponse,
+              data: [...addResponse.data, newItem],
+            };
+          },
+          false,
+        );
+        return newId;
+      } catch (error) {
+        if (error instanceof Error) {
+          //console.log(error.message);
+        }
+      }
+    },
+    [path, key, mutate, type],
+  );
+  const handleUpdate = useCallback<
+    ({ data, id }: { data: Omit<K, "id">; id?: string }) => Promise<void>
+  >(
+    async ({
+      data: updatedCollectionItem,
+      id,
+    }: {
+      data: Omit<K, "id">;
+      id?: string;
+    }) => {
       await mutate(
         key,
-        async (addResponse: {
-          data: { data: JSONAPIEmployee[]; included: JSONAPISkill[] };
-        }) => {
-          const { data: newItem } = await fetcher<{ data: JSONAPIEmployee }>(
-            "POST",
-            path,
-            newCollectionItem,
+        async (cachedData: { data: T[] }) => {
+          let { data: updatedItem } = await fetcher<{ data: T }>(
+            "PATCH",
+            type,
+            `${path}/${id}`,
+            updatedCollectionItem,
           );
+          //----------------------------------------------
+          // a temporary measure until all endpoints are in JSON API format
+          // otherwise the deserializer will flatten out object and erase information
+          if (type !== "undefined") {
+            const [deserializedItem, relationships] = jsonApiMiddleware(
+              { data: updatedItem },
+              type,
+            );
+            updatedItem = deserializedItem.data;
 
-          newId = newItem.id;
-          const newItemIncluded = await skillStoreManager.store.getListData({
-            filter: {
-              id: newItem.relationships.skills.data.map(
-                (skill: Skill) => skill.id,
-              ),
-            },
-          });
-          const skillsToAdd = newItemIncluded.data
-            .filter((skill) => {
-              if (
-                !addResponse.data.included.find(
-                  (cacheObject: JSONAPISkill) => cacheObject.id === skill.id,
-                )
-              ) {
-                return skill;
-              }
-            })
-            .map((skill) => ({
-              type: "skills",
-              id: skill.id,
-              attributes: {
-                name: skill.name,
-              },
-            }));
-
-          const newCache = {
-            data: [...addResponse.data.data, newItem],
-            included: [...addResponse.data.included, ...skillsToAdd],
-          };
-
+            // if the return object had relationship fields, they need to be hydrated
+            // otherwise they are in the format [ {type: string, id: string} ]
+            if (relationships.length > 0) {
+              const hydratedDeserialized = await hydrateObject<{ data: T }>(
+                deserializedItem,
+                relationships,
+              );
+              updatedItem = hydratedDeserialized.data;
+            }
+          }
+          // -----------------------------------------------
           return {
-            ...addResponse,
-            data: newCache,
+            ...cachedData,
+            data: (cachedData?.data ?? []).map((item) =>
+              item.id === updatedItem.id ? updatedItem : item,
+            ),
           };
         },
         false,
       );
-      return newId;
     },
-    [path, key, mutate],
+    [path, key, mutate, type],
   );
-
+  const handleDelete = useCallback(
+    async (collectionItemId: string) => {
+      await mutate(
+        key,
+        async (deleteResponse: { data: T[] }) => {
+          await fetcher("DELETE", type, `${path}/${collectionItemId}`);
+          return {
+            ...deleteResponse,
+            data: deleteResponse.data.filter(
+              (item) => item.id !== collectionItemId,
+            ),
+          };
+        },
+        false,
+      );
+    },
+    [path, key, mutate, type],
+  );
   return {
     data: response?.data,
     handleAdd,
+    handleUpdate,
+    handleDelete,
     error,
     isLoading: !response && !error,
     reset: () => mutate(key, (v: T) => v, false),
   };
 }
-
 export default useRest;

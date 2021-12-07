@@ -6,7 +6,6 @@ import {
 } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
-
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
 
@@ -60,13 +59,15 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { employees, addEmployee } = useEmployees();
+  const { employees, addEmployee, deleteEmployee, updateEmployee } =
+    useEmployees();
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   return (
     <Box maxHeight="100%">
       <EmployeeModal
+        toastTitle="New team member"
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
         onSave={addEmployee}
@@ -87,12 +88,19 @@ export function Employees({
           size="lg"
           variant="primary"
           onClick={() => setEmployeeModal(true)}
+          arialabel="Add Employee"
         >
           Add Team Member
         </Button>
       </Flex>
 
-      <EmployeeTable mt="48px" employees={employees} onEdit={() => undefined} />
+      <EmployeeTable
+        mt="48px"
+        updateEmployee={updateEmployee}
+        deleteEmployee={deleteEmployee}
+        employees={employees}
+        skills={skills}
+      />
     </Box>
   );
 }

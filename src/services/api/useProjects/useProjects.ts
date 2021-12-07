@@ -25,7 +25,7 @@ export default function useProjects(
     handleUpdate,
     handleDelete,
     reset,
-  } = useRest<Project>("/api/v1/projects", queryParams);
+  } = useRest<Project>("/api/v1/projects", "undefined", queryParams);
 
   return {
     projects,

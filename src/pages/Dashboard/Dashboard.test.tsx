@@ -5,6 +5,6 @@ import Dashboard from "./Dashboard";
 describe("Pages/Dashboard", () => {
   it("works", async () => {
     render(<Dashboard />);
-    expect(screen.getByText("React")).toBeInTheDocument();
+    expect(screen.getByText("Bitovi Staff Management")).toBeInTheDocument();
   });
 });

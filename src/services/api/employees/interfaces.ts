@@ -1,4 +1,6 @@
+import { JSONData } from "../baseMocks/interfaces";
 import { Skill } from "../skills";
+import { JSONSkill } from "../skills/interfaces";
 
 export interface Employee {
   id: string;
@@ -23,42 +25,20 @@ export interface AssignedEmployee {
   employee: Employee;
 }
 
-export interface JSONAPIEmployee {
-  type: string;
-  id: string;
-  attributes: {
-    name: string;
-    startDate: Date;
-    endDate?: Date;
-  };
-  relationships: {
-    skills: {
-      data: {
-        type: string;
-        id: string;
-      }[];
-    };
+export interface EmployeeAttributes {
+  name: string;
+  startDate: Date;
+  endDate?: Date;
+}
+
+export interface EmployeeRelationships {
+  skills: {
+    data: Omit<JSONSkill, "attributes">[];
   };
 }
 
-//////////////////////////////////////////////////////////////////
-//** This interface for Typing frontend Employee sent through POST
-//**  Note that the date values are strings and not date objects --
-//**  This happens in middleware
-/////////////////////////////////////////////////////////////////
-export interface FrontEndEmployee
-  extends Omit<JSONAPIEmployee, "id" | "attributes" | "relationships"> {
-  attributes: {
-    name: string;
-    startDate: string;
-    endDate?: string;
-  };
-  relationships: {
-    skills: {
-      data?: {
-        type: string;
-        id: string;
-      }[];
-    };
-  };
-}
+export type EmployeeJSON = JSONData<
+  "employees",
+  EmployeeAttributes,
+  EmployeeRelationships
+>;
