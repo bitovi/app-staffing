@@ -114,7 +114,7 @@ export default function EmployeeModal({
         status: "success",
       });
       onClose();
-      await setStatus("idle");
+      setStatus("idle");
     } catch (e) {
       setServerError(!serverError);
     }
