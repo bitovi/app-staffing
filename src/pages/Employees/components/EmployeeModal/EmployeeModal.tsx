@@ -235,7 +235,7 @@ export default function EmployeeModal({
               {isNewEmployee ? "Add & Close" : "Save & Close"}
             </Button>
           ) : (
-            <Button isLoading loadingText="Saving" isDisabled/>
+            <Button isLoading loadingText="Saving" isDisabled />
           )}
         </ModalFooter>
       </ModalContent>
