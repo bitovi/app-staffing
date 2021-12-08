@@ -26,6 +26,11 @@ setupWorker(...mocks).start({
 });
 
 // Commented out for potentialy causing production errors?
+// overwrites localStorage app-cache entry at page unmount
+// with the current contents of the SWR cache, effectively
+// preventing a clearing of localStorage from effectively emptying
+// the app-cache entry
+
 // function localStorageProvider() {
 //   const map = new Map(JSON.parse(localStorage.getItem("app-cache") || "[]"));
 //   window.addEventListener("beforeunload", () => {
