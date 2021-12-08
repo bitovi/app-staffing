@@ -16,7 +16,6 @@ const jsonApiMiddleware = (
   const relationshipFields: string[] = [];
   // if this is a POST or PUT method and the response data is a single object
   // store the name of its relationship fields in an array
-
   // we will then hydrate these fields with their data in the following function within fetcher();
   if (typeof response.data === "object" && response.data !== null) {
     for (const key in response.data.relationships) {

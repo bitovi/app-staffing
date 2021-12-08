@@ -97,8 +97,9 @@ export default function restBuilder<
             const hydratedDeserialized = await hydrateObject<{
               data: FrontEndData;
             }>({ data: deserializedItem }, relationships);
-            deserializedItem = hydratedDeserialized;
+            deserializedItem = hydratedDeserialized.data;
           }
+
           // mutate list data
           await mutate(
             path,
@@ -193,9 +194,7 @@ export default function restBuilder<
         msgObject &&
           toast({
             title: `${msgObject.title} updated`,
-            description: `${
-              deserializedItem?.name || msgObject.title
-            } was succesfully updated!`,
+            description: `${deserializedItem?.name} was succesfully updated!`,
             duration: 5000,
             isClosable: false,
             position: "bottom-right",
