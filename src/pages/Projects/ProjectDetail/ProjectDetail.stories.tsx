@@ -37,7 +37,7 @@ const mockProject = {
 };
 
 export default {
-  title: "Pages/ProjectDetail",
+  title: "Pages/Projects/ProjectDetail",
   component: ProjectDetail,
 } as ComponentMeta<typeof ProjectDetail>;
 

@@ -2,11 +2,14 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-
+import { Link } from "react-router-dom";
+import { Spinner } from "@chakra-ui/spinner";
 export default function ProjectsHeader({
   loading,
+  name,
 }: {
   loading?: boolean;
+  name?: string;
 }): JSX.Element {
   return (
     <Box mb="48px">
@@ -18,12 +21,42 @@ export default function ProjectsHeader({
         separator={<ChevronRightIcon />}
       >
         <BreadcrumbItem>
-          <BreadcrumbLink href="/app-staffing/#">Home</BreadcrumbLink>
+          <BreadcrumbLink href="/" data-testid="home">
+            Home
+          </BreadcrumbLink>
         </BreadcrumbItem>
 
-        <BreadcrumbItem isCurrentPage color="gray.800">
-          <BreadcrumbLink href="#">Projects</BreadcrumbLink>
-        </BreadcrumbItem>
+        {/* Conditionals for Breadcrumb focus */}
+        {!name && !loading ? (
+          <BreadcrumbItem isCurrentPage color="gray.800">
+            <BreadcrumbLink href="/projects" data-testid="projects">
+              Projects
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        ) : (
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/projects" data-testid="projects">
+              Projects
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        )}
+
+        {name && loading ? (
+          <BreadcrumbItem isCurrentPage color="gray.800">
+            <BreadcrumbLink as={Link} to={"#"} data-testid="project">
+              {name}
+              <Spinner size="xs" ml="0.5rem" />
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        ) : name && !loading ? (
+          <BreadcrumbItem isCurrentPage color="gray.800">
+            <BreadcrumbLink as={Link} to={"#"} data-testid="project">
+              {name}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        ) : (
+          ""
+        )}
       </Breadcrumb>
 
       <Flex

@@ -1,7 +1,7 @@
-import BreadCrumb from "../../../components/Breadcrumb/Breadcrumb";
 import { LoadingProjectList } from "./components/LoadingProjectList";
 import ProjectList from "./components/ProjectList";
 import { ServiceError } from "../../../components/ServiceError";
+import { useProjects as defaultUseProjects } from "../../../services/api";
 import ProjectsHeader from "./components/ProjectsHeader/ProjectsHeader";
 
 export default function Projects({
@@ -21,7 +21,6 @@ export default function Projects({
         <ServiceError />
       ) : (
         <div>
-          <BreadCrumb />
           <ProjectList projects={projects} />
         </div>
       )}

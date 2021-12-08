@@ -2,10 +2,10 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useProjects } from "../../../services/api";
 import { Box } from "@chakra-ui/layout";
-import BreadCrumb from "../../../components/Breadcrumb/Breadcrumb";
 import type { Project } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
+import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import RoleList from "../components/RoleList";
 
 export default function ProjectDetail(): JSX.Element {
@@ -26,10 +26,10 @@ export default function ProjectDetail(): JSX.Element {
   };
 
   return (
-    <div>
+    <>
+      <ProjectsHeader name={projectData?.name} loading={false} />
       {projectData && (
-        <>
-          <BreadCrumb name={projectData.name} />
+        <div>
           <ProjectDescription onEdit={onSave} project={projectData} />
           <RoleList onEdit={onSave} project={projectData} />
           <Box mt={10}>
@@ -38,8 +38,8 @@ export default function ProjectDetail(): JSX.Element {
               projectId={projectData.id}
             />
           </Box>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }
