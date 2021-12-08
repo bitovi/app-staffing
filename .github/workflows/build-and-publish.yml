@@ -77,9 +77,17 @@ jobs:
   # https://octokit.github.io/rest.js/v18#actions-create-workflow-dispatch
   deploy-dev:
     # only deploy dev if not pull request
-    if: ${{ github.ref != 'refs/heads/main' }}
+
+    # doesn't stop the job from running
+    # if: ${{ github.ref != 'refs/heads/main' }}
+
+    # doesn't stop the job from running
     # if: env.GITHUB_EVENT_NAME != 'pull_request'
+
+    # doesn't stop the job from running
     # if: ${{ github.event_name }} != 'pull_request'
+
+    # uncomment before merge
     # needs: [ publish ]
     runs-on: ubuntu-latest
     steps:
@@ -98,6 +106,8 @@ jobs:
         # fi
     - name: Deploy Stage
       uses: actions/github-script@v5
+      # this will stop the step from running
+      if: env.GITHUB_EVENT_NAME != 'pull_request'
       env:
         OPERATIONS_REPO: operations-staffing-app
         OPERATIONS_REPO_ORG: bitovi
