@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy Stage
-      if: env.GITHUB_EVENT_NAME != "pull_request"
+      if: env.GITHUB_EVENT_NAME != 'pull_request'
       uses: actions/github-script@v5
       env:
         OPERATIONS_REPO: operations-staffing-app
