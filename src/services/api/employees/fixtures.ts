@@ -284,17 +284,17 @@ export const employeeMockData = (): ResponseStatus & EmployeeActions => {
     },
   ];
   return {
-    getEmployee: (id: string) => {
+    useEmployee: (id: string) => {
       return { data: employees[0] };
     },
-    getEmployeeList: () => {
+    useEmployees: () => {
       return { data: employees };
     },
-    getEmployeeActions: () => {
+    useEmployeeActions: () => {
       return {
-        handleAdd: (employee) => Promise.resolve(""),
-        handleUpdate: (id) => Promise.resolve(),
-        handleDelete: (id) => Promise.resolve(),
+        addEmployee: (employee) => Promise.resolve(""),
+        updateEmployee: (id) => Promise.resolve(),
+        deleteEmployee: (id) => Promise.resolve(),
       };
     },
   };
