@@ -80,43 +80,33 @@ export default function restBuilder<
       async (newCollectionItem: { data: Omit<BackEndData, "id"> }) => {
         let newId = "";
         try {
-          let { data: newItem } = await fetcher(
+          const { data: newItem } = await fetcher(
             "POST",
             type,
             path,
             newCollectionItem,
           );
-
-          //----------------------------------------------
-          // a temporary measure until all endpoints are in JSON API format
-          // otherwise the deserializer will flatten out object and erase information
-          if (type !== "undefined") {
-            const [deserializedItem, relationships] = jsonApiMiddleware(
-              { data: newItem },
-              type,
-            );
-            newItem = deserializedItem.data;
-
-            // if the return object had relationship fields, they need to be hydrated
-            // otherwise they are in the format [ {type: string, id: string} ]
-            if (relationships.length > 0) {
-              const hydratedDeserialized = await hydrateObject<{
-                data: FrontEndData;
-              }>(deserializedItem, relationships);
-              newItem = hydratedDeserialized.data;
-            }
+          //eslint-disable-next-line prefer-const
+          let [{ data: deserializedItem }, relationships] = jsonApiMiddleware(
+            { data: newItem },
+            type,
+          );
+          // if the return object had relationship fields, they need to be hydrated
+          // otherwise they are in the format [ {type: string, id: string} ]
+          if (relationships.length > 0) {
+            const hydratedDeserialized = await hydrateObject<{
+              data: FrontEndData;
+            }>({ data: deserializedItem }, relationships);
+            deserializedItem = hydratedDeserialized;
           }
-          // -----------------------------------------------
-
           // mutate list data
           await mutate(
             path,
             async (addResponse: { data: FrontEndData[] }) => {
               newId = newItem.id;
-
               return {
                 ...addResponse,
-                data: [...addResponse.data, newItem],
+                data: [...addResponse.data, deserializedItem],
               };
             },
             false,
@@ -127,7 +117,7 @@ export default function restBuilder<
             `${path}/${newItem.id}`,
             async (updateCollectionItem: { data: FrontEndData }) => {
               return {
-                data: { ...updateCollectionItem, ...newItem },
+                data: { ...updateCollectionItem, ...deserializedItem },
               };
             },
             false,
@@ -135,7 +125,7 @@ export default function restBuilder<
           msgObject &&
             toast({
               title: `${msgObject.title} added`,
-              description: `${newItem.name} was succesfully added!`,
+              description: `${deserializedItem.name} was succesfully added!`,
               duration: 5000,
               isClosable: false,
               position: "bottom-right",
@@ -152,34 +142,27 @@ export default function restBuilder<
       [mutate, toast],
     );
     const handleUpdate = useCallback<
-      (id: string, data: { data: BackEndData }) => Promise<void>
+      (id: string, patchedData: { data: BackEndData }) => Promise<void>
     >(
-      async (id: string, data: { data: BackEndData }) => {
-        let { data: updatedItem } = await fetcher<{ data: FrontEndData }>(
+      async (id: string, patchedData: { data: BackEndData }) => {
+        await fetcher<{ data: FrontEndData }>(
           "PATCH",
           type,
           `${path}/${id}`,
-          data,
+          patchedData,
         );
-
-        //----------------------------------------------
-        // a temporary measure until all endpoints are in JSON API format
-        // otherwise the deserializer will flatten out object and erase information
-        if (type !== "undefined") {
-          const [deserializedItem, relationships] = jsonApiMiddleware(
-            { data: updatedItem },
-            type,
-          );
-          updatedItem = deserializedItem.data;
-
-          // if the return object had relationship fields, they need to be hydrated
-          // otherwise they are in the format [ {type: string, id: string} ]
-          if (relationships.length > 0) {
-            const hydratedDeserialized = await hydrateObject<{
-              data: FrontEndData;
-            }>(deserializedItem, relationships);
-            updatedItem = hydratedDeserialized.data;
-          }
+        //eslint-disable-next-line prefer-const
+        let [{ data: deserializedItem }, relationships] = jsonApiMiddleware(
+          patchedData,
+          type,
+        );
+        // if the return object had relationship fields, they need to be hydrated
+        // otherwise they are in the format [ {type: string, id: string} ]
+        if (relationships.length > 0) {
+          const hydratedDeserialized = await hydrateObject<{
+            data: FrontEndData;
+          }>({ data: deserializedItem }, relationships);
+          deserializedItem = hydratedDeserialized.data;
         }
         // -----------------------------------------------
 
@@ -190,7 +173,7 @@ export default function restBuilder<
             return {
               ...cachedData,
               data: (cachedData?.data ?? []).map((item) =>
-                item?.id === updatedItem.id ? updatedItem : item,
+                item?.id === deserializedItem?.id ? deserializedItem : item,
               ),
             };
           },
@@ -202,7 +185,7 @@ export default function restBuilder<
           `${path}/${id}`,
           async (updateCollectionItem: { data: FrontEndData }) => {
             return {
-              data: { ...updateCollectionItem, ...updatedItem },
+              data: { ...updateCollectionItem, ...deserializedItem },
             };
           },
           false,
@@ -210,7 +193,9 @@ export default function restBuilder<
         msgObject &&
           toast({
             title: `${msgObject.title} updated`,
-            description: `${updatedItem.name} was succesfully updated!`,
+            description: `${
+              deserializedItem?.name || msgObject.title
+            } was succesfully updated!`,
             duration: 5000,
             isClosable: false,
             position: "bottom-right",

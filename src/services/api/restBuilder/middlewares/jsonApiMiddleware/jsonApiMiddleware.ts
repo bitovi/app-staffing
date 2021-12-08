@@ -14,7 +14,6 @@ const jsonApiMiddleware = (
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 ): [any, string[]] => {
   const relationshipFields: string[] = [];
-
   // if this is a POST or PUT method and the response data is a single object
   // store the name of its relationship fields in an array
 
@@ -24,7 +23,6 @@ const jsonApiMiddleware = (
       if (!relationshipFields.includes(key)) relationshipFields.push(key);
     }
   }
-
   const deserializedData = getJsonApiSerializer().deserialize(
     type,
     response ?? {},
