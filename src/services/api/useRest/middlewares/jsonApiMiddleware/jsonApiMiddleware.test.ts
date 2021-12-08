@@ -11,7 +11,6 @@ import { employeeSkillsStoreManager } from "../../../employee_skills/mocks";
 import { skillStoreManager } from "../../../skills/mocks";
 import useEmployees from "../../../useEmployees";
 import hydrateObject from "../../hydrateObject";
-import { wrapper } from "../../useRest.test";
 import jsonApiMiddleware from "./jsonApiMiddleware";
 
 describe("json-api-deserializer middleware", () => {
@@ -28,7 +27,8 @@ describe("json-api-deserializer middleware", () => {
   });
 
   it("works", async () => {
-    const { employees: frontEndShapeDeserialized } = employeeMockData();
+    const { useEmployeeList } = employeeMockData();
+    const { data: frontEndShapeDeserialized } = useEmployeeList();
     const [deserializedResults, relationships] = jsonApiMiddleware(
       serializedEmployeeMockData,
       "employees",
@@ -126,11 +126,8 @@ describe("json-api-deserializer middleware", () => {
   });
 
   it("Adds employee and hydrates skills fields", async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useEmployees(), {
-      wrapper,
-    });
+    const { result: actions } = renderHook(() => useEmployees());
 
-    await waitForNextUpdate();
     const newEmployee: { data: Omit<EmployeeJSON, "id"> } = {
       data: {
         type: "employees",
@@ -156,10 +153,18 @@ describe("json-api-deserializer middleware", () => {
       },
     };
     // Functionality works integrated with employees hook
-    result.current.addEmployee(newEmployee);
+    const { result: dataList, waitForNextUpdate } = renderHook(() =>
+      actions.current.useEmployeeList(),
+    );
+
+    await waitForNextUpdate();
+
+    const { addEmployee } = actions.current.useEmployeeActions();
+
+    addEmployee(newEmployee);
     await waitFor(() =>
       expect(
-        result.current.employees
+        dataList.current?.data
           ?.filter((employee) => employee.name === "Test Person")
           .map((employee) => employee.skills)[0],
       ).toEqual([
@@ -169,5 +174,3 @@ describe("json-api-deserializer middleware", () => {
     );
   });
 });
-
-export {};

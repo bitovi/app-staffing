@@ -84,9 +84,8 @@ describe("Pages/Employees", () => {
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     await waitFor(() => expect(modal).not.toBeInTheDocument());
-
     // check for toast message
-    const toastMessage = await screen.findByText("New team member", {
+    const toastMessage = await screen.findByText("Team member added", {
       exact: false,
     });
 
@@ -178,12 +177,14 @@ describe("Pages/Employees", () => {
 
     deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    const toastMessage = await screen.findByText("Team member deleted", {
-      exact: false,
-    });
-
+    const toastMessage = await screen.findByText(
+      "Rosemarie Mitchell was successfully deleted",
+      {
+        exact: false,
+      },
+    );
+    screen.debug(toastMessage);
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
-
     expect(rosemarieRow).not.toBeInTheDocument;
 
     const employeeStore = await employeeStoreManager.store.getListData();
