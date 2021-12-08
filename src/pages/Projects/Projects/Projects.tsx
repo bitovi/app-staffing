@@ -1,7 +1,8 @@
-import ProjectList from "./components/ProjectList";
-import { useProjects as defaultUseProjects } from "../../../services/api";
+import BreadCrumb from "../../../components/Breadcrumb/Breadcrumb";
 import { LoadingProjectList } from "./components/LoadingProjectList";
+import ProjectList from "./components/ProjectList";
 import { ServiceError } from "../../../components/ServiceError";
+import { useProjects as defaultUseProjects } from "../../../services/api";
 
 export default function Projects({
   useProjects = defaultUseProjects,
@@ -17,7 +18,10 @@ export default function Projects({
       ) : error ? (
         <ServiceError />
       ) : (
-        <ProjectList mt="48px" projects={projects} />
+        <div>
+          <BreadCrumb />
+          <ProjectList mt="48px" projects={projects} />
+        </div>
       )}
     </>
   );
