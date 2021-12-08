@@ -16,23 +16,20 @@ export interface RestActions<K> {
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
 
-export interface RestBuilderActions<T, K> {
+export interface RestHooks<T, K> {
   useRestOne: (id: string) => APIResponse<T>;
   useRestList: () => APIResponse<T[]>;
   useRestActions: () => RestActions<K>;
 }
 
 export default function restBuilder<
-  FrontEndShape extends { id?: string },
-  JSONShape,
->(
-  path: string,
-  type: SerializerTypes,
-): RestBuilderActions<FrontEndShape, JSONShape> {
+  FrontEndData extends { id?: string },
+  BackEndData,
+>(path: string, type: SerializerTypes): RestHooks<FrontEndData, BackEndData> {
   function useRestList(
-    queryParams?: QueriableList<JSONShape>,
-  ): APIResponse<FrontEndShape[]> {
-    const { data: response, error } = useSWR<{ data: FrontEndShape[] }, Error>(
+    queryParams?: QueriableList<BackEndData>,
+  ): APIResponse<FrontEndData[]> {
+    const { data: response, error } = useSWR<{ data: FrontEndData[] }, Error>(
       path,
       (path) => fetcher("GET", type, `${path}?${param(queryParams)}`),
       {
@@ -46,9 +43,9 @@ export default function restBuilder<
     };
   }
 
-  function useRestOne(id: string): APIResponse<FrontEndShape> {
+  function useRestOne(id: string): APIResponse<FrontEndData> {
     const key = `${path}/${id}`;
-    const { data: response, error } = useSWR<{ data: FrontEndShape }, Error>(
+    const { data: response, error } = useSWR<{ data: FrontEndData }, Error>(
       key,
       (key) => fetcher("GET", type, key),
       {
@@ -62,14 +59,14 @@ export default function restBuilder<
     };
   }
 
-  function useRestActions(): RestActions<JSONShape> {
+  function useRestActions(): RestActions<BackEndData> {
     const { mutate } = useSWRConfig();
     const handleAdd = useCallback<
       (newCollectionItem: {
-        data: Omit<JSONShape, "id">;
+        data: Omit<BackEndData, "id">;
       }) => Promise<string | undefined>
     >(
-      async (newCollectionItem: { data: Omit<JSONShape, "id"> }) => {
+      async (newCollectionItem: { data: Omit<BackEndData, "id"> }) => {
         let newId = "";
         try {
           let { data: newItem } = await fetcher(
@@ -93,7 +90,7 @@ export default function restBuilder<
             // otherwise they are in the format [ {type: string, id: string} ]
             if (relationships.length > 0) {
               const hydratedDeserialized = await hydrateObject<{
-                data: FrontEndShape;
+                data: FrontEndData;
               }>(deserializedItem, relationships);
               newItem = hydratedDeserialized.data;
             }
@@ -103,7 +100,7 @@ export default function restBuilder<
           // mutate list data
           await mutate(
             path,
-            async (addResponse: { data: FrontEndShape[] }) => {
+            async (addResponse: { data: FrontEndData[] }) => {
               newId = newItem.id;
 
               return {
@@ -117,7 +114,7 @@ export default function restBuilder<
           // mutate individual resource cache key
           await mutate(
             `${path}/${newItem.id}`,
-            async (updateCollectionItem: { data: FrontEndShape }) => {
+            async (updateCollectionItem: { data: FrontEndData }) => {
               return {
                 data: { ...updateCollectionItem, ...newItem },
               };
@@ -134,13 +131,13 @@ export default function restBuilder<
       [mutate],
     );
     const handleUpdate = useCallback<
-      (id: string, data: { data: Omit<JSONShape, "id"> }) => Promise<void>
+      (id: string, data: { data: Omit<BackEndData, "id"> }) => Promise<void>
     >(
-      async (id: string, data: { data: Omit<JSONShape, "id"> }) => {
+      async (id: string, data: { data: Omit<BackEndData, "id"> }) => {
         console.log("PATCH");
         console.log({ id });
         console.log("data", data);
-        let { data: updatedItem } = await fetcher<{ data: FrontEndShape }>(
+        let { data: updatedItem } = await fetcher<{ data: FrontEndData }>(
           "PATCH",
           type,
           `${path}/${id}`,
@@ -161,7 +158,7 @@ export default function restBuilder<
           // otherwise they are in the format [ {type: string, id: string} ]
           if (relationships.length > 0) {
             const hydratedDeserialized = await hydrateObject<{
-              data: FrontEndShape;
+              data: FrontEndData;
             }>(deserializedItem, relationships);
             updatedItem = hydratedDeserialized.data;
           }
@@ -171,7 +168,7 @@ export default function restBuilder<
         // mutate list data
         await mutate(
           path,
-          async (cachedData: { data: FrontEndShape[] }) => {
+          async (cachedData: { data: FrontEndData[] }) => {
             return {
               ...cachedData,
               data: (cachedData?.data ?? []).map((item) =>
@@ -185,7 +182,7 @@ export default function restBuilder<
         // mutate individual resource cache key
         await mutate(
           `${path}/${id}`,
-          async (updateCollectionItem: { data: FrontEndShape }) => {
+          async (updateCollectionItem: { data: FrontEndData }) => {
             return {
               data: { ...updateCollectionItem, ...updatedItem },
             };
@@ -203,7 +200,7 @@ export default function restBuilder<
         // mutate list data
         await mutate(
           path,
-          async (deleteResponse: { data: FrontEndShape[] }) => {
+          async (deleteResponse: { data: FrontEndData[] }) => {
             return {
               ...deleteResponse,
               data: deleteResponse.data.filter(
@@ -217,7 +214,7 @@ export default function restBuilder<
         // mutate individual resource cache key
         await mutate(
           `${path}/${collectionItemId}`,
-          async (_deleteResponse: { data: FrontEndShape }) => {
+          async (_deleteResponse: { data: FrontEndData }) => {
             return {
               data: {},
             };

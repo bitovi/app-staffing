@@ -2,7 +2,7 @@ import type { Employee } from "../employees";
 import { EmployeeJSON } from "../employees/interfaces";
 import type { ResponseStatus, APIResponse } from "../shared";
 
-import useRest, { RestActions } from "../useRest/useRestV3";
+import restBuilder from "../useRest/restBuilder";
 
 // const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
 //   if (array) {
@@ -12,29 +12,37 @@ import useRest, { RestActions } from "../useRest/useRestV3";
 //   }
 //   return [];
 // };
-export interface EmployeeActions {
-  getEmployee: (id: string) => APIResponse<Employee>;
-  getEmployeeList: () => APIResponse<Employee[]>;
-  getEmployeeActions: () => RestActions<EmployeeJSON>;
+export interface EmployeeMutations<K> {
+  addEmployee: (newCollectionItem: {
+    data: Omit<K, "id">;
+  }) => Promise<string | undefined>;
+  updateEmployee: (id: string, data: { data: Omit<K, "id"> }) => Promise<void>;
+  deleteEmployee: (collectionItemId: string) => Promise<void>;
 }
 
-/** Hook for getting a list of the employees */
+export interface EmployeeActions {
+  useEmployee: (id: string) => APIResponse<Employee>;
+  useEmployees: () => APIResponse<Employee[]>;
+  useEmployeeActions: () => EmployeeMutations<EmployeeJSON>;
+}
+
+const { useRestOne, useRestList, useRestActions } = restBuilder<
+  Employee,
+  EmployeeJSON
+>("/api/v1/employees", "employees");
+
 export default function useEmployees(): ResponseStatus & EmployeeActions {
-  // *** do we still need to call query params here?
-  // queryParams?: QueriableList<Employee>,
   const {
-    useRestOne,
-    useRestList,
-    useRestActions,
-    // two interfaces passed to useRest now,
-    // the backend data shape of Employees
-    // and the frontend data shape of Employees
-    // useRest operates as the switchboard between the two.
-  } = useRest<Employee, EmployeeJSON>("/api/v1/employees", "employees");
+    handleAdd: addEmployee,
+    handleUpdate: updateEmployee,
+    handleDelete: deleteEmployee,
+  } = useRestActions();
 
   return {
-    getEmployee: useRestOne,
-    getEmployeeList: useRestList,
-    getEmployeeActions: useRestActions,
+    useEmployee: useRestOne,
+    useEmployees: useRestList,
+    useEmployeeActions: () => {
+      return { addEmployee, updateEmployee, deleteEmployee };
+    },
   };
 }
