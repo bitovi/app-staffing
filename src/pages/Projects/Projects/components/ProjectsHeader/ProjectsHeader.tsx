@@ -2,11 +2,15 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
+import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
+import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBreadCrumb";
 
 export default function ProjectsHeader({
   loading,
+  name,
 }: {
   loading?: boolean;
+  name?: string;
 }): JSX.Element {
   return (
     <Box mb="48px">
@@ -18,12 +22,17 @@ export default function ProjectsHeader({
         separator={<ChevronRightIcon />}
       >
         <BreadcrumbItem>
-          <BreadcrumbLink href="/app-staffing/#">Home</BreadcrumbLink>
+          <BreadcrumbLink href="/" data-testid="home">
+            Home
+          </BreadcrumbLink>
         </BreadcrumbItem>
 
-        <BreadcrumbItem isCurrentPage color="gray.800">
-          <BreadcrumbLink href="#">Projects</BreadcrumbLink>
-        </BreadcrumbItem>
+        {/* Conditionals for Breadcrumb focus */}
+        {name ? (
+          <SingleProjectBreadCrumb name={name} loading={loading} />
+        ) : (
+          <ProjectsBreadCrumb loading={loading} />
+        )}
       </Breadcrumb>
 
       <Flex

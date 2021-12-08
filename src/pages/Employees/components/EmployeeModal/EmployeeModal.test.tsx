@@ -96,5 +96,5 @@ describe("EmployeeModal", () => {
       expect(getByText("Saving")).toBeInTheDocument();
     });
     // Default timeout is 5000ms, this test needed more time to complete
-  }, 6000);
+  }, 6500);
 });
