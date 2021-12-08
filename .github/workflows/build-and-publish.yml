@@ -67,7 +67,7 @@ jobs:
   deploy-dev:
     # only deploy dev if not pull request
     # if: ${{ github.ref != 'refs/heads/main' }}
-    if: env.GITHUB_EVENT_NAME != "pull_request"
+    if: ${{ env.GITHUB_EVENT_NAME != "pull_request" }}
     # needs: [ publish ]
     runs-on: ubuntu-latest
     steps:
