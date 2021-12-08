@@ -7,109 +7,100 @@ on:
     branches: [ main ]
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
 
-  #     - name: Install
-  #       run: npm ci
+      - name: Install
+        run: npm ci
 
-  #     - name: Typecheck
-  #       run: npm run typecheck
-  #     - name: ESLint
-  #       run: npm run eslint
-  #     - name: Prettier
-  #       run: npm run prettier
-  #     - name: Depcheck
-  #       run: npm run depcheck
+      - name: Typecheck
+        run: npm run typecheck
+      - name: ESLint
+        run: npm run eslint
+      - name: Prettier
+        run: npm run prettier
+      - name: Depcheck
+        run: npm run depcheck
 
-  #     - name: Test
-  #       run: npm run test:ci
+      - name: Test
+        run: npm run test:ci
 
-  #     - name: Build App
-  #       run: npm run build
-  #     - name: Build Storybook
-  #       run: npm run storybook:build
-
-
-
-  # publish:
-  #   needs: [ build ]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Publish Docker and Helm
-  #     env:
-  #       # TODO: this isn't working as expected. Output is masked.
-  #       # AWS_ACCOUNT_NO: ${{ secrets.AWS_ACCOUNT_NO }}
-  #       AWS_ACCOUNT_NO: "832297766686"
-  #       ECR_REGISTRY_ID: app-staffing
-  #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-  #       AWS_DEFAULT_REGION: us-west-2
-  #       PROD_TARGET_STAGE_NAME: production
-  #       HELM_PUBLISH_S3_BUCKET: bitovi-operations-staffing-app-helm
-  #     run: |
-  #       echo "running scripts/ci/publish.sh"
-  #       ./scripts/ci/publish.sh
+      - name: Build App
+        run: npm run build
+      - name: Build Storybook
+        run: npm run storybook:build
 
 
-  debugging:
+
+  publish:
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-    - name: debugging
+    - uses: actions/checkout@v2
+    - name: Publish Docker and Helm
       env:
-        GITHUB_CONTEXT_EVENT_NAME: ${{ github.event_name }}
-        GITHUB_CONTEXT_REF: ${{ github.ref }}
+        # TODO: this isn't working as expected. Output is masked.
+        # AWS_ACCOUNT_NO: ${{ secrets.AWS_ACCOUNT_NO }}
+        AWS_ACCOUNT_NO: "832297766686"
+        ECR_REGISTRY_ID: app-staffing
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        AWS_DEFAULT_REGION: us-west-2
+        PROD_TARGET_STAGE_NAME: production
+        HELM_PUBLISH_S3_BUCKET: bitovi-operations-staffing-app-helm
       run: |
-        echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
-        echo "GITHUB_CONTEXT_EVENT_NAME: $GITHUB_CONTEXT_EVENT_NAME"
-        echo "GITHUB_CONTEXT_REF: $GITHUB_CONTEXT_REF"
+        echo "running scripts/ci/publish.sh"
+        ./scripts/ci/publish.sh
 
   # https://github.com/actions/github-script
   # https://octokit.github.io/rest.js/v18#actions-create-workflow-dispatch
   deploy-dev:
     # only deploy dev if not pull request
 
-    if: ${{ github.ref }} != 'refs/heads/main'
+    ###
+    ### TODO: stop the entire job from running (not just the step)
+    ### attempts:
+    ###
+    # attempt1: doesn't stop the job from running
+    # if: ${{ github.ref }} != 'refs/heads/main'
 
-    # doesn't stop the job from running
+    # attempt2: doesn't stop the job from running
     # if: ${{ github.ref != 'refs/heads/main' }}
 
-    # doesn't stop the job from running
+    # attempt3: doesn't stop the job from running
     # if: env.GITHUB_EVENT_NAME != 'pull_request'
 
-    # doesn't stop the job from running
+    # attempt4: doesn't stop the job from running
     # if: ${{ github.event_name }} != 'pull_request'
 
-    # uncomment before merge
-    # needs: [ publish ]
+    needs: [ publish ]
     runs-on: ubuntu-latest
     steps:
-    - name: debugging
-      env:
-        GITHUB_CONTEXT_EVENT_NAME: ${{ github.event_name }}
-        GITHUB_CONTEXT_REF: ${{ github.ref }}
-      run: |
-        echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
-        echo "GITHUB_CONTEXT_EVENT_NAME: $GITHUB_CONTEXT_EVENT_NAME"
-        echo "GITHUB_CONTEXT_REF: $GITHUB_CONTEXT_REF"
-        # if [[ $BRANCH == 'master' && $GITHUB_EVENT_NAME == 'push' ]]; then
-        #     echo "NEED=true" >> "$GITHUB_ENV"
-        # else
-        #     echo "NEED=false" >> "$GITHUB_ENV"
-        # fi
+    # - name: debugging
+    #   env:
+    #     GITHUB_CONTEXT_EVENT_NAME: ${{ github.event_name }}
+    #     GITHUB_CONTEXT_REF: ${{ github.ref }}
+    #   run: |
+    #     echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+    #     echo "GITHUB_CONTEXT_EVENT_NAME: $GITHUB_CONTEXT_EVENT_NAME"
+    #     echo "GITHUB_CONTEXT_REF: $GITHUB_CONTEXT_REF"
+    #     # if [[ $BRANCH == 'master' && $GITHUB_EVENT_NAME == 'push' ]]; then
+    #     #     echo "NEED=true" >> "$GITHUB_ENV"
+    #     # else
+    #     #     echo "NEED=false" >> "$GITHUB_ENV"
+    #     # fi
     - name: Deploy Stage
       uses: actions/github-script@v5
-      # this will stop the step from running
-      # if: env.GITHUB_EVENT_NAME != 'pull_request'
+      # this will stop the step from running if not pull request
+      if: env.GITHUB_EVENT_NAME != 'pull_request'
       env:
         OPERATIONS_REPO: operations-staffing-app
         OPERATIONS_REPO_ORG: bitovi
