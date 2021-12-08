@@ -21,10 +21,7 @@ import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   skills?: Skill[];
-  updateEmployee: (
-    id: string,
-    data: { data: Omit<EmployeeJSON, "id"> },
-  ) => Promise<void>;
+  updateEmployee: (id: string, data: { data: EmployeeJSON }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
 }
 
@@ -55,7 +52,8 @@ export default function EmployeeTable({
     employeeToUpdate: Omit<EmployeeJSON, "id">,
   ) => {
     if (employeeToEdit) {
-      await updateEmployee(employeeToEdit.id, { data: employeeToUpdate });
+      const id = employeeToEdit.id;
+      await updateEmployee(id, { data: { ...employeeToUpdate, id } });
     }
   };
 

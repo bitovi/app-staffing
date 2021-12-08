@@ -16,7 +16,7 @@ export interface EmployeeMutations<K> {
   addEmployee: (newCollectionItem: {
     data: Omit<K, "id">;
   }) => Promise<string | undefined>;
-  updateEmployee: (id: string, data: { data: Omit<K, "id"> }) => Promise<void>;
+  updateEmployee: (id: string, data: { data: K }) => Promise<void>;
   deleteEmployee: (collectionItemId: string) => Promise<void>;
 }
 

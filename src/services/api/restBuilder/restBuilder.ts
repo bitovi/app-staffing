@@ -13,7 +13,7 @@ export interface RestActions<K> {
   handleAdd: (newCollectionItem: {
     data: Omit<K, "id">;
   }) => Promise<string | undefined>;
-  handleUpdate: (id: string, data: { data: Omit<K, "id"> }) => Promise<void>;
+  handleUpdate: (id: string, data: { data: K }) => Promise<void>;
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
 
@@ -152,9 +152,9 @@ export default function restBuilder<
       [mutate, toast],
     );
     const handleUpdate = useCallback<
-      (id: string, data: { data: Omit<BackEndData, "id"> }) => Promise<void>
+      (id: string, data: { data: BackEndData }) => Promise<void>
     >(
-      async (id: string, data: { data: Omit<BackEndData, "id"> }) => {
+      async (id: string, data: { data: BackEndData }) => {
         let { data: updatedItem } = await fetcher<{ data: FrontEndData }>(
           "PATCH",
           type,
