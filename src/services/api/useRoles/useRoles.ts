@@ -1,7 +1,7 @@
 import type { Role, NewRole } from "../roles";
 import type { ResponseStatus, QueriableList } from "../shared";
 
-import useRest from "../useRest";
+import useRest from "../restBuilder";
 
 interface RoleActions {
   roles?: Role[];

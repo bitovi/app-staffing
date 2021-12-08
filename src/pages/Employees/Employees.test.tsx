@@ -183,7 +183,6 @@ describe("Pages/Employees", () => {
         exact: false,
       },
     );
-    screen.debug(toastMessage);
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
     expect(rosemarieRow).not.toBeInTheDocument;
 

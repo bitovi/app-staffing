@@ -2,7 +2,7 @@ import type { Employee } from "../employees";
 import { EmployeeJSON } from "../employees/interfaces";
 import type { ResponseStatus, APIResponse } from "../shared";
 
-import restBuilder from "../useRest/restBuilder";
+import restBuilder from "../restBuilder/restBuilder";
 
 // const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
 //   if (array) {

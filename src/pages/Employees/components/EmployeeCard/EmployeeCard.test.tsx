@@ -7,7 +7,7 @@ import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
 import { employeeMockData } from "../../../../services/api/employees/fixtures";
-import { wrapper } from "../../../../services/api/useRest/useRest.test";
+import { wrapper } from "../../../../services/api/restBuilder/useRest.test";
 import theme from "../../../../theme";
 //import { employees } from "../../../../services/api/employees/fixtures";
 import EmployeeCard from "./EmployeeCard";

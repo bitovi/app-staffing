@@ -1,6 +1,6 @@
 import { Filter } from "can-query-logic";
-import { SerializerTypes } from "./useRest/getJsonApiSerializer";
-import jsonApiMiddleware from "./useRest/middlewares/jsonApiMiddleware";
+import { SerializerTypes } from "./restBuilder/getJsonApiSerializer";
+import jsonApiMiddleware from "./restBuilder/middlewares/jsonApiMiddleware";
 export interface APIResponse<T> extends ResponseStatus {
   data?: T;
 }
