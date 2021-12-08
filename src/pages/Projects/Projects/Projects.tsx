@@ -2,7 +2,7 @@ import BreadCrumb from "../../../components/Breadcrumb/Breadcrumb";
 import { LoadingProjectList } from "./components/LoadingProjectList";
 import ProjectList from "./components/ProjectList";
 import { ServiceError } from "../../../components/ServiceError";
-import { useProjects as defaultUseProjects } from "../../../services/api";
+import ProjectsHeader from "./components/ProjectsHeader/ProjectsHeader";
 
 export default function Projects({
   useProjects = defaultUseProjects,
@@ -13,6 +13,8 @@ export default function Projects({
 
   return (
     <>
+      <ProjectsHeader loading={isLoading} />
+
       {isLoading ? (
         <LoadingProjectList />
       ) : error ? (
@@ -20,7 +22,7 @@ export default function Projects({
       ) : (
         <div>
           <BreadCrumb />
-          <ProjectList mt="48px" projects={projects} />
+          <ProjectList projects={projects} />
         </div>
       )}
     </>

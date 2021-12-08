@@ -1,0 +1,62 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+      - name: ESLint
+        run: npm run eslint
+      - name: Prettier
+        run: npm run prettier
+      - name: Depcheck
+        run: npm run depcheck
+
+      - name: Test
+        run: npm run test:ci
+
+      - name: Build App
+        run: npm run build
+      - name: Build Storybook
+        run: npm run storybook:build
+
+
+
+  publish:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish Docker and Helm
+      env:
+        # TODO: this isn't working as expected. Output is masked.
+        # AWS_ACCOUNT_NO: ${{ secrets.AWS_ACCOUNT_NO }}
+        AWS_ACCOUNT_NO: "832297766686"
+        ECR_REGISTRY_ID: app-staffing
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        AWS_DEFAULT_REGION: us-west-2
+        PROD_TARGET_STAGE_NAME: production
+        HELM_PUBLISH_S3_BUCKET: bitovi-operations-staffing-app-helm
+      run: |
+        echo "running scripts/ci/publish.sh"
+        ./scripts/ci/publish.sh
+

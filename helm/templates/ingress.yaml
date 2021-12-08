@@ -1,0 +1,60 @@
+{{- range $index, $item := .Values.ingress }}
+---
+{{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+{{- else }}
+apiVersion: networking.k8s.io/v1
+{{- end }}
+
+kind: Ingress
+metadata:
+  {{- if .name }}
+  name: app-staffing-{{ $item.name }}
+  {{- else }}
+  name: app-staffing-{{ $index }}
+  {{- end}}
+  labels:
+    app: {{ $.Values.appname }}
+    chart: {{ $.Chart.Name }}
+  annotations:
+    kubernetes.io/ingress.class: {{ $item.class }}
+    {{- range $key, $val := $item.extraAnnotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    # {{- if eq $item.class "nginx" }}
+    # nginx.ingress.kubernetes.io/rewrite-target: {{ $item.rewriteTarget }}
+    # {{- end }}
+
+spec:
+  {{- if $item.tls }}
+  tls:
+  - hosts:
+    - {{ $item.host }}
+    secretName: {{ $item.host }}-tls
+  {{- end }}
+
+  rules:
+  {{- if $item.host }}
+  - host: {{ $item.host }}
+    http:
+  {{- else }}
+  - http:
+  {{- end }}
+      paths:
+      {{- range $item.paths }}
+      {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+        - path: "{{ .path }}"
+          backend:
+            serviceName: {{ .service }}
+            servicePort: {{ .port }}
+      {{- else }}
+        - path: "{{ .path }}"
+          pathType: "{{ .pathType }}"
+          backend:
+            service:
+              name: {{ .service }}
+              port:
+                number: {{ .port }}
+      {{- end }}
+      {{- end}}
+{{- end}}

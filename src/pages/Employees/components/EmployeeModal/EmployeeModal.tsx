@@ -51,6 +51,8 @@ interface EmployeeModalProps {
   toastTitle: string;
 }
 
+type SaveButtonStatus = "idle" | "pending";
+
 export default function EmployeeModal({
   onSave,
   onClose,
@@ -60,6 +62,7 @@ export default function EmployeeModal({
   toastTitle,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
+  const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const employeeData = employee ? toEmployeeFormData(employee) : undefined;
   const {
     register,
@@ -88,6 +91,7 @@ export default function EmployeeModal({
 
   const submitForm = async (data: EmployeeFormData) => {
     try {
+      await setStatus("pending");
       // added the Employee ID property for PATCH request as specified in JSON API PATCH specs
       await onSave({
         data: formatEmployeeData(data),
@@ -110,6 +114,7 @@ export default function EmployeeModal({
         status: "success",
       });
       onClose();
+      setStatus("idle");
     } catch (e) {
       setServerError(!serverError);
     }
@@ -221,13 +226,17 @@ export default function EmployeeModal({
           <Button variant="outline" mr="8px" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            variant={canSubmitForm ? "primary" : "primaryDisabled"}
-            isDisabled={!canSubmitForm}
-            onClick={handleSubmit((data) => submitForm(data))}
-          >
-            {isNewEmployee ? "Add & Close" : "Save & Close"}
-          </Button>
+          {status === "idle" ? (
+            <Button
+              variant={canSubmitForm ? "primary" : "primaryDisabled"}
+              isDisabled={!canSubmitForm}
+              onClick={handleSubmit((data) => submitForm(data))}
+            >
+              {isNewEmployee ? "Add & Close" : "Save & Close"}
+            </Button>
+          ) : (
+            <Button isLoading loadingText="Saving" isDisabled />
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

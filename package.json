@@ -2,7 +2,7 @@
   "name": "repo",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bitovi.github.io/app-staffing/",
+  "homepage": "/",
   "scripts": {
     "chakra:typings": "chakra-cli tokens ./src/theme/index.ts",
     "postinstall": "npm run chakra:typings",
