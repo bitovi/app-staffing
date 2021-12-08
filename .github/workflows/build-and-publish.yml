@@ -78,6 +78,8 @@ jobs:
   deploy-dev:
     # only deploy dev if not pull request
 
+    if: ${{ github.ref }} != 'refs/heads/main'
+
     # doesn't stop the job from running
     # if: ${{ github.ref != 'refs/heads/main' }}
 
@@ -107,7 +109,7 @@ jobs:
     - name: Deploy Stage
       uses: actions/github-script@v5
       # this will stop the step from running
-      if: env.GITHUB_EVENT_NAME != 'pull_request'
+      # if: env.GITHUB_EVENT_NAME != 'pull_request'
       env:
         OPERATIONS_REPO: operations-staffing-app
         OPERATIONS_REPO_ORG: bitovi
