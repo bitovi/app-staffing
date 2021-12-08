@@ -34,8 +34,8 @@ export const serverError: ComponentStory<typeof EmployeeModal> = () => {
 };
 
 export const EditEmployee: ComponentStory<typeof EmployeeModal> = () => {
-  const { useEmployees } = employeeMockData();
-  const { data: employees } = useEmployees();
+  const { useEmployeeList } = employeeMockData();
+  const { data: employees } = useEmployeeList();
 
   return (
     <EmployeeModal

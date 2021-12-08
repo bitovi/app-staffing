@@ -22,7 +22,7 @@ export interface EmployeeMutations<K> {
 
 export interface EmployeeActions {
   useEmployee: (id: string) => APIResponse<Employee>;
-  useEmployees: () => APIResponse<Employee[]>;
+  useEmployeeList: () => APIResponse<Employee[]>;
   useEmployeeActions: () => EmployeeMutations<EmployeeJSON>;
 }
 
@@ -40,7 +40,7 @@ export default function useEmployees(): ResponseStatus & EmployeeActions {
 
   return {
     useEmployee: useRestOne,
-    useEmployees: useRestList,
+    useEmployeeList: useRestList,
     useEmployeeActions: () => {
       return { addEmployee, updateEmployee, deleteEmployee };
     },

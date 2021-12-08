@@ -287,7 +287,7 @@ export const employeeMockData = (): ResponseStatus & EmployeeActions => {
     useEmployee: (id: string) => {
       return { data: employees[0] };
     },
-    useEmployees: () => {
+    useEmployeeList: () => {
       return { data: employees };
     },
     useEmployeeActions: () => {

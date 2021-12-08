@@ -61,13 +61,9 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { getEmployeeList, getEmployeeActions } = useEmployees();
-  const {
-    handleAdd: addEmployee,
-    handleUpdate: updateEmployee,
-    handleDelete: deleteEmployee,
-  } = getEmployeeActions();
-  const { data: employees } = getEmployeeList();
+  const { useEmployeeList, useEmployeeActions } = useEmployees();
+  const { addEmployee, updateEmployee, deleteEmployee } = useEmployeeActions();
+  const { data: employees } = useEmployeeList();
 
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
