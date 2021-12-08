@@ -20,9 +20,7 @@ export default function Projects({
       ) : error ? (
         <ServiceError />
       ) : (
-        <div>
-          <ProjectList projects={projects} />
-        </div>
+        <ProjectList projects={projects} />
       )}
     </>
   );
