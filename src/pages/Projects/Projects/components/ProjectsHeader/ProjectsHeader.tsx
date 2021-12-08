@@ -2,8 +2,9 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
-import { Spinner } from "@chakra-ui/spinner";
+import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
+import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBreadCrumb";
+
 export default function ProjectsHeader({
   loading,
   name,
@@ -27,35 +28,10 @@ export default function ProjectsHeader({
         </BreadcrumbItem>
 
         {/* Conditionals for Breadcrumb focus */}
-        {!name && !loading ? (
-          <BreadcrumbItem isCurrentPage color="gray.800">
-            <BreadcrumbLink href="/projects" data-testid="projects">
-              Projects
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+        {name ? (
+          <SingleProjectBreadCrumb name={name} loading={loading} />
         ) : (
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/projects" data-testid="projects">
-              Projects
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        )}
-
-        {name && loading ? (
-          <BreadcrumbItem isCurrentPage color="gray.800">
-            <BreadcrumbLink as={Link} to={"#"} data-testid="project">
-              {name}
-              <Spinner size="xs" ml="0.5rem" />
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        ) : name && !loading ? (
-          <BreadcrumbItem isCurrentPage color="gray.800">
-            <BreadcrumbLink as={Link} to={"#"} data-testid="project">
-              {name}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        ) : (
-          ""
+          <ProjectsBreadCrumb loading={loading} />
         )}
       </Breadcrumb>
 

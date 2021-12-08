@@ -26,10 +26,10 @@ export default function ProjectDetail(): JSX.Element {
   };
 
   return (
-    <>
+    <div>
       <ProjectsHeader name={projectData?.name} loading={false} />
       {projectData && (
-        <div>
+        <>
           <ProjectDescription onEdit={onSave} project={projectData} />
           <RoleList onEdit={onSave} project={projectData} />
           <Box mt={10}>
@@ -38,8 +38,8 @@ export default function ProjectDetail(): JSX.Element {
               projectId={projectData.id}
             />
           </Box>
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 }

@@ -46,7 +46,7 @@ describe("EmployeeModal", () => {
     expect(getAddButton()).toBeEnabled();
   });
 
-  xit("renders 'edit employee' UI when 'employee' prop is set", async () => {
+  it("renders 'edit employee' UI when 'employee' prop is set", async () => {
     const { getByText, getByDisplayValue, getByRole, getAllByRole } = render(
       <EmployeeModal
         toastTitle="Edit team member"
@@ -96,5 +96,5 @@ describe("EmployeeModal", () => {
       expect(getByText("Saving")).toBeInTheDocument();
     });
     // Default timeout is 5000ms, this test needed more time to complete
-  }, 6000);
+  }, 6500);
 });
