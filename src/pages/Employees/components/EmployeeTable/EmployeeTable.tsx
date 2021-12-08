@@ -9,7 +9,6 @@ import {
   Th,
   Thead,
   Tr,
-  useToast,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import { isEmpty } from "lodash";
@@ -40,21 +39,11 @@ export default function EmployeeTable({
     null,
   );
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
-  const toast = useToast();
 
   const removeEmployee = async () => {
     if (employeeToDelete) {
       try {
         await deleteEmployee(employeeToDelete.id);
-        toast({
-          title: "Team member deleted",
-          description: ` ${employeeToDelete.name} was successfully deleted!`,
-          duration: 5000,
-          isClosable: false,
-          position: "bottom-right",
-          status: "success",
-          variant: "left-accent",
-        });
         setEmployeeToDelete(null);
       } catch (e) {
         //ERROR HANDLING
@@ -67,15 +56,6 @@ export default function EmployeeTable({
   ) => {
     if (employeeToEdit) {
       await updateEmployee(employeeToEdit.id, { data: employeeToUpdate });
-      toast({
-        title: "Team member updated",
-        description: ` ${employeeToUpdate.attributes.name} was successfully edited!`,
-        duration: 5000,
-        isClosable: false,
-        position: "bottom-right",
-        variant: "left-accent",
-        status: "success",
-      });
     }
   };
 

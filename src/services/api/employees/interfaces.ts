@@ -5,7 +5,7 @@ import { JSONSkill } from "../skills/interfaces";
 export interface Employee {
   id: string;
   name: string;
-  startDate: Date;
+  startDate?: Date;
   endDate?: Date;
   skills: Skill[];
 }
@@ -13,7 +13,7 @@ export interface Employee {
 export interface EmployeeTable {
   id: string;
   name: string;
-  startDate: Date;
+  startDate?: Date;
   endDate?: Date;
 }
 
@@ -27,7 +27,7 @@ export interface AssignedEmployee {
 
 export interface EmployeeAttributes {
   name: string;
-  startDate: Date;
+  startDate?: Date;
   endDate?: Date;
 }
 

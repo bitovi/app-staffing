@@ -29,7 +29,7 @@ export interface EmployeeActions {
 const { useRestOne, useRestList, useRestActions } = restBuilder<
   Employee,
   EmployeeJSON
->("/api/v1/employees", "employees");
+>("/api/v1/employees", "employees", { title: "Team member" });
 
 export default function useEmployees(): ResponseStatus & EmployeeActions {
   const {

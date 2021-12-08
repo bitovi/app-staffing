@@ -1,3 +1,4 @@
+import { useToast } from "@chakra-ui/toast";
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
@@ -22,10 +23,18 @@ export interface RestHooks<T, K> {
   useRestActions: () => RestActions<K>;
 }
 
+interface ToastConfig {
+  title: string;
+}
+
 export default function restBuilder<
-  FrontEndData extends { id?: string },
+  FrontEndData extends { id?: string; name?: string },
   BackEndData,
->(path: string, type: SerializerTypes): RestHooks<FrontEndData, BackEndData> {
+>(
+  path: string,
+  type: SerializerTypes,
+  msgObject?: ToastConfig,
+): RestHooks<FrontEndData, BackEndData> {
   function useRestList(
     queryParams?: QueriableList<BackEndData>,
   ): APIResponse<FrontEndData[]> {
@@ -61,6 +70,8 @@ export default function restBuilder<
 
   function useRestActions(): RestActions<BackEndData> {
     const { mutate } = useSWRConfig();
+    const toast = useToast();
+
     const handleAdd = useCallback<
       (newCollectionItem: {
         data: Omit<BackEndData, "id">;
@@ -121,6 +132,16 @@ export default function restBuilder<
             },
             false,
           );
+          msgObject &&
+            toast({
+              title: `${msgObject.title} added`,
+              description: `${newItem.name} was succesfully added!`,
+              duration: 5000,
+              isClosable: false,
+              position: "bottom-right",
+              variant: "left-accent",
+              status: "success",
+            });
           return newId;
         } catch (error) {
           if (error instanceof Error) {
@@ -128,15 +149,12 @@ export default function restBuilder<
           }
         }
       },
-      [mutate],
+      [mutate, toast],
     );
     const handleUpdate = useCallback<
       (id: string, data: { data: Omit<BackEndData, "id"> }) => Promise<void>
     >(
       async (id: string, data: { data: Omit<BackEndData, "id"> }) => {
-        console.log("PATCH");
-        console.log({ id });
-        console.log("data", data);
         let { data: updatedItem } = await fetcher<{ data: FrontEndData }>(
           "PATCH",
           type,
@@ -189,18 +207,32 @@ export default function restBuilder<
           },
           false,
         );
+        msgObject &&
+          toast({
+            title: `${msgObject.title} updated`,
+            description: `${updatedItem.name} was succesfully updated!`,
+            duration: 5000,
+            isClosable: false,
+            position: "bottom-right",
+            variant: "left-accent",
+            status: "success",
+          });
       },
-      [mutate],
+      [mutate, toast],
     );
 
     const handleDelete = useCallback(
       async (collectionItemId: string) => {
         await fetcher("DELETE", type, `${path}/${collectionItemId}`);
-
+        let name: string | undefined;
         // mutate list data
         await mutate(
           path,
           async (deleteResponse: { data: FrontEndData[] }) => {
+            const toDelete = deleteResponse.data.find(
+              (item) => item.id === collectionItemId,
+            );
+            name = toDelete ? toDelete.name : undefined;
             return {
               ...deleteResponse,
               data: deleteResponse.data.filter(
@@ -214,15 +246,29 @@ export default function restBuilder<
         // mutate individual resource cache key
         await mutate(
           `${path}/${collectionItemId}`,
-          async (_deleteResponse: { data: FrontEndData }) => {
+          async (deleteResponse: { data: FrontEndData }) => {
+            if (!name)
+              name = deleteResponse
+                ? deleteResponse.data.name
+                : msgObject?.title;
             return {
               data: {},
             };
           },
           false,
         );
+        msgObject &&
+          toast({
+            title: `${msgObject.title} updated`,
+            description: ` ${name} was succesfully deleted!`,
+            duration: 5000,
+            isClosable: false,
+            position: "bottom-right",
+            variant: "left-accent",
+            status: "success",
+          });
       },
-      [mutate],
+      [mutate, toast],
     );
     return {
       handleAdd,
