@@ -72,6 +72,19 @@ jobs:
     # needs: [ publish ]
     runs-on: ubuntu-latest
     steps:
+    - name: debugging
+      env:
+        GITHUB_CONTEXT_EVENT_NAME: ${{ github.event_name }}
+        GITHUB_CONTEXT_REF: ${{ github.ref }}
+      run: |
+        echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+        echo "GITHUB_CONTEXT_EVENT_NAME: $GITHUB_CONTEXT_EVENT_NAME"
+        echo "GITHUB_CONTEXT_REF: $GITHUB_CONTEXT_REF"
+        # if [[ $BRANCH == 'master' && $GITHUB_EVENT_NAME == 'push' ]]; then
+        #     echo "NEED=true" >> "$GITHUB_ENV"
+        # else
+        #     echo "NEED=false" >> "$GITHUB_ENV"
+        # fi
     - name: Deploy Stage
       uses: actions/github-script@v5
       env:
