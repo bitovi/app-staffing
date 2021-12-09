@@ -1,9 +1,14 @@
+import { Box } from "@chakra-ui/layout";
+
 export default function Loading(): JSX.Element {
-  const divStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-  };
-  return <div style={divStyle}>Loading...</div>;
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+    >
+      Loading...
+    </Box>
+  );
 }
