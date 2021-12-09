@@ -5,6 +5,7 @@ import { EmployeeJSON } from "../../../employees";
 import {
   serializedEmployeeMockData,
   employeeMockData,
+  fakeDateString,
 } from "../../../employees/fixtures";
 import { employeeStoreManager } from "../../../employees/mocks";
 import { employeeSkillsStoreManager } from "../../../employee_skills/mocks";
@@ -51,7 +52,7 @@ describe("json-api-deserializer middleware", () => {
         id: "100",
         attributes: {
           name: "Test Person",
-          startDate: new Date(),
+          startDate: fakeDateString(),
           endDate: "",
         },
         relationships: {
@@ -88,7 +89,7 @@ describe("json-api-deserializer middleware", () => {
         id: "100",
         attributes: {
           name: "Test Person",
-          startDate: new Date(),
+          startDate: fakeDateString(),
           endDate: "",
         },
         relationships: {
@@ -133,8 +134,8 @@ describe("json-api-deserializer middleware", () => {
         type: "employees",
         attributes: {
           name: "Test Person",
-          startDate: new Date(),
-          endDate: new Date(),
+          startDate: fakeDateString(),
+          endDate: "",
         },
         relationships: {
           skills: {

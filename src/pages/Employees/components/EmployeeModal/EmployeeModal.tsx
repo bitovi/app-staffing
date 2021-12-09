@@ -223,7 +223,6 @@ function getSelectedRoles(map: undefined | Record<string, boolean>) {
 
 function formatEmployeeData(data: EmployeeFormData): Omit<EmployeeJSON, "id"> {
   const selectedRoles = getSelectedRoles(data.roles);
-
   return {
     type: "employees",
     attributes: {
