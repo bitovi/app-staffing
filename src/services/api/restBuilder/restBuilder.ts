@@ -243,7 +243,7 @@ export default function restBuilder<
         );
         msgObject &&
           toast({
-            title: `${msgObject.title} updated`,
+            title: `${msgObject.title} deleted`,
             description: ` ${name} was successfully deleted!`,
             duration: 5000,
             isClosable: false,
