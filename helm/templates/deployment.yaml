@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}
+  labels:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+      chart: {{ .Chart.Name }}
+  strategy:
+    type: {{ .Values.updateStrategy }}
+  {{- if .Values.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        chart: {{ .Chart.Name }}
+      annotations:
+        app: {{ .Values.appname }}
+        {{- if .Values.cacheBusting.timestamp }}
+        cachebusting/timestamp: {{ now }}
+        {{- end }}
+
+
+        {{- if .Values.prometheus }}
+        {{- if .Values.prometheus.enabled }}
+        prometheus.io/port: {{ .Values.prometheus.targetPort | quote }}
+        prometheus.io/scrape: "true"
+        {{- end }}
+        {{- end }}
+    spec:
+
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- end }}
+
+      {{- if and .Values.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.appname }}
+      {{- end }}
+
+      {{- if .Values.extraVolumes }}
+      volumes:
+        {{ toYaml .Values.extraVolumes | nindent 8 }}
+      {{- end }}
+
+      containers:
+      - name: {{ .Values.appname }}
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+        - name: service
+          containerPort: {{ .Values.service.targetPort }}
+          protocol: TCP
+        # envFrom:
+        #   - secretRef:
+        #       name: {{ .Values.appname }}
+        {{- if .Values.extraEnv }}
+        env:
+        {{- range $key, $value := .Values.extraEnv }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+
+        {{- if .Values.extraVolumeMounts }}
+        volumeMounts:
+          {{ toYaml .Values.extraVolumeMounts | nindent 10 }}
+        {{- end }}
+
+        {{- if .Values.livenessProbe }}
+        livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 10 }}
+        {{- end }}
+
+        {{- if .Values.readinessProbe }}
+        readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 10 }}
+        {{- end }}

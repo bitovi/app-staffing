@@ -1,16 +1,16 @@
-import { Box } from "@chakra-ui/layout";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { Project } from "../../../services/api";
+import { useEffect, useState } from "react";
 import { useProjects } from "../../../services/api";
+import { Box } from "@chakra-ui/layout";
+import type { Project } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
+import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import RoleList from "../components/RoleList";
 
 export default function ProjectDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const { projects, updateProject } = useProjects();
-
   const [projectData, setProjectData] = useState<Project | undefined>(
     projects?.find((p) => p.id === id),
   );
@@ -27,6 +27,7 @@ export default function ProjectDetail(): JSX.Element {
 
   return (
     <div>
+      <ProjectsHeader name={projectData?.name} loading={false} />
       {projectData && (
         <>
           <ProjectDescription onEdit={onSave} project={projectData} />

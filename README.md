@@ -127,6 +127,45 @@ Run `npm run test` to run test scripts.
 
 In the project directory, you can run:
 
+### Generating a Production based Docker Image:
+
+`docker build -f ./Dockerfile -t Any-repo-name/Any-image-name .`
+
+### Building a Production based Docker Container:
+
+`docker run --rm -it -p 3000:3000 Any-repo-name/Any-image-name`
+
+### Generating a Development based Docker Image
+
+`docker build -f ./Dockerfile.dev -t Any-dev-repo-name/Any-dev-image-name .`
+
+### Building a Development based Docker Container:
+
+`docker run --rm -it -p 3000:3000 Any-dev-repo-name/Any-dev-image-name`
+
+## Docker-Compose:
+
+### Generating a Production based App via Docker-compose
+
+ `docker-compose -f ./docker-compose.yml up`
+Runs the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+### Generating a Development based App via Docker-compose
+
+ `docker-compose -f ./docker-compose.dev.yml up`
+Runs the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+
+For more information, see [Dockerfile](./Dockerfile) and [docker-compose.yml](./docker-compose.yaml)
+
 ### `npm run dev`
 
 Runs the app in the development mode.\

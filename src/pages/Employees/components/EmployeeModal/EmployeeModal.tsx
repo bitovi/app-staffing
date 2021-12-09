@@ -45,6 +45,8 @@ interface EmployeeModalProps {
   employee?: Employee;
 }
 
+type SaveButtonStatus = "idle" | "pending";
+
 export default function EmployeeModal({
   onSave,
   onClose,
@@ -53,6 +55,7 @@ export default function EmployeeModal({
   employee,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
+  const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const employeeData = employee ? toEmployeeFormData(employee) : undefined;
   const {
     register,
@@ -77,6 +80,7 @@ export default function EmployeeModal({
 
   const submitForm = async (data: EmployeeFormData) => {
     try {
+      await setStatus("pending");
       await onSave(formatEmployeeData(data));
       reset({
         name: "",
@@ -84,6 +88,7 @@ export default function EmployeeModal({
         end_date: "",
       });
       onClose();
+      setStatus("idle");
     } catch (e) {
       setServerError(!serverError);
     }
@@ -195,13 +200,17 @@ export default function EmployeeModal({
           <Button variant="outline" mr="8px" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            variant={canSubmitForm ? "primary" : "primaryDisabled"}
-            isDisabled={!canSubmitForm}
-            onClick={handleSubmit((data) => submitForm(data))}
-          >
-            {isNewEmployee ? "Add & Close" : "Save & Close"}
-          </Button>
+          {status === "idle" ? (
+            <Button
+              variant={canSubmitForm ? "primary" : "primaryDisabled"}
+              isDisabled={!canSubmitForm}
+              onClick={handleSubmit((data) => submitForm(data))}
+            >
+              {isNewEmployee ? "Add & Close" : "Save & Close"}
+            </Button>
+          ) : (
+            <Button isLoading loadingText="Saving" isDisabled />
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>
