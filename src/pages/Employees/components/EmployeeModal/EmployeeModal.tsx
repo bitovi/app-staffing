@@ -228,8 +228,8 @@ function formatEmployeeData(data: EmployeeFormData): Omit<EmployeeJSON, "id"> {
     type: "employees",
     attributes: {
       name: data.name,
-      startDate: new Date(data.start_date),
-      endDate: new Date(data.end_date),
+      startDate: data.start_date,
+      endDate: data.end_date,
     },
     relationships: {
       skills: {

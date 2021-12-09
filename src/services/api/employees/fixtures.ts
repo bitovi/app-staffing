@@ -13,8 +13,8 @@ export function makeEmployee(): EmployeeTable {
   return {
     id: `${++employeeId}`,
     name: faker.name.findName(),
-    startDate: startDate,
-    endDate: startDate,
+    startDate: `${startDate}`,
+    endDate: `${startDate}`,
   };
 }
 
