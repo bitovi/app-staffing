@@ -26,7 +26,7 @@ export default function AddProjectModal({
 
   const addNewProject = async () => {
     const newProjectId = await addProject(newProject);
-    history.push(`/${newProjectId}`);
+    history.push(`/projects/${newProjectId}`);
   };
 
   const handleChange = (
@@ -46,12 +46,7 @@ export default function AddProjectModal({
   };
 
   return (
-    <Modal
-      size="lg"
-      isOpen={isOpen}
-      onClose={onCloseModal}
-      title="Enter Project Name and Description"
-    >
+    <Modal size="lg" isOpen={isOpen} onClose={onCloseModal} title="Add Project">
       <ModalBody>
         <Stack spacing={4}>
           <InputControl

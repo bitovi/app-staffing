@@ -1,33 +1,294 @@
-import type { Skill } from "../common";
-import type { Employee } from "./interfaces";
-
 import faker from "faker";
-
-import { skillList } from "../common";
+import { ResponseStatus } from "../shared";
+import { EmployeeActions } from "../useEmployees/useEmployees";
+import type { EmployeeTable } from "./interfaces";
 
 faker.seed(0);
 
 let employeeId = 0;
-export function makeEmployee(employee?: Partial<Employee>): Employee {
-  const startDate = faker.date.past();
 
-  const skills: Skill[] = faker.random
-    .arrayElements(skillList, faker.datatype.number(3) + 1)
-    .map((name) => ({ name }));
+export function makeEmployee(): EmployeeTable {
+  const startDate = faker.date.past();
 
   return {
     id: `${++employeeId}`,
     name: faker.name.findName(),
     startDate: startDate,
-    skills,
-    ...employee,
+    endDate: startDate,
   };
 }
 
-export const employees: Employee[] = [
+export const employees: EmployeeTable[] = [
   makeEmployee(),
   makeEmployee(),
   makeEmployee(),
   makeEmployee(),
   makeEmployee(),
 ];
+
+export const serializedEmployeeMockData = {
+  data: [
+    {
+      type: "employees",
+      id: "1",
+      attributes: {
+        name: "Vitor Forbrig",
+        startDate: new Date(),
+        endDate: new Date(),
+      },
+      relationships: {
+        skills: {
+          data: [
+            {
+              id: "105",
+              type: "skills",
+            },
+            {
+              id: "102",
+              type: "skills",
+            },
+            {
+              id: "101",
+              type: "skills",
+            },
+          ],
+        },
+      },
+    },
+    {
+      type: "employees",
+      id: "3",
+      attributes: {
+        name: "Travis Draper",
+        startDate: new Date(),
+        endDate: new Date(),
+      },
+      relationships: {
+        skills: {
+          data: [
+            {
+              id: "105",
+              type: "skills",
+            },
+          ],
+        },
+      },
+    },
+    {
+      type: "employees",
+      id: "2",
+      attributes: {
+        name: "Rosemarie Mitchell",
+        startDate: new Date(),
+        endDate: new Date(),
+      },
+      relationships: {
+        skills: {
+          data: [
+            {
+              id: "105",
+              type: "skills",
+            },
+            {
+              id: "101",
+              type: "skills",
+            },
+          ],
+        },
+      },
+    },
+    {
+      type: "employees",
+      id: "4",
+      attributes: {
+        name: "Wilma Mueller",
+        startDate: new Date(),
+        endDate: new Date(),
+      },
+      relationships: {
+        skills: {
+          data: [
+            {
+              id: "105",
+              type: "skills",
+            },
+            {
+              id: "101",
+              type: "skills",
+            },
+            {
+              id: "105",
+              type: "skills",
+            },
+          ],
+        },
+      },
+    },
+    {
+      type: "employees",
+      id: "5",
+      attributes: {
+        name: "Clifford Toy",
+        startDate: new Date(),
+        endDate: new Date(),
+      },
+      relationships: {
+        skills: {
+          data: [
+            {
+              id: "105",
+              type: "skills",
+            },
+            {
+              id: "102",
+              type: "skills",
+            },
+            {
+              id: "101",
+              type: "skills",
+            },
+            {
+              id: "108",
+              type: "skills",
+            },
+          ],
+        },
+      },
+    },
+  ],
+  included: [
+    {
+      type: "skills",
+      id: "105",
+      attributes: {
+        name: "React",
+      },
+    },
+    {
+      type: "skills",
+      id: "102",
+      attributes: {
+        name: "Angular",
+      },
+    },
+    {
+      type: "skills",
+      id: "101",
+      attributes: {
+        name: "UX",
+      },
+    },
+    {
+      type: "skills",
+      id: "108",
+      attributes: {
+        name: "Project Management",
+      },
+    },
+  ],
+};
+
+export const employeeMockData = (): ResponseStatus & EmployeeActions => {
+  const employees = [
+    {
+      id: "1",
+      name: "Vitor Forbrig",
+      startDate: new Date(),
+      endDate: new Date(),
+      skills: [
+        {
+          id: "105",
+          name: "React",
+        },
+        {
+          id: "102",
+          name: "Angular",
+        },
+        {
+          id: "101",
+          name: "UX",
+        },
+      ],
+    },
+    {
+      id: "3",
+      name: "Travis Draper",
+      startDate: new Date(),
+      endDate: new Date(),
+      skills: [
+        {
+          id: "106",
+          name: "React",
+        },
+      ],
+    },
+    {
+      id: "2",
+      name: "Rosemarie Mitchell",
+      startDate: new Date(),
+      endDate: new Date(),
+      skills: [
+        {
+          id: "107",
+          name: "React",
+        },
+        {
+          id: "101",
+          name: "UX",
+        },
+      ],
+    },
+    {
+      id: "4",
+      name: "Wilma Mueller",
+      startDate: new Date(),
+      endDate: new Date(),
+      skills: [
+        {
+          id: "107",
+          name: "React",
+        },
+        {
+          id: "101",
+          name: "UX",
+        },
+        {
+          id: "106",
+          name: "React",
+        },
+      ],
+    },
+    {
+      id: "5",
+      name: "Clifford Toy",
+      startDate: new Date(),
+      endDate: new Date(),
+      skills: [
+        {
+          id: "105",
+          name: "React",
+        },
+        {
+          id: "102",
+          name: "Angular",
+        },
+        {
+          id: "101",
+          name: "UX",
+        },
+        {
+          id: "108",
+          name: "Project Management",
+        },
+      ],
+    },
+  ];
+  return {
+    employees,
+    addEmployee: (employee) => Promise.resolve(""),
+    updateEmployee: () => Promise.resolve(),
+    deleteEmployee: (id) => Promise.resolve(),
+    isLoading: false,
+    reset: () => undefined,
+  };
+};

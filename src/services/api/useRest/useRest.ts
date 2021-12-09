@@ -1,10 +1,10 @@
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import type { APIResponse, QueriableList } from "../common";
-import { fetcher } from "../common";
+import type { APIResponse, QueriableList } from "../shared";
+import { fetcher } from "../shared";
+import { SerializerTypes } from "./getJsonApiSerializer";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
-
 interface RestActions<T> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
   handleUpdate: (
@@ -14,19 +14,18 @@ interface RestActions<T> extends APIResponse<T[]> {
   handleDelete: (collectionItemId: string) => Promise<void>;
   reset: () => void;
 }
-
 function useRest<T extends { id: string }>(
   path: string,
+  type: SerializerTypes,
   queryParams?: QueriableList<T>,
 ): RestActions<T> {
   const key = `${path}?${param(queryParams)}`;
   const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     key,
-    (url) => fetcher("GET", url),
+    (url) => fetcher("GET", type, url),
     { suspense: true, use: [deserializeDateMiddleware] },
   );
-
   const handleAdd = useCallback<
     (newCollectionItem: Omit<T, "id">) => Promise<string>
   >(
@@ -37,12 +36,11 @@ function useRest<T extends { id: string }>(
         async (addResponse: { data: T[] }) => {
           const { data: newItem } = await fetcher<{ data: T }>(
             "POST",
+            type,
             path,
             newCollectionItem,
           );
-
           newId = newItem.id;
-
           return {
             ...addResponse,
             data: [...addResponse.data, { ...newCollectionItem, id: newId }],
@@ -50,12 +48,10 @@ function useRest<T extends { id: string }>(
         },
         false,
       );
-
       return newId;
     },
-    [path, key, mutate],
+    [path, key, mutate, type],
   );
-
   const handleUpdate = useCallback<
     (
       collectionItemId: string,
@@ -68,10 +64,10 @@ function useRest<T extends { id: string }>(
         async (cachedData: { data: T[] }) => {
           const { data: updatedItem } = await fetcher<{ data: T }>(
             "PUT",
+            type,
             `${path}/${collectionItemId}`,
             updatedCollectionItem,
           );
-
           return {
             ...cachedData,
             data: (cachedData?.data ?? []).map((item) =>
@@ -82,16 +78,14 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, key, mutate],
+    [path, key, mutate, type],
   );
-
   const handleDelete = useCallback(
     async (collectionItemId: string) => {
       await mutate(
         key,
         async (deleteResponse: { data: T[] }) => {
-          await fetcher("DELETE", `${path}/${collectionItemId}`);
-
+          await fetcher("DELETE", type, `${path}/${collectionItemId}`);
           return {
             ...deleteResponse,
             data: deleteResponse.data.filter(
@@ -102,7 +96,7 @@ function useRest<T extends { id: string }>(
         false,
       );
     },
-    [path, key, mutate],
+    [path, key, mutate, type],
   );
 
   return {
@@ -115,5 +109,4 @@ function useRest<T extends { id: string }>(
     reset: () => mutate(key, (v: T) => v, false),
   };
 }
-
 export default useRest;

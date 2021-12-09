@@ -1,8 +1,6 @@
-import type { Role, Project } from "../../../../services/api";
+import type { Project, Role } from "../../../../services/api";
 
 import { cloneDeep } from "lodash";
-
-import { skillList } from "../../../../services/api";
 import RoleDetails from "../RoleDetails";
 import Button from "../../../../components/Button";
 
@@ -18,7 +16,7 @@ export default function RoleList({
   const createNewRole = (): Role => {
     return {
       id: Math.floor(Math.random() * 1000).toString(),
-      skill: { name: "Node" },
+      skill: { name: "Node", id: "" },
       startDate: {
         date: undefined,
         confidence: "",
@@ -59,7 +57,7 @@ export default function RoleList({
         Add Role
       </Button>
       <div className={styles.skillFilter}>
-        {skillList.map((s) => (
+        {[].map((s) => (
           <p key={s}>{s}</p>
         ))}
       </div>

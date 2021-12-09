@@ -1,0 +1,71 @@
+# Default values for app-staffing
+appname: app-staffing
+replicas: 1
+
+imagePullPolicy: Always
+updateStrategy: RollingUpdate
+revisionHistoryLimit: 2
+# imagePullSecrets:
+#   - docker-registry
+
+image: app-staffing:latest
+
+service:
+  port: 80
+  targetPort: 3000
+  type: ClusterIP
+  annotations: {}
+
+ingress: []
+  # - class: nginx
+  #   name: app
+  #   host: app.localhost
+  #   tls: false
+  #   extraAnnotations:
+  #     kubernetes.io/ingress.class: nginx
+  #   paths:
+  #     - path: /
+  #       pathType: Prefix
+  #       service: app-staffing
+  #       port: 80
+
+
+local:
+  websocketPort:
+    enabled: false
+    port: 35729
+    targetPort: 35729
+
+cacheBusting:
+  timestamp: false
+  # TODO: implement the following to deploy chart only when relevant templates change
+  # helmfiles: false
+
+# the above requires something along the lines of the following:
+# spec:
+#   template:
+#     metadata:
+#       annotations:
+#         {{- if .Values.cacheBusting.helmfiles }}
+#         cachebusting-helmfiles/deployment: {{ include (print $.Template.BasePath "/deployment.yaml") . | sha256sum }}
+#         cachebusting-helmfiles/service: {{ include (print $.Template.BasePath "/service.yaml") . | sha256sum }}
+#         {{- end }}
+
+extraEnv: {}
+  # APP_PORT: 3000
+
+prometheus:
+  enabled: false
+
+# extraVolumes:
+#   - name: local-files-app-staffing
+#     hostPath: 
+#       path: /local-files/app-staffing
+# extraVolumeMounts:
+#   - mountPath: /usr/src/app
+#     name: local-files-app-staffing
+
+
+# TODO: implement serviceaccount.yaml
+serviceAccount:
+  enabled: false

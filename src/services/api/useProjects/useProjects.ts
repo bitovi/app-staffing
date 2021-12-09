@@ -1,4 +1,4 @@
-import type { QueriableList, ResponseStatus } from "../common";
+import type { QueriableList, ResponseStatus } from "../shared";
 import type { NewProject, Project } from "../projects";
 import useRest from "../useRest";
 
@@ -25,7 +25,7 @@ export default function useProjects(
     handleUpdate,
     handleDelete,
     reset,
-  } = useRest<Project>("/api/v1/projects", queryParams);
+  } = useRest<Project>("/api/v1/projects", "undefined", queryParams);
 
   return {
     projects,

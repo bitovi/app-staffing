@@ -61,7 +61,10 @@ describe("Components/ConfirmationModal", () => {
       />,
     );
 
-    const confirmButton = screen.getByText(confirmText);
+    const confirmButton = screen.getByRole("button", {
+      name: "confirm button",
+    });
+
     fireEvent.click(confirmButton);
 
     rerender(

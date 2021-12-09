@@ -1,19 +1,16 @@
-import { useDisclosure } from "@chakra-ui/hooks";
-import { Box } from "@chakra-ui/layout";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Button from "../../../components/Button";
-import type { Project } from "../../../services/api";
+import { useEffect, useState } from "react";
 import { useProjects } from "../../../services/api";
-import DeleteProjectModal from "../components/DeleteProjectModal";
+import { Box } from "@chakra-ui/layout";
+import type { Project } from "../../../services/api";
+import ProjectDeleteButton from "../components/ProjectDeleteButton/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
+import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import RoleList from "../components/RoleList";
 
 export default function ProjectDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const { projects, updateProject } = useProjects();
-  const { isOpen, onClose, onOpen } = useDisclosure();
-
   const [projectData, setProjectData] = useState<Project | undefined>(
     projects?.find((p) => p.id === id),
   );
@@ -30,21 +27,17 @@ export default function ProjectDetail(): JSX.Element {
 
   return (
     <div>
+      <ProjectsHeader name={projectData?.name} loading={false} />
       {projectData && (
         <>
           <ProjectDescription onEdit={onSave} project={projectData} />
           <RoleList onEdit={onSave} project={projectData} />
           <Box mt={10}>
-            <Button onClick={onOpen} variant="primary">
-              Delete
-            </Button>
+            <ProjectDeleteButton
+              projectName={projectData.name}
+              projectId={projectData.id}
+            />
           </Box>
-          <DeleteProjectModal
-            projectName={projectData.name}
-            projectId={projectData.id}
-            isOpen={isOpen}
-            onClose={onClose}
-          />
         </>
       )}
     </div>

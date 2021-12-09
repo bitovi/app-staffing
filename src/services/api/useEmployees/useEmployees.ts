@@ -1,15 +1,26 @@
-import type { Employee, NewEmployee } from "../employees";
-import type { ResponseStatus, QueriableList } from "../common";
+import type { Employee } from "../employees";
+import { EmployeeJSON } from "../employees/interfaces";
+import type { ResponseStatus, QueriableList } from "../shared";
 
-import useRest from "../useRest";
+import useRest from "../useRest/useRestV2";
 
-interface EmployeeActions {
-  employees?: Employee[];
-  addEmployee: (employee: NewEmployee) => Promise<string>;
-  updateEmployee: (
-    employeeId: string,
-    employee: Partial<Employee>,
-  ) => Promise<void>;
+const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
+  if (array) {
+    return array.sort((a, b) =>
+      a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
+    );
+  }
+  return [];
+};
+export interface EmployeeActions {
+  employees?: Employee[] | undefined;
+  addEmployee: (employee: {
+    data: Omit<EmployeeJSON, "id">;
+  }) => Promise<string | undefined>;
+  updateEmployee: (employee: {
+    data: Omit<EmployeeJSON, "id">;
+    id?: string;
+  }) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
   reset: () => void;
 }
@@ -26,10 +37,18 @@ export default function useEmployees(
     handleUpdate,
     handleDelete,
     reset,
-  } = useRest<Employee>("/api/v1/employees", queryParams);
+    // two interfaces passed to useRest now,
+    // the backend data shape of Employees
+    // and the frontend data shape of Employees
+    // useRest operates as the switchboard between the two.
+  } = useRest<Employee, EmployeeJSON>(
+    "/api/v1/employees",
+    "employees",
+    queryParams,
+  );
 
   return {
-    employees,
+    employees: alphabetizeByName(employees),
     isLoading,
     error,
     addEmployee: handleAdd,

@@ -31,7 +31,7 @@ export default function ProjectDescription({
           name="description"
           defaultValue={project.description}
           onBlur={updateMainField}
-        ></textarea>
+        />
       </div>
     </div>
   );

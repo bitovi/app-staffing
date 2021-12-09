@@ -34,7 +34,9 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
     render(<AddProjectModal isOpen={true} onClose={() => undefined} />);
 
     fireEvent.click(screen.getByText(/Save/g));
-    await waitFor(() => expect(mockHistoryPush).toBeCalledWith(`/${someId}`));
+    await waitFor(() =>
+      expect(mockHistoryPush).toBeCalledWith(`/projects/${someId}`),
+    );
   });
 
   it("reset modal on close", async () => {

@@ -1,23 +1,28 @@
-import { useDisclosure } from "@chakra-ui/hooks";
-import { Flex } from "@chakra-ui/layout";
-import Button from "../../../components/Button";
-import { useProjects } from "../../../services/api";
-import AddProjectModal from "./components/AddProjectModal";
+import { LoadingProjectList } from "./components/LoadingProjectList";
 import ProjectList from "./components/ProjectList";
+import { ServiceError } from "../../../components/ServiceError";
+import { useProjects as defaultUseProjects } from "../../../services/api";
+import ProjectsHeader from "./components/ProjectsHeader/ProjectsHeader";
+// import AddProjectModal from "./components/AddProjectModal";
 
-export default function Projects(): JSX.Element {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { projects } = useProjects();
+export default function Projects({
+  useProjects = defaultUseProjects,
+}: {
+  useProjects?: typeof defaultUseProjects;
+}): JSX.Element {
+  const { projects, isLoading, error } = useProjects();
 
   return (
     <>
-      <Flex justifyContent="flex-end">
-        <Button variant="primary" onClick={onOpen}>
-          Create a new project
-        </Button>
-      </Flex>
-      <ProjectList projects={projects} />
-      <AddProjectModal isOpen={isOpen} onClose={onClose} />
+      <ProjectsHeader loading={isLoading} />
+
+      {isLoading ? (
+        <LoadingProjectList />
+      ) : error ? (
+        <ServiceError />
+      ) : (
+        <ProjectList projects={projects} />
+      )}
     </>
   );
 }

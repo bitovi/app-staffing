@@ -1,73 +1,106 @@
-import type { Employee } from "../../services/api";
-
-import { useCallback, useState } from "react";
-
-import { useEmployees } from "../../services/api";
+import { Suspense, useState } from "react";
+import { Box, Flex, Text } from "@chakra-ui/layout";
+import {
+  useEmployees as useEmployeesDefault,
+  useSkills as useSkillsDefault,
+} from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
-
-import styles from "./Employees.module.scss";
-
+import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
+import EmployeeModal from "./components/EmployeeModal";
 
-export default function Employees(): JSX.Element {
-  const { employees, addEmployee, updateEmployee } = useEmployees();
-  const [filterValue, setFilterValue] = useState<string>();
+interface IEmployees {
+  useEmployees: typeof useEmployeesDefault;
+  useSkills: typeof useSkillsDefault;
+}
 
-  const handleEditSave = useCallback(
-    async (id: string, employee: Employee) => {
-      employee.name && (await updateEmployee(id, employee)); // @TODO: add a loading spinner to save button
-    },
-    [updateEmployee],
-  );
-
-  const handleAddEmployee = async () => {
-    await addEmployee({
-      name: "",
-      startDate: new Date(),
-      skills: [],
-    }); // @TODO: add a loading spinner to save button
-  };
-
-  const filteredEmployees = filterValue
-    ? employees?.filter((e) =>
-        e.name.toLowerCase().includes(filterValue.toLowerCase()),
-      )
-    : employees;
-
+export function EmployeePageLoadingLayout(): JSX.Element {
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.actionBar}>
-        <div className={styles.actionBarTitle}>Team</div>
-        <div className={styles.actionBarActions}>
-          <input
-            onChange={(e) => setFilterValue(e.target.value)}
-            type="text"
-            placeholder="Filter"
-            className={styles.actionBarFilter}
-          />
-        </div>
-      </div>
-      <div className={styles.row}>
+    <Box>
+      <Flex
+        width="full"
+        fontFamily="Arial, Helvetica, sans-serif"
+        display="flex"
+        justifyContent="space-between"
+      >
+        <Text textStyle="title" color="gray.700">
+          Team Members
+        </Text>
+
         <Button
-          variant="link"
+          size="lg"
+          variant="primary"
           onClick={() => {
-            handleAddEmployee();
+            null;
           }}
         >
-          Add Team Member +
+          Add Team Member
         </Button>
-      </div>
-      {!employees && <div className={styles.noResults}>LOADING...</div>}
-      {employees && employees.length === 0 && (
-        <div className={styles.noResults}>NO DATA FOUND!</div>
-      )}
-      {filteredEmployees?.length && (
-        <EmployeeTable
-          filterValue={filterValue}
-          filteredEmployees={filteredEmployees}
-          onEdit={handleEditSave}
-        />
-      )}
-    </div>
+      </Flex>
+      <Box mt="48px">
+        <EmployeeCardSkeleton />
+      </Box>
+    </Box>
+  );
+}
+
+export default function EmployeesWrapper(): JSX.Element {
+  return (
+    <Suspense fallback={<EmployeePageLoadingLayout />}>
+      <Employees
+        useEmployees={useEmployeesDefault}
+        useSkills={useSkillsDefault}
+      />
+    </Suspense>
+  );
+}
+
+export function Employees({
+  useEmployees,
+  useSkills,
+}: IEmployees): JSX.Element {
+  const { employees, addEmployee, deleteEmployee, updateEmployee } =
+    useEmployees();
+  const { skills } = useSkills();
+  const [employeeModal, setEmployeeModal] = useState<boolean>(false);
+
+  return (
+    <Box maxHeight="100%">
+      <EmployeeModal
+        toastTitle="New team member"
+        isOpen={employeeModal}
+        onClose={() => setEmployeeModal(false)}
+        onSave={addEmployee}
+        skills={skills}
+      />
+
+      <Flex
+        width="full"
+        fontFamily="Arial, Helvetica, sans-serif"
+        display="flex"
+        justifyContent="space-between"
+      >
+        <Text textStyle="title" color="gray.700">
+          Team Members
+        </Text>
+
+        <Button
+          size="lg"
+          variant="primary"
+          onClick={() => setEmployeeModal(true)}
+          arialabel="Add Employee"
+        >
+          Add Team Member
+        </Button>
+      </Flex>
+
+      <EmployeeTable
+        mt="48px"
+        updateEmployee={updateEmployee}
+        deleteEmployee={deleteEmployee}
+        employees={employees}
+        skills={skills}
+      />
+    </Box>
   );
 }

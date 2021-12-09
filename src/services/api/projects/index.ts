@@ -1,1 +1,1 @@
-export type { Project, NewProject, Role, EstimatedDate } from "./interfaces";
+export type { Project, NewProject } from "./interfaces";

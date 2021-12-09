@@ -1,4 +1,6 @@
-import { Skill } from "../common";
+import { JSONData } from "../baseMocks/interfaces";
+import { Skill } from "../skills";
+import { JSONSkill } from "../skills/interfaces";
 
 export interface Employee {
   id: string;
@@ -8,6 +10,13 @@ export interface Employee {
   skills: Skill[];
 }
 
+export interface EmployeeTable {
+  id: string;
+  name: string;
+  startDate: Date;
+  endDate?: Date;
+}
+
 export type NewEmployee = Omit<Employee, "id">;
 
 export interface AssignedEmployee {
@@ -15,3 +24,21 @@ export interface AssignedEmployee {
   endDate?: Date;
   employee: Employee;
 }
+
+export interface EmployeeAttributes {
+  name: string;
+  startDate: Date;
+  endDate?: Date;
+}
+
+export interface EmployeeRelationships {
+  skills: {
+    data: Omit<JSONSkill, "attributes">[];
+  };
+}
+
+export type EmployeeJSON = JSONData<
+  "employees",
+  EmployeeAttributes,
+  EmployeeRelationships
+>;

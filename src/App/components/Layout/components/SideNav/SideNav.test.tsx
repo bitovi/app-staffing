@@ -6,7 +6,7 @@ import SideNav from ".";
 describe("Side Nav", () => {
   it("Should highlight active page", () => {
     render(
-      <MemoryRouter initialEntries={["/employees"]}>
+      <MemoryRouter initialEntries={["/team-members"]}>
         <SideNav />
       </MemoryRouter>,
     );
