@@ -31,6 +31,7 @@ const ProjectDeleteButton = ({
   };
 
   useEffect(() => {
+    // Ref used here as a workaround to avoid infinite error loop, STAF-154 created
     if (currentProject.current === false) {
       currentProject.current = true;
       !isOpen && reset();

@@ -3,7 +3,6 @@ import ProjectList from "./components/ProjectList";
 import { ServiceError } from "../../../components/ServiceError";
 import { useProjects as defaultUseProjects } from "../../../services/api";
 import ProjectsHeader from "./components/ProjectsHeader/ProjectsHeader";
-// import AddProjectModal from "./components/AddProjectModal";
 
 export default function Projects({
   useProjects = defaultUseProjects,

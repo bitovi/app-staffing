@@ -42,7 +42,7 @@ describe("Components/Projects/ProjectsHeader", () => {
     expect(homeBreadcrumb).toBeInTheDocument();
     expect(projectsBreadcrumb).toBeInTheDocument();
     expect(projectListTitle).toBeInTheDocument();
-    expect(singleProjectBreadcrumb).toBeInTheDocument();
+    expect(singleProjectBreadcrumb?.innerHTML).toBe("Nike Store");
   });
 
   it("renders breadcrumbs with the correct link", async () => {

@@ -1,10 +1,23 @@
-import { Stack } from "@chakra-ui/layout";
-import { ModalBody, ModalFooter } from "@chakra-ui/modal";
+import {
+  ModalBody,
+  ModalFooter,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalOverlay,
+} from "@chakra-ui/modal";
+import {
+  Input,
+  VStack,
+  Divider,
+  FormControl,
+  FormLabel,
+  Textarea,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import Button from "../../../../../components/Button";
-import { InputControl, TextArea } from "../../../../../components/formControls";
-import Modal from "../../../../../components/Modal";
+import { Button } from "@chakra-ui/button";
 import { Project, useProjects } from "../../../../../services/api";
 
 type IFormData = Omit<Project, "id">;
@@ -46,31 +59,50 @@ export default function AddProjectModal({
   };
 
   return (
-    <Modal size="lg" isOpen={isOpen} onClose={onCloseModal} title="Add Project">
-      <ModalBody>
-        <Stack spacing={4}>
-          <InputControl
-            name="name"
-            label="Project name"
-            onChange={handleChange}
-            value={newProject.name}
-          />
-          <TextArea
-            label="Description"
-            onChange={handleChange}
-            name="description"
-            value={newProject.description}
-          />
-        </Stack>
-      </ModalBody>
-      <ModalFooter>
-        <Button mr={4} variant="link" onClick={onCloseModal}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={addNewProject}>
-          Save
-        </Button>
-      </ModalFooter>
+    <Modal
+      size="md"
+      isOpen={isOpen}
+      onClose={onCloseModal}
+      variant="project_modal"
+    >
+      <ModalOverlay />
+      <ModalContent mt="14vh">
+        <ModalHeader textStyle="modal.title" pt={6} pl={6}>
+          Add Project
+        </ModalHeader>
+        <ModalCloseButton mt={2} />
+        <Divider pt={2} />
+        <ModalBody pt={4}>
+          <VStack spacing="16px" pb={6}>
+            <FormControl isRequired>
+              <FormLabel>Project Name</FormLabel>
+              <Input
+                name="name"
+                label="Project name"
+                onChange={handleChange}
+                value={newProject.name}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                label="Description"
+                onChange={handleChange}
+                name="description"
+                value={newProject.description}
+              />
+            </FormControl>
+          </VStack>
+        </ModalBody>
+        <ModalFooter>
+          <Button mr={4} variant="link" onClick={onCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={addNewProject}>
+            Save
+          </Button>
+        </ModalFooter>
+      </ModalContent>
     </Modal>
   );
 }
