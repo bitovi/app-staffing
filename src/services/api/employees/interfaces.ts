@@ -13,8 +13,8 @@ export interface Employee {
 export interface EmployeeTable {
   id: string;
   name: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 export type NewEmployee = Omit<Employee, "id">;
@@ -27,8 +27,8 @@ export interface AssignedEmployee {
 
 export interface EmployeeAttributes {
   name: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 export interface EmployeeRelationships {

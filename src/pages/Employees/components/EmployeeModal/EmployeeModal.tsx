@@ -85,7 +85,7 @@ export default function EmployeeModal({
       await onSave({
         name: data.name,
         startDate: data.start_date
-          ? new Date(data.start_date.replace("-", "/"))
+          ? new Date(data.start_date.replace("-", "/")) //.replace() seems to fix native Date JS changing date due to time zone
           : undefined,
         endDate: data.end_date
           ? new Date(data.end_date.replace("-", "/"))

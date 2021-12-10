@@ -3,7 +3,6 @@ import { EmployeeJSON } from "../employees/interfaces";
 import type { ResponseStatus, APIResponse } from "../shared";
 
 import restBuilder from "../restBuilder/restBuilder";
-import { format } from "date-fns";
 
 function formatEmployeeData(employee: Omit<Employee, "id">): {
   data: Omit<EmployeeJSON, "id">;
@@ -21,10 +20,8 @@ function formatEmployeeData(
     type: "employees",
     attributes: {
       name: employee.name,
-      startDate: employee.startDate
-        ? format(employee.startDate, "yyyy-MM-dd")
-        : "",
-      endDate: employee.endDate ? format(employee.endDate, "yyyy-MM-dd") : "",
+      startDate: employee.startDate,
+      endDate: employee.endDate,
     },
     relationships: {
       skills: {

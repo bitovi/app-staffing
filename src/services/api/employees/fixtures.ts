@@ -2,19 +2,18 @@ import faker from "faker";
 import { ResponseStatus } from "../shared";
 import { EmployeeActions } from "../useEmployees/useEmployees";
 import type { EmployeeTable } from "./interfaces";
-import { format } from "date-fns";
+
 faker.seed(0);
 
 let employeeId = 0;
-export const fakeDateString = (): string => {
-  return format(faker.date.past(), "yyyy-MM-dd");
-};
+
 export function makeEmployee(): EmployeeTable {
+  const date = faker.date.past();
   return {
     id: `${++employeeId}`,
     name: faker.name.findName(),
-    startDate: fakeDateString(),
-    endDate: fakeDateString(),
+    startDate: date,
+    endDate: date,
   };
 }
 
@@ -33,8 +32,8 @@ export const serializedEmployeeMockData = {
       id: "1",
       attributes: {
         name: "Vitor Forbrig",
-        startDate: fakeDateString(),
-        endDate: fakeDateString(),
+        startDate: new Date(),
+        endDate: new Date(),
       },
       relationships: {
         skills: {
@@ -60,8 +59,8 @@ export const serializedEmployeeMockData = {
       id: "3",
       attributes: {
         name: "Travis Draper",
-        startDate: fakeDateString(),
-        endDate: fakeDateString(),
+        startDate: new Date(),
+        endDate: new Date(),
       },
       relationships: {
         skills: {
@@ -79,8 +78,8 @@ export const serializedEmployeeMockData = {
       id: "2",
       attributes: {
         name: "Rosemarie Mitchell",
-        startDate: fakeDateString(),
-        endDate: fakeDateString(),
+        startDate: new Date(),
+        endDate: new Date(),
       },
       relationships: {
         skills: {
@@ -102,8 +101,8 @@ export const serializedEmployeeMockData = {
       id: "4",
       attributes: {
         name: "Wilma Mueller",
-        startDate: fakeDateString(),
-        endDate: fakeDateString(),
+        startDate: new Date(),
+        endDate: new Date(),
       },
       relationships: {
         skills: {
@@ -129,8 +128,8 @@ export const serializedEmployeeMockData = {
       id: "5",
       attributes: {
         name: "Clifford Toy",
-        startDate: fakeDateString(),
-        endDate: fakeDateString(),
+        startDate: new Date(),
+        endDate: new Date(),
       },
       relationships: {
         skills: {
