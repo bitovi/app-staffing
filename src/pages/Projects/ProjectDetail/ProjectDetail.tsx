@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useProjects } from "../../../services/api";
 import { Box } from "@chakra-ui/layout";
 import type { Project } from "../../../services/api";
-import ProjectDeleteButton from "../components/ProjectDeleteButton";
+import ProjectDeleteButton from "../components/ProjectDeleteButton/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
 import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import RoleList from "../components/RoleList";

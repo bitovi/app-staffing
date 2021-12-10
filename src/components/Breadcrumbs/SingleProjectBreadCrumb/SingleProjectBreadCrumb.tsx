@@ -13,13 +13,17 @@ export default function SingleProjectBreadCrumb({
   return (
     <>
       <BreadcrumbItem separator={<ChevronRightIcon />} spacing="8px">
-        <BreadcrumbLink href="/projects" data-testid="projects">
+        <BreadcrumbLink href="/projects" data-testid="projectsBreadcrumb">
           Projects
         </BreadcrumbLink>
       </BreadcrumbItem>
 
       <BreadcrumbItem isCurrentPage color="gray.800">
-        <BreadcrumbLink as={Link} to={"#"} data-testid="project">
+        <BreadcrumbLink
+          as={Link}
+          to={"#"}
+          data-testid="singleProjectBreadcrumb"
+        >
           {name}
           {loading ? <Spinner size="xs" ml="0.5rem" /> : null}
         </BreadcrumbLink>

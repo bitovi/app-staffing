@@ -11,7 +11,7 @@ export default function ProjectsBreadCrumb({
         isCurrentPage={loading ? true : false}
         color={loading ? "" : "gray.800"}
       >
-        <BreadcrumbLink href="/projects" data-testid="projects">
+        <BreadcrumbLink href="/projects" data-testid="projectsBreadcrumb">
           Projects
         </BreadcrumbLink>
       </BreadcrumbItem>

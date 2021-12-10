@@ -1,43 +1,48 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import ProjectsHeader from "./ProjectsHeader";
 import { BrowserRouter } from "react-router-dom";
+import { Suspense } from "react";
+import Loading from "../../../../Loading";
 
 describe("Components/Projects/ProjectsHeader", () => {
-  it("renders title, breadcrumbs, and button", () => {
-    render(<ProjectsHeader />);
-
-    const [title, secondBreadcrumb] = screen.getAllByText("Projects");
-    const firstBreadcrumb = screen.getByText("Home");
-
-    expect(title).toBeVisible();
-    expect(firstBreadcrumb).toBeVisible();
-    expect(secondBreadcrumb).toBeVisible();
-  });
-
-  it("renders breadcrumbs up until a project name", () => {
+  it("renders with breadcrumbs up until a project name", () => {
     const { queryByTestId } = render(
       <BrowserRouter>
-        <ProjectsHeader />
+        <Suspense fallback={<Loading />}>
+          <ProjectsHeader />
+        </Suspense>
       </BrowserRouter>,
     );
 
-    const projectName = queryByTestId("project");
+    const homeBreadcrumb = queryByTestId("homeBreadcrumb");
+    const projectsBreadcrumb = queryByTestId("projectsBreadcrumb");
+    const projectListTitle = queryByTestId("projectListTitle");
+    const singleProjectBreadcrumb = queryByTestId("singleProjectBreadcrumb");
 
-    expect(queryByTestId("home")).toBeInTheDocument();
-    expect(queryByTestId("projects")).toBeInTheDocument();
-    expect(projectName).toBeNull();
+    expect(homeBreadcrumb).toBeInTheDocument();
+    expect(projectsBreadcrumb).toBeInTheDocument();
+    expect(projectListTitle).toBeInTheDocument();
+    expect(singleProjectBreadcrumb).toBeNull();
   });
 
   it("renders breadcrumbs with the correct project name", () => {
     const { queryByTestId } = render(
       <BrowserRouter>
-        <ProjectsHeader name="Nike Store" />
+        <Suspense fallback={<Loading />}>
+          <ProjectsHeader name="Nike Store" />
+        </Suspense>
       </BrowserRouter>,
     );
 
-    expect(queryByTestId("home")).toBeInTheDocument();
-    expect(queryByTestId("projects")).toBeInTheDocument();
-    expect(queryByTestId("project")).toBeInTheDocument();
+    const homeBreadcrumb = queryByTestId("homeBreadcrumb");
+    const projectsBreadcrumb = queryByTestId("projectsBreadcrumb");
+    const projectListTitle = queryByTestId("projectListTitle");
+    const singleProjectBreadcrumb = queryByTestId("singleProjectBreadcrumb");
+
+    expect(homeBreadcrumb).toBeInTheDocument();
+    expect(projectsBreadcrumb).toBeInTheDocument();
+    expect(projectListTitle).toBeInTheDocument();
+    expect(singleProjectBreadcrumb?.innerHTML).toBe("Nike Store");
   });
 
   it("renders breadcrumbs with the correct link", async () => {
@@ -47,10 +52,13 @@ describe("Components/Projects/ProjectsHeader", () => {
       </BrowserRouter>,
     );
 
-    const projects = getByTestId("projects");
-    const projectName = getByTestId("project");
+    const projectsBreadcrumb = getByTestId("projectsBreadcrumb");
+    const singleProjectBreadcrumb = getByTestId("singleProjectBreadcrumb");
 
-    expect(projects.closest("a")).toHaveAttribute("href", "/projects");
-    expect(projectName.closest("a")).toHaveAttribute("href", "/");
+    expect(projectsBreadcrumb.closest("a")).toHaveAttribute(
+      "href",
+      "/projects",
+    );
+    expect(singleProjectBreadcrumb.closest("a")).toHaveAttribute("href", "/");
   });
 });

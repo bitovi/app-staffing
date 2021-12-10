@@ -4,6 +4,8 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
 import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBreadCrumb";
+import { useDisclosure } from "@chakra-ui/hooks";
+import AddProjectModal from "../AddProjectModal";
 
 export default function ProjectsHeader({
   loading,
@@ -12,6 +14,8 @@ export default function ProjectsHeader({
   loading?: boolean;
   name?: string;
 }): JSX.Element {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box mb="48px">
       <Breadcrumb
@@ -22,7 +26,7 @@ export default function ProjectsHeader({
         separator={<ChevronRightIcon />}
       >
         <BreadcrumbItem>
-          <BreadcrumbLink href="/" data-testid="home">
+          <BreadcrumbLink href="/" data-testid="homeBreadcrumb">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -41,13 +45,24 @@ export default function ProjectsHeader({
         display="flex"
         justifyContent="space-between"
       >
-        <Text textStyle="title" color="gray.700">
+        <Text textStyle="title" color="gray.700" data-testid="projectListTitle">
           Projects
         </Text>
+        {!name && (
+          <>
+            <Button
+              size="lg"
+              variant="primary"
+              arialabel="Add Project"
+              onClick={onOpen}
+              data-testid="addProjectButton"
+            >
+              Add Project
+            </Button>
 
-        <Button size="lg" variant="primary" arialabel="Add Project">
-          Add Project
-        </Button>
+            <AddProjectModal isOpen={isOpen} onClose={onClose} />
+          </>
+        )}
       </Flex>
     </Box>
   );
