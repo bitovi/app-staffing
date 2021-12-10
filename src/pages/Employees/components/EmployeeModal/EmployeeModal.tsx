@@ -28,17 +28,17 @@ import { isEmpty, pickBy } from "lodash";
 import format from "date-fns/format";
 
 import { Employee, Skill } from "../../../../services/api";
-import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 import { ServiceError } from "../../../../components/ServiceError";
+import { skills } from "../../../../services/api/skills/fixtures";
 
 interface EmployeeFormData {
   name: string;
   start_date: string;
   end_date: string;
-  roles?: Record<string, boolean>;
+  roles: Record<string, boolean>;
 }
 interface EmployeeModalProps {
-  onSave: (data: Omit<EmployeeJSON, "id">) => Promise<void>;
+  onSave: (data: Omit<Employee, "id">) => Promise<void>;
   onClose: () => void;
   isOpen: boolean;
   skills?: Skill[];
@@ -79,9 +79,19 @@ export default function EmployeeModal({
     (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
+    const selectedRoles = getSelectedRoles(data.roles);
     try {
-      await setStatus("pending");
-      await onSave(formatEmployeeData(data));
+      setStatus("pending");
+      await onSave({
+        name: data.name,
+        startDate: data.start_date
+          ? new Date(data.start_date.replace("-", "/"))
+          : undefined,
+        endDate: data.end_date
+          ? new Date(data.end_date.replace("-", "/"))
+          : undefined,
+        skills: selectedRoles as Skill[], //@TODO: Fix the undefined Type issue for skills,
+      });
       reset({
         name: "",
         start_date: "",
@@ -218,36 +228,19 @@ export default function EmployeeModal({
 }
 
 function getSelectedRoles(map: undefined | Record<string, boolean>) {
-  return isEmpty(map) ? [] : Object.keys(pickBy(map, (checked) => !!checked));
-}
-
-function formatEmployeeData(data: EmployeeFormData): Omit<EmployeeJSON, "id"> {
-  const selectedRoles = getSelectedRoles(data.roles);
-  return {
-    type: "employees",
-    attributes: {
-      name: data.name,
-      startDate: data.start_date,
-      endDate: data.end_date,
-    },
-    relationships: {
-      skills: {
-        data: selectedRoles.map((role) => ({
-          type: "skills",
-          id: role,
-        })),
-      },
-    },
-  };
+  return isEmpty(map)
+    ? []
+    : Object.keys(pickBy(map, (checked) => !!checked)).map((entry: string) =>
+        skills.find((skill) => skill.id === entry),
+      );
 }
 
 function toEmployeeFormData(data: Employee): EmployeeFormData {
   const roles: Record<string, boolean> = {};
 
-  data.skills.forEach((skill) => {
-    roles[skill.id] = true;
+  data.skills?.forEach((skill) => {
+    roles[skill?.id] = true;
   });
-
   return {
     name: data.name,
     start_date: data.startDate ? format(data.startDate, "yyyy-MM-dd") : "",

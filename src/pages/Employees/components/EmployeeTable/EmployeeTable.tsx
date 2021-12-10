@@ -16,12 +16,11 @@ import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
-import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   skills?: Skill[];
-  updateEmployee: (id: string, data: { data: EmployeeJSON }) => Promise<void>;
+  updateEmployee: (id: string, data: Omit<Employee, "id">) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
 }
 
@@ -49,11 +48,11 @@ export default function EmployeeTable({
   };
 
   const submitUpdateEmployee = async (
-    employeeToUpdate: Omit<EmployeeJSON, "id">,
+    employeeToUpdate: Omit<Employee, "id">,
   ) => {
     if (employeeToEdit) {
       const id = employeeToEdit.id;
-      await updateEmployee(id, { data: { ...employeeToUpdate, id } });
+      await updateEmployee(id, employeeToUpdate);
     }
   };
 

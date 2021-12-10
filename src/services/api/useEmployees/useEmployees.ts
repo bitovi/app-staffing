@@ -3,27 +3,57 @@ import { EmployeeJSON } from "../employees/interfaces";
 import type { ResponseStatus, APIResponse } from "../shared";
 
 import restBuilder from "../restBuilder/restBuilder";
+import { format } from "date-fns";
 
-// const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
-//   if (array) {
-//     return array.sort((a, b) =>
-//       a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
-//     );
-//   }
-//   return [];
-// };
-export interface EmployeeMutations<K> {
-  addEmployee: (newCollectionItem: {
-    data: Omit<K, "id">;
-  }) => Promise<string | undefined>;
-  updateEmployee: (id: string, data: { data: K }) => Promise<void>;
+function formatEmployeeData(employee: Omit<Employee, "id">): {
+  data: Omit<EmployeeJSON, "id">;
+};
+function formatEmployeeData(
+  employee: Omit<Employee, "id">,
+  id: string,
+): { data: EmployeeJSON };
+
+function formatEmployeeData(
+  employee: Omit<Employee, "id">,
+  id?: string,
+): { data: EmployeeJSON } | { data: Omit<EmployeeJSON, "id"> } {
+  const jsonFormattedEmployee: Omit<EmployeeJSON, "id"> = {
+    type: "employees",
+    attributes: {
+      name: employee.name,
+      startDate: employee.startDate
+        ? format(employee.startDate, "yyyy-MM-dd")
+        : "",
+      endDate: employee.endDate ? format(employee.endDate, "yyyy-MM-dd") : "",
+    },
+    relationships: {
+      skills: {
+        data: employee.skills.map((skill) => ({
+          type: "skills",
+          id: skill.id,
+        })),
+      },
+    },
+  };
+  return id
+    ? { data: { ...jsonFormattedEmployee, id } }
+    : { data: jsonFormattedEmployee };
+}
+export interface EmployeeMutations<T> {
+  addEmployee: (
+    newCollectionItem: Omit<T, "id">,
+  ) => Promise<string | undefined>;
+  updateEmployee: (
+    id: string,
+    updateCollectionItem: Omit<T, "id">,
+  ) => Promise<void>;
   deleteEmployee: (collectionItemId: string) => Promise<void>;
 }
 
 export interface EmployeeActions {
   useEmployee: (id: string) => APIResponse<Employee>;
   useEmployeeList: () => APIResponse<Employee[]>;
-  useEmployeeActions: () => EmployeeMutations<EmployeeJSON>;
+  useEmployeeActions: () => EmployeeMutations<Employee>;
 }
 
 const { useRestOne, useRestList, useRestActions } = restBuilder<
@@ -33,8 +63,8 @@ const { useRestOne, useRestList, useRestActions } = restBuilder<
 
 export default function useEmployees(): ResponseStatus & EmployeeActions {
   const {
-    handleAdd: addEmployee,
-    handleUpdate: updateEmployee,
+    handleAdd,
+    handleUpdate,
     handleDelete: deleteEmployee,
   } = useRestActions();
 
@@ -42,7 +72,13 @@ export default function useEmployees(): ResponseStatus & EmployeeActions {
     useEmployee: useRestOne,
     useEmployeeList: useRestList,
     useEmployeeActions: () => {
-      return { addEmployee, updateEmployee, deleteEmployee };
+      return {
+        addEmployee: (employee: Omit<Employee, "id">) =>
+          handleAdd(formatEmployeeData(employee)),
+        updateEmployee: (id: string, employee: Omit<Employee, "id">) =>
+          handleUpdate(id, formatEmployeeData(employee, id)),
+        deleteEmployee,
+      };
     },
   };
 }

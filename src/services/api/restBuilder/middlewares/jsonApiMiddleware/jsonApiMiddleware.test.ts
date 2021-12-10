@@ -1,7 +1,6 @@
 import { waitFor } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { Employee } from "../../..";
-import { EmployeeJSON } from "../../../employees";
 import {
   serializedEmployeeMockData,
   employeeMockData,
@@ -129,29 +128,20 @@ describe("json-api-deserializer middleware", () => {
   it("Adds employee and hydrates skills fields", async () => {
     const { result: actions } = renderHook(() => useEmployees());
 
-    const newEmployee: { data: Omit<EmployeeJSON, "id"> } = {
-      data: {
-        type: "employees",
-        attributes: {
-          name: "Test Person",
-          startDate: fakeDateString(),
-          endDate: "",
+    const newEmployee: Omit<Employee, "id"> = {
+      name: "Test Person",
+      startDate: new Date(fakeDateString()),
+      endDate: undefined,
+      skills: [
+        {
+          name: "Angular",
+          id: "100",
         },
-        relationships: {
-          skills: {
-            data: [
-              {
-                type: "skills",
-                id: "100",
-              },
-              {
-                type: "skills",
-                id: "101",
-              },
-            ],
-          },
+        {
+          name: "Design",
+          id: "101",
         },
-      },
+      ],
     };
     // Functionality works integrated with employees hook
     const { result: dataList, waitForNextUpdate } = renderHook(() =>

@@ -8,7 +8,7 @@ import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
-import { EmployeeJSON } from "../../services/api/employees";
+import { Employee } from "../../services/api/employees";
 interface IEmployees {
   useEmployees: typeof useEmployeesDefault;
   useSkills: typeof useSkillsDefault;
@@ -65,10 +65,9 @@ export function Employees({
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
-  const addNewEmployee = async (data: Omit<EmployeeJSON, "id">) => {
-    await addEmployee({ data });
+  const addNewEmployee = async (data: Omit<Employee, "id">) => {
+    await addEmployee(data);
   };
-
   return (
     <Box maxHeight="100%">
       <EmployeeModal
