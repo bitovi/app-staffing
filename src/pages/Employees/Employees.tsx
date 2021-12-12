@@ -61,7 +61,7 @@ export function Employees({
 }: IEmployees): JSX.Element {
   const { useEmployeeList, useEmployeeActions } = useEmployees();
   const { addEmployee, updateEmployee, deleteEmployee } = useEmployeeActions();
-  const { data: employees } = useEmployeeList();
+  const { data: employees } = useEmployeeList({ include: "skills" });
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 

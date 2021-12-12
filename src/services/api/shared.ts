@@ -14,6 +14,7 @@ export interface QueriableList<T> {
   sort?: string;
   page?: number;
   count?: number;
+  include?: string;
 }
 
 export async function fetcher<T>(

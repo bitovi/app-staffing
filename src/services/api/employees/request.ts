@@ -243,9 +243,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         }
       },
     ),
-    //////////////////////////////
-    //**  Changed parameter typing to suit response object in JSON API format
-    /////////////////////////////
+
     getAll: rest.get<JSONAPI<EmployeeJSON[], JSONSkill[]>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
@@ -254,6 +252,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
           sort,
           page = 1,
           count = 25,
+          include = null,
         } = deparam(req.url.searchParams.toString());
 
         ////////////////////////////////////////////
@@ -273,11 +272,8 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         // ** finding relevant skill IDs with the "join table" employeeSkillsStore
         // ** includedSkills will provide the "included" field for data response
         ////////////////////////////////////////////
-
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!! This jsonAPIEmployee Promise.All is currently breaking the useEmployees test
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         const includedSkills: string[] = [];
+
         const jsonAPIEmployees: EmployeeJSON[] = await Promise.all(
           employees.map(
             async (employee: EmployeeTable): Promise<EmployeeJSON> => {
@@ -288,28 +284,38 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
                   },
                 });
 
-              return {
-                type: "employees",
-                id: employee.id,
-                attributes: {
-                  name: employee.name,
-                  startDate: employee.startDate,
-                  endDate: employee.endDate,
-                },
-                relationships: {
-                  skills: {
-                    data: employeeSkills.map((skill) => {
-                      if (!includedSkills.includes(skill.skill_id)) {
-                        includedSkills.push(skill.skill_id);
-                      }
-                      return {
-                        type: "skills",
-                        id: skill.skill_id,
-                      };
-                    }),
-                  },
-                },
-              };
+              return include
+                ? {
+                    type: "employees",
+                    id: employee.id,
+                    attributes: {
+                      name: employee.name,
+                      startDate: employee.startDate,
+                      endDate: employee.endDate,
+                    },
+                    relationships: {
+                      skills: {
+                        data: employeeSkills.map((skill) => {
+                          if (!includedSkills.includes(skill.skill_id)) {
+                            includedSkills.push(skill.skill_id);
+                          }
+                          return {
+                            type: "skills",
+                            id: skill.skill_id,
+                          };
+                        }),
+                      },
+                    },
+                  }
+                : {
+                    type: "employees",
+                    id: employee.id,
+                    attributes: {
+                      name: employee.name,
+                      startDate: employee.startDate,
+                      endDate: employee.endDate,
+                    },
+                  };
             },
           ),
         );
@@ -317,26 +323,35 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         // ** Filtering the skillStoreManager to join
         // ** the skill id to its skill object
         /////////////////////////////////////////////
-        const included: JSONSkill[] = (
-          await skillStoreManager.store.getListData({
-            filter: {
-              id: includedSkills,
-            },
-          })
-        ).data.map((skill) => ({
-          type: "skills",
-          id: skill.id,
-          attributes: {
-            name: skill.name,
-          },
-        }));
-        return res(
-          ctx.status(200),
-          ctx.json({
-            data: jsonAPIEmployees,
-            included,
-          }),
-        );
+        const included: JSONSkill[] | null = include
+          ? (
+              await skillStoreManager.store.getListData({
+                filter: {
+                  id: includedSkills,
+                },
+              })
+            ).data.map((skill) => ({
+              type: "skills",
+              id: skill.id,
+              attributes: {
+                name: skill.name,
+              },
+            }))
+          : null;
+        return include
+          ? res(
+              ctx.status(200),
+              ctx.json({
+                data: jsonAPIEmployees,
+                included,
+              }),
+            )
+          : res(
+              ctx.status(200),
+              ctx.json({
+                data: jsonAPIEmployees,
+              }),
+            );
       },
     ),
   };

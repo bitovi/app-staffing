@@ -19,7 +19,7 @@ export interface RestActions<K> {
 
 export interface RestHooks<T, K> {
   useRestOne: (id: string) => APIResponse<T>;
-  useRestList: () => APIResponse<T[]>;
+  useRestList: (queryParams?: QueriableList<T>) => APIResponse<T[]>;
   useRestActions: () => RestActions<K>;
 }
 
@@ -36,7 +36,7 @@ export default function restBuilder<
   msgObject?: ToastConfig,
 ): RestHooks<FrontEndData, BackEndData> {
   function useRestList(
-    queryParams?: QueriableList<BackEndData>,
+    queryParams?: QueriableList<FrontEndData>,
   ): APIResponse<FrontEndData[]> {
     const { data: response, error } = useSWR<{ data: FrontEndData[] }, Error>(
       path,

@@ -1,6 +1,6 @@
 import type { Employee } from "../employees";
 import { EmployeeJSON } from "../employees/interfaces";
-import type { ResponseStatus, APIResponse } from "../shared";
+import type { ResponseStatus, APIResponse, QueriableList } from "../shared";
 
 import restBuilder from "../restBuilder/restBuilder";
 
@@ -49,7 +49,9 @@ export interface EmployeeMutations<T> {
 
 export interface EmployeeActions {
   useEmployee: (id: string) => APIResponse<Employee>;
-  useEmployeeList: () => APIResponse<Employee[]>;
+  useEmployeeList: (
+    queryParams?: QueriableList<Employee>,
+  ) => APIResponse<Employee[]>;
   useEmployeeActions: () => EmployeeMutations<Employee>;
 }
 
