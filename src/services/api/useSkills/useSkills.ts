@@ -1,7 +1,7 @@
 import type { Skill, JSONSkill } from "../skills";
 import type { ResponseStatus } from "../shared";
 
-import useRest from "../useRest/useRestV2";
+import useRest from "../restBuilder/useRestV2";
 
 export default function useSkills(): ResponseStatus & {
   skills: Skill[] | undefined;

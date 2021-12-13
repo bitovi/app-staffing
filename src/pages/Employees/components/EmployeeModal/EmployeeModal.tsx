@@ -20,7 +20,6 @@ import {
   Box,
   SimpleGrid,
   Divider,
-  useToast,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
@@ -29,26 +28,21 @@ import { isEmpty, pickBy } from "lodash";
 import format from "date-fns/format";
 
 import { Employee, Skill } from "../../../../services/api";
-import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 import { ServiceError } from "../../../../components/ServiceError";
+import { skills } from "../../../../services/api/skills/fixtures";
 
 interface EmployeeFormData {
   name: string;
   start_date: string;
   end_date: string;
-  roles?: Record<string, boolean>;
+  roles: Record<string, boolean>;
 }
-
 interface EmployeeModalProps {
-  onSave: (employee: {
-    data: Omit<EmployeeJSON, "id">;
-    id?: string;
-  }) => Promise<string | void>;
+  onSave: (data: Omit<Employee, "id">) => Promise<void>;
   onClose: () => void;
   isOpen: boolean;
   skills?: Skill[];
   employee?: Employee;
-  toastTitle: string;
 }
 
 type SaveButtonStatus = "idle" | "pending";
@@ -59,7 +53,6 @@ export default function EmployeeModal({
   isOpen,
   skills,
   employee,
-  toastTitle,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
@@ -74,7 +67,6 @@ export default function EmployeeModal({
   } = useForm<EmployeeFormData>({
     defaultValues: employeeData,
   });
-  const toast = useToast();
 
   const isNewEmployee = isEmpty(employeeData);
   const employeeName = watch("name");
@@ -82,36 +74,28 @@ export default function EmployeeModal({
   const fullNameProvided = (name: string): boolean =>
     name ? name.trim().split(" ").length >= 2 : false;
 
-  // allow form submit if at least full name is entered for a new employee OR
-  // any of the inputs has been modified when editing an existing employee
-  // and name still exists
   const canSubmitForm =
     (isNewEmployee && fullNameProvided(employeeName)) ||
     (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
+    const selectedRoles = getSelectedRoles(data.roles);
     try {
-      await setStatus("pending");
-      // added the Employee ID property for PATCH request as specified in JSON API PATCH specs
+      setStatus("pending");
       await onSave({
-        data: formatEmployeeData(data),
-        id: employee ? employee.id : undefined,
+        name: data.name,
+        startDate: data.start_date
+          ? new Date(data.start_date.replace("-", "/")) //.replace() seems to fix native Date JS changing date due to time zone
+          : undefined,
+        endDate: data.end_date
+          ? new Date(data.end_date.replace("-", "/"))
+          : undefined,
+        skills: selectedRoles as Skill[], //@TODO: Fix the undefined Type issue for skills,
       });
       reset({
         name: "",
         start_date: "",
         end_date: "",
-      });
-      toast({
-        title: toastTitle,
-        description: ` ${data.name} was successfully ${
-          employee ? "edited" : "added"
-        }!`,
-        duration: 5000,
-        isClosable: false,
-        position: "bottom-right",
-        variant: "left-accent",
-        status: "success",
       });
       onClose();
       setStatus("idle");
@@ -244,37 +228,19 @@ export default function EmployeeModal({
 }
 
 function getSelectedRoles(map: undefined | Record<string, boolean>) {
-  return isEmpty(map) ? [] : Object.keys(pickBy(map, (checked) => !!checked));
-}
-
-function formatEmployeeData(data: EmployeeFormData): Omit<EmployeeJSON, "id"> {
-  const selectedRoles = getSelectedRoles(data.roles);
-
-  return {
-    type: "employees",
-    attributes: {
-      name: data.name,
-      startDate: new Date(data.start_date),
-      endDate: new Date(data.end_date),
-    },
-    relationships: {
-      skills: {
-        data: selectedRoles.map((role) => ({
-          type: "skills",
-          id: role,
-        })),
-      },
-    },
-  };
+  return isEmpty(map)
+    ? []
+    : Object.keys(pickBy(map, (checked) => !!checked)).map((entry: string) =>
+        skills.find((skill) => skill.id === entry),
+      );
 }
 
 function toEmployeeFormData(data: Employee): EmployeeFormData {
   const roles: Record<string, boolean> = {};
 
-  data.skills.forEach((skill) => {
-    roles[skill.id] = true;
+  data.skills?.forEach((skill) => {
+    roles[skill?.id] = true;
   });
-
   return {
     name: data.name,
     start_date: data.startDate ? format(data.startDate, "yyyy-MM-dd") : "",

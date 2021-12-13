@@ -8,7 +8,7 @@ import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
-
+import { Employee } from "../../services/api/employees";
 interface IEmployees {
   useEmployees: typeof useEmployeesDefault;
   useSkills: typeof useSkillsDefault;
@@ -59,18 +59,21 @@ export function Employees({
   useEmployees,
   useSkills,
 }: IEmployees): JSX.Element {
-  const { employees, addEmployee, deleteEmployee, updateEmployee } =
-    useEmployees();
+  const { useEmployeeList, useEmployeeActions } = useEmployees();
+  const { addEmployee, updateEmployee, deleteEmployee } = useEmployeeActions();
+  const { data: employees } = useEmployeeList({ include: "skills" });
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
+  const addNewEmployee = async (data: Omit<Employee, "id">) => {
+    await addEmployee(data);
+  };
   return (
     <Box maxHeight="100%">
       <EmployeeModal
-        toastTitle="New team member"
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
-        onSave={addEmployee}
+        onSave={addNewEmployee}
         skills={skills}
       />
 

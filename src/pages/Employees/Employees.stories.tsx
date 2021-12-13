@@ -42,12 +42,19 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
         {...props}
         useEmployees={() => {
           return {
-            isLoading: false,
-            employees: [],
-            addEmployee: (employee) => new Promise((resolve) => resolve("")),
-            deleteEmployee: (employeeId) => new Promise((resolve) => resolve()),
-            updateEmployee: (employeeId) => new Promise((resolve) => resolve()),
-            reset: () => undefined,
+            useEmployee: (id: string) => {
+              return { data: undefined };
+            },
+            useEmployeeList: () => {
+              return { data: [] };
+            },
+            useEmployeeActions: () => {
+              return {
+                addEmployee: (employee) => Promise.resolve(""),
+                updateEmployee: (id) => Promise.resolve(),
+                deleteEmployee: (id) => Promise.resolve(),
+              };
+            },
           };
         }}
         useSkills={() => {

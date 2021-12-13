@@ -4,7 +4,7 @@ import useProjects from "./useProjects";
 
 import { projectStoreManager } from "../projects/mocks";
 import { projects } from "../projects/fixtures";
-import { wrapper } from "../useRest/useRest.test";
+import { wrapper } from "../restBuilder/useRest.test";
 
 describe("useProjects", () => {
   beforeEach(async () => {

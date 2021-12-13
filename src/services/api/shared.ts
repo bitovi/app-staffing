@@ -1,11 +1,11 @@
 import { Filter } from "can-query-logic";
-import { SerializerTypes } from "./useRest/getJsonApiSerializer";
-import jsonApiMiddleware from "./useRest/middlewares/jsonApiMiddleware";
+import { SerializerTypes } from "./restBuilder/getJsonApiSerializer";
+import jsonApiMiddleware from "./restBuilder/middlewares/jsonApiMiddleware";
 export interface APIResponse<T> extends ResponseStatus {
   data?: T;
 }
 export interface ResponseStatus {
-  isLoading: boolean;
+  isLoading?: boolean;
   error?: Error;
 }
 
@@ -14,6 +14,7 @@ export interface QueriableList<T> {
   sort?: string;
   page?: number;
   count?: number;
+  include?: string;
 }
 
 export async function fetcher<T>(
