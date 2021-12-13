@@ -79,6 +79,7 @@ export default function AddProjectModal({
               <Input
                 name="name"
                 label="Project name"
+                data-testid="projectInput"
                 onChange={handleChange}
                 value={newProject.name}
               />
@@ -89,6 +90,7 @@ export default function AddProjectModal({
                 label="Description"
                 onChange={handleChange}
                 name="description"
+                data-testid="projectDescription"
                 value={newProject.description}
               />
             </FormControl>
