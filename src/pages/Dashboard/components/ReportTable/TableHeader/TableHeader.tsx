@@ -37,7 +37,8 @@ export default function TableHeader({
 
             {/* Sub Heading */}
             <Center height={4} flex={1} justifyContent="start">
-              {type === TimescaleType.month && (
+              {(type === TimescaleType.month ||
+                type === TimescaleType.quarter) && (
                 <Text color={"#718096"}>{format(startDate, "MMM do")}</Text>
               )}
             </Center>
