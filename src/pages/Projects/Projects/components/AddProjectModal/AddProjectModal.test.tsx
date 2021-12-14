@@ -31,29 +31,29 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
       new Promise((resolve) => resolve(someId)),
     );
 
-    const { getByText, getByTestId } = render(
+    const { getByTestId } = render(
       <AddProjectModal isOpen={true} onClose={() => undefined} />,
     );
 
     const projectName = getByTestId("projectInput") as HTMLInputElement;
     const projectDescription = getByTestId("projectDescription");
 
-    expect(projectName).toBeInTheDocument();
-    expect(projectDescription).toBeInTheDocument();
-
     fireEvent.change(projectName, { target: { value: "Adidas" } });
     fireEvent.change(projectDescription, {
       target: { value: "Fashion and athletics" },
     });
-
-    expect(projectName.value).toBe("Adidas");
-    expect(getByText(/Fashion and athletics/g)).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/Save/g));
 
     await waitFor(() =>
       expect(mockHistoryPush).toBeCalledWith(`/projects/${someId}`),
     );
+
+    expect(mockAddProject).toBeCalledWith({
+      name: "Adidas",
+      description: "Fashion and athletics",
+      roles: [],
+    });
   });
 
   it("reset modal on close", async () => {
