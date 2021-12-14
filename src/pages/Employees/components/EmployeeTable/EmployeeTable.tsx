@@ -111,7 +111,7 @@ export default function EmployeeTable({
 
         {employees && employees.length > 0 && (
           <>
-            <Box maxHeight="80vh" overflowY="scroll">
+            <Box maxHeight="80vh" overflowY="auto">
               <Table>
                 <Thead py={4}>
                   <Tr>
