@@ -17,6 +17,10 @@ export interface QueriableList<T> {
   include?: string;
 }
 
+class HttpError extends Error {
+  status?: number;
+}
+
 export async function fetcher<T>(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
 
@@ -24,7 +28,7 @@ export async function fetcher<T>(
   url: string,
   body?: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
 ): Promise<T> {
-  const jsonResponse = await fetch(url, {
+  const response = await fetch(url, {
     method,
     body: JSON.stringify(body),
     headers: {
@@ -32,7 +36,15 @@ export async function fetcher<T>(
     },
   });
 
-  const response = await jsonResponse.json();
+  if (!response.ok) {
+    const error = new HttpError(
+      `An error occurred while fetching: ${method} ${url}`,
+    );
+    error.status = response.status;
+    throw error;
+  }
+
+  const responseBody = await response.json();
 
   // "undefined" is a temporary measure to avoid breaking endpoints which haven't
   // converted to JSON API fully; otherwise, the deserializer omits much of the
@@ -45,10 +57,10 @@ export async function fetcher<T>(
     // as the response from fetch sets the shape of the SWR cache;
     // therefore, deserializing here allows us to have a localStorage SWR cache in the shape
     // of the frontend
-    const [deserialized] = jsonApiMiddleware(response, type);
+    const [deserialized] = jsonApiMiddleware(responseBody, type);
 
     return deserialized;
-  } else {
-    return response;
   }
+
+  return responseBody;
 }

@@ -1,15 +1,12 @@
 import { rest } from "msw";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
-import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
 
-//import type { QueriableList } from "../shared";
-
 import { MockResponse, JSONAPI, JSONData } from "../baseMocks/interfaces";
-import { skillStoreManager } from "../skills/mocks";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
 import { EmployeeTable, EmployeeJSON } from "./interfaces";
 import { JSONSkill } from "../skills/interfaces";
+import { getAll } from "./handlers";
 
 interface EmployeeSkillsEntry {
   id: string;
@@ -243,115 +240,27 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
         }
       },
     ),
-
     getAll: rest.get<JSONAPI<EmployeeJSON[], JSONSkill[]>>(
       `${basePath}${resourcePath}`,
       async (req, res, ctx) => {
-        const {
-          filter,
-          sort,
-          page = 1,
-          count = 25,
-          include = null,
-        } = deparam(req.url.searchParams.toString());
-
-        ////////////////////////////////////////////
-        // ** Employee store data
-        ///////////////////////////////////////////
-
-        const { data: employees } = await store.getListData({
-          filter,
-          sort,
-          page: {
-            start: (page - 1) * count,
-            end: page * count - 1,
-          },
-        });
-        /////////////////////////////////////////////
-        // ** JSON API formatting each employee for response
-        // ** finding relevant skill IDs with the "join table" employeeSkillsStore
-        // ** includedSkills will provide the "included" field for data response
-        ////////////////////////////////////////////
-        const includedSkills: string[] = [];
-
-        const jsonAPIEmployees: EmployeeJSON[] = await Promise.all(
-          employees.map(
-            async (employee: EmployeeTable): Promise<EmployeeJSON> => {
-              const { data: employeeSkills } =
-                await employeeSkillsStoreManager.store.getListData({
-                  filter: {
-                    employee_id: employee.id,
-                  },
-                });
-
-              return include
-                ? {
-                    type: "employees",
-                    id: employee.id,
-                    attributes: {
-                      name: employee.name,
-                      startDate: employee.startDate,
-                      endDate: employee.endDate,
-                    },
-                    relationships: {
-                      skills: {
-                        data: employeeSkills.map((skill) => {
-                          if (!includedSkills.includes(skill.skill_id)) {
-                            includedSkills.push(skill.skill_id);
-                          }
-                          return {
-                            type: "skills",
-                            id: skill.skill_id,
-                          };
-                        }),
-                      },
-                    },
-                  }
-                : {
-                    type: "employees",
-                    id: employee.id,
-                    attributes: {
-                      name: employee.name,
-                      startDate: employee.startDate,
-                      endDate: employee.endDate,
-                    },
-                  };
-            },
-          ),
-        );
-        //////////////////////////////////////////////
-        // ** Filtering the skillStoreManager to join
-        // ** the skill id to its skill object
-        /////////////////////////////////////////////
-        const included: JSONSkill[] | null = include
-          ? (
-              await skillStoreManager.store.getListData({
-                filter: {
-                  id: includedSkills,
+        try {
+          const response = await getAll(store, req.url.searchParams.toString());
+          return res(ctx.status(200), ctx.json(response));
+        } catch (error) {
+          return res(
+            ctx.status(500),
+            ctx.json({
+              errors: [
+                {
+                  status: "500",
+                  source: { pointer: "" },
+                  title: "Internal Server Error",
+                  detail: (error as Error).message,
                 },
-              })
-            ).data.map((skill) => ({
-              type: "skills",
-              id: skill.id,
-              attributes: {
-                name: skill.name,
-              },
-            }))
-          : null;
-        return include
-          ? res(
-              ctx.status(200),
-              ctx.json({
-                data: jsonAPIEmployees,
-                included,
-              }),
-            )
-          : res(
-              ctx.status(200),
-              ctx.json({
-                data: jsonAPIEmployees,
-              }),
-            );
+              ],
+            }),
+          );
+        }
       },
     ),
   };
