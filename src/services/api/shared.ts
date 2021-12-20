@@ -23,16 +23,17 @@ class HttpError extends Error {
 
 export async function fetcher<T>(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
-
   type: SerializerTypes,
   url: string,
-  body?: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: Record<string, any>,
 ): Promise<T> {
   const response = await fetch(url, {
     method,
-    body: JSON.stringify(body),
+    ...(body ? { body: JSON.stringify(body) } : {}),
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/vnd.api+json",
+      Accept: "application/vnd.api+json",
     },
   });
 

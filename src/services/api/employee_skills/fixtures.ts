@@ -1,6 +1,6 @@
 import faker from "faker";
 import { employees } from "../employees/fixtures";
-import { EmployeeTable } from "../employees/interfaces";
+import { EmployeeRecord } from "../employees/interfaces";
 import { skills } from "../skills/fixtures";
 import { Skill } from "../skills/interfaces";
 import { EmployeeSkillTable } from "./interfaces";
@@ -12,7 +12,7 @@ const maxNumberOfSkillsGenerated = 3;
 
 const populateJoinTable = (
   skills: Skill[],
-  employees: EmployeeTable[],
+  employees: EmployeeRecord[],
 ): EmployeeSkillTable[] => {
   const employee_skill_table: EmployeeSkillTable[] = [];
 

@@ -1,5 +1,3 @@
-import { waitFor } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
 import { Employee } from "../../..";
 import {
   serializedEmployeeMockData,
@@ -8,7 +6,6 @@ import {
 import { employeeStoreManager } from "../../../employees/mocks";
 import { employeeSkillsStoreManager } from "../../../employee_skills/mocks";
 import { skillStoreManager } from "../../../skills/mocks";
-import useEmployees from "../../../useEmployees";
 import hydrateObject from "../../hydrateObject";
 import jsonApiMiddleware from "./jsonApiMiddleware";
 
@@ -122,45 +119,5 @@ describe("json-api-deserializer middleware", () => {
       { id: "100", name: "Angular" },
       { id: "101", name: "Design" },
     ]);
-  });
-
-  it("Adds employee and hydrates skills fields", async () => {
-    const { result: actions } = renderHook(() => useEmployees());
-
-    const newEmployee: Omit<Employee, "id"> = {
-      name: "Test Person",
-      startDate: new Date(),
-      endDate: undefined,
-      skills: [
-        {
-          name: "Angular",
-          id: "100",
-        },
-        {
-          name: "Design",
-          id: "101",
-        },
-      ],
-    };
-    // Functionality works integrated with employees hook
-    const { result: dataList, waitForNextUpdate } = renderHook(() =>
-      actions.current.useEmployeeList(),
-    );
-
-    await waitForNextUpdate();
-
-    const { addEmployee } = actions.current.useEmployeeActions();
-
-    addEmployee(newEmployee);
-    await waitFor(() =>
-      expect(
-        dataList.current?.data
-          ?.filter((employee) => employee.name === "Test Person")
-          .map((employee) => employee.skills)[0],
-      ).toEqual([
-        { id: "100", name: "Angular" },
-        { id: "101", name: "Design" },
-      ]),
-    );
   });
 });

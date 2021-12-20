@@ -2,16 +2,16 @@ import QueryLogic from "can-query-logic";
 import requestCreatorEmployee from "./request";
 import { createStore, DateString } from "../baseMocks";
 
-import type { EmployeeTable } from "./interfaces";
+import { EmployeeRecord } from "./interfaces";
 import { employees } from "./fixtures";
 
-const queryLogic = new QueryLogic<EmployeeTable>({
+const queryLogic = new QueryLogic<EmployeeRecord>({
   identity: ["id"],
   keys: {
     id: "string",
     name: "string",
-    startDate: DateString,
-    endDate: DateString,
+    start_date: DateString,
+    end_date: DateString,
   },
 });
 

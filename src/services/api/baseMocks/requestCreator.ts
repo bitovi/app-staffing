@@ -6,15 +6,15 @@ import { rest } from "msw";
 import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export default function requestCreator<Resource extends { id: string }>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
-  const basePath = "/api/v1";
-
   return {
     getOne: rest.get<undefined, MockResponse<Resource>, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
+      `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
         const item = await store.getData({ id });
@@ -37,7 +37,7 @@ export default function requestCreator<Resource extends { id: string }>(
       },
     ),
     update: rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
+      `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
         // const index = collection.findIndex((item) => item.id === id);
@@ -72,7 +72,7 @@ export default function requestCreator<Resource extends { id: string }>(
       },
     ),
     delete: rest.delete<undefined, MockResponse, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
+      `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
         const resourceToDelete = await store.getData({ id });
@@ -92,7 +92,7 @@ export default function requestCreator<Resource extends { id: string }>(
       },
     ),
     create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
-      `${basePath}${resourcePath}`,
+      `${API_BASE_URL}${resourcePath}`,
       async (req, res, ctx) => {
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
         const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
@@ -107,7 +107,7 @@ export default function requestCreator<Resource extends { id: string }>(
       undefined,
       MockResponse<Resource[], { total: number }>,
       QueriableList<Resource>
-    >(`${basePath}${resourcePath}`, async (req, res, ctx) => {
+    >(`${API_BASE_URL}${resourcePath}`, async (req, res, ctx) => {
       const {
         filter,
         sort,
