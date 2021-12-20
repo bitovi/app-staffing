@@ -29,7 +29,6 @@ import format from "date-fns/format";
 
 import { Employee, Skill } from "../../../../services/api";
 import { ServiceError } from "../../../../components/ServiceError";
-import { skills } from "../../../../services/api/skills/fixtures";
 
 interface EmployeeFormData {
   name: string;
@@ -79,7 +78,8 @@ export default function EmployeeModal({
     (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
-    const selectedRoles = getSelectedRoles(data.roles);
+    const employeeSkills = getSelectedSkills(data.roles, skills || []);
+
     try {
       setStatus("pending");
       await onSave({
@@ -90,7 +90,7 @@ export default function EmployeeModal({
         endDate: data.end_date
           ? new Date(data.end_date.replace("-", "/"))
           : undefined,
-        skills: selectedRoles as Skill[], //@TODO: Fix the undefined Type issue for skills,
+        skills: employeeSkills,
       });
       reset({
         name: "",
@@ -227,20 +227,25 @@ export default function EmployeeModal({
   );
 }
 
-function getSelectedRoles(map: undefined | Record<string, boolean>) {
-  return isEmpty(map)
-    ? []
-    : Object.keys(pickBy(map, (checked) => !!checked)).map((entry: string) =>
-        skills.find((skill) => skill.id === entry),
-      );
+/**
+ * Retrieve the selected skills from the object bound to the Employee form
+ */
+function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
+  if (isEmpty(roles)) return [];
+
+  const selected = pickBy(roles, (checked) => !!checked);
+  return Object.keys(selected).map(
+    (entry: string) => skills.find((skill) => skill.id === entry) as Skill,
+  );
 }
 
 function toEmployeeFormData(data: Employee): EmployeeFormData {
   const roles: Record<string, boolean> = {};
 
-  data.skills?.forEach((skill) => {
-    roles[skill?.id] = true;
+  data.skills.forEach((skill) => {
+    roles[skill.id] = true;
   });
+
   return {
     name: data.name,
     start_date: data.startDate ? format(data.startDate, "yyyy-MM-dd") : "",

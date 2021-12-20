@@ -9,6 +9,8 @@ interface RoleActions {
   updateRole: (roleId: string, role: Partial<Role>) => Promise<void>;
 }
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 /** Hook for getting a list of the roles */
 export default function useRoles(
   queryParams?: QueriableList<Role>,
@@ -19,7 +21,7 @@ export default function useRoles(
     isLoading,
     handleAdd,
     handleUpdate,
-  } = useRest<Role>("/api/v1/roles", "undefined", queryParams);
+  } = useRest<Role>(`${API_BASE_URL}/roles`, "undefined", queryParams);
 
   return {
     roles,

@@ -2,39 +2,39 @@ import { useToast } from "@chakra-ui/toast";
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
+import { JSONAPIDocument } from "json-api-serializer";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
-import { SerializerTypes } from "./getJsonApiSerializer";
-import hydrateObject from "./hydrateObject";
+import getJsonApiSerializer, { SerializerTypes } from "./getJsonApiSerializer";
 import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
-import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
 
 export interface RestActions<K> {
-  handleAdd: (newCollectionItem: {
+  create: (newCollectionItem: {
     data: Omit<K, "id">;
   }) => Promise<string | undefined>;
-  handleUpdate: (id: string, data: { data: K }) => Promise<void>;
-  handleDelete: (collectionItemId: string) => Promise<void>;
+  update: (id: string, data: { data: Omit<K, "id"> }) => Promise<void>;
+  destroy: (collectionItemId: string) => Promise<void>;
 }
 
-export interface RestHooks<T, K> {
+export interface RestHooks<T> {
   useRestOne: (id: string) => APIResponse<T>;
   useRestList: (queryParams?: QueriableList<T>) => APIResponse<T[]>;
-  useRestActions: () => RestActions<K>;
+  useRestActions: () => RestActions<T>;
 }
 
 interface ToastConfig {
   title: string;
 }
 
+const jsonApiSerializer = getJsonApiSerializer();
+
 export default function restBuilder<
   FrontEndData extends { id?: string; name?: string },
-  BackEndData,
 >(
   path: string,
   type: SerializerTypes,
   msgObject?: ToastConfig,
-): RestHooks<FrontEndData, BackEndData> {
+): RestHooks<FrontEndData> {
   function useRestList(
     queryParams?: QueriableList<FrontEndData>,
   ): APIResponse<FrontEndData[]> {
@@ -68,104 +68,82 @@ export default function restBuilder<
     };
   }
 
-  function useRestActions(): RestActions<BackEndData> {
+  function useRestActions(): RestActions<FrontEndData> {
     const { mutate } = useSWRConfig();
     const toast = useToast();
 
-    const handleAdd = useCallback<
-      (newCollectionItem: {
-        data: Omit<BackEndData, "id">;
-      }) => Promise<string | undefined>
-    >(
-      async (newCollectionItem: { data: Omit<BackEndData, "id"> }) => {
-        let newId = "";
+    const create = useCallback(
+      async (newCollectionItem: { data: Omit<FrontEndData, "id"> }) => {
+        const payload = jsonApiSerializer.serialize(
+          type,
+          newCollectionItem.data,
+        );
+
         try {
-          const { data: newItem } = await fetcher(
+          const response = await fetcher<JSONAPIDocument>(
             "POST",
             type,
             path,
-            newCollectionItem,
+            payload,
           );
-          //eslint-disable-next-line prefer-const
-          let [{ data: deserializedItem }, relationships] = jsonApiMiddleware(
-            { data: newItem },
-            type,
-          );
-          // if the return object had relationship fields, they need to be hydrated
-          // otherwise they are in the format [ {type: string, id: string} ]
-          if (relationships.length > 0) {
-            const hydratedDeserialized = await hydrateObject<{
-              data: FrontEndData;
-            }>({ data: deserializedItem }, relationships);
-            deserializedItem = hydratedDeserialized.data;
-          }
+          const deserialized = jsonApiSerializer.deserialize(type, response);
 
           // mutate list data
           await mutate(
             path,
             async (addResponse: { data: FrontEndData[] }) => {
-              newId = newItem.id;
               return {
                 ...addResponse,
-                data: [...addResponse.data, deserializedItem],
+                data: [...addResponse.data, deserialized],
               };
             },
             false,
           );
 
           // mutate individual resource cache key
+          const resourceId = deserialized.id;
           await mutate(
-            `${path}/${newItem.id}`,
+            `${path}/${resourceId.id}`,
             async (updateCollectionItem: { data: FrontEndData }) => {
               return {
-                data: { ...updateCollectionItem, ...deserializedItem },
+                data: { ...updateCollectionItem, ...deserialized },
               };
             },
             false,
           );
-          msgObject &&
+
+          if (msgObject) {
             toast({
               title: `${msgObject.title} added`,
-              description: `${deserializedItem.name} was succesfully added!`,
+              description: `${deserialized.name} was succesfully added!`,
               duration: 5000,
               isClosable: false,
               position: "bottom-right",
               variant: "left-accent",
               status: "success",
             });
-          return newId;
-        } catch (error) {
-          if (error instanceof Error) {
-            //console.log(error.message);
           }
+
+          return resourceId;
+        } catch (error) {
+          throw error;
         }
       },
       [mutate, toast],
     );
-    const handleUpdate = useCallback<
-      (id: string, patchedData: { data: BackEndData }) => Promise<void>
-    >(
-      async (id: string, patchedData: { data: BackEndData }) => {
-        await fetcher<{ data: FrontEndData }>(
+
+    const update = useCallback(
+      async (id: string, patchedData: { data: Omit<FrontEndData, "id"> }) => {
+        const payload = jsonApiSerializer.serialize(type, patchedData.data);
+
+        const response = await fetcher<JSONAPIDocument>(
           "PATCH",
           type,
           `${path}/${id}`,
-          patchedData,
+          payload,
         );
-        //eslint-disable-next-line prefer-const
-        let [{ data: deserializedItem }, relationships] = jsonApiMiddleware(
-          patchedData,
-          type,
-        );
-        // if the return object had relationship fields, they need to be hydrated
-        // otherwise they are in the format [ {type: string, id: string} ]
-        if (relationships.length > 0) {
-          const hydratedDeserialized = await hydrateObject<{
-            data: FrontEndData;
-          }>({ data: deserializedItem }, relationships);
-          deserializedItem = hydratedDeserialized.data;
-        }
-        // -----------------------------------------------
+
+        const deserializedItem = jsonApiSerializer.deserialize(type, response);
 
         // mutate list data
         await mutate(
@@ -191,7 +169,8 @@ export default function restBuilder<
           },
           false,
         );
-        msgObject &&
+
+        if (msgObject) {
           toast({
             title: `${msgObject.title} updated`,
             description: `${deserializedItem?.name} was succesfully updated!`,
@@ -201,11 +180,12 @@ export default function restBuilder<
             variant: "left-accent",
             status: "success",
           });
+        }
       },
       [mutate, toast],
     );
 
-    const handleDelete = useCallback(
+    const destroy = useCallback(
       async (collectionItemId: string) => {
         await fetcher("DELETE", type, `${path}/${collectionItemId}`);
         let name: string | undefined;
@@ -241,7 +221,8 @@ export default function restBuilder<
           },
           false,
         );
-        msgObject &&
+
+        if (msgObject) {
           toast({
             title: `${msgObject.title} deleted`,
             description: ` ${name} was successfully deleted!`,
@@ -251,14 +232,17 @@ export default function restBuilder<
             variant: "left-accent",
             status: "success",
           });
+        }
       },
       [mutate, toast],
     );
+
     return {
-      handleAdd,
-      handleUpdate,
-      handleDelete,
+      create,
+      update,
+      destroy,
     };
   }
+
   return { useRestOne, useRestList, useRestActions };
 }

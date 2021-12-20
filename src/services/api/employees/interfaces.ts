@@ -10,11 +10,11 @@ export interface Employee {
   skills: Skill[];
 }
 
-export interface EmployeeTable {
+export interface EmployeeRecord {
   id: string;
   name: string;
-  startDate?: Date;
-  endDate?: Date;
+  start_date?: Date;
+  end_date?: Date;
 }
 
 export type NewEmployee = Omit<Employee, "id">;

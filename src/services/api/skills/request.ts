@@ -2,21 +2,18 @@ import { rest } from "msw";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
-
-//import type { QueriableList } from "../shared";
-
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import { JSONSkill, Skill } from "../skills/interfaces";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function requestCreatorSkill<Resource extends Skill>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
-  const basePath = "/api/v1";
-
   return {
     getOne: rest.get<undefined, MockResponse<Resource>, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
+      `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
         const item = await store.getData({ id });
@@ -39,7 +36,7 @@ export default function requestCreatorSkill<Resource extends Skill>(
       },
     ),
     update: rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
+      `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
         // const index = collection.findIndex((item) => item.id === id);
@@ -74,7 +71,7 @@ export default function requestCreatorSkill<Resource extends Skill>(
       },
     ),
     delete: rest.delete<undefined, MockResponse, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
+      `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
         const resourceToDelete = await store.getData({ id });
@@ -94,7 +91,7 @@ export default function requestCreatorSkill<Resource extends Skill>(
       },
     ),
     create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
-      `${basePath}${resourcePath}`,
+      `${API_BASE_URL}${resourcePath}`,
       async (req, res, ctx) => {
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
         const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
@@ -106,7 +103,7 @@ export default function requestCreatorSkill<Resource extends Skill>(
     ),
 
     getAll: rest.get<JSONAPI<JSONSkill[], void>>(
-      `${basePath}${resourcePath}`,
+      `${API_BASE_URL}${resourcePath}`,
       async (req, res, ctx) => {
         const {
           filter,

@@ -12,6 +12,7 @@ export type SerializerTypes =
 
 const getJsonApiSerializer = (): JsonApiSerializer => {
   const Serializer = new JsonApiSerializer({
+    convertCase: "snake_case",
     unconvertCase: "camelCase",
   });
   Serializer.register("skills", {
@@ -19,6 +20,11 @@ const getJsonApiSerializer = (): JsonApiSerializer => {
   });
   Serializer.register("employees", {
     id: "id",
+    relationships: {
+      skills: {
+        type: "skills",
+      },
+    },
   });
   Serializer.register("projects", {
     id: "id",

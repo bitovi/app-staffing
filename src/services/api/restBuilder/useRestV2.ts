@@ -1,6 +1,7 @@
 import param from "can-param";
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
+import isEmpty from "lodash/isEmpty";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
 import { SerializerTypes } from "./getJsonApiSerializer";
@@ -21,12 +22,20 @@ interface RestActions<T, K> extends APIResponse<T[]> {
   reset: () => void;
   handleDelete: (collectionItemId: string) => Promise<void>;
 }
+
+/**
+ * @typeParam T - Frontend data shape
+ * @typeParam K - Backend (JSON API) data shape
+ * @param path - The endpoint path
+ * @param type
+ * @param queryParams
+ */
 function useRest<T extends { id?: string }, K>(
   path: string,
   type: SerializerTypes,
   queryParams?: QueriableList<K>,
 ): RestActions<T, K> {
-  const key = `${path}?${param(queryParams)}`;
+  const key = isEmpty(queryParams) ? path : `${path}?${param(queryParams)}`;
   const { mutate } = useSWRConfig();
   const { data: response, error } = useSWR<{ data: T[] }, Error>(
     key,
@@ -34,8 +43,6 @@ function useRest<T extends { id?: string }, K>(
     {
       suspense: true,
       use: [deserializeDateMiddleware],
-      // removed localStorage persistance causing production break ?
-      // fallbackData: cache.get(key),
     },
   );
   const handleAdd = useCallback<

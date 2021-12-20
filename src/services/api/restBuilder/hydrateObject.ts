@@ -1,8 +1,6 @@
 import { AllJSONResults, AnyJsonObject } from "../baseMocks/interfaces";
 import { fetcher } from "../shared";
 
-const basePath = "/api/v1";
-
 export default async function hydrateObject<T>(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   object: any,
@@ -23,7 +21,7 @@ export default async function hydrateObject<T>(
         // measure here is to prevent breaking. If everything was formatted
         // the fetcher would automatically deserialize the GET all results
         "undefined",
-        `${basePath}/${relationship}`,
+        `${process.env.REACT_APP_API_BASE_URL}/${relationship}`,
       );
       hydratedObject.data[key] = hydratedObject.data[key]
         .map((id: string) => {

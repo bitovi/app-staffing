@@ -13,6 +13,8 @@ interface ProjectActions {
   reset: () => void;
 }
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 /** Hook for getting a list of the projects */
 export default function useProjects(
   queryParams?: QueriableList<Project>,
@@ -25,7 +27,7 @@ export default function useProjects(
     handleUpdate,
     handleDelete,
     reset,
-  } = useRest<Project>("/api/v1/projects", "undefined", queryParams);
+  } = useRest<Project>(`${API_BASE_URL}/projects`, "undefined", queryParams);
 
   return {
     projects,

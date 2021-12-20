@@ -1,23 +1,23 @@
 import faker from "faker";
 import { ResponseStatus } from "../shared";
 import { EmployeeActions } from "../useEmployees/useEmployees";
-import type { EmployeeTable } from "./interfaces";
+import { EmployeeRecord } from "./interfaces";
 
 faker.seed(0);
 
 let employeeId = 0;
 
-export function makeEmployee(): EmployeeTable {
+export function makeEmployee(): EmployeeRecord {
   const date = faker.date.past();
   return {
     id: `${++employeeId}`,
     name: faker.name.findName(),
-    startDate: date,
-    endDate: date,
+    start_date: date,
+    end_date: date,
   };
 }
 
-export const employees: EmployeeTable[] = [
+export const employees: EmployeeRecord[] = [
   makeEmployee(),
   makeEmployee(),
   makeEmployee(),

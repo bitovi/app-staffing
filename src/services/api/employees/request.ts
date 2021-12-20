@@ -1,62 +1,31 @@
 import { rest } from "msw";
+import { v4 as uuidv4 } from "uuid";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 import { CanLocalStore } from "can-local-store";
 
-import { MockResponse, JSONAPI, JSONData } from "../baseMocks/interfaces";
+import { JSONAPI } from "../baseMocks/interfaces";
 import { employeeSkillsStoreManager } from "../employee_skills/mocks";
-import { EmployeeTable, EmployeeJSON } from "./interfaces";
+import { EmployeeRecord, EmployeeJSON } from "./interfaces";
 import { JSONSkill } from "../skills/interfaces";
 import { getAll } from "./handlers";
+import { JSONAPIDocument, ResourceObject } from "json-api-serializer";
 
-interface EmployeeSkillsEntry {
-  id: string;
-  employee_id: string;
-  skill_id: string;
-}
+type EmployeeResource = ResourceObject<EmployeeRecord>;
 
-export default function requestCreatorEmployee<Resource extends EmployeeTable>(
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+export default function requestCreatorEmployee<Resource extends EmployeeRecord>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
-  const basePath = "/api/v1";
+  const basePath = `${API_BASE_URL}${resourcePath}`;
 
   return {
-    getOne: rest.get<undefined, MockResponse<Resource>, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
-      async (req, res, ctx) => {
-        const id = req.params.id;
-        const item = await store.getData({ id });
-
-        if (!item) {
-          return res(
-            ctx.status(404),
-            ctx.json({
-              error: `Resource ${id} not found.`,
-            }),
-          );
-        }
-
-        return res(
-          ctx.status(200),
-          ctx.json({
-            data: item,
-          }),
-        );
-      },
-    ),
-    update: rest.patch<
-      Partial<Resource>,
-      MockResponse<Resource>,
-      { id: string }
-      // Need to clean up this any Type and likely the Typing in general in this file, opening a ticket
-      // to address this at STAF-138
-      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-    >(`${basePath}${resourcePath}/:id`, async (req: any, res, ctx) => {
+    getOne: rest.get(`${basePath}/:id`, async (req, res, ctx) => {
       const id = req.params.id;
-      // const index = collection.findIndex((item) => item.id === id);
-      const itemExists = await store.getData({ id });
+      const item = await store.getData({ id });
 
-      if (!itemExists) {
+      if (!item) {
         return res(
           ctx.status(404),
           ctx.json({
@@ -64,16 +33,111 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
           }),
         );
       }
-      const employeeTableEntry = { ...req.body.data.attributes, id };
-      const updatedItem = await store.updateData(
-        employeeTableEntry as unknown as Resource,
-      );
 
+      return res(
+        ctx.status(200),
+        ctx.json({
+          data: item,
+        }),
+      );
+    }),
+
+    update: rest.patch(`${basePath}/:id`, async (req, res, ctx) => {
+      const id = req.params.id as string;
+
+      const storedItem = await store.getData({ id });
+      if (!storedItem) {
+        return res(
+          ctx.status(404),
+          ctx.json({
+            status: "404",
+            title: `Resource ${id} not found.`,
+          }),
+        );
+      }
+
+      const body = req.body as JSONAPIDocument;
+      const data = body.data as EmployeeResource;
+      const newItemData = {
+        ...data.attributes,
+        id,
+      } as Resource;
+
+      const updatedItem = await store.updateData(newItemData);
       if (!updatedItem) {
         return res(
           ctx.status(400),
           ctx.json({
-            error: `Could not update Resource with id: ${id}`,
+            status: "400",
+            title: `Could not update Resource with id: ${id}`,
+          }),
+        );
+      }
+
+      try {
+        const { data: oldEmployeeSkills } =
+          await employeeSkillsStoreManager.store.getListData({
+            filter: {
+              employee_id: id,
+            },
+          });
+
+        const skillsData = data?.relationships?.skills?.data;
+        const newEmployeeSkills = Array.isArray(skillsData) ? skillsData : [];
+
+        const skillsToAdd = newEmployeeSkills.filter((nes) => {
+          return !oldEmployeeSkills.find((oes) => nes.id === oes.skill_id);
+        });
+
+        const skillsToRemove = oldEmployeeSkills.filter((oes) => {
+          return !newEmployeeSkills.find((nes) => nes.id === oes.skill_id);
+        });
+
+        // add all new skills to employeeSkills join table
+        await Promise.all(
+          skillsToAdd.map((skill) =>
+            employeeSkillsStoreManager.store.createData({
+              id: uuidv4(),
+              employee_id: id,
+              skill_id: skill.id,
+            }),
+          ),
+        );
+
+        // remove any no longer applicable skills from employeeSkills join table
+        await Promise.all(
+          skillsToRemove.map((skill) =>
+            employeeSkillsStoreManager.store.destroyData(skill),
+          ),
+        );
+      } catch (error) {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            status: "400",
+            title: `Could not update Resource with id: ${id}`,
+          }),
+        );
+      }
+
+      return res(
+        ctx.status(201),
+        ctx.json({
+          ...body,
+          data: { ...body.data, id },
+        }),
+      );
+    }),
+
+    delete: rest.delete(`${basePath}/:id`, async (req, res, ctx) => {
+      const id = req.params.id;
+      const resourceToDelete = await store.getData({ id });
+
+      if (!resourceToDelete) {
+        return res(
+          ctx.status(404),
+          ctx.json({
+            error: `Project ${id} not found.`,
           }),
         );
       }
@@ -84,164 +148,72 @@ export default function requestCreatorEmployee<Resource extends EmployeeTable>(
             employee_id: id,
           },
         });
-        // add all new skills to employeeSkills join table
-        await Promise.all(
-          req.body.data.relationships.skills.data.map(
-            async (req: JSONData<"skills">) => {
-              if (
-                !joinTable.data.find(
-                  (jReq: EmployeeSkillsEntry) => jReq.skill_id === req.id,
-                )
-              ) {
-                await employeeSkillsStoreManager.store.createData({
-                  id: (Math.floor(Math.random() * 1000) + 1).toString(),
-                  employee_id: id,
-                  skill_id: req.id,
-                });
-              }
-            },
-          ),
-        );
 
-        //remove any no longer applicable skills from employeeSkills join table
         await Promise.all(
-          joinTable.data.map(async (joinEntry: EmployeeSkillsEntry) => {
-            if (
-              !req.body.data.relationships.skills.data.find(
-                (req: JSONData<"skills">) => req.id === joinEntry.skill_id,
-              )
-            ) {
-              await employeeSkillsStoreManager.store.destroyData(joinEntry);
-            }
+          joinTable.data.map((record) => {
+            employeeSkillsStoreManager.store.destroyData(record);
           }),
         );
-      } catch (_) {
+        await store.destroyData(resourceToDelete);
+
+        return res(ctx.status(200), ctx.json({}));
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+      }
+    }),
+
+    // type RestHandler = <RequestBody, ResponseBody, RequestParams>(mask, resolver) => MockedResponse
+    create: rest.post<JSONAPIDocument>(basePath, async (req, res, ctx) => {
+      const id = uuidv4();
+      const { attributes, relationships } = req.body.data as EmployeeResource;
+      if (!attributes) return res(ctx.status(400));
+
+      const skillsData = relationships?.skills?.data;
+      const response = { ...req.body };
+      response.data = {
+        ...response.data,
+        id,
+      } as EmployeeResource;
+
+      // Persist data to the Employee store
+      const newEmployeeTableEntry: EmployeeRecord = {
+        id,
+        name: attributes.name,
+        start_date: attributes.start_date,
+        end_date: attributes.end_date,
+      };
+
+      try {
+        if (Array.isArray(skillsData)) {
+          const employeeSkillsTableJoins = skillsData.map((skill) => ({
+            id: uuidv4(),
+            employee_id: id,
+            skill_id: skill.id,
+          }));
+
+          await Promise.all(
+            employeeSkillsTableJoins.map(async (skillJoin) => {
+              await employeeSkillsStoreManager.store.createData(skillJoin);
+            }),
+          );
+        }
+        await store.createData(newEmployeeTableEntry as Resource);
+        return res(ctx.status(201), ctx.json(response));
+      } catch (error) {
         return res(
-          ctx.status(400),
+          ctx.status(500),
           ctx.json({
-            error: `Could not update Resource with id: ${id}`,
+            status: "500",
+            title: (error as Error).message,
           }),
         );
       }
-      return res(
-        ctx.status(201),
-        ctx.json({
-          data: { ...req.body.data, id },
-        }),
-      );
     }),
-    delete: rest.delete<undefined, MockResponse, { id: string }>(
-      `${basePath}${resourcePath}/:id`,
-      async (req, res, ctx) => {
-        const id = req.params.id;
-        const resourceToDelete = await store.getData({ id });
 
-        if (!resourceToDelete) {
-          return res(
-            ctx.status(404),
-            ctx.json({
-              error: `Project ${id} not found.`,
-            }),
-          );
-        }
-
-        try {
-          const joinTable = await employeeSkillsStoreManager.store.getListData({
-            filter: {
-              employee_id: id,
-            },
-          });
-
-          await Promise.all(
-            joinTable.data.map((record) => {
-              employeeSkillsStoreManager.store.destroyData(record);
-            }),
-          );
-          await store.destroyData(resourceToDelete);
-
-          return res(ctx.status(200), ctx.json({}));
-        } catch (error) {
-          if (error instanceof Error) {
-            console.error(error.message);
-          }
-        }
-      },
-    ),
-    create: rest.post<JSONAPI<EmployeeJSON, null>, MockResponse<Resource>>(
-      `${basePath}${resourcePath}`,
-      async (req, res, ctx) => {
-        const id = (Math.floor(Math.random() * 1000) + 1).toString();
-        const { attributes } = req.body.data;
-        const skillData = req.body.data.relationships?.skills?.data;
-        const item = {
-          data: {
-            id,
-            type: "employees",
-            attributes,
-            relationships: {
-              skills: {
-                data: skillData,
-              },
-            },
-          },
-        }; // @TODO: look into typing issue
-
-        // const included: JSONAPISkill[] = (
-        //   await skillStoreManager.store.getListData({
-        //     filter: {
-        //       id: item.data.relationships.skills.data.map((skill) => skill.id),
-        //     },
-        //   })
-        // ).data.map((skill) => ({
-        //   type: "skills",
-        //   id: skill.id,
-        //   attributes: {
-        //     name: skill.name,
-        //   },
-        // }));
-
-        ////////////////////////////////
-        //** Updates the Employee store
-        ////////////////////////////////
-        const newEmployeeTableEntry: EmployeeTable = {
-          name: attributes.name,
-          id,
-          startDate: attributes.startDate,
-          endDate: attributes.endDate,
-        };
-
-        const employeeSkillsTableJoins = skillData?.map((skill) => ({
-          id: (Math.floor(Math.random() * 1000) + 1).toString(),
-          employee_id: id,
-          skill_id: skill.id,
-        }));
-
-        try {
-          if (employeeSkillsTableJoins) {
-            await Promise.all(
-              employeeSkillsTableJoins.map(async (skillJoin) => {
-                await employeeSkillsStoreManager.store.createData(skillJoin);
-              }),
-            );
-
-            await store.createData(newEmployeeTableEntry as Resource);
-          }
-
-          return res(
-            ctx.status(201),
-            ctx.json({
-              data: { ...item.data } as unknown as Resource,
-            }),
-          );
-        } catch (error) {
-          if (error instanceof Error) {
-            console.error(error.message);
-          }
-        }
-      },
-    ),
     getAll: rest.get<JSONAPI<EmployeeJSON[], JSONSkill[]>>(
-      `${basePath}${resourcePath}`,
+      basePath,
       async (req, res, ctx) => {
         try {
           const response = await getAll(store, req.url.searchParams.toString());
