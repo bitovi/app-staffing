@@ -9,7 +9,6 @@ import {
   Th,
   Thead,
   Tr,
-  useToast,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import { isEmpty } from "lodash";
@@ -17,18 +16,11 @@ import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
-import { EmployeeJSON } from "../../../../services/api/employees/interfaces";
 
 interface IEmployeeTable extends BoxProps {
   employees: Employee[] | undefined;
   skills?: Skill[];
-  updateEmployee: ({
-    data,
-    id,
-  }: {
-    data: Omit<EmployeeJSON, "id">;
-    id?: string;
-  }) => Promise<void>;
+  updateEmployee: (id: string, data: Omit<Employee, "id">) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
 }
 
@@ -43,24 +35,24 @@ export default function EmployeeTable({
     null,
   );
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
-  const toast = useToast();
+
   const removeEmployee = async () => {
     if (employeeToDelete) {
       try {
         await deleteEmployee(employeeToDelete.id);
-        toast({
-          title: "Team member deleted",
-          description: ` ${employeeToDelete.name} was successfully deleted!`,
-          duration: 5000,
-          isClosable: false,
-          position: "bottom-right",
-          status: "success",
-          variant: "left-accent",
-        });
         setEmployeeToDelete(null);
       } catch (e) {
         //ERROR HANDLING
       }
+    }
+  };
+
+  const submitUpdateEmployee = async (
+    employeeToUpdate: Omit<Employee, "id">,
+  ) => {
+    if (employeeToEdit) {
+      const id = employeeToEdit.id;
+      await updateEmployee(id, employeeToUpdate);
     }
   };
 
@@ -88,10 +80,9 @@ export default function EmployeeTable({
       <EmployeeModal
         isOpen={!isEmpty(employeeToEdit)}
         onClose={() => setEmployeeToEdit(null)}
-        onSave={updateEmployee}
+        onSave={submitUpdateEmployee}
         skills={skills}
         employee={employeeToEdit ? employeeToEdit : undefined}
-        toastTitle={"Team member updated"}
       />
       <Box {...props}>
         {employees && employees.length === 0 && (

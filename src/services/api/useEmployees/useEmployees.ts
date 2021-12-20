@@ -1,59 +1,83 @@
 import type { Employee } from "../employees";
 import { EmployeeJSON } from "../employees/interfaces";
-import type { ResponseStatus, QueriableList } from "../shared";
+import type { ResponseStatus, APIResponse, QueriableList } from "../shared";
 
-import useRest from "../useRest/useRestV2";
+import restBuilder from "../restBuilder/restBuilder";
 
-const alphabetizeByName = (array: Employee[] | undefined): Employee[] => {
-  if (array) {
-    return array.sort((a, b) =>
-      a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]),
-    );
-  }
-  return [];
+function formatEmployeeData(employee: Omit<Employee, "id">): {
+  data: Omit<EmployeeJSON, "id">;
 };
-export interface EmployeeActions {
-  employees?: Employee[] | undefined;
-  addEmployee: (employee: {
-    data: Omit<EmployeeJSON, "id">;
-  }) => Promise<string | undefined>;
-  updateEmployee: (employee: {
-    data: Omit<EmployeeJSON, "id">;
-    id?: string;
-  }) => Promise<void>;
-  deleteEmployee: (employeeId: string) => Promise<void>;
-  reset: () => void;
+function formatEmployeeData(
+  employee: Omit<Employee, "id">,
+  id: string,
+): { data: EmployeeJSON };
+
+function formatEmployeeData(
+  employee: Omit<Employee, "id">,
+  id?: string,
+): { data: EmployeeJSON } | { data: Omit<EmployeeJSON, "id"> } {
+  const jsonFormattedEmployee: Omit<EmployeeJSON, "id"> = {
+    type: "employees",
+    attributes: {
+      name: employee.name,
+      startDate: employee.startDate,
+      endDate: employee.endDate,
+    },
+    relationships: {
+      skills: {
+        data: employee.skills.map((skill) => ({
+          type: "skills",
+          id: skill.id,
+        })),
+      },
+    },
+  };
+  return id
+    ? { data: { ...jsonFormattedEmployee, id } }
+    : { data: jsonFormattedEmployee };
+}
+export interface EmployeeMutations<T> {
+  addEmployee: (
+    newCollectionItem: Omit<T, "id">,
+  ) => Promise<string | undefined>;
+  updateEmployee: (
+    id: string,
+    updateCollectionItem: Omit<T, "id">,
+  ) => Promise<void>;
+  deleteEmployee: (collectionItemId: string) => Promise<void>;
 }
 
-/** Hook for getting a list of the employees */
-export default function useEmployees(
-  queryParams?: QueriableList<Employee>,
-): ResponseStatus & EmployeeActions {
+export interface EmployeeActions {
+  useEmployee: (id: string) => APIResponse<Employee>;
+  useEmployeeList: (
+    queryParams?: QueriableList<Employee>,
+  ) => APIResponse<Employee[]>;
+  useEmployeeActions: () => EmployeeMutations<Employee>;
+}
+
+const { useRestOne, useRestList, useRestActions } = restBuilder<
+  Employee,
+  EmployeeJSON
+>("/api/v1/employees", "employees", { title: "Team member" });
+
+export default function useEmployees(): ResponseStatus & EmployeeActions {
   const {
-    data: employees,
-    error,
-    isLoading,
     handleAdd,
     handleUpdate,
-    handleDelete,
-    reset,
-    // two interfaces passed to useRest now,
-    // the backend data shape of Employees
-    // and the frontend data shape of Employees
-    // useRest operates as the switchboard between the two.
-  } = useRest<Employee, EmployeeJSON>(
-    "/api/v1/employees",
-    "employees",
-    queryParams,
-  );
+    handleDelete: deleteEmployee,
+  } = useRestActions();
 
   return {
-    employees: alphabetizeByName(employees),
-    isLoading,
-    error,
-    addEmployee: handleAdd,
-    updateEmployee: handleUpdate,
-    deleteEmployee: handleDelete,
-    reset,
+    useEmployee: useRestOne,
+    useEmployeeList: useRestList,
+    useEmployeeActions: () => {
+      return {
+        addEmployee: (employee: Omit<Employee, "id">) =>
+          handleAdd(formatEmployeeData(employee)),
+        updateEmployee: (id: string, employee: Omit<Employee, "id">) =>
+          handleUpdate(id, formatEmployeeData(employee, id)),
+        deleteEmployee,
+      };
+    },
   };
 }

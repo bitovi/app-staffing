@@ -8,13 +8,12 @@ faker.seed(0);
 let employeeId = 0;
 
 export function makeEmployee(): EmployeeTable {
-  const startDate = faker.date.past();
-
+  const date = faker.date.past();
   return {
     id: `${++employeeId}`,
     name: faker.name.findName(),
-    startDate: startDate,
-    endDate: startDate,
+    startDate: date,
+    endDate: date,
   };
 }
 
@@ -284,11 +283,18 @@ export const employeeMockData = (): ResponseStatus & EmployeeActions => {
     },
   ];
   return {
-    employees,
-    addEmployee: (employee) => Promise.resolve(""),
-    updateEmployee: () => Promise.resolve(),
-    deleteEmployee: (id) => Promise.resolve(),
-    isLoading: false,
-    reset: () => undefined,
+    useEmployee: (id: string) => {
+      return { data: employees[0] };
+    },
+    useEmployeeList: () => {
+      return { data: employees };
+    },
+    useEmployeeActions: () => {
+      return {
+        addEmployee: (employee) => Promise.resolve(""),
+        updateEmployee: (id) => Promise.resolve(),
+        deleteEmployee: (id) => Promise.resolve(),
+      };
+    },
   };
 };

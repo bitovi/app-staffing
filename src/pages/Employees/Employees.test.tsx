@@ -33,7 +33,11 @@ describe("Pages/Employees", () => {
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
-    expect(await screen.findByText("Sam Kreiger")).toBeInTheDocument();
+    const memberRows = await screen.findAllByRole("button", {
+      name: "Edit Member",
+      exact: false,
+    });
+    expect(memberRows[0]).toBeInTheDocument();
   });
 
   it("Displays loading state skeleton", () => {
@@ -84,9 +88,8 @@ describe("Pages/Employees", () => {
     submitButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
     await waitFor(() => expect(modal).not.toBeInTheDocument());
-
     // check for toast message
-    const toastMessage = await screen.findByText("New team member", {
+    const toastMessage = await screen.findByText("Team member added", {
       exact: false,
     });
 
@@ -111,15 +114,16 @@ describe("Pages/Employees", () => {
   it("Edits employee", async () => {
     render(<EmployeesWrapper />);
 
-    const rosemarieRow = await screen.findByRole("row", {
-      name: /Rosemarie Mitchell/,
+    await screen.findAllByRole("button", {
+      name: "Edit Member",
       exact: false,
     });
-    const editMember = await within(rosemarieRow).findByLabelText(
+    const memberRows = await screen.findAllByRole("row");
+    const editMember = await within(memberRows[1]).findByLabelText(
       "Edit Member",
     );
     //before we edit Employee to add this skill, they do not have it.
-    expect(within(rosemarieRow).queryByText("Design")).not.toBeInTheDocument();
+    expect(within(memberRows[1]).queryByText("Design")).not.toBeInTheDocument();
 
     fireEvent.click(editMember);
     const editModal = await screen.findByRole("dialog");
@@ -148,7 +152,7 @@ describe("Pages/Employees", () => {
 
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
 
-    const editedEmployee = await within(rosemarieRow).findByText("Design");
+    const editedEmployee = await within(memberRows[1]).findByText("Design");
     //we now check for the same skill, and the Employee has it
     expect(editedEmployee).toBeInTheDocument();
   });
@@ -159,13 +163,17 @@ describe("Pages/Employees", () => {
         <EmployeesWrapper />
       </SWRConfig>,
     );
-    expect(await screen.findByText("Rosemarie Mitchell")).toBeInTheDocument();
-
-    const rosemarieRow = await screen.findByRole("row", {
-      name: /Rosemarie Mitchell/,
+    await screen.findAllByRole("button", {
+      name: "Delete Member",
       exact: false,
     });
-    const deleteMember = await within(rosemarieRow).findByLabelText(
+
+    const employeeRows = await screen.findAllByRole("row");
+    const employeeToDelete = employeeRows[1];
+    const employeeName =
+      within(employeeToDelete).getAllByRole("gridcell")[0].textContent;
+
+    const deleteMember = await within(employeeToDelete).findByLabelText(
       "Delete Member",
     );
 
@@ -178,13 +186,15 @@ describe("Pages/Employees", () => {
 
     deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    const toastMessage = await screen.findByText("Team member deleted", {
-      exact: false,
-    });
-
+    const toastMessage = await screen.findByText(
+      `${employeeName} was successfully deleted`,
+      {
+        exact: false,
+      },
+    );
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
 
-    expect(rosemarieRow).not.toBeInTheDocument;
+    expect(employeeToDelete).not.toBeInTheDocument;
 
     const employeeStore = await employeeStoreManager.store.getListData();
 
