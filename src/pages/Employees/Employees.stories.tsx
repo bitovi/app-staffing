@@ -13,12 +13,7 @@ const backgroundColor = "gray.10";
 
 export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
   <Flex height="100%" width="100%" overflow="hidden">
-    <Box
-      backgroundColor={backgroundColor}
-      flex="1 1"
-      padding="40px"
-      overflow="auto"
-    >
+    <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
       <Employees
         {...props}
         useEmployees={employeeMockData}
@@ -32,12 +27,7 @@ export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
 
 export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
   <Flex height="100%" width="100%" overflow="hidden">
-    <Box
-      backgroundColor={backgroundColor}
-      flex="1 1"
-      padding="40px"
-      overflow="auto"
-    >
+    <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
       <Employees
         {...props}
         useEmployees={() => {
@@ -67,12 +57,7 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
 
 export const Loading: ComponentStory<any> = ({ ...props }) => (
   <Flex height="100%" width="100%" overflow="hidden">
-    <Box
-      backgroundColor={backgroundColor}
-      flex="1 1"
-      padding="40px"
-      overflow="auto"
-    >
+    <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
       <EmployeePageLoadingLayout {...props} />
     </Box>
   </Flex>
