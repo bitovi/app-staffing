@@ -1,7 +1,5 @@
 import { Flex, Box } from "@chakra-ui/layout";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import { employeeMockData } from "../../services/api/mocks/employees/fixtures";
-import { skills } from "../../services/api/mocks/skills/fixtures";
 import { Employees, EmployeePageLoadingLayout } from "./Employees";
 
 export default {
@@ -21,10 +19,15 @@ export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
     >
       <Employees
         {...props}
-        useEmployees={employeeMockData}
-        useSkills={() => {
-          return { skills, isLoading: false };
+        useEmployees={() => []}
+        useEmployeeMutations={() => {
+          return {
+            createEmployee: (employee) => Promise.resolve(""),
+            updateEmployee: (id) => Promise.resolve(),
+            destroyEmployee: (id) => Promise.resolve(),
+          };
         }}
+        useSkills={() => []}
       />
     </Box>
   </Flex>
@@ -48,9 +51,7 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
             destroyEmployee: (id) => Promise.resolve(),
           };
         }}
-        useSkills={() => {
-          return { skills: [], isLoading: false };
-        }}
+        useSkills={() => []}
       />
     </Box>
   </Flex>

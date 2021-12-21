@@ -97,6 +97,8 @@ export default function restBuilder<Data extends BaseData>(
         const deserialized = serializer.deserialize(type, response) as Data;
         const identifier = deserialized.name || deserialized.id;
 
+        parseDate(deserialized);
+
         // mutate list cache
         await mutate(
           path,
@@ -137,6 +139,8 @@ export default function restBuilder<Data extends BaseData>(
         const response = await fetcher("PATCH", type, `${path}/${id}`, payload);
         const deserialized = serializer.deserialize(type, response) as Data;
         const identifier = deserialized.name || deserialized.id;
+
+        parseDate(deserialized);
 
         // mutate list cache
         await mutate(

@@ -3,13 +3,11 @@ import {
   render,
   screen,
   within,
-  cleanup,
   waitFor,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { employeeStoreManager } from "../../services/api/mocks/employees/mocks";
-import { employeeSkillsStoreManager } from "../../services/api/mocks/employee_skills/mocks";
-import { skillStoreManager } from "../../services/api/mocks/skills/mocks";
+import { clearFixtures, loadFixtures } from "../../services/api/mocks/fixtures";
 
 import EmployeesWrapper from "./Employees";
 
@@ -18,18 +16,8 @@ describe("Pages/Employees", () => {
   jest.useFakeTimers();
   jest.runAllTimers();
 
-  beforeEach(async () => {
-    await employeeStoreManager.load();
-    await skillStoreManager.load();
-    await employeeSkillsStoreManager.load();
-  });
-
-  afterEach(async () => {
-    await employeeStoreManager.clear();
-    await employeeSkillsStoreManager.clear();
-    await skillStoreManager.clear();
-    cleanup();
-  });
+  beforeEach(async () => loadFixtures());
+  afterEach(async () => clearFixtures());
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
