@@ -58,7 +58,7 @@ describe("Components/Layout", () => {
     render(
       <EmployeeTable
         updateEmployee={() => Promise.resolve()}
-        deleteEmployee={(id) => new Promise((resolve) => resolve())}
+        destroyEmployee={(id) => new Promise((resolve) => resolve())}
         employees={[]}
         skills={[]}
       />,
@@ -71,7 +71,7 @@ describe("Components/Layout", () => {
     render(
       <EmployeeTable
         updateEmployee={() => Promise.resolve()}
-        deleteEmployee={(id) => new Promise((resolve) => resolve())}
+        destroyEmployee={(id) => new Promise((resolve) => resolve())}
         employees={mockData}
         skills={[]}
       />,

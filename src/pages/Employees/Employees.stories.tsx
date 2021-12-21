@@ -1,7 +1,7 @@
 import { Flex, Box } from "@chakra-ui/layout";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import { employeeMockData } from "../../services/api/employees/fixtures";
-import { skills } from "../../services/api/skills/fixtures";
+import { employeeMockData } from "../../services/api/mocks/employees/fixtures";
+import { skills } from "../../services/api/mocks/skills/fixtures";
 import { Employees, EmployeePageLoadingLayout } from "./Employees";
 
 export default {
@@ -40,21 +40,12 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
     >
       <Employees
         {...props}
-        useEmployees={() => {
+        useEmployees={() => []}
+        useEmployeeMutations={() => {
           return {
-            useEmployee: (id: string) => {
-              return { data: undefined };
-            },
-            useEmployeeList: () => {
-              return { data: [] };
-            },
-            useEmployeeActions: () => {
-              return {
-                addEmployee: (employee) => Promise.resolve(""),
-                updateEmployee: (id) => Promise.resolve(),
-                deleteEmployee: (id) => Promise.resolve(),
-              };
-            },
+            createEmployee: (employee) => Promise.resolve(""),
+            updateEmployee: (id) => Promise.resolve(),
+            destroyEmployee: (id) => Promise.resolve(),
           };
         }}
         useSkills={() => {

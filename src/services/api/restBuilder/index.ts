@@ -1,1 +1,1 @@
-export { default } from "./useRest";
+export { default } from "./legacy/useRest";

@@ -1,17 +1,13 @@
-import getJsonApiSerializer, {
-  SerializerTypes,
-} from "../../getJsonApiSerializer";
+import type { JSONAPIDocument } from "json-api-serializer";
+
+import serializer, { SerializerTypes } from "../../../getJsonApiSerializer";
 
 // utilizes the json-api-serializer library to deserializer incoming
 // response JSON API formatted response objects from the server
-// This middleware is consumed inside the fetcher method to allow us
-// to shape our SWR caches in the shape of frontend data
 
 const jsonApiMiddleware = (
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  response: any,
   type: SerializerTypes,
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  response: JSONAPIDocument,
 ): [any, string[]] => {
   const relationshipFields: string[] = [];
   // if this is a POST or PUT method and the response data is a single object
@@ -22,10 +18,9 @@ const jsonApiMiddleware = (
       if (!relationshipFields.includes(key)) relationshipFields.push(key);
     }
   }
-  const deserializedData = getJsonApiSerializer().deserialize(
-    type,
-    response ?? {},
-  );
+
+  const deserializedData = serializer.deserialize(type, response ?? {});
+
   return [
     Object.assign(
       {},

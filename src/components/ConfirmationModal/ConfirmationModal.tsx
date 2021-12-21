@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import Button, { ButtonVariant } from "../Button";
 
-interface IConfirmationModalProps {
+interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => Promise<void> | void;
@@ -38,7 +38,7 @@ export default function ConfirmationModal({
   confirmButtonVariant = "primary",
   modalSize = "md",
   isCentered = false,
-}: IConfirmationModalProps): JSX.Element {
+}: ConfirmationModalProps): JSX.Element {
   return (
     <Modal
       isOpen={isOpen}

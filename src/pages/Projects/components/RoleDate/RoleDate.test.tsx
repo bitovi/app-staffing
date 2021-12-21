@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
-import { projects } from "../../../../services/api/projects/fixtures";
+import { projects } from "../../../../services/api/mocks/projects/fixtures";
 import RoleDate from "./RoleDate";
 
 describe("Pages/Projects/components/RoleDates", () => {

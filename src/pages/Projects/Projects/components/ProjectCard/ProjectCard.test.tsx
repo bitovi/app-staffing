@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 
 import theme from "../../../../../theme";
 import ProjectCard from "./ProjectCard";
-import { projects } from "../../../../../services/api/projects/fixtures";
+import { projects } from "../../../../../services/api/mocks/projects/fixtures";
 
 const project = projects[0];
 

@@ -7,9 +7,9 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
-import { employeeStoreManager } from "../../services/api/employees/mocks";
-import { employeeSkillsStoreManager } from "../../services/api/employee_skills/mocks";
-import { skillStoreManager } from "../../services/api/skills/mocks";
+import { employeeStoreManager } from "../../services/api/mocks/employees/mocks";
+import { employeeSkillsStoreManager } from "../../services/api/mocks/employee_skills/mocks";
+import { skillStoreManager } from "../../services/api/mocks/skills/mocks";
 
 import EmployeesWrapper from "./Employees";
 

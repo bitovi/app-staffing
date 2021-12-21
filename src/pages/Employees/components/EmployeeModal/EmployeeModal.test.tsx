@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import parseISO from "date-fns/parseISO";
 
 import EmployeeModal from "./EmployeeModal";
-import { skills } from "../../../../services/api/skills/fixtures";
+import { skills } from "../../../../services/api/mocks/skills/fixtures";
 import { fireEvent } from "@testing-library/dom";
 
 describe("EmployeeModal", () => {

@@ -3,8 +3,8 @@ import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
-import { SerializerTypes } from "./getJsonApiSerializer";
-import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
+import { SerializerTypes } from "../getJsonApiSerializer";
+import deserializeDateMiddleware from "../parseDate";
 interface RestActions<T> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: Omit<T, "id">) => Promise<string>;
   handleUpdate: (

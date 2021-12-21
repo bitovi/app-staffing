@@ -1,5 +1,5 @@
-import type { QueriableList, ResponseStatus } from "../shared";
-import type { NewProject, Project } from "../projects";
+import type { QueriableList, ResponseStatus } from "../restBuilder/shared";
+import type { NewProject, Project } from "../mocks/projects";
 import useRest from "../restBuilder";
 
 interface ProjectActions {

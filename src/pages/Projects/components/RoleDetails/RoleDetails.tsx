@@ -23,8 +23,7 @@ export default function RoleDetails({
   editRole: (role: Role) => void;
   deleteRole: (role: Role) => void;
 }): JSX.Element {
-  const { useEmployeeList } = useEmployees();
-  const { data: employees } = useEmployeeList();
+  const employees = useEmployees();
   const { skills } = useSkills();
 
   const createUnassignedEmployee = (): AssignedEmployee => {

@@ -1,13 +1,14 @@
-import { rest } from "msw";
+import type { MockResponse } from "./interfaces";
+import type { QueriableList } from "../../restBuilder/shared";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
+
+import { rest } from "msw";
 import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
-import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
-import { JSONSkill, Skill } from "../skills/interfaces";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export default function requestCreatorSkill<Resource extends Skill>(
+export default function requestCreator<Resource extends { id: string }>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
@@ -102,41 +103,37 @@ export default function requestCreatorSkill<Resource extends Skill>(
       },
     ),
 
-    getAll: rest.get<JSONAPI<JSONSkill[], void>>(
-      `${API_BASE_URL}${resourcePath}`,
-      async (req, res, ctx) => {
-        const {
-          filter,
-          sort,
-          page = 1,
-          count = 25,
-        } = deparam(req.url.searchParams.toString());
+    getAll: rest.get<
+      undefined,
+      MockResponse<Resource[], { total: number }>,
+      QueriableList<Resource>
+    >(`${API_BASE_URL}${resourcePath}`, async (req, res, ctx) => {
+      const {
+        filter,
+        sort,
+        page = 1,
+        count = 25,
+      } = deparam(req.url.searchParams.toString());
 
-        const { data: skills } = await store.getListData({
-          filter,
-          sort,
-          page: {
-            start: (page - 1) * count,
-            end: page * count - 1,
+      const { data, count: total } = await store.getListData({
+        filter,
+        sort,
+        page: {
+          start: (page - 1) * count,
+          end: page * count - 1,
+        },
+      });
+
+      return res(
+        ctx.status(200),
+        ctx.json({
+          data,
+          metadata: {
+            total,
+            pages: Math.ceil(total / count),
           },
-        });
-
-        const jsonAPISkills: JSONSkill[] = skills.map(
-          (skill: Skill): JSONSkill => ({
-            type: "skills",
-            id: skill.id,
-            attributes: {
-              name: skill?.name,
-            },
-          }),
-        );
-        return res(
-          ctx.status(200),
-          ctx.json({
-            data: jsonAPISkills,
-          }),
-        );
-      },
-    ),
+        }),
+      );
+    }),
   };
 }

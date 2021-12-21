@@ -1,5 +1,5 @@
-import type { Role, NewRole } from "../roles";
-import type { ResponseStatus, QueriableList } from "../shared";
+import type { Role, NewRole } from "../mocks/roles";
+import type { ResponseStatus, QueriableList } from "../restBuilder/shared";
 
 import useRest from "../restBuilder";
 

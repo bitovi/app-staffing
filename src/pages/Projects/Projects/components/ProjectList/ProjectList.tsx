@@ -15,14 +15,14 @@ import { Project } from "../../../../../services/api";
 import ProjectCard from "../ProjectCard";
 import { useCallback } from "react";
 
-interface IProjectList extends BoxProps {
+interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
 }
 
 export default function ProjectList({
   projects,
   ...props
-}: IProjectList): JSX.Element {
+}: ProjectListProps): JSX.Element {
   const generateRows = useCallback(() => {
     return projects?.map(
       (project, index): JSX.Element => (

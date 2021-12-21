@@ -1,13 +1,10 @@
 import { StylesProvider } from "@chakra-ui/react";
 import { /*fireEvent,*/ render, screen } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
 //import { select as selectEvent } from "react-select-event";
 
 import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
-import { employeeMockData } from "../../../../services/api/employees/fixtures";
-import { wrapper } from "../../../../services/api/restBuilder/useRest.test";
 import theme from "../../../../theme";
 //import { employees } from "../../../../services/api/employees/fixtures";
 import EmployeeCard from "./EmployeeCard";
@@ -17,23 +14,22 @@ jest.useFakeTimers("modern");
 
 describe("Components/Layout", () => {
   it("works", () => {
-    const { result } = renderHook(() => employeeMockData(), {
-      wrapper,
-    });
-    const { data: employees } = result.current.useEmployeeList();
     render(
       <MemoryRouter>
         <StylesProvider value={theme}>
           <table>
             <tbody>
-              {employees && (
-                <EmployeeCard
-                  handleEditEmployee={() => Promise.resolve()}
-                  handleDeleteEmployee={() => Promise.resolve()}
-                  key={employees[0].id}
-                  employee={employees[0]}
-                />
-              )}
+              <EmployeeCard
+                handleEditEmployee={() => Promise.resolve()}
+                handleDeleteEmployee={() => Promise.resolve()}
+                employee={{
+                  id: "",
+                  name: "",
+                  startDate: new Date(),
+                  endDate: new Date(),
+                  skills: [],
+                }}
+              />
             </tbody>
           </table>
         </StylesProvider>

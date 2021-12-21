@@ -2,7 +2,7 @@ import { useHistory } from "react-router-dom";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { useProjects } from "../../../../services/api";
 
-interface IProps {
+interface DeleteProjectModalProps {
   projectId: string;
   projectName: string;
   isOpen: boolean;
@@ -14,7 +14,7 @@ const DeleteProjectModal = ({
   projectName,
   isOpen,
   onClose,
-}: IProps): JSX.Element => {
+}: DeleteProjectModalProps): JSX.Element => {
   const { deleteProject, error, isLoading, reset } = useProjects();
   const history = useHistory();
 

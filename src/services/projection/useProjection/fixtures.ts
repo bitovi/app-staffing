@@ -2,7 +2,7 @@ import type { ProjectedData, RoleProjection } from "./interfaces";
 
 import faker from "faker";
 
-import { skills } from "../../api/skills/fixtures";
+import { skills } from "../../api/mocks/skills/fixtures";
 
 /** creates an action with weights */
 const makeAction = (): "Sell" | "Hire" | "Assign" | "Ok" => {

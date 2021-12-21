@@ -1,6 +1,1 @@
-export type {
-  Employee,
-  NewEmployee,
-  AssignedEmployee,
-  EmployeeJSON,
-} from "./interfaces";
+export * from "./Employees";

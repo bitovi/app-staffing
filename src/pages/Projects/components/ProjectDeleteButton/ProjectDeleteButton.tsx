@@ -5,7 +5,7 @@ import Button from "../../../../components/Button";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { useProjects } from "../../../../services/api";
 
-interface IProps {
+interface ProjectDeleteButtonProps {
   projectId: string;
   projectName: string;
 }
@@ -13,7 +13,7 @@ interface IProps {
 const ProjectDeleteButton = ({
   projectId,
   projectName,
-}: IProps): JSX.Element => {
+}: ProjectDeleteButtonProps): JSX.Element => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const currentProject = useRef(false);
   const { deleteProject, error, isLoading, reset } = useProjects();

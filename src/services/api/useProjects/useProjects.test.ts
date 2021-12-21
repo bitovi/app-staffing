@@ -2,9 +2,9 @@ import { renderHook } from "@testing-library/react-hooks";
 
 import useProjects from "./useProjects";
 
-import { projectStoreManager } from "../projects/mocks";
-import { projects } from "../projects/fixtures";
-import { wrapper } from "../restBuilder/useRest.test";
+import { projectStoreManager } from "../mocks/projects/mocks";
+import { projects } from "../mocks/projects/fixtures";
+import { wrapper } from "../restBuilder/legacy/useRest.test";
 
 describe("useProjects", () => {
   beforeEach(async () => {

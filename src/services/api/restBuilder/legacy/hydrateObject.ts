@@ -1,4 +1,7 @@
-import { AllJSONResults, AnyJsonObject } from "../baseMocks/interfaces";
+import {
+  AllJSONResults,
+  AnyJsonObject,
+} from "../../mocks/baseMocks/interfaces";
 import { fetcher } from "../shared";
 
 export default async function hydrateObject<T>(

@@ -1,11 +1,11 @@
-import { Employee } from "../../..";
+import { Employee } from "../../../..";
 import {
   serializedEmployeeMockData,
   employeeMockData,
-} from "../../../employees/fixtures";
-import { employeeStoreManager } from "../../../employees/mocks";
-import { employeeSkillsStoreManager } from "../../../employee_skills/mocks";
-import { skillStoreManager } from "../../../skills/mocks";
+} from "../../../../mocks/employees/fixtures";
+import { employeeStoreManager } from "../../../../mocks/employees/mocks";
+import { employeeSkillsStoreManager } from "../../../../mocks/employee_skills/mocks";
+import { skillStoreManager } from "../../../../mocks/skills/mocks";
 import hydrateObject from "../../hydrateObject";
 import jsonApiMiddleware from "./jsonApiMiddleware";
 

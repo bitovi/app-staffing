@@ -2,7 +2,7 @@ import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 
 import ProjectList from ".";
-import { projects } from "../../../../../services/api/projects/fixtures";
+import { projects } from "../../../../../services/api/mocks/projects/fixtures";
 
 export default {
   title: "Pages/Projects/ProjectList",

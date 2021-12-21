@@ -1,6 +1,6 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-import { projects } from "../../../services/api/projects/fixtures";
+import { projects } from "../../../services/api/mocks/projects/fixtures";
 import Projects from "./Projects";
 
 export default {

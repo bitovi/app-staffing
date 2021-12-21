@@ -5,11 +5,13 @@ import TableRow from "./TableRow";
 import { useProjection } from "../../../../services/projection/useProjection";
 import TableHeader from "./TableHeader";
 
-interface IProps {
+interface ReportTableProps {
   reportDate?: Date;
 }
 
-export function ReportTable({ reportDate = new Date() }: IProps): JSX.Element {
+export function ReportTable({
+  reportDate = new Date(),
+}: ReportTableProps): JSX.Element {
   const { projections } = useProjection(reportDate);
 
   return (

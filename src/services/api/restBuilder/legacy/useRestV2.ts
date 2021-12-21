@@ -4,9 +4,9 @@ import useSWR, { useSWRConfig } from "swr";
 import isEmpty from "lodash/isEmpty";
 import type { APIResponse, QueriableList } from "../shared";
 import { fetcher } from "../shared";
-import { SerializerTypes } from "./getJsonApiSerializer";
+import { SerializerTypes } from "../getJsonApiSerializer";
 import hydrateObject from "./hydrateObject";
-import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
+import deserializeDateMiddleware from "../parseDate";
 import jsonApiMiddleware from "./middlewares/jsonApiMiddleware";
 interface RestActions<T, K> extends APIResponse<T[]> {
   handleAdd: (newCollectionItem: {

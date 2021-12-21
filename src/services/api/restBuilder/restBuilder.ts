@@ -1,240 +1,227 @@
-import { useToast } from "@chakra-ui/toast";
-import param from "can-param";
+import type { QueriableList } from "./shared";
+
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { JSONAPIDocument } from "json-api-serializer";
-import type { APIResponse, QueriableList } from "../shared";
-import { fetcher } from "../shared";
-import getJsonApiSerializer, { SerializerTypes } from "./getJsonApiSerializer";
-import deserializeDateMiddleware from "./middlewares/deserializeDateMiddleware";
+import param from "can-param";
+import { useToast } from "../../toast";
 
-export interface RestActions<K> {
-  create: (newCollectionItem: {
-    data: Omit<K, "id">;
-  }) => Promise<string | undefined>;
-  update: (id: string, data: { data: Omit<K, "id"> }) => Promise<void>;
-  destroy: (collectionItemId: string) => Promise<void>;
+import { fetcher } from "./shared";
+
+import serializer, { SerializerTypes } from "./getJsonApiSerializer";
+import { parseDate } from "./parseDate";
+
+export interface BaseData {
+  id: string;
+  name?: string;
 }
 
-export interface RestHooks<T> {
-  useRestOne: (id: string) => APIResponse<T>;
-  useRestList: (queryParams?: QueriableList<T>) => APIResponse<T[]>;
-  useRestActions: () => RestActions<T>;
-}
-
-interface ToastConfig {
-  title: string;
-}
-
-const jsonApiSerializer = getJsonApiSerializer();
-
-export default function restBuilder<
-  FrontEndData extends { id?: string; name?: string },
->(
+export default function restBuilder<Data extends BaseData>(
   path: string,
   type: SerializerTypes,
-  msgObject?: ToastConfig,
-): RestHooks<FrontEndData> {
-  function useRestList(
-    queryParams?: QueriableList<FrontEndData>,
-  ): APIResponse<FrontEndData[]> {
-    const { data: response, error } = useSWR<{ data: FrontEndData[] }, Error>(
+  messages?: {
+    title: string;
+  },
+): {
+  useRestList: (queryParams?: QueriableList<Data>) => Data[];
+  useRestOne: (id: string) => Data;
+  useRestMutations: () => {
+    create: (data: Omit<Data, "id">) => Promise<string | undefined>;
+    update: (id: string, data: Data) => Promise<void>;
+    destroy: (id: string) => Promise<void>;
+  };
+} {
+  function useRestList(queryParams?: QueriableList<Data>): Data[] {
+    const { data, error } = useSWR<Data[], Error>(
       path,
-      (path) => fetcher("GET", type, `${path}?${param(queryParams)}`),
-      {
-        suspense: true,
-        use: [deserializeDateMiddleware],
-      },
-    );
-    return {
-      data: response?.data,
-      error,
-    };
-  }
-
-  function useRestOne(id: string): APIResponse<FrontEndData> {
-    const key = `${path}/${id}`;
-    const { data: response, error } = useSWR<{ data: FrontEndData }, Error>(
-      key,
-      (key) => fetcher("GET", type, key),
-      {
-        suspense: true,
-        use: [deserializeDateMiddleware],
-      },
-    );
-    return {
-      data: response?.data,
-      error,
-    };
-  }
-
-  function useRestActions(): RestActions<FrontEndData> {
-    const { mutate } = useSWRConfig();
-    const toast = useToast();
-
-    const create = useCallback(
-      async (newCollectionItem: { data: Omit<FrontEndData, "id"> }) => {
-        const payload = jsonApiSerializer.serialize(
+      async (path) => {
+        const response = await fetcher(
+          "GET",
           type,
-          newCollectionItem.data,
+          `${path}?${param(queryParams)}`,
         );
 
-        try {
-          const response = await fetcher<JSONAPIDocument>(
-            "POST",
-            type,
-            path,
-            payload,
-          );
-          const deserialized = jsonApiSerializer.deserialize(type, response);
-
-          // mutate list data
-          await mutate(
-            path,
-            async (addResponse: { data: FrontEndData[] }) => {
-              return {
-                ...addResponse,
-                data: [...addResponse.data, deserialized],
-              };
-            },
-            false,
-          );
-
-          // mutate individual resource cache key
-          const resourceId = deserialized.id;
-          await mutate(
-            `${path}/${resourceId.id}`,
-            async (updateCollectionItem: { data: FrontEndData }) => {
-              return {
-                data: { ...updateCollectionItem, ...deserialized },
-              };
-            },
-            false,
-          );
-
-          if (msgObject) {
-            toast({
-              title: `${msgObject.title} added`,
-              description: `${deserialized.name} was succesfully added!`,
-              duration: 5000,
-              isClosable: false,
-              position: "bottom-right",
-              variant: "left-accent",
-              status: "success",
-            });
-          }
-
-          return resourceId;
-        } catch (error) {
-          throw error;
+        const list = serializer.deserialize(type, response) as Data[];
+        for (const item of list) {
+          parseDate(item);
         }
+
+        return list;
       },
-      [mutate, toast],
+      {
+        suspense: true,
+      },
+    );
+
+    if (error || !data) {
+      throw error || new Error(`Unable to fetch ${path}`);
+    }
+
+    return data;
+  }
+
+  function useRestOne(id: string): Data {
+    const { data, error } = useSWR<Data, Error>(
+      `${path}/${id}`,
+      async (path) => {
+        const response = await fetcher("GET", type, path);
+
+        const item = serializer.deserialize(type, response) as Data;
+        parseDate(item);
+
+        return item;
+      },
+      {
+        suspense: true,
+      },
+    );
+
+    if (error || !data) {
+      throw error || new Error(`Unable to fetch ${path}/${id}`);
+    }
+
+    return data;
+  }
+
+  function useRestMutations() {
+    const toast = useToast();
+    const { mutate } = useSWRConfig();
+
+    const create = useCallback(
+      async (data: Omit<Data, "id">) => {
+        const payload = serializer.serialize(type, data);
+        const response = await fetcher("POST", type, path, payload);
+        const deserialized = serializer.deserialize(type, response) as Data;
+        const identifier = deserialized.name || deserialized.id;
+
+        // mutate list cache
+        await mutate(
+          path,
+          async (cache: Data[] | undefined) => {
+            if (!cache) {
+              return cache;
+            }
+
+            return [...cache, deserialized];
+          },
+          false,
+        );
+
+        // mutate individual cache
+        await mutate(
+          `${path}/${deserialized.id}`,
+          async (cache: Data) => {
+            return deserialized;
+          },
+          false,
+        );
+
+        if (messages) {
+          toast({
+            title: `${messages.title} added`,
+            description: `${identifier} was succesfully added!`,
+          });
+        }
+
+        return deserialized.id;
+      },
+      [toast, mutate],
     );
 
     const update = useCallback(
-      async (id: string, patchedData: { data: Omit<FrontEndData, "id"> }) => {
-        const payload = jsonApiSerializer.serialize(type, patchedData.data);
+      async (id: string, data: Partial<Data>) => {
+        const payload = serializer.serialize(type, data);
+        const response = await fetcher("PATCH", type, `${path}/${id}`, payload);
+        const deserialized = serializer.deserialize(type, response) as Data;
+        const identifier = deserialized.name || deserialized.id;
 
-        const response = await fetcher<JSONAPIDocument>(
-          "PATCH",
-          type,
-          `${path}/${id}`,
-          payload,
-        );
-
-        const deserializedItem = jsonApiSerializer.deserialize(type, response);
-
-        // mutate list data
+        // mutate list cache
         await mutate(
           path,
-          async (cachedData: { data: FrontEndData[] }) => {
-            return {
-              ...cachedData,
-              data: (cachedData?.data ?? []).map((item) =>
-                item?.id === deserializedItem?.id ? deserializedItem : item,
-              ),
-            };
+          async (cache: Data[] | undefined) => {
+            if (!cache) {
+              return cache;
+            }
+
+            const index = cache.findIndex(
+              (item) => item.id === deserialized.id,
+            );
+
+            if (index > -1) {
+              return [
+                ...cache.slice(0, index),
+                deserialized,
+                ...cache.slice(index + 1),
+              ];
+            }
+
+            return [...cache, deserialized];
           },
           false,
         );
 
-        // mutate individual resource cache key
+        // mutate individual cache
         await mutate(
           `${path}/${id}`,
-          async (updateCollectionItem: { data: FrontEndData }) => {
-            return {
-              data: { ...updateCollectionItem, ...deserializedItem },
-            };
+          async (cache: Data) => {
+            return deserialized;
           },
           false,
         );
 
-        if (msgObject) {
+        if (messages) {
           toast({
-            title: `${msgObject.title} updated`,
-            description: `${deserializedItem?.name} was succesfully updated!`,
-            duration: 5000,
-            isClosable: false,
-            position: "bottom-right",
-            variant: "left-accent",
-            status: "success",
+            title: `${messages.title} updated`,
+            description: `${identifier} was succesfully updated!`,
           });
         }
       },
-      [mutate, toast],
+      [toast, mutate],
     );
 
     const destroy = useCallback(
-      async (collectionItemId: string) => {
-        await fetcher("DELETE", type, `${path}/${collectionItemId}`);
-        let name: string | undefined;
-        // mutate list data
+      async (id: string) => {
+        await fetcher("DELETE", type, `${path}/${id}`);
+        let identifier: string | undefined = undefined;
+
+        // mutate list cache
         await mutate(
           path,
-          async (deleteResponse: { data: FrontEndData[] }) => {
-            const toDelete = deleteResponse.data.find(
-              (item) => item.id === collectionItemId,
-            );
-            name = toDelete ? toDelete.name : undefined;
-            return {
-              ...deleteResponse,
-              data: deleteResponse.data.filter(
-                (item) => item.id !== collectionItemId,
-              ),
-            };
+          async (cache: Data[] | undefined) => {
+            if (!cache) {
+              return cache;
+            }
+
+            const item = cache.find((item) => item.id === id);
+            if (item) {
+              identifier = item.name;
+            }
+
+            return cache.filter((item) => item.id !== id);
           },
           false,
         );
 
-        // mutate individual resource cache key
+        // mutate individual cache
         await mutate(
-          `${path}/${collectionItemId}`,
-          async (deleteResponse: { data: FrontEndData }) => {
-            if (!name)
-              name = deleteResponse
-                ? deleteResponse.data.name
-                : msgObject?.title;
-            return {
-              data: {},
-            };
+          `${path}/${id}`,
+          async (cache: Data) => {
+            if (cache && !identifier) {
+              identifier = cache.name;
+            }
+
+            return undefined;
           },
           false,
         );
 
-        if (msgObject) {
+        if (messages) {
           toast({
-            title: `${msgObject.title} deleted`,
-            description: ` ${name} was successfully deleted!`,
-            duration: 5000,
-            isClosable: false,
-            position: "bottom-right",
-            variant: "left-accent",
-            status: "success",
+            title: `${messages.title} deleted`,
+            description: `${identifier || id} was successfully deleted!`,
           });
         }
       },
-      [mutate, toast],
+      [toast, mutate],
     );
 
     return {
@@ -244,5 +231,5 @@ export default function restBuilder<
     };
   }
 
-  return { useRestOne, useRestList, useRestActions };
+  return { useRestOne, useRestList, useRestMutations };
 }

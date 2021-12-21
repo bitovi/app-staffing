@@ -1,16 +1,19 @@
 import { Suspense, useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import {
+  Employee,
   useEmployees as useEmployeesDefault,
+  useEmployeeMutations as useEmployeeMutationsDefault,
   useSkills as useSkillsDefault,
 } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
-import { Employee } from "../../services/api/employees";
-interface IEmployees {
+
+interface EmployeesProps {
   useEmployees: typeof useEmployeesDefault;
+  useEmployeeMutations: typeof useEmployeeMutationsDefault;
   useSkills: typeof useSkillsDefault;
 }
 
@@ -49,6 +52,7 @@ export default function EmployeesWrapper(): JSX.Element {
     <Suspense fallback={<EmployeePageLoadingLayout />}>
       <Employees
         useEmployees={useEmployeesDefault}
+        useEmployeeMutations={useEmployeeMutationsDefault}
         useSkills={useSkillsDefault}
       />
     </Suspense>
@@ -57,16 +61,17 @@ export default function EmployeesWrapper(): JSX.Element {
 
 export function Employees({
   useEmployees,
+  useEmployeeMutations,
   useSkills,
-}: IEmployees): JSX.Element {
-  const { useEmployeeList, useEmployeeActions } = useEmployees();
-  const { addEmployee, updateEmployee, deleteEmployee } = useEmployeeActions();
-  const { data: employees } = useEmployeeList({ include: "skills" });
+}: EmployeesProps): JSX.Element {
+  const { createEmployee, updateEmployee, destroyEmployee } =
+    useEmployeeMutations();
+  const employees = useEmployees({ include: "skills" });
   const { skills } = useSkills();
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   const addNewEmployee = async (data: Omit<Employee, "id">) => {
-    await addEmployee(data);
+    await createEmployee(data);
   };
   return (
     <Box maxHeight="100%">
@@ -100,7 +105,7 @@ export function Employees({
       <EmployeeTable
         mt="48px"
         updateEmployee={updateEmployee}
-        deleteEmployee={deleteEmployee}
+        destroyEmployee={destroyEmployee}
         employees={employees}
         skills={skills}
       />
