@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "/",
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "chakra:typings": "chakra-cli tokens ./src/theme/index.ts",
     "postinstall": "npm run chakra:typings",
     "precheck": "npm run typecheck && npm run eslint && npm run prettier && npm run depcheck && npm run test:ci && npm run build && echo \"\\033[32mAll good, PR ready!\"",
@@ -100,6 +101,7 @@
     "react-router-dom": "^5.2.0",
     "react-select": "^4.3.1",
     "react-use": "^17.3.1",
+    "source-map-explorer": "^2.5.2",
     "swr": "^1.0.1"
   },
   "devDependencies": {
