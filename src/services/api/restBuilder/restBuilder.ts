@@ -1,14 +1,22 @@
-import type { QueriableList } from "./shared";
+import type { Filter } from "can-query-logic";
 
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import param from "can-param";
 import { useToast } from "../../toast";
 
-import { fetcher } from "./shared";
+import fetcher from "./fetcher";
 
-import serializer, { SerializerTypes } from "./getJsonApiSerializer";
+import serializer, { SerializerTypes } from "./serializer";
 import { parseDate } from "./parseDate";
+
+interface ListQuery<T> {
+  filter?: Filter<T>;
+  sort?: string;
+  page?: number;
+  count?: number;
+  include?: string;
+}
 
 export interface BaseData {
   id: string;
@@ -22,7 +30,7 @@ export default function restBuilder<Data extends BaseData>(
     title: string;
   },
 ): {
-  useRestList: (queryParams?: QueriableList<Data>) => Data[];
+  useRestList: (query?: ListQuery<Data>) => Data[];
   useRestOne: (id: string) => Data;
   useRestMutations: () => {
     create: (data: Omit<Data, "id">) => Promise<string | undefined>;
@@ -30,15 +38,11 @@ export default function restBuilder<Data extends BaseData>(
     destroy: (id: string) => Promise<void>;
   };
 } {
-  function useRestList(queryParams?: QueriableList<Data>): Data[] {
+  function useRestList(query?: ListQuery<Data>): Data[] {
     const { data, error } = useSWR<Data[], Error>(
       path,
       async (path) => {
-        const response = await fetcher(
-          "GET",
-          type,
-          `${path}?${param(queryParams)}`,
-        );
+        const response = await fetcher("GET", type, `${path}?${param(query)}`);
 
         const list = serializer.deserialize(type, response) as Data[];
         for (const item of list) {

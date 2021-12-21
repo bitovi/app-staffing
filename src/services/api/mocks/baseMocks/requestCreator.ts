@@ -1,10 +1,18 @@
-import type { MockResponse } from "./interfaces";
-import type { QueriableList } from "../../restBuilder/shared";
+import type { Filter } from "can-query-logic";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
+import type { MockResponse } from "./interfaces";
 
 import { rest } from "msw";
 import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
+
+interface ListQuery<T> {
+  filter?: Filter<T>;
+  sort?: string;
+  page?: number;
+  count?: number;
+  include?: string;
+}
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -106,7 +114,7 @@ export default function requestCreator<Resource extends { id: string }>(
     getAll: rest.get<
       undefined,
       MockResponse<Resource[], { total: number }>,
-      QueriableList<Resource>
+      ListQuery<Resource>
     >(`${API_BASE_URL}${resourcePath}`, async (req, res, ctx) => {
       const {
         filter,

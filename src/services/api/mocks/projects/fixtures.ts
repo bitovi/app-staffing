@@ -1,19 +1,33 @@
-import type { Project } from "./interfaces";
-
 import faker from "faker";
 
-import { roles } from "../roles/fixtures";
+export interface JSONProject {
+  id: string;
+  attributes: {
+    name: string;
+    description: string;
+  };
+  relationships: {
+    roles: {
+      data: Array<{ type: "roles"; id: string }>;
+    };
+  };
+}
 
 faker.seed(0);
 
 let projectId = 1000;
-export function makeProject(project?: Partial<Project>): Project {
+export function makeProject(): JSONProject {
   return {
     id: `${++projectId}`,
-    name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,
-    description: faker.lorem.sentences(4),
-    roles: faker.random.arrayElements(roles, 3),
-    ...project,
+    attributes: {
+      name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,
+      description: faker.lorem.sentences(4),
+    },
+    relationships: {
+      roles: {
+        data: [{ type: "roles", id: "" }],
+      },
+    },
   };
 }
 

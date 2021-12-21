@@ -1,42 +1,53 @@
-import type { AssignedEmployee } from "../employees";
-import type { Role } from "./interfaces";
-
 import faker from "faker";
 
 import { skills } from "../skills/fixtures";
-// import { employees } from "../employees/fixtures";
+
+export interface JSONRole {
+  id: string;
+  attributes: {
+    start_date: Date;
+    start_confidence: number;
+    end_date: Date;
+    end_confidence: number;
+  };
+  relationships: {
+    assignments: {
+      data: Array<{ type: "assignments"; id: string }>;
+    };
+    project: {
+      data: { type: "projects"; id: string };
+    };
+    skills: {
+      data: Array<{ type: "skills"; id: string }>;
+    };
+  };
+}
 
 faker.seed(0);
 
 let roleId = 100;
-export function makeRole(role?: Partial<Role>): Role {
-  const startDate = {
-    date: faker.date.past(),
-    confidence: `${faker.datatype.number({ min: 0, max: 100 })}%`,
-  };
-
-  const endDate = {
-    date: faker.date.past(),
-    confidence: `${faker.datatype.number({ min: 0, max: 100 })}%`,
-  };
-
-  const assignedEmployees: AssignedEmployee[] = [];
-
-  // const assignedEmployees: AssignedEmployee[] = faker.random
-  //   .arrayElements(employees, faker.datatype.number(2) + 1)
-  //   .map((employee) => ({
-  //     employee,
-  //     startDate: faker.date.past(),
-  //     endDate: faker.date.future(),
-  //   }));
-
+export function makeRole(): JSONRole {
   return {
     id: `${++roleId}`,
-    skill: faker.random.arrayElement(skills),
-    startDate,
-    endDate,
-    employees: assignedEmployees,
-    ...role,
+    attributes: {
+      start_date: faker.date.past(),
+      start_confidence: faker.datatype.number({ min: 0, max: 100 }),
+      end_date: faker.date.past(),
+      end_confidence: faker.datatype.number({ min: 0, max: 100 }),
+    },
+    relationships: {
+      assignments: {
+        data: [{ type: "assignments", id: "" }],
+      },
+      project: {
+        data: { type: "projects", id: "" },
+      },
+      skills: {
+        data: faker.random
+          .arrayElements(skills, faker.datatype.number({ min: 1, max: 3 }))
+          .map(({ id }) => ({ type: "skills", id })),
+      },
+    },
   };
 }
 

@@ -1,6 +1,8 @@
 import faker from "faker";
 
-interface JSONEmployee {
+import { skills } from "../skills/fixtures";
+
+export interface JSONEmployee {
   id: string;
   attributes: {
     name: string;
@@ -8,6 +10,9 @@ interface JSONEmployee {
     end_date: Date;
   };
   relationships: {
+    assignments: {
+      data: Array<{ type: "assignments"; id: string }>;
+    };
     skills: {
       data: Array<{ type: "skills"; id: string }>;
     };
@@ -27,8 +32,13 @@ export function makeEmployee(): JSONEmployee {
       end_date: faker.date.future(),
     },
     relationships: {
+      assignments: {
+        data: [{ type: "assignments", id: "" }],
+      },
       skills: {
-        data: [],
+        data: faker.random
+          .arrayElements(skills, faker.datatype.number({ min: 1, max: 3 }))
+          .map(({ id }) => ({ type: "skills", id })),
       },
     },
   };

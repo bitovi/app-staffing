@@ -1,23 +1,5 @@
-import type { Filter } from "can-query-logic";
 import type { JSONAPIDocument } from "json-api-serializer";
-import type { SerializerTypes } from "./getJsonApiSerializer";
-
-export interface APIResponse<T> extends ResponseStatus {
-  data?: T;
-}
-
-export interface ResponseStatus {
-  isLoading?: boolean;
-  error?: Error;
-}
-
-export interface QueriableList<T> {
-  filter?: Filter<T>;
-  sort?: string;
-  page?: number;
-  count?: number;
-  include?: string;
-}
+import type { SerializerTypes } from "../serializer";
 
 class HttpError extends Error {
   status?: number;
@@ -28,14 +10,16 @@ class HttpError extends Error {
   }
 }
 
-export async function fetcher(
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+export default async function fetcher(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
   type: SerializerTypes,
   url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: Record<string, any>,
 ): Promise<JSONAPIDocument> {
-  const response = await fetch(url, {
+  const response = await fetch(`${API_BASE_URL}${url}`, {
     method,
     headers: {
       "Content-Type": "application/vnd.api+json",

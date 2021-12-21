@@ -9,7 +9,7 @@ import { Center, Divider } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
-import { SkillColors } from "../../../../../services/api/mocks/skills/interfaces";
+import { SkillColors } from "../../../../../services/api/Skills";
 
 type TableRowProps = {
   rowData: ProjectedData;

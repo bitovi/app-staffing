@@ -1,12 +1,17 @@
-import { Skill } from ".";
+export interface JSONSkill {
+  id: string;
+  attributes: {
+    name: string;
+  };
+}
 
-export const skills: Array<Skill> = [
-  { id: "100", name: "Angular" },
-  { id: "101", name: "Design" },
-  { id: "102", name: "DevOps" },
-  { id: "103", name: "Node" },
-  { id: "104", name: "React" },
-  { id: "105", name: "UX Designer" },
-  { id: "106", name: "UI Designer" },
-  { id: "107", name: "Project Management" },
+export const skills: JSONSkill[] = [
+  { id: "100", attributes: { name: "Angular" } },
+  { id: "101", attributes: { name: "Design" } },
+  { id: "102", attributes: { name: "DevOps" } },
+  { id: "103", attributes: { name: "Node" } },
+  { id: "104", attributes: { name: "React" } },
+  { id: "105", attributes: { name: "UX Designer" } },
+  { id: "106", attributes: { name: "UI Designer" } },
+  { id: "107", attributes: { name: "Project Management" } },
 ];

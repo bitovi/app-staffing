@@ -1,14 +1,17 @@
 import type { BaseData } from "../restBuilder/restBuilder";
 
 import restBuilder from "../restBuilder/restBuilder";
-import { Skill } from "../mocks/skills/interfaces";
+import { Assignment } from "../Assignments";
+import { Skill } from "../Skills";
 
 export interface Employee extends BaseData {
   id: string;
   name: string;
   startDate?: Date;
   endDate?: Date;
-  skills: Skill[];
+
+  assignments?: Assignment[];
+  skills?: Skill[];
 }
 
 export type NewEmployee = Omit<Employee, "id">;
