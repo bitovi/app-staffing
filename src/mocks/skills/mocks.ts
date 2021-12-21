@@ -1,6 +1,6 @@
 import QueryLogic from "can-query-logic";
 
-import type { Skill } from ".";
+import type { Skill } from "../skills";
 import { skills } from "./fixtures";
 import { createStore } from "../baseMocks";
 import requestCreatorSkills from "./request";

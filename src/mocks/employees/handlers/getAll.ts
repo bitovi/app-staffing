@@ -7,7 +7,7 @@ import { EmployeeRecord } from "../interfaces";
 import { Skill } from "../../skills/interfaces";
 import { skillStoreManager } from "../../skills/mocks";
 import { employeeSkillsStoreManager } from "../../employee_skills/mocks";
-import serializer from "../../../restBuilder/serializer";
+import serializer from "../../../services/api/restBuilder/serializer";
 
 /**
  * Mock handler for the GET /employees endpoint

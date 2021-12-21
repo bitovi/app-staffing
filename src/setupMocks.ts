@@ -1,5 +1,5 @@
 import { setupWorker } from "msw";
-import mocks from "./services/mocks";
+import mocks from "./mocks";
 
 setupWorker(...mocks).start({
   onUnhandledRequest: "bypass",
