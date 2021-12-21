@@ -4,9 +4,6 @@ import { projectStoreManager } from "./projects/mocks";
 // import { roleStoreManager } from "./roles/mocks";
 import { skillStoreManager } from "./skills/mocks";
 
-import { employeeSkillsStoreManager } from "./employee_skills/mocks";
-// import { roleSkillsStoreManager } from "./role_skills/mocks";
-
 export async function loadFixtures(): Promise<void> {
   await Promise.all([
     // assignmentStoreManager.load(),
@@ -14,9 +11,6 @@ export async function loadFixtures(): Promise<void> {
     projectStoreManager.load(),
     // roleStoreManager.load(),
     skillStoreManager.load(),
-
-    employeeSkillsStoreManager.load(),
-    // roleSkillsStoreManager.load(),
   ]);
 }
 
@@ -27,8 +21,5 @@ export async function clearFixtures(): Promise<void> {
     projectStoreManager.clear(),
     // roleStoreManager.clear(),
     skillStoreManager.clear(),
-
-    employeeSkillsStoreManager.clear(),
-    // roleSkillsStoreManager.clear(),
   ]);
 }
