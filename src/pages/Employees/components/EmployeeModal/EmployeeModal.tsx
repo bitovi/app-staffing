@@ -25,15 +25,16 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { isEmpty, pickBy } from "lodash";
-import format from "date-fns/format";
+import formatISO from "date-fns/formatISO";
+import parseISO from "date-fns/parseISO";
 
 import { Employee, Skill } from "../../../../services/api";
 import { ServiceError } from "../../../../components/ServiceError";
 
 interface EmployeeFormData {
   name: string;
-  start_date: string;
-  end_date: string;
+  startDate: string;
+  endDate: string;
   roles: Record<string, boolean>;
 }
 interface EmployeeModalProps {
@@ -69,10 +70,6 @@ export default function EmployeeModal({
 
   const isNewEmployee = isEmpty(employeeData);
   const employeeName = watch("name");
-
-  const fullNameProvided = (name: string): boolean =>
-    name ? name.trim().split(" ").length >= 2 : false;
-
   const canSubmitForm =
     (isNewEmployee && fullNameProvided(employeeName)) ||
     (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
@@ -84,19 +81,11 @@ export default function EmployeeModal({
       setStatus("pending");
       await onSave({
         name: data.name,
-        startDate: data.start_date
-          ? new Date(data.start_date.replace("-", "/")) //.replace() seems to fix native Date JS changing date due to time zone
-          : undefined,
-        endDate: data.end_date
-          ? new Date(data.end_date.replace("-", "/"))
-          : undefined,
+        startDate: data.startDate ? parseISO(data.startDate) : undefined,
+        endDate: data.endDate ? parseISO(data.endDate) : undefined,
         skills: employeeSkills,
       });
-      reset({
-        name: "",
-        start_date: "",
-        end_date: "",
-      });
+      reset({ name: "", startDate: "", endDate: "" });
       onClose();
       setStatus("idle");
     } catch (e) {
@@ -104,11 +93,22 @@ export default function EmployeeModal({
     }
   };
 
-  useEffect(() => {
-    if (employee) {
-      reset(toEmployeeFormData(employee));
-    }
-  }, [employee, reset]);
+  const resetForm = () => {
+    reset(
+      employee
+        ? toEmployeeFormData(employee)
+        : {
+            name: "",
+            startDate: "",
+            endDate: "",
+          },
+    );
+  };
+
+  // Reset the form fields if the `employee` prop changes while the modal is
+  // mounted
+  useEffect(resetForm, [employee, reset]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md" variant="team_modal">
       <ModalOverlay />
@@ -126,7 +126,7 @@ export default function EmployeeModal({
                 {...register("name", {
                   required: "Name not filled out",
                   validate: (name) =>
-                    name.trim().split(" ").length >= 2 || "Full name required",
+                    fullNameProvided(name) || "Full name required",
                 })}
                 id="name"
                 placeholder="name"
@@ -135,10 +135,10 @@ export default function EmployeeModal({
             </FormControl>
 
             <HStack spacing="8px" width="100%">
-              <FormControl isInvalid={errors.start_date ? true : false}>
+              <FormControl isInvalid={errors.startDate ? true : false}>
                 <FormLabel>Start Date</FormLabel>
                 <Input
-                  {...register("start_date")}
+                  {...register("startDate")}
                   id="start_date"
                   type="date"
                   data-testid="start_date"
@@ -147,7 +147,7 @@ export default function EmployeeModal({
 
               <FormControl>
                 <FormLabel>End Date</FormLabel>
-                <Input {...register("end_date")} id="end_date" type="date" />
+                <Input {...register("endDate")} id="end_date" type="date" />
               </FormControl>
             </HStack>
 
@@ -165,7 +165,7 @@ export default function EmployeeModal({
                           value={skill.id}
                           onChange={onChange}
                           onBlur={onBlur}
-                          isChecked={value}
+                          isChecked={Boolean(value)}
                           textStyle="modal.checkboxLabel"
                         >
                           {skill.name}
@@ -207,24 +207,57 @@ export default function EmployeeModal({
         <Divider pt={1} />
 
         <ModalFooter>
-          <Button variant="outline" mr="8px" onClick={onClose}>
+          <Button
+            variant="outline"
+            mr="8px"
+            onClick={() => {
+              resetForm();
+              onClose();
+            }}
+          >
             Cancel
           </Button>
-          {status === "idle" ? (
-            <Button
-              variant={canSubmitForm ? "primary" : "primaryDisabled"}
-              isDisabled={!canSubmitForm}
-              onClick={handleSubmit((data) => submitForm(data))}
-            >
-              {isNewEmployee ? "Add & Close" : "Save & Close"}
-            </Button>
-          ) : (
-            <Button isLoading loadingText="Saving" isDisabled />
-          )}
+          <Button
+            {...getSubmitButtonProps({
+              status,
+              canSubmitForm,
+              onClick: handleSubmit((data) => submitForm(data)),
+            })}
+          >
+            {isNewEmployee ? "Add & Close" : "Save & Close"}
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
   );
+}
+
+function fullNameProvided(name: string) {
+  return name ? name.trim().split(" ").length >= 2 : false;
+}
+
+function getSubmitButtonProps({
+  status,
+  canSubmitForm,
+  onClick,
+}: {
+  status: SaveButtonStatus;
+  canSubmitForm: boolean;
+  onClick: () => Promise<void>;
+}) {
+  if (status === "pending") {
+    return {
+      isLoading: true,
+      isDisabled: true,
+      loadingText: "Saving",
+    };
+  }
+
+  return {
+    variant: canSubmitForm ? "primary" : "primaryDisabled",
+    isDisabled: !canSubmitForm,
+    onClick,
+  };
 }
 
 /**
@@ -248,8 +281,12 @@ function toEmployeeFormData(data: Employee): EmployeeFormData {
 
   return {
     name: data.name,
-    start_date: data.startDate ? format(data.startDate, "yyyy-MM-dd") : "",
-    end_date: data.endDate ? format(data.endDate, "yyyy-MM-dd") : "",
+    startDate: data.startDate
+      ? formatISO(data.startDate, { representation: "date" })
+      : "",
+    endDate: data.endDate
+      ? formatISO(data.endDate, { representation: "date" })
+      : "",
     roles,
   };
 }
