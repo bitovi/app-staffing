@@ -10,6 +10,9 @@ revisionHistoryLimit: 2
 
 image: app-staffing:latest
 
+# For the front-end config
+baseURL: http://app-staffing.localhost
+
 service:
   port: 80
   targetPort: 3000
@@ -58,13 +61,15 @@ prometheus:
   enabled: false
 
 # extraVolumes:
-#   - name: local-files-app-staffing
-#     hostPath: 
-#       path: /local-files/app-staffing
-# extraVolumeMounts:
-#   - mountPath: /usr/src/app
-#     name: local-files-app-staffing
+# - name: config
+#   configMap:
+#     name: app-staffing-config
+#     defaultMode: 0777
 
+# extraVolumeMounts:
+# - name: config
+#   mountPath: /usr/src/app/config.js
+#   subPath: config.js
 
 # TODO: implement serviceaccount.yaml
 serviceAccount:
