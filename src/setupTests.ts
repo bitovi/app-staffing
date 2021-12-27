@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import "./setupTests.env";
 
 import "@testing-library/jest-dom";
 import chai from "chai";

@@ -3,7 +3,7 @@ import type { ResponseStatus } from "../shared";
 
 import useRest from "../restBuilder/useRestV2";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = window.env.API_BASE_URL;
 
 export default function useSkills(): ResponseStatus & {
   skills: Skill[] | undefined;

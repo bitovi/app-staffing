@@ -5,7 +5,7 @@ import { CanLocalStore } from "can-local-store";
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import { JSONSkill, Skill } from "../skills/interfaces";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = window.env.API_BASE_URL;
 
 export default function requestCreatorSkill<Resource extends Skill>(
   resourcePath: string,

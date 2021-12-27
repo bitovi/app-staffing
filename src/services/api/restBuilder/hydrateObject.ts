@@ -21,7 +21,7 @@ export default async function hydrateObject<T>(
         // measure here is to prevent breaking. If everything was formatted
         // the fetcher would automatically deserialize the GET all results
         "undefined",
-        `${process.env.REACT_APP_API_BASE_URL}/${relationship}`,
+        `${window.env.API_BASE_URL}/${relationship}`,
       );
       hydratedObject.data[key] = hydratedObject.data[key]
         .map((id: string) => {

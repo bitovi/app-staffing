@@ -15,9 +15,7 @@ export const parameters = {
 };
 
 const pathPrefix =
-  process.env.NODE_ENV === "production"
-    ? "/storybook"
-    : window.location.origin;
+  process.env.NODE_ENV === "production" ? "/storybook" : window.location.origin;
 
 setupWorker(...mocks).start({
   onUnhandledRequest: "bypass",
