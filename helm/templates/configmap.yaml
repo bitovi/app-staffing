@@ -9,5 +9,5 @@ metadata:
 data:
   config.js: |
     window.env = {
-      API_BASE_URL: "{{ .Values.baseURL }}",
+      API_BASE_URL: "{{ .Values.apiBaseURL }}",
     };
