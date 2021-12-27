@@ -22,7 +22,7 @@ export interface EmployeeActions {
   useEmployeeActions: () => EmployeeMutations<Employee>;
 }
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = window.env.API_BASE_URL;
 
 const { useRestOne, useRestList, useRestActions } = restBuilder<Employee>(
   `${API_BASE_URL}/employees`,

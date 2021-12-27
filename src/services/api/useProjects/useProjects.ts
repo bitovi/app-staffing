@@ -13,7 +13,7 @@ interface ProjectActions {
   reset: () => void;
 }
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = window.env.API_BASE_URL;
 
 /** Hook for getting a list of the projects */
 export default function useProjects(
