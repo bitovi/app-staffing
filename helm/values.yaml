@@ -11,7 +11,7 @@ revisionHistoryLimit: 2
 image: app-staffing:latest
 
 # For the front-end config
-baseURL: http://app-staffing.localhost
+apiBaseURL: http://app-staffing-api.localhost
 
 service:
   port: 80
