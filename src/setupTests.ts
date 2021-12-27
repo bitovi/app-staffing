@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import "./setupTests.env";
 
 import "@testing-library/jest-dom";
 import chai from "chai";
@@ -18,7 +19,3 @@ beforeAll(() => {
 });
 afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
-
-window.env = {
-  API_BASE_URL: "https://api.dev.bitovi-staffing.com",
-};
