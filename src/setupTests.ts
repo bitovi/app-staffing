@@ -18,3 +18,7 @@ beforeAll(() => {
 });
 afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
+
+window.env = {
+  API_BASE_URL: "https://api.dev.bitovi-staffing.com",
+};
