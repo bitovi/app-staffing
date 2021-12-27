@@ -64,11 +64,10 @@ prometheus:
 # - name: config
 #   configMap:
 #     name: app-staffing-config
-#     defaultMode: 0777
 
 # extraVolumeMounts:
 # - name: config
-#   mountPath: /usr/src/app/config.js
+#   mountPath: /usr/share/nginx/html/config.js
 #   subPath: config.js
 
 # TODO: implement serviceaccount.yaml
