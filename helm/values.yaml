@@ -10,7 +10,7 @@ revisionHistoryLimit: 2
 
 image: app-staffing:latest
 
-# For the front-end config
+# Note: Please see /public/config.js for information about these values.
 apiBaseURL: http://app-staffing-api.localhost
 
 service:

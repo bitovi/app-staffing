@@ -8,10 +8,11 @@
  * the values available need to be coordinated with devops prior to merging so
  * the deployed environments can be updated first.
  *
- * If you edit this file, you must also edit 3 other files as well:
+ * If you edit this file, you must also edit 4 other files as well:
  *   - [Type Definitions](/src/window-env.d.ts)
- *   - [Deployment Template](/helm/templates/configmap.yml)
  *   - [Test Config](/src/setupTests.env.ts)
+ *   - [Helm Values](/helm/values.yaml)
+ *   - [Deployment Template](/helm/templates/configmap.yaml)
  */
 
 window.env = {
