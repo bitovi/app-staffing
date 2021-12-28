@@ -1,3 +1,4 @@
+// Note: Please see /public/config.js for information about this file.
 declare global {
   interface Window {
     env: {
