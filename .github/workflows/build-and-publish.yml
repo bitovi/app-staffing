@@ -41,10 +41,10 @@ jobs:
     # if: ${{ github.ref != 'refs/heads/main' }}
 
     # attempt3: doesn't stop the job from running
-    if: env.GITHUB_EVENT_NAME != 'pull_request'
+    # if: env.GITHUB_EVENT_NAME != 'pull_request'
 
     # attempt4: doesn't stop the job from running
-    # if: ${{ github.event_name }} != 'pull_request'
+    if: github.event_name != 'pull_request'
 
     needs: [publish]
     runs-on: ubuntu-latest
