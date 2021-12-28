@@ -35,7 +35,7 @@ jobs:
     ### attempts:
     ###
     # attempt1: doesn't stop the job from running
-    if: github.ref != 'refs/heads/main'
+    if: ${{ github.ref != 'refs/heads/main' }}
 
     # attempt2: doesn't stop the job from running
     # if: ${{ github.ref != 'refs/heads/main' }}
