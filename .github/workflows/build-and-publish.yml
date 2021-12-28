@@ -35,13 +35,13 @@ jobs:
     ### attempts:
     ###
     # attempt1: doesn't stop the job from running
-    if: ${{ github.ref == 'refs/heads/main' }}
+    # if: ${{ github.ref == 'refs/heads/main' }}
 
     # attempt2: doesn't stop the job from running
     # if: ${{ github.ref != 'refs/heads/main' }}
 
     # attempt3: doesn't stop the job from running
-    # if: env.GITHUB_EVENT_NAME != 'pull_request'
+    if: env.GITHUB_EVENT_NAME != 'pull_request'
 
     # attempt4: doesn't stop the job from running
     # if: ${{ github.event_name }} != 'pull_request'
