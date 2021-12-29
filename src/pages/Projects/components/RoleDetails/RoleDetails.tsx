@@ -1,93 +1,93 @@
 import type {
-  AssignedEmployee,
-  Employee,
+  // AssignedEmployee,
+  // Employee,
   Role,
   Skill,
 } from "../../../../services/api";
-import { useEmployees, useSkills } from "../../../../services/api";
+import { /** useEmployees, */ useSkills } from "../../../../services/api";
 
-import { cloneDeep } from "lodash";
+// import { cloneDeep } from "lodash";
 import Button from "../../../../components/Button";
 import Select from "../../../../components/Select";
-import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
+// import AssignedEmployeeDetails from "../AssignedEmployeeDetails";
 import RoleDate from "../RoleDate";
 
 import styles from "./RoleDetails.module.scss";
 
 export default function RoleDetails({
   role,
-  editRole,
-  deleteRole,
+  updateRole,
+  destroyRole,
 }: {
   role: Role;
-  editRole: (role: Role) => void;
-  deleteRole: (role: Role) => void;
+  updateRole: (id: string, role: Role) => void;
+  destroyRole: (id: string) => void;
 }): JSX.Element {
-  const employees = useEmployees();
-  const { skills } = useSkills();
+  // const employees = useEmployees();
+  const skills = useSkills();
 
-  const createUnassignedEmployee = (): AssignedEmployee => {
-    return {
-      employee: {
-        id: Math.floor(Math.random() * 1000).toString(),
-        name: "unassigned",
-        startDate: new Date(),
-        skills: [],
-      },
-    };
-  };
+  // const createUnassignedEmployee = (): AssignedEmployee => {
+  //   return {
+  //     employee: {
+  //       id: Math.floor(Math.random() * 1000).toString(),
+  //       name: "unassigned",
+  //       startDate: new Date(),
+  //       skills: [],
+  //     },
+  //   };
+  // };
 
-  const createEmployeeChoices = (
-    assignedEmployee: AssignedEmployee,
-  ): Employee[] => {
-    // This list consists of the current assigned employees and any other
-    // employee which has the skill but isn't already assigned
-    return [
-      // assignedEmployee.employee,
-      // ...(employees || [])
-      //   .filter(({ skills }) =>
-      //     skills.map(({ name }) => name).includes(role.skill.name),
-      //   )
-      //   .filter(
-      //     (employee) =>
-      //       !role.employees
-      //         .map(({ employee: { id } }: { employee: { id: string } }) => id)
-      //         .includes(employee.id),
-      //   ),
-    ];
-  };
+  // const createEmployeeChoices = (
+  //   assignedEmployee: AssignedEmployee,
+  // ): Employee[] => {
+  //   // This list consists of the current assigned employees and any other
+  //   // employee which has the skill but isn't already assigned
+  //   return [
+  //     // assignedEmployee.employee,
+  //     // ...(employees || [])
+  //     //   .filter(({ skills }) =>
+  //     //     skills.map(({ name }) => name).includes(role.skill.name),
+  //     //   )
+  //     //   .filter(
+  //     //     (employee) =>
+  //     //       !role.employees
+  //     //         .map(({ employee: { id } }: { employee: { id: string } }) => id)
+  //     //         .includes(employee.id),
+  //     //   ),
+  //   ];
+  // };
 
-  const editAssignedEmployee = (assignedEmployee: AssignedEmployee) => {
-    const employees = cloneDeep(role.employees);
-    const index = employees.findIndex(
-      ({ employee: { id } }: { employee: { id: string } }) =>
-        id === assignedEmployee.employee.id,
-    );
+  // const editAssignedEmployee = (assignedEmployee: AssignedEmployee) => {
+  //   const employees = cloneDeep(role?.employees || []);
+  //   const index = employees.findIndex(
+  //     ({ employee: { id } }: { employee: { id: string } }) =>
+  //       id === assignedEmployee.employee.id,
+  //   );
 
-    employees[index] = assignedEmployee;
+  //   employees[index] = assignedEmployee;
 
-    editRole({
-      ...role,
-      employees,
-    });
-  };
+  //   updateRole(role.id, {
+  //     ...role,
+  //     employees,
+  //   });
+  // };
 
-  const changeAssignedEmployee = (
-    previousId: string,
-    newAssignedEmployee: AssignedEmployee,
-  ) => {
-    const employees = cloneDeep(role.employees);
-    const index = employees.findIndex(
-      ({ employee: { id } }: { employee: { id: string } }) => id === previousId,
-    );
+  // const changeAssignedEmployee = (
+  //   previousId: string,
+  //   newAssignedEmployee: AssignedEmployee,
+  // ) => {
+  //   const employees = cloneDeep(role.employees);
+  //   const index = employees.findIndex(
+  //     ({ employee: { id } }: { employee: { id: string } }) => id === previousId,
+  //   );
 
-    employees[index] = newAssignedEmployee;
+  //   employees[index] = newAssignedEmployee;
 
-    editRole({
-      ...role,
-      employees,
-    });
-  };
+  //   updateRole({
+  //     ...role,
+  //     employees,
+  //   });
+  // };
 
   return (
     <div className={styles.roleContainer}>
@@ -96,9 +96,14 @@ export default function RoleDetails({
           <Select<Skill>
             label="Role"
             name="roleSkill"
-            disabled={role.employees.length > 0}
-            onChange={(skill?: Skill) => skill && editRole({ ...role, skill })}
-            value={role.skill}
+            onChange={(skill?: Skill) =>
+              skill &&
+              updateRole(role.id, {
+                ...role,
+                skills: [...(role?.skills || []), skill],
+              })
+            }
+            value={role?.skills?.[0]}
             options={skills.map((skill) => ({
               label: skill.name,
               value: skill,
@@ -108,19 +113,33 @@ export default function RoleDetails({
         <div className={styles.dateContainer}>
           <RoleDate
             title="Start Date"
-            estimatedDate={role.startDate}
-            onChange={(startDate) => editRole({ ...role, startDate })}
+            date={role.startDate}
+            confidence={role.startConfidence}
+            onChange={({ date: startDate, confidence: startConfidence }) =>
+              updateRole(role.id, {
+                ...role,
+                startDate: startDate || role.startDate,
+                startConfidence: startConfidence || role.startConfidence,
+              })
+            }
           />
           <RoleDate
             title="End Date"
-            estimatedDate={role.endDate}
-            onChange={(endDate) => editRole({ ...role, endDate })}
+            date={role.endDate}
+            confidence={role.endConfidence}
+            onChange={({ date: endDate, confidence: endConfidence }) =>
+              updateRole(role.id, {
+                ...role,
+                endDate: endDate || role.endDate,
+                endConfidence: endConfidence || role.endConfidence,
+              })
+            }
           />
         </div>
       </div>
       <div className={styles.employees}>
         Assigned Employees
-        {employees &&
+        {/* {employees &&
           role.employees.map(
             (assignedEmployee: AssignedEmployee, index: number) => (
               <AssignedEmployeeDetails
@@ -131,21 +150,21 @@ export default function RoleDetails({
                 possibleOtherEmployees={createEmployeeChoices(assignedEmployee)}
               />
             ),
-          )}
+          )} */}
       </div>
       <div className={styles.controls}>
-        <Button
+        {/* <Button
           className={styles.button}
           onClick={() =>
-            editRole({
+            updateRole(role.id, {
               ...role,
               employees: [...role.employees, createUnassignedEmployee()],
             })
           }
         >
           Add Another Team Member
-        </Button>
-        <Button className={styles.button} onClick={() => deleteRole(role)}>
+        </Button> */}
+        <Button className={styles.button} onClick={() => destroyRole(role.id)}>
           Delete Role
         </Button>
       </div>

@@ -1,16 +1,17 @@
 import Select from "../../../../components/Select";
-import type { EstimatedDate } from "../../../../services/api";
 
 import styles from "./RoleDate.module.scss";
 
 export default function RoleDate({
   title,
-  estimatedDate,
+  date,
+  confidence,
   onChange,
 }: {
   title: "Start Date" | "End Date";
-  estimatedDate: EstimatedDate;
-  onChange: (date: EstimatedDate) => void;
+  date: Date | undefined;
+  confidence: number | undefined;
+  onChange: (estimation: { date?: Date; confidence?: number }) => void;
 }): JSX.Element {
   return (
     <div className={styles.dateContainer}>
@@ -18,10 +19,9 @@ export default function RoleDate({
         {title}
         <input
           type="date"
-          defaultValue={estimatedDate.date?.toString()}
+          defaultValue={date?.toString()}
           onBlur={(e) => {
             onChange({
-              ...estimatedDate,
               date: new Date(e.target.value),
             });
           }}
@@ -30,12 +30,12 @@ export default function RoleDate({
       <Select
         name={`${title.replace(" ", "")}Confidence`}
         label="Confidence:"
-        value={estimatedDate.confidence}
+        value={confidence}
         onChange={(value) => {
-          value && onChange({ ...estimatedDate, confidence: value });
+          value && onChange({ confidence: value });
         }}
-        options={Array.from(Array(21).keys()).map((n) => ({
-          value: `${n * 5}%`,
+        options={[...Array(21).keys()].map((n) => ({
+          value: n * 5,
           label: `${n * 5}%`,
         }))}
       />

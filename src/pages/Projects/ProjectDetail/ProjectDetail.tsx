@@ -6,6 +6,7 @@ import { Box } from "@chakra-ui/layout";
 
 import {
   useProjects as defaultUseProjects,
+  useRoleMutations as defaultRoleMutation,
   useProjectMutations as defaultUseProjectMutations,
 } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
@@ -16,14 +17,17 @@ import ProjectsHeader from "../Projects/components/ProjectsHeader";
 interface ProjectDetailProps {
   useProjects: typeof defaultUseProjects;
   useProjectMutations: typeof defaultUseProjectMutations;
+  useRoleMutations: typeof defaultRoleMutation;
 }
 
 export function ProjectDetail({
   useProjects = defaultUseProjects,
   useProjectMutations = defaultUseProjectMutations,
+  useRoleMutations = defaultRoleMutation,
 }: ProjectDetailProps): JSX.Element {
   const projects = useProjects();
-  const { updateProject } = useProjectMutations();
+  const { updateProject, destroyProject } = useProjectMutations();
+  const { updateRole, destroyRole } = useRoleMutations();
 
   const { id } = useParams<{ id: string }>();
 
@@ -43,17 +47,23 @@ export function ProjectDetail({
 
   return (
     <div>
-      {/* TODO: pull out header to top level components since its in Projects and Project Detail. Should also change
+      {/* TODO: pull out header to top level components since its in 
+      Projects and Project Detail. Should also change
       the logic for addProject so it optional */}
       <ProjectsHeader name={projectData?.name} addProject={() => null} />
       {projectData && (
         <>
           <ProjectDescription onEdit={onSave} project={projectData} />
-          <RoleList onEdit={onSave} project={projectData} />
+          <RoleList
+            destroyRole={destroyRole}
+            updateRole={updateRole}
+            project={projectData}
+          />
           <Box mt={10}>
             <ProjectDeleteButton
               projectName={projectData.name}
               projectId={projectData.id}
+              destroyProject={destroyProject}
             />
           </Box>
         </>
@@ -69,6 +79,7 @@ export default function ProjectDetailWrapper(): JSX.Element {
       <ProjectDetail
         useProjects={defaultUseProjects}
         useProjectMutations={defaultUseProjectMutations}
+        useRoleMutations={defaultRoleMutation}
       />
     </Suspense>
   );
