@@ -275,7 +275,7 @@ function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
 function toEmployeeFormData(data: Employee): EmployeeFormData {
   const roles: Record<string, boolean> = {};
 
-  data.skills.forEach((skill) => {
+  data?.skills?.forEach((skill) => {
     roles[skill.id] = true;
   });
 

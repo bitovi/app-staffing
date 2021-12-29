@@ -1,19 +1,26 @@
+import type { NewProject } from "../../../../../services/api";
+
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
+import { useDisclosure } from "@chakra-ui/hooks";
+
+import AddProjectModal from "../AddProjectModal";
 import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
 import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBreadCrumb";
-import { useDisclosure } from "@chakra-ui/hooks";
-import AddProjectModal from "../AddProjectModal";
+
+interface ProjectHeaderProps {
+  loading?: boolean;
+  name?: string;
+  addProject: (project: NewProject) => void;
+}
 
 export default function ProjectsHeader({
   loading,
   name,
-}: {
-  loading?: boolean;
-  name?: string;
-}): JSX.Element {
+  addProject,
+}: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -60,7 +67,11 @@ export default function ProjectsHeader({
               Add Project
             </Button>
 
-            <AddProjectModal isOpen={isOpen} onClose={onClose} />
+            <AddProjectModal
+              isOpen={isOpen}
+              onClose={onClose}
+              addProject={addProject}
+            />
           </>
         )}
       </Flex>

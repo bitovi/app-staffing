@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import {
   Box,
   BoxProps,
@@ -11,9 +12,9 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
-import { Project } from "../../../../../services/api";
+
 import ProjectCard from "../ProjectCard";
-import { useCallback } from "react";
+import { Project } from "../../../../../services/api";
 
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
@@ -21,7 +22,7 @@ interface ProjectListProps extends BoxProps {
 
 export default function ProjectList({
   projects,
-  ...props
+  ...rest
 }: ProjectListProps): JSX.Element {
   const generateRows = useCallback(() => {
     return projects?.map(
@@ -35,7 +36,7 @@ export default function ProjectList({
 
   return (
     <>
-      <Box {...props}>
+      <Box {...rest}>
         {projects && projects.length === 0 && (
           <Flex
             width="100%"

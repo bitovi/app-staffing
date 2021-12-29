@@ -1,3 +1,5 @@
+import type { Employee } from "../../../../services/api";
+
 import {
   Flex,
   Skeleton,
@@ -12,8 +14,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
+
 import { Tag } from "../../../../components/Tag";
-import type { Employee } from "../../../../services/api";
 import { TrashIcon, EditIcon } from "../../../assets";
 
 interface EmployeeCardProps {
@@ -72,7 +74,7 @@ export default function EmployeeCard({
         </Td>
         <Td>
           <Wrap spacing="8px">
-            {employee.skills.map((skill) => (
+            {employee?.skills?.map((skill) => (
               <Tag variant="primary" key={skill.id}>
                 <Text
                   fontFamily="Inter"

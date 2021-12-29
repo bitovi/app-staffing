@@ -1,3 +1,7 @@
+import type { NewProject, Project } from "../../../../../services/api";
+
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   ModalBody,
   ModalFooter,
@@ -15,10 +19,7 @@ import {
   FormLabel,
   Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { Button } from "@chakra-ui/button";
-import { Project, useProjects } from "../../../../../services/api";
 
 type FormData = Omit<Project, "id">;
 
@@ -27,14 +28,16 @@ const initialFormState: FormData = { name: "", description: "", roles: [] };
 interface AddProjectModalProps {
   onClose: () => void;
   isOpen: boolean;
+  addProject: (project: NewProject) => void;
 }
 
 export default function AddProjectModal({
   isOpen,
   onClose,
+  addProject,
 }: AddProjectModalProps): JSX.Element {
-  const { reset, addProject } = useProjects();
   const history = useHistory();
+
   const [newProject, setNewProject] = useState<FormData>(initialFormState);
 
   const addNewProject = async () => {
@@ -53,7 +56,7 @@ export default function AddProjectModal({
   };
 
   const onCloseModal = () => {
-    reset();
+    // reset(); TODO: look into ramifications of removing reset
     setNewProject(initialFormState);
     onClose();
   };
