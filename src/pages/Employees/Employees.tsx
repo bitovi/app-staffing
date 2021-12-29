@@ -74,7 +74,7 @@ export function Employees({
     await createEmployee(data);
   };
   return (
-    <Box maxHeight="100%">
+    <Box>
       <EmployeeModal
         isOpen={employeeModal}
         onClose={() => setEmployeeModal(false)}
@@ -87,6 +87,8 @@ export function Employees({
         fontFamily="Arial, Helvetica, sans-serif"
         display="flex"
         justifyContent="space-between"
+        position="sticky"
+        top="0"
       >
         <Text textStyle="title" color="gray.700">
           Team Members

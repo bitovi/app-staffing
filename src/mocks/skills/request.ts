@@ -6,7 +6,7 @@ import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
 import {Skill } from "../../services/api";
 import { JSONSkill } from "./fixtures";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = window.env.API_BASE_URL;
 
 export default function requestCreatorSkill<Resource extends Skill>(
   resourcePath: string,

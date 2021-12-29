@@ -85,6 +85,17 @@ import "./theme/fonts/styles.css";
 
 > If you still see `[MSW]` messages in your terminal, restart your local development server and reload the browser window.
 
+## Analyzing the Bundle Size
+
+This project uses the [source map explorer](https://www.npmjs.com/package/source-map-explorer) package to analyze and debug JavaScript code bloat through source maps.
+
+To generate a treemap visualization of the bundle chunks size first run the production build then run the analyze script.
+
+```
+npm run build
+npm run analyze
+```
+
 ## 📜 Documentation
 
 Components are documented using [storybook](https://storybook.js.org/docs/react/writing-stories/introduction).

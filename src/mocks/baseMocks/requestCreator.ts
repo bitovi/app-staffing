@@ -14,7 +14,7 @@ interface ListQuery<T> {
   include?: string;
 }
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = window.env.API_BASE_URL;
 
 export default function requestCreator<Resource extends { id: string }>(
   resourcePath: string,

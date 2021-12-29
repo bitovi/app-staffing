@@ -13,7 +13,7 @@ import { employeeSkillsStoreManager } from "../employee_skills/mocks";
 
 type EmployeeResource = ResourceObject<EmployeeRecord>;
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = window.env.API_BASE_URL;
 
 export default function requestCreatorEmployee<Resource extends EmployeeRecord>(
   resourcePath: string,

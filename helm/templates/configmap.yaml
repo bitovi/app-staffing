@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-staffing-config
+  labels:
+    app: app-staffing
+    chart: app-staffing
+data:
+  # Note: Please see /public/config.js for information about this file.
+  config.js: |
+    window.env = {
+      API_BASE_URL: "{{ .Values.apiBaseURL }}",
+    };

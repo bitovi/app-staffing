@@ -3,8 +3,7 @@ import userEvent from "@testing-library/user-event";
 import parseISO from "date-fns/parseISO";
 
 import EmployeeModal from "./EmployeeModal";
-import { skills } from "../../../../services/api/mocks/skills/fixtures";
-import { fireEvent } from "@testing-library/dom";
+import { skills } from "../../../../services/api/skills/fixtures";
 
 describe("EmployeeModal", () => {
   afterEach(cleanup);
@@ -21,8 +20,8 @@ describe("EmployeeModal", () => {
 
     getByText("Add a New Team Member");
 
-    const getAddButton = () => getByRole("button", { name: "Add & Close" });
-    expect(getAddButton()).toBeDisabled();
+    const addButton = getByRole("button", { name: "Add & Close" });
+    expect(addButton).toBeDisabled();
 
     const checkboxes = getAllByRole("checkbox", { checked: false });
     const onScreenIds = Array.from(checkboxes).map(
@@ -35,14 +34,11 @@ describe("EmployeeModal", () => {
 
     // Add & Close button still disabled when at least one role is selected
     // but name is not inputed
-    expect(getAddButton()).toBeDisabled();
-
-    fireEvent.change(getByPlaceholderText("name"), {
-      target: { value: "Johnny Appleseed" },
-    });
+    expect(addButton).toBeDisabled();
 
     // With name inputed, Add & Close button is enabled
-    expect(getAddButton()).toBeEnabled();
+    userEvent.type(getByPlaceholderText("name"), "Johnny Appleseed");
+    expect(addButton).toBeEnabled();
   });
 
   it("renders 'edit employee' UI when 'employee' prop is set", async () => {
@@ -68,9 +64,9 @@ describe("EmployeeModal", () => {
     const getNameInput = () => getByDisplayValue("Martin Silenus");
 
     getByText("Edit Team Member");
-    getNameInput();
     getByDisplayValue("2019-01-30");
-    getSaveButton();
+    const nameInput = getNameInput();
+    const saveButton = getSaveButton();
 
     const selectedRoles = getAllByRole("checkbox", { checked: true });
     const ids = Array.from(selectedRoles).map(
@@ -79,20 +75,57 @@ describe("EmployeeModal", () => {
     expect(ids).toStrictEqual(["100", "103", "104"]);
 
     // Save button must be disabled if user has not edited the form
-    expect(getSaveButton()).toBeDisabled();
+    expect(saveButton).toBeDisabled();
 
     // Save button must be enabled as soon as the user modifies any input
-    const nameInput = getNameInput();
     userEvent.click(nameInput);
     userEvent.type(nameInput, "Het Masteen");
 
-    expect(getSaveButton()).toBeEnabled();
-    fireEvent.click(getSaveButton());
+    expect(saveButton).toBeEnabled();
+    userEvent.click(saveButton);
 
     // Save button will be in "pending" state when clicked
     await waitFor(() => {
       expect(getByText("Saving")).toBeInTheDocument();
     });
-    // Default timeout is 5000ms, this test needed more time to complete
-  }, 6500);
+  });
+
+  it("should reset form fields when cancel button is clicked", async () => {
+    const { getByText, getByRole, getAllByRole, getByPlaceholderText } = render(
+      <EmployeeModal
+        onSave={() => Promise.resolve()}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+      />,
+    );
+
+    // make sure the form is empty on open
+    getByText("Add a New Team Member");
+
+    const nameInput = getByPlaceholderText("name");
+    expect(nameInput).toHaveValue("");
+
+    const checkboxes = getAllByRole("checkbox");
+    const isChecked = (el: unknown) => (el as HTMLInputElement).checked;
+    expect(checkboxes.filter(isChecked)).toHaveLength(0);
+
+    // input some data
+    userEvent.type(nameInput, "Thomas Anderson");
+    userEvent.click(checkboxes[0]);
+    userEvent.click(checkboxes[1]);
+
+    // make sure the form fields are properly updated
+    expect(nameInput).toHaveValue("Thomas Anderson");
+    expect(checkboxes.filter(isChecked)).toHaveLength(2);
+
+    // click cancel button
+    const cancelButton = getByRole("button", { name: "Cancel" });
+    expect(cancelButton).toBeEnabled();
+    userEvent.click(cancelButton);
+
+    // make sure form fields do not show old values
+    expect(nameInput).toHaveValue("");
+    expect(checkboxes.filter(isChecked)).toHaveLength(0);
+  });
 });
