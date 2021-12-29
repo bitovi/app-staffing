@@ -3,11 +3,11 @@ import isEmpty from "lodash/isEmpty";
 import { CanLocalStore } from "can-local-store";
 import { JSONAPIDocument } from "json-api-serializer";
 
-import { EmployeeRecord } from "../interfaces";
-import { Skill } from "../../skills/interfaces";
-import { skillStoreManager } from "../../skills/mocks";
-import { employeeSkillsStoreManager } from "../../employee_skills/mocks";
 import serializer from "../../../services/api/restBuilder/serializer";
+import { Skill } from "../../../services/api";
+import { skillStoreManager } from "../../skills/mocks";
+import { Employee } from "../../../services/api/Employees/Employees";
+import { employeeSkillsStoreManager } from "../../employee_skills/mocks";
 
 /**
  * Mock handler for the GET /employees endpoint
@@ -15,13 +15,13 @@ import serializer from "../../../services/api/restBuilder/serializer";
  * @param qs - The request query string
  */
 export default async function getAll(
-  store: CanLocalStore<EmployeeRecord>,
+  store: CanLocalStore<Employee>,
   qs: string,
 ): Promise<JSONAPIDocument> {
   const { filter, sort, page = 1, count = 25, include = "" } = deparam(qs);
   const includeList = isEmpty(include) ? [] : include.split(",");
 
-  const { data: employeesRecords }: { data: EmployeeRecord[] } =
+  const { data: employeesRecords }: { data: Employee[] } =
     await store.getListData({
       filter,
       sort,
@@ -45,7 +45,7 @@ export default async function getAll(
 }
 
 interface RelationshipsGetter {
-  skills: (employee: EmployeeRecord) => Promise<Skill[]>;
+  skills: (employee: Employee) => Promise<Skill[]>;
 }
 
 interface EmployeeRelationships {
@@ -53,7 +53,7 @@ interface EmployeeRelationships {
 }
 
 const relationshipsGetter: RelationshipsGetter = {
-  async skills(employee: EmployeeRecord) {
+  async skills(employee: Employee) {
     const { data: employeeSkills } =
       await employeeSkillsStoreManager.store.getListData({
         filter: {
@@ -78,7 +78,7 @@ const relationshipsGetter: RelationshipsGetter = {
  * @param include - The list of relationship names to attach to the resource object
  */
 async function getRelationships(
-  employee: EmployeeRecord,
+  employee: Employee,
   include: Array<keyof RelationshipsGetter>,
 ) {
   const relationships: EmployeeRelationships = {};

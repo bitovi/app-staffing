@@ -1,7 +1,8 @@
 import type { BaseData } from "../restBuilder/restBuilder";
 
 import restBuilder from "../restBuilder/restBuilder";
-import { Role } from "../Roles";
+
+import { Role } from "../Roles/Roles";
 
 export interface Project extends BaseData {
   id: string;
@@ -9,6 +10,12 @@ export interface Project extends BaseData {
   description?: string;
 
   roles?: Role[];
+}
+
+export interface ProjectRecord {
+  id: string;
+  name?: string;
+  description?: string;
 }
 
 export type NewProject = Omit<Project, "id">;

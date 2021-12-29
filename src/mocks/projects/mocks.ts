@@ -1,11 +1,9 @@
-import type { Project } from "./fixtures";
-
 import QueryLogic from "can-query-logic";
+import requestCreatorProject from "./request";
+import { createStore } from "../baseMocks";
+import { JSONProject, projects } from "./fixtures";
 
-import { projects } from "./fixtures";
-import { createStore, requestCreator } from "../baseMocks";
-
-const queryLogic = new QueryLogic<Project>({
+const queryLogic = new QueryLogic<JSONProject>({
   identity: ["id"],
   keys: {
     id: "string",
@@ -28,8 +26,9 @@ const { store, ...storeManager } = createStore(
   "projects",
 );
 
-export default Object.values(requestCreator("/projects", store));
+export default Object.values(requestCreatorProject("/projects", store));
 
 export const projectStoreManager = {
+  store,
   ...storeManager,
 };

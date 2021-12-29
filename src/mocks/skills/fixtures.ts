@@ -1,5 +1,6 @@
 export interface JSONSkill {
   id: string;
+  type?: string;
   attributes: {
     name: string;
   };

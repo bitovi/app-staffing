@@ -1,9 +1,12 @@
 import faker from "faker";
+// import { ProjectRoleTable } from "../../services/api/Roles/Roles";
 
 import { skills } from "../skills/fixtures";
+// import { ProjectRoleTable } from "../../services/api/Roles/Roles";
 
 export interface JSONRole {
   id: string;
+  type?: string;
   attributes: {
     start_date: Date;
     start_confidence: number;
@@ -51,7 +54,7 @@ export function makeRole(): JSONRole {
   };
 }
 
-export const roles = [
+export const roles: JSONRole[] = [
   makeRole(),
   makeRole(),
   makeRole(),

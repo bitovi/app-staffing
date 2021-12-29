@@ -1,8 +1,4 @@
-import {
-  EmployeeAttributes,
-  EmployeeRelationships,
-} from "../employees/interfaces";
-import { SkillAttributes } from "../skills/interfaces";
+import { Employee, Skill } from "../../services/api";
 
 export interface MockResponse<D = undefined, M = undefined, I = undefined> {
   data?: D;
@@ -25,12 +21,14 @@ export interface JSONData<T, K = undefined, M = undefined> {
 }
 type AllTypes = "roles" | "employees" | "skills" | "projects";
 // expanded to include other endpoints as they conform to JSON API formatting
-type AllAttributes = EmployeeAttributes | SkillAttributes;
-type AllRelationships = EmployeeRelationships;
+type AllAttributes = Employee | Skill;
+// type AllRelationships = EmployeeRelationships;
 
 // Following two types utilized in the hydrateObject middleware within
 // our fetcher function
-export type AnyJsonObject = JSONData<AllTypes, AllAttributes, AllRelationships>;
+
+//removed AllRelationships
+export type AnyJsonObject = JSONData<AllTypes, AllAttributes>;
 
 export type AllJSONResults = JSONAPI<AnyJsonObject[]>;
 

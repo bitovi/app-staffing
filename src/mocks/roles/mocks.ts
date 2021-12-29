@@ -1,9 +1,9 @@
-import type { Role } from "./interfaces";
-
 import QueryLogic from "can-query-logic";
 
+import { Role } from "../../services/api";
 import { roles } from "./fixtures";
-import { createStore, DateString, requestCreator } from "../baseMocks";
+import { createStore, DateString } from "../baseMocks";
+import requestCreatorRole from "./request";
 
 const queryLogic = new QueryLogic<Role>({
   identity: ["id"],
@@ -33,8 +33,9 @@ const queryLogic = new QueryLogic<Role>({
 
 const { store, ...storeManager } = createStore(roles, queryLogic, "roles");
 
-export default Object.values(requestCreator<Role>("/roles", store));
+export default Object.values(requestCreatorRole("/roles", store));
 
 export const rolesStoreManager = {
+  store,
   ...storeManager,
 };

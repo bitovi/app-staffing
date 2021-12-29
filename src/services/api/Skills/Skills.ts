@@ -7,6 +7,12 @@ export interface Skill extends BaseData {
   name: string;
 }
 
+export interface EmployeeSkillTable {
+  id: string;
+  skill_id: string;
+  employee_id: string;
+}
+
 export type NewSkill = Omit<Skill, "id">;
 
 export enum SkillColors {

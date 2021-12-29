@@ -1,11 +1,9 @@
 import QueryLogic from "can-query-logic";
 import requestCreatorEmployee from "./request";
 import { createStore, DateString } from "../baseMocks";
+import { JSONEmployee, employees } from "./fixtures";
 
-import { EmployeeRecord } from "./interfaces";
-import { employees } from "./fixtures";
-
-const queryLogic = new QueryLogic<EmployeeRecord>({
+const queryLogic = new QueryLogic<JSONEmployee>({
   identity: ["id"],
   keys: {
     id: "string",

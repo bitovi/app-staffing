@@ -3,12 +3,12 @@ import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 import deparam from "can-deparam";
 import { CanLocalStore } from "can-local-store";
 import { MockResponse, JSONAPI } from "../baseMocks/interfaces";
-import {Skill } from "../../services/api";
-import { JSONSkill } from "./fixtures";
+import { Role } from "../../services/api";
+import { JSONRole } from "./fixtures";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export default function requestCreatorSkill<Resource extends Skill>(
+export default function requestCreatorRole<Resource extends Role>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
@@ -103,7 +103,7 @@ export default function requestCreatorSkill<Resource extends Skill>(
       },
     ),
 
-    getAll: rest.get<JSONAPI<JSONSkill[], void>>(
+    getAll: rest.get<JSONAPI<JSONRole[], void>>(
       `${API_BASE_URL}${resourcePath}`,
       async (req, res, ctx) => {
         const {
@@ -122,12 +122,26 @@ export default function requestCreatorSkill<Resource extends Skill>(
           },
         });
 
-        const jsonAPISkills: JSONSkill[] = skills.map(
-          (skill: Skill): JSONSkill => ({
-            type: "skills",
-            id: skill.id,
+        const jsonAPISkills: JSONRole[] = skills.map(
+          (role: Role): JSONRole => ({
+            type: "roles",
+            id: role.id,
             attributes: {
-              name: skill?.name,
+              start_date: role.start_date,
+              start_confidence: role.start_confidence,
+              end_date: role.end_date,
+              end_confidence: role.end_confidence,
+            },
+            relationships: {
+              assignments: {
+                data: [{ type: "assignments", id: "1"}]
+              },
+              project: {
+                data: { type: "projects", id: "2"}
+              },
+              skills: {
+                data: [{ type: "skills", id: "3"}]
+              },
             },
           }),
         );

@@ -4,11 +4,12 @@ import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 import { CanLocalStore } from "can-local-store";
 
 import { JSONAPI } from "../baseMocks/interfaces";
-import { employeeSkillsStoreManager } from "../employee_skills/mocks";
-import { EmployeeRecord, EmployeeJSON } from "./interfaces";
-import { JSONSkill } from "../skills/interfaces";
-import { getAll } from "./handlers";
 import { JSONAPIDocument, ResourceObject } from "json-api-serializer";
+import { JSONEmployee } from "./fixtures";
+import { JSONSkill } from "../skills/fixtures";
+import { EmployeeRecord } from "../../services/api/Employees/Employees";
+import { getAll } from "./handlers";
+import { employeeSkillsStoreManager } from "../employee_skills/mocks";
 
 type EmployeeResource = ResourceObject<EmployeeRecord>;
 
@@ -61,7 +62,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeRecord>(
       const newItemData = {
         ...data.attributes,
         id,
-      } as Resource;
+      } as unknown as Resource;
 
       const updatedItem = await store.updateData(newItemData);
       if (!updatedItem) {
@@ -212,7 +213,7 @@ export default function requestCreatorEmployee<Resource extends EmployeeRecord>(
       }
     }),
 
-    getAll: rest.get<JSONAPI<EmployeeJSON[], JSONSkill[]>>(
+    getAll: rest.get<JSONAPI<JSONEmployee[], JSONSkill[]>>(
       basePath,
       async (req, res, ctx) => {
         try {
