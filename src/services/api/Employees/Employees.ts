@@ -2,23 +2,16 @@ import type { BaseData } from "../restBuilder/restBuilder";
 
 import restBuilder from "../restBuilder/restBuilder";
 import { Assignment } from "../Assignments";
-import { Skill } from ".."; 
+import { Skill } from "../Skills";
 
 export interface Employee extends BaseData {
   id: string;
-  name?: string;
+  name: string;
   startDate?: Date;
   endDate?: Date;
 
   assignments?: Assignment[];
   skills?: Skill[];
-}
-
-export interface EmployeeRecord {
-  id: string;
-  name?: string;
-  start_date?: Date;
-  end_date?: Date;
 }
 
 export type NewEmployee = Omit<Employee, "id">;

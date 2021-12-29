@@ -7,25 +7,7 @@ export interface Skill extends BaseData {
   name: string;
 }
 
-export interface EmployeeSkillTable {
-  id: string;
-  skill_id: string;
-  employee_id: string;
-}
-
 export type NewSkill = Omit<Skill, "id">;
-
-export enum SkillColors {
-  Design = "#435BAE",
-  UX = "#AE436A",
-  Angular = "#876363",
-  React = "#61D0D7",
-  Node = "#805AD5",
-  DevOps = "#5FAE43",
-  "UI Designer" = "#435BAE",
-  "UX Designer" = "#AE436A",
-  "Project Management" = "#B55F10",
-}
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Skill>(
   "/skills",

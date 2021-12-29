@@ -9,7 +9,6 @@ import { Center, Divider } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
-import { SkillColors } from "../../../../../services/api/Skills";
 
 type TableRowProps = {
   rowData: ProjectedData;
@@ -18,7 +17,17 @@ type TableRowProps = {
 function TableRow({ rowData }: TableRowProps): JSX.Element {
   const [isExpanded, setExpanded] = useState(false);
 
-  const skillBackgrounds: { [key: string]: string } = SkillColors;
+  const skillBackgrounds: { [key: string]: string } = {
+    Design: "#435BAE",
+    UX: "#AE436A",
+    Angular: "#876363",
+    React: "#61D0D7",
+    Node: "#805AD5",
+    DevOps: "#5FAE43",
+    "UI Designer": "#435BAE",
+    "UX Designer": "#AE436A",
+    "Project Management": "#B55F10",
+  };
 
   const getRowColors = (
     action: ProjectionAction,
@@ -61,10 +70,7 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
         {/* Department Column*/}
         <Center width="3xs" px={3} minH={24}>
           <Flex flex={1} ml={1}>
-            <Badge
-              size="sm"
-              background={skillBackgrounds[rowData.role.name || "React"]}
-            >
+            <Badge size="sm" background={skillBackgrounds[rowData.role.name]}>
               {rowData.role.name}
             </Badge>
           </Flex>
