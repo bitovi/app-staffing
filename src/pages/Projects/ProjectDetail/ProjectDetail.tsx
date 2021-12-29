@@ -25,7 +25,9 @@ export function ProjectDetail({
   useProjectMutations = defaultUseProjectMutations,
   useRoleMutations = defaultRoleMutation,
 }: ProjectDetailProps): JSX.Element {
-  const projects = useProjects();
+  const projects = useProjects({
+    include: "roles,roles.assignments,roles.skills",
+  });
   const { updateProject, destroyProject } = useProjectMutations();
   const { updateRole, destroyRole } = useRoleMutations();
 
