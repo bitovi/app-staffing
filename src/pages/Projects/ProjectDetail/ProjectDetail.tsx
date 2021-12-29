@@ -1,10 +1,11 @@
 import type { Project } from "../../../services/api";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { Box } from "@chakra-ui/layout";
 
 import {
+  useProject as defaultUseProject,
   useProjects as defaultUseProjects,
   useRoleMutations as defaultRoleMutation,
   useProjectMutations as defaultUseProjectMutations,
@@ -15,33 +16,28 @@ import RoleList from "../components/RoleList";
 
 import ProjectsHeader from "../Projects/components/ProjectsHeader";
 interface ProjectDetailProps {
+  useProject: typeof defaultUseProject;
   useProjects: typeof defaultUseProjects;
   useProjectMutations: typeof defaultUseProjectMutations;
   useRoleMutations: typeof defaultRoleMutation;
 }
 
 export function ProjectDetail({
+  useProject = defaultUseProject,
   useProjects = defaultUseProjects,
   useProjectMutations = defaultUseProjectMutations,
   useRoleMutations = defaultRoleMutation,
 }: ProjectDetailProps): JSX.Element {
-  const projects = useProjects({
-    include: "roles,roles.assignments,roles.skills",
-  });
+  const { id } = useParams<{ id: string }>();
+  const project = useProject(id);
+  // TODO: look into after fixtures are running. project may not include the roles and
+  // role assignment. if not we will need to get them
+  // const projects = useProjects({
+  //   include: "roles,roles.assignments,roles.skills",
+  // });
+
   const { updateProject, destroyProject } = useProjectMutations();
   const { updateRole, destroyRole } = useRoleMutations();
-
-  const { id } = useParams<{ id: string }>();
-
-  const [projectData, setProjectData] = useState<Project | undefined>(
-    projects?.find((p) => p.id === id),
-  );
-
-  useEffect(() => {
-    if (!projects) return;
-
-    setProjectData(projects.find((p) => p.id === id));
-  }, [projects, id]);
 
   const onSave = (project: Project) => {
     updateProject(project.id, project);
@@ -52,19 +48,19 @@ export function ProjectDetail({
       {/* TODO: pull out header to top level components since its in 
       Projects and Project Detail. Should also change
       the logic for addProject so it optional */}
-      <ProjectsHeader name={projectData?.name} addProject={() => null} />
-      {projectData && (
+      <ProjectsHeader name={project?.name} addProject={() => null} />
+      {project && (
         <>
-          <ProjectDescription onEdit={onSave} project={projectData} />
+          <ProjectDescription onEdit={onSave} project={project} />
           <RoleList
             destroyRole={destroyRole}
             updateRole={updateRole}
-            project={projectData}
+            project={project}
           />
           <Box mt={10}>
             <ProjectDeleteButton
-              projectName={projectData.name}
-              projectId={projectData.id}
+              projectName={project.name}
+              projectId={project.id}
               destroyProject={destroyProject}
             />
           </Box>
@@ -79,6 +75,7 @@ export default function ProjectDetailWrapper(): JSX.Element {
     // TODO: Skeleton
     <Suspense fallback={<h1>loading</h1>}>
       <ProjectDetail
+        useProject={defaultUseProject}
         useProjects={defaultUseProjects}
         useProjectMutations={defaultUseProjectMutations}
         useRoleMutations={defaultRoleMutation}

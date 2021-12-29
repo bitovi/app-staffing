@@ -24,8 +24,8 @@ export default function RoleList({
       </div>
       {project?.roles?.map((role) => (
         <RoleDetails
-          role={role}
           key={role.id}
+          role={role}
           updateRole={updateRole}
           destroyRole={destroyRole}
         />

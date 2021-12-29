@@ -1,4 +1,5 @@
 import type { Assignment, Role, Skill } from "../../../../services/api";
+
 import { useSkills } from "../../../../services/api";
 
 import Button from "../../../../components/Button";
@@ -26,6 +27,7 @@ export default function RoleDetails({
           <Select<Skill>
             label="Role"
             name="roleSkill"
+            disabled // TODO: look at this once fixtures are in place
             onChange={(skill?: Skill) =>
               skill &&
               updateRole(role.id, {
@@ -45,24 +47,22 @@ export default function RoleDetails({
             title="Start Date"
             date={role.startDate}
             confidence={role.startConfidence}
-            onChange={({ date: startDate, confidence: startConfidence }) =>
-              updateRole(role.id, {
-                ...role,
-                startDate: startDate || role.startDate,
-                startConfidence: startConfidence || role.startConfidence,
-              })
+            onConfidenceChange={(startConfidence) =>
+              updateRole(role.id, { ...role, startConfidence })
+            }
+            onDateChange={(startDate) =>
+              updateRole(role.id, { ...role, startDate })
             }
           />
           <RoleDate
             title="End Date"
             date={role.endDate}
             confidence={role.endConfidence}
-            onChange={({ date: endDate, confidence: endConfidence }) =>
-              updateRole(role.id, {
-                ...role,
-                endDate: endDate || role.endDate,
-                endConfidence: endConfidence || role.endConfidence,
-              })
+            onConfidenceChange={(endConfidence) =>
+              updateRole(role.id, { ...role, endConfidence })
+            }
+            onDateChange={(endDate) =>
+              updateRole(role.id, { ...role, endDate })
             }
           />
         </div>

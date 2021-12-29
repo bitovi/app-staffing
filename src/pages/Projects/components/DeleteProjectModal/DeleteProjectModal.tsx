@@ -1,4 +1,5 @@
 import { useHistory } from "react-router-dom";
+
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 
 interface DeleteProjectModalProps {
@@ -16,11 +17,9 @@ const DeleteProjectModal = ({
   onClose,
   destroyProject,
 }: DeleteProjectModalProps): JSX.Element => {
-  // const { deleteProject, error, isLoading, reset } = useProjects();
   const history = useHistory();
 
   const onCloseModal = () => {
-    // reset();
     onClose();
   };
 
@@ -41,10 +40,6 @@ const DeleteProjectModal = ({
       message={`Are you sure you want to delete the ${projectName} project? This can’t be undone.`}
       confirmText="Yes, Remove & Delete"
       closeText="No, Return to Page"
-      // error={
-      //   error ? error?.message?.toString() ?? "Unable to delete Project." : ""
-      // }
-      // isLoading={isLoading}
       isOpen={isOpen}
       onClose={onCloseModal}
       confirmButtonVariant="danger"
