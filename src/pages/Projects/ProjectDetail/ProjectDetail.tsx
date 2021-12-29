@@ -1,16 +1,32 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useProjects } from "../../../services/api";
-import { Box } from "@chakra-ui/layout";
 import type { Project } from "../../../services/api";
-import ProjectDeleteButton from "../components/ProjectDeleteButton/ProjectDeleteButton";
+
+import { Suspense, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Box } from "@chakra-ui/layout";
+
+import {
+  useProjects as defaultUseProjects,
+  useProjectMutations as defaultUseProjectMutations,
+} from "../../../services/api";
+import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
-import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import RoleList from "../components/RoleList";
 
-export default function ProjectDetail(): JSX.Element {
+import ProjectsHeader from "../Projects/components/ProjectsHeader";
+interface ProjectDetailProps {
+  useProjects: typeof defaultUseProjects;
+  useProjectMutations: typeof defaultUseProjectMutations;
+}
+
+export function ProjectDetail({
+  useProjects = defaultUseProjects,
+  useProjectMutations = defaultUseProjectMutations,
+}: ProjectDetailProps): JSX.Element {
+  const projects = useProjects();
+  const { updateProject } = useProjectMutations();
+
   const { id } = useParams<{ id: string }>();
-  const { projects, updateProject } = useProjects();
+
   const [projectData, setProjectData] = useState<Project | undefined>(
     projects?.find((p) => p.id === id),
   );
@@ -27,7 +43,9 @@ export default function ProjectDetail(): JSX.Element {
 
   return (
     <div>
-      <ProjectsHeader name={projectData?.name} loading={false} />
+      {/* TODO: pull out header to top level components since its in Projects and Project Detail. Should also change
+      the logic for addProject so it optional */}
+      <ProjectsHeader name={projectData?.name} addProject={() => null} />
       {projectData && (
         <>
           <ProjectDescription onEdit={onSave} project={projectData} />
@@ -41,5 +59,17 @@ export default function ProjectDetail(): JSX.Element {
         </>
       )}
     </div>
+  );
+}
+
+export default function ProjectDetailWrapper(): JSX.Element {
+  return (
+    // TODO: Skeleton
+    <Suspense fallback={<h1>loading</h1>}>
+      <ProjectDetail
+        useProjects={defaultUseProjects}
+        useProjectMutations={defaultUseProjectMutations}
+      />
+    </Suspense>
   );
 }
