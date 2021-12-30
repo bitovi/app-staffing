@@ -33,8 +33,8 @@ export default function restBuilder<Data extends BaseData>(
   useRestList: (query?: ListQuery<Data>) => Data[];
   useRestOne: (id: string) => Data;
   useRestMutations: () => {
-    create: (data: Omit<Data, "id">) => Promise<string | undefined>;
-    update: (id: string, data: Data) => Promise<void>;
+    create: (data: Partial<Omit<Data, "id">>) => Promise<string | undefined>;
+    update: (id: string, data: Partial<Data> & { id: string }) => Promise<void>;
     destroy: (id: string) => Promise<void>;
   };
 } {
@@ -91,7 +91,7 @@ export default function restBuilder<Data extends BaseData>(
     const { mutate } = useSWRConfig();
 
     const create = useCallback(
-      async (data: Omit<Data, "id">) => {
+      async (data: Partial<Omit<Data, "id">>) => {
         const payload = serializer.serialize(type, data);
         const response = await fetcher("POST", type, path, payload);
         const deserialized = serializer.deserialize(type, response) as Data;
@@ -134,7 +134,7 @@ export default function restBuilder<Data extends BaseData>(
     );
 
     const update = useCallback(
-      async (id: string, data: Partial<Data>) => {
+      async (id: string, data: Partial<Data> & { id: string }) => {
         const payload = serializer.serialize(type, data);
         const response = await fetcher("PATCH", type, `${path}/${id}`, payload);
         const deserialized = serializer.deserialize(type, response) as Data;

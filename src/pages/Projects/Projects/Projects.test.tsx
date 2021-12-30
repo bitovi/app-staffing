@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { projectStoreManager } from "../../../services/api/mocks/projects/mocks";
+import projectStoreManager from "../../../services/api/mocks/projects/mocks";
 import Projects from "./Projects";
 import Loading from "../../Loading";
 import { Suspense } from "react";

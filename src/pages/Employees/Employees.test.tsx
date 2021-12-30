@@ -6,8 +6,8 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
-import { employeeStoreManager } from "../../mocks/employees/mocks";
-import { clearFixtures, loadFixtures } from "../../mocks/fixtures";
+import employeeStoreManager from "../../mocks/employees/mocks";
+import { clearFixtures, loadFixtures } from "../../mocks";
 
 import EmployeesWrapper from "./Employees";
 

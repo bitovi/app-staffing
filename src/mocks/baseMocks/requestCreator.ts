@@ -1,22 +1,48 @@
 import type { Filter } from "can-query-logic";
+import type { CanLocalStore } from "can-local-store";
 import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
-import type { MockResponse } from "./interfaces";
 
 import { rest } from "msw";
 import deparam from "can-deparam";
-import { CanLocalStore } from "can-local-store";
 
-interface ListQuery<T> {
-  filter?: Filter<T>;
-  sort?: string;
-  page?: number;
-  count?: number;
-  include?: string;
+import assignmentStoreManager from "../assignments/mocks";
+import employeeStoreManager from "../employees/mocks";
+import projectStoreManager from "../projects/mocks";
+import roleStoreManager from "../roles/mocks";
+import skillStoreManager from "../skills/mocks";
+
+interface Relationship {
+  type: string;
+  id: string;
+}
+interface BaseResource {
+  type: string;
+  id: string;
+  attributes: Record<string, unknown>;
+  relationships?: Record<string, { data: Relationship | Relationship[] }>;
+}
+
+interface MockResponse<
+  Data extends BaseResource | BaseResource[] = never,
+  Meta = never,
+> {
+  data?: Data;
+  included?: BaseResource[];
+  meta?: Meta;
+  error?: string;
 }
 
 const API_BASE_URL = window.env.API_BASE_URL;
 
-export default function requestCreator<Resource extends { id: string }>(
+const stores: Record<string, CanLocalStore<BaseResource>> = {
+  assignments: assignmentStoreManager.store,
+  employees: employeeStoreManager.store,
+  projects: projectStoreManager.store,
+  roles: roleStoreManager.store,
+  skills: skillStoreManager.store,
+};
+
+export default function requestCreator<Resource extends BaseResource>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
@@ -25,9 +51,8 @@ export default function requestCreator<Resource extends { id: string }>(
       `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
-        const item = await store.getData({ id });
-
-        if (!item) {
+        const data = await store.getData({ id });
+        if (!data) {
           return res(
             ctx.status(404),
             ctx.json({
@@ -36,19 +61,74 @@ export default function requestCreator<Resource extends { id: string }>(
           );
         }
 
+        const included = await getIncluded([data]);
+
         return res(
           ctx.status(200),
           ctx.json({
-            data: item,
+            data,
+            included,
           }),
         );
+      },
+    ),
+    getAll: rest.get<
+      undefined,
+      MockResponse<Resource[], { total: number }>,
+      {
+        filter?: Filter<Resource>;
+        sort?: string;
+        page?: number;
+        count?: number;
+        include?: string;
+      }
+    >(`${API_BASE_URL}${resourcePath}`, async (req, res, ctx) => {
+      const {
+        filter,
+        sort,
+        page = 1,
+        count = 25,
+      } = deparam(req.url.searchParams.toString());
+
+      const { data, count: total } = await store.getListData({
+        filter,
+        sort,
+        page: {
+          start: (page - 1) * count,
+          end: page * count - 1,
+        },
+      });
+
+      const included = await getIncluded(data);
+
+      return res(
+        ctx.status(200),
+        ctx.json({
+          data,
+          included,
+          meta: {
+            total,
+            pages: Math.ceil(total / count),
+          },
+        }),
+      );
+    }),
+
+    create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
+      `${API_BASE_URL}${resourcePath}`,
+      async (req, res, ctx) => {
+        const id = (Math.floor(Math.random() * 1000) + 1).toString();
+        const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
+
+        await store.createData(item);
+
+        return res(ctx.status(201), ctx.json({ data: item }));
       },
     ),
     update: rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
       `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
-        // const index = collection.findIndex((item) => item.id === id);
         const itemExists = await store.getData({ id });
 
         if (!itemExists) {
@@ -79,7 +159,7 @@ export default function requestCreator<Resource extends { id: string }>(
         );
       },
     ),
-    delete: rest.delete<undefined, MockResponse, { id: string }>(
+    destroy: rest.delete<undefined, MockResponse, { id: string }>(
       `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
@@ -99,49 +179,44 @@ export default function requestCreator<Resource extends { id: string }>(
         return res(ctx.status(200), ctx.json({}));
       },
     ),
-    create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
-      `${API_BASE_URL}${resourcePath}`,
-      async (req, res, ctx) => {
-        const id = (Math.floor(Math.random() * 1000) + 1).toString();
-        const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
-
-        await store.createData(item);
-
-        return res(ctx.status(201), ctx.json({ data: item }));
-      },
-    ),
-
-    getAll: rest.get<
-      undefined,
-      MockResponse<Resource[], { total: number }>,
-      ListQuery<Resource>
-    >(`${API_BASE_URL}${resourcePath}`, async (req, res, ctx) => {
-      const {
-        filter,
-        sort,
-        page = 1,
-        count = 25,
-      } = deparam(req.url.searchParams.toString());
-
-      const { data, count: total } = await store.getListData({
-        filter,
-        sort,
-        page: {
-          start: (page - 1) * count,
-          end: page * count - 1,
-        },
-      });
-
-      return res(
-        ctx.status(200),
-        ctx.json({
-          data,
-          metadata: {
-            total,
-            pages: Math.ceil(total / count),
-          },
-        }),
-      );
-    }),
   };
+}
+
+async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
+  const included: BaseResource[] = [];
+  const processing = [...items];
+
+  while (processing.length > 0) {
+    const item = processing.splice(1)[0];
+    if (included.find(({ id }) => id === item.id)) continue;
+
+    if (!item.relationships) continue;
+
+    for (const key in item.relationships) {
+      const relationships = Array.isArray(item.relationships[key].data)
+        ? (item.relationships[key].data as Relationship[])
+        : [item.relationships[key].data as Relationship];
+
+      for (const { type, id } of relationships) {
+        const store = stores[type];
+        if (!store) {
+          throw new Error(
+            `${item.type}[${item.id}].relationships.${key}: Invalid type ${type}`,
+          );
+        }
+
+        try {
+          const data = await store.getData({ id });
+          included.push(data);
+          processing.push(data);
+        } catch (e) {
+          throw new Error(
+            `${item.type}[${item.id}].relationships.${key}: Missing ${type}[${id}]`,
+          );
+        }
+      }
+    }
+  }
+
+  return included;
 }

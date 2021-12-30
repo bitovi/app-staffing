@@ -1,12 +1,12 @@
-import type { BaseData } from "../restBuilder/restBuilder";
+import type { BaseData } from "../restBuilder";
 
-import restBuilder from "../restBuilder/restBuilder";
+import restBuilder from "../restBuilder";
 import { Employee } from "../Employees";
 import { Role } from "../Roles";
 
 export interface Assignment extends BaseData {
   id: string;
-  startDate: Date;
+  startDate?: Date;
   endDate?: Date;
 
   employee: Employee;

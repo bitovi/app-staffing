@@ -1,7 +1,9 @@
+import type { JSONEmployee } from "./fixtures";
+
 import QueryLogic from "can-query-logic";
-import requestCreatorEmployee from "./request";
-import { createStore, DateString } from "../baseMocks";
-import { JSONEmployee, employees } from "./fixtures";
+import { createStoreManager, requestCreator, DateString } from "../baseMocks";
+
+import { employees } from "./fixtures";
 
 const queryLogic = new QueryLogic<JSONEmployee>({
   identity: ["id"],
@@ -13,15 +15,10 @@ const queryLogic = new QueryLogic<JSONEmployee>({
   },
 });
 
-const { store, ...storeManager } = createStore(
-  employees,
-  queryLogic,
-  "employees",
+const storeManager = createStoreManager("employees", employees, queryLogic);
+
+export const employeeMocks = Object.values(
+  requestCreator("/employees", storeManager.store),
 );
 
-export default Object.values(requestCreatorEmployee("/employees", store));
-
-export const employeeStoreManager = {
-  store,
-  ...storeManager,
-};
+export default storeManager;

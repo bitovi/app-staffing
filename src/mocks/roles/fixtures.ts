@@ -1,17 +1,15 @@
 import faker from "faker";
-// import { ProjectRoleTable } from "../../services/api/Roles/Roles";
 
 import { skills } from "../skills/fixtures";
-// import { ProjectRoleTable } from "../../services/api/Roles/Roles";
 
 export interface JSONRole {
+  type: "roles";
   id: string;
-  type?: string;
   attributes: {
-    start_date: Date;
-    start_confidence: number;
-    end_date: Date;
-    end_confidence: number;
+    start_date?: Date;
+    start_confidence?: number;
+    end_date?: Date;
+    end_confidence?: number;
   };
   relationships: {
     assignments: {
@@ -31,6 +29,7 @@ faker.seed(0);
 let roleId = 100;
 export function makeRole(): JSONRole {
   return {
+    type: "roles",
     id: `${++roleId}`,
     attributes: {
       start_date: faker.date.past(),

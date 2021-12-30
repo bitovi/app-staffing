@@ -3,10 +3,11 @@ import faker from "faker";
 import { roles } from "../roles/fixtures";
 
 export interface JSONProject {
+  type: "projects";
   id: string;
   attributes: {
     name: string;
-    description: string;
+    description?: string;
   };
   relationships: {
     roles: {
@@ -21,6 +22,7 @@ let projectId = 1000;
 
 export function makeProject(): JSONProject {
   return {
+    type: "projects",
     id: `${++projectId}`,
     attributes: {
       name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,

@@ -28,8 +28,18 @@ declare module "can-query-logic" {
     };
   }
 
+  export type QueryLogicSchemaKeys = Record<
+    string,
+    | string
+    | {
+        type: string;
+        [key: string]: unknown;
+      }
+    | unknown
+  >;
+
   export default class QueryLogic<T extends BaseT> {
-    constructor(schema: any);
+    constructor(schema: { identity: string[]; keys: QueryLogicSchemaKeys });
 
     filterMembersAndGetCount(
       queryA: Query<T>,

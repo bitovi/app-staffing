@@ -1,6 +1,6 @@
-import type { BaseData } from "../restBuilder/restBuilder";
+import type { BaseData } from "../restBuilder";
 
-import restBuilder from "../restBuilder/restBuilder";
+import restBuilder from "../restBuilder";
 import { Assignment } from "../Assignments";
 import { Project } from "../Projects";
 import { Skill } from "../Skills";

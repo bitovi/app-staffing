@@ -1,9 +1,9 @@
 import type { JSONAssignment } from "./fixtures";
 
 import QueryLogic from "can-query-logic";
+import { createStoreManager, requestCreator } from "../baseMocks";
 
 import { assignments } from "./fixtures";
-import { createStore, requestCreator } from "../baseMocks";
 
 const queryLogic = new QueryLogic<JSONAssignment>({
   identity: ["id"],
@@ -22,14 +22,10 @@ const queryLogic = new QueryLogic<JSONAssignment>({
   },
 });
 
-const { store, ...storeManager } = createStore(
-  assignments,
-  queryLogic,
-  "assignments",
+const storeManager = createStoreManager("assignments", assignments, queryLogic);
+
+export const assignmentMocks = Object.values(
+  requestCreator("/assignments", storeManager.store),
 );
 
-export default Object.values(requestCreator("/assignments", store));
-
-export const projectStoreManager = {
-  ...storeManager,
-};
+export default storeManager;

@@ -3,11 +3,12 @@ import faker from "faker";
 import { skills } from "../skills/fixtures";
 
 export interface JSONEmployee {
+  type: "employees";
   id: string;
   attributes: {
     name: string;
-    start_date: Date;
-    end_date: Date;
+    start_date?: Date;
+    end_date?: Date;
   };
   relationships: {
     assignments: {
@@ -25,6 +26,7 @@ let employeeId = 0;
 
 export function makeEmployee(): JSONEmployee {
   return {
+    type: "employees",
     id: `${++employeeId}`,
     attributes: {
       name: faker.name.findName(),

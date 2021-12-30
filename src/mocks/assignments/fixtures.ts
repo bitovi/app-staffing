@@ -1,10 +1,11 @@
 import faker from "faker";
 
 export interface JSONAssignment {
+  type: "assignments";
   id: string;
   attributes: {
-    start_date: Date;
-    end_date: Date;
+    start_date?: Date;
+    end_date?: Date;
   };
   relationships: {
     employee: {
@@ -22,6 +23,7 @@ let assignmentId = 0;
 
 export function makeAssignment(): JSONAssignment {
   return {
+    type: "assignments",
     id: `${++assignmentId}`,
     attributes: {
       start_date: faker.date.past(),

@@ -4,7 +4,7 @@
 // import useRest from "../..";
 // import { Employee } from "../../..";
 // import { employees } from "../../../employees/fixtures";
-// import { employeeStoreManager } from "../../../employees/mocks";
+// import employeeStoreManager from "../../../employees/mocks";
 // import { wrapper } from "../../useRest.test";
 // import { isIsoDateTime, parseDate } from "./deserializeDateMiddleware";
 

@@ -1,11 +1,11 @@
+import type { JSONRole } from "./fixtures";
+
 import QueryLogic from "can-query-logic";
+import { createStoreManager, requestCreator, DateString } from "../baseMocks";
 
-import { Role } from "../../services/api";
 import { roles } from "./fixtures";
-import { createStore, DateString } from "../baseMocks";
-import requestCreatorRole from "./request";
 
-const queryLogic = new QueryLogic<Role>({
+const queryLogic = new QueryLogic<JSONRole>({
   identity: ["id"],
   keys: {
     id: "string",
@@ -31,11 +31,10 @@ const queryLogic = new QueryLogic<Role>({
   },
 });
 
-const { store, ...storeManager } = createStore(roles, queryLogic, "roles");
+const storeManager = createStoreManager("roles", roles, queryLogic);
 
-export default Object.values(requestCreatorRole("/roles", store));
+export const roleMocks = Object.values(
+  requestCreator("/roles", storeManager.store),
+);
 
-export const rolesStoreManager = {
-  store,
-  ...storeManager,
-};
+export default storeManager;

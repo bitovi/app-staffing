@@ -1,6 +1,6 @@
-import type { BaseData } from "../restBuilder/restBuilder";
+import type { BaseData } from "../restBuilder";
 
-import restBuilder from "../restBuilder/restBuilder";
+import restBuilder from "../restBuilder";
 
 export interface Skill extends BaseData {
   id: string;

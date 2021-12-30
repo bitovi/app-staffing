@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks/fixtures";
+import { loadFixtures, clearFixtures } from "../../../mocks";
 import { skills as skillsFixture } from "../../../mocks/skills/fixtures";
 
 import { useSkills, useSkill, useSkillMutations } from "./Skills";

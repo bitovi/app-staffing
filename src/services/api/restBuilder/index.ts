@@ -1,1 +1,2 @@
-export { default } from "./legacy/useRest";
+export { default } from "./restBuilder";
+export * from "./restBuilder";
