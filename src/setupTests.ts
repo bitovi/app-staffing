@@ -10,6 +10,7 @@ chai.use(chaiSpies);
 
 import { setupServer } from "msw/node";
 import mocks from "./mocks";
+
 const server = setupServer(...mocks);
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterAll(() => server.close());

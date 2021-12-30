@@ -42,6 +42,7 @@ export default function AddProjectModal({
 
   const addNewProject = async () => {
     const newProjectId = await addProject(newProject);
+
     history.push(`/projects/${newProjectId}`);
   };
 
@@ -56,7 +57,6 @@ export default function AddProjectModal({
   };
 
   const onCloseModal = () => {
-    // reset(); TODO: look into ramifications of removing reset
     setNewProject(initialFormState);
     onClose();
   };

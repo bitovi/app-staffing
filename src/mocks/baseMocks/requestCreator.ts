@@ -40,6 +40,7 @@ export default function requestCreator<Resource extends BaseResource>(
       async (req, res, ctx) => {
         const id = req.params.id;
         const data = await store.getData({ id });
+
         if (!data) {
           return res(
             ctx.status(404),
@@ -102,51 +103,52 @@ export default function requestCreator<Resource extends BaseResource>(
       );
     }),
 
-    create: rest.post<Omit<Resource, "id">, MockResponse<Resource>>(
+    create: rest.post<{ data: Omit<Resource, "id"> }, MockResponse<Resource>>(
       `${API_BASE_URL}${resourcePath}`,
       async (req, res, ctx) => {
         const id = (Math.floor(Math.random() * 1000) + 1).toString();
-        const item = { ...req.body, id } as Resource; // @TODO: look into typing issue
+        const item = { ...req.body.data, id } as Resource; // @TODO: look into typing issue
 
         await store.createData(item);
 
         return res(ctx.status(201), ctx.json({ data: item }));
       },
     ),
-    update: rest.put<Partial<Resource>, MockResponse<Resource>, { id: string }>(
-      `${API_BASE_URL}${resourcePath}/:id`,
-      async (req, res, ctx) => {
-        const id = req.params.id;
-        const itemExists = await store.getData({ id });
+    update: rest.patch<
+      { data: Partial<Resource> },
+      MockResponse<Resource>,
+      { id: string }
+    >(`${API_BASE_URL}${resourcePath}/:id`, async (req, res, ctx) => {
+      const id = req.params.id;
+      const itemExists = await store.getData({ id });
 
-        if (!itemExists) {
-          return res(
-            ctx.status(404),
-            ctx.json({
-              error: `Resource ${id} not found.`,
-            }),
-          );
-        }
-
-        const updatedItem = await store.updateData({ ...req.body, id });
-
-        if (!updatedItem) {
-          return res(
-            ctx.status(400),
-            ctx.json({
-              error: `Could not update Resource with id: ${id}`,
-            }),
-          );
-        }
-
+      if (!itemExists) {
         return res(
-          ctx.status(201),
+          ctx.status(404),
           ctx.json({
-            data: updatedItem,
+            error: `Resource ${id} not found.`,
           }),
         );
-      },
-    ),
+      }
+
+      const updatedItem = await store.updateData({ ...req.body.data, id });
+
+      if (!updatedItem) {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            error: `Could not update Resource with id: ${id}`,
+          }),
+        );
+      }
+
+      return res(
+        ctx.status(201),
+        ctx.json({
+          data: updatedItem,
+        }),
+      );
+    }),
     destroy: rest.delete<undefined, MockResponse, { id: string }>(
       `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {

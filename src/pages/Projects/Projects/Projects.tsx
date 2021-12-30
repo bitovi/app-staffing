@@ -16,7 +16,6 @@ interface ProjectProps {
 function LoadingProjectList(): JSX.Element {
   return (
     <>
-      {/* TODO: pull out loading from header to add to skeleton */}
       <ProjectsHeader loading />
       <Stack data-testid="loading-projects-skeleton">
         <Skeleton height="55px" />

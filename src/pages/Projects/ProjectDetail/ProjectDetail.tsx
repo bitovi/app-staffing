@@ -30,17 +30,14 @@ export function ProjectDetail({
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const project = useProject(id);
-  // TODO: look into after fixtures are running. project may not include the roles and
-  // role assignment. if not we will need to get them
-  // const projects = useProjects({
-  //   include: "roles,roles.assignments,roles.skills",
-  // });
+
+  console.log(project);
 
   const { updateProject, destroyProject } = useProjectMutations();
   const { updateRole, destroyRole } = useRoleMutations();
 
-  const onSave = (project: Project) => {
-    updateProject(project.id, project);
+  const onSave = (id: string, updated: Partial<Project>) => {
+    updateProject(id, { ...project, ...updated });
   };
 
   return (
