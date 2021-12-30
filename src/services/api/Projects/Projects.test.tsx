@@ -24,10 +24,12 @@ describe("Services/API/Projects", () => {
       await waitForNextUpdate();
 
       // TODO: use serializer
-      expect(result.current).to.equal({
-        id: expected.id,
-        ...expected.attributes,
-      });
+      expect(result.current).to.have.property("id", expected.id);
+      expect(result.current).to.have.property("name", expected.attributes.name);
+      expect(result.current).to.have.property(
+        "description",
+        expected.attributes.description,
+      );
     });
   });
 
@@ -42,12 +44,19 @@ describe("Services/API/Projects", () => {
       await waitForNextUpdate();
 
       // TODO: use serializer
-      expect(result.current).to.equal(
-        projectsFixture.map((expected) => ({
-          id: expected.id,
-          ...expected.attributes,
-        })),
-      );
+      for (let i = 0; i < result.current.length; i++) {
+        const expected = projectsFixture[i];
+
+        expect(result.current[i]).to.have.property("id", expected.id);
+        expect(result.current[i]).to.have.property(
+          "name",
+          expected.attributes.name,
+        );
+        expect(result.current[i]).to.have.property(
+          "description",
+          expected.attributes.description,
+        );
+      }
     });
   });
 

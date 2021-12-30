@@ -28,10 +28,9 @@ describe("Services/API/Assignments", () => {
       await waitForNextUpdate();
 
       // TODO: use serializer
-      expect(result.current).to.equal({
-        id: expected.id,
-        ...expected.attributes,
-      });
+      expect(result.current).to.have.property("id", expected.id);
+      expect(result.current).to.have.property("startDate").that.is.a("date");
+      expect(result.current).to.have.property("endDate").that.is.a("date");
     });
   });
 
@@ -46,12 +45,15 @@ describe("Services/API/Assignments", () => {
       await waitForNextUpdate();
 
       // TODO: use serializer
-      expect(result.current).to.equal(
-        assignmentsFixture.map((expected) => ({
-          id: expected.id,
-          ...expected.attributes,
-        })),
-      );
+      for (let i = 0; i < result.current.length; i++) {
+        const expected = assignmentsFixture[i];
+
+        expect(result.current[i]).to.have.property("id", expected.id);
+        expect(result.current[i])
+          .to.have.property("startDate")
+          .that.is.a("date");
+        expect(result.current[i]).to.have.property("endDate").that.is.a("date");
+      }
     });
   });
 

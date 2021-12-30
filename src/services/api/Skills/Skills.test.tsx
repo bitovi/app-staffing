@@ -24,10 +24,8 @@ describe("Services/API/Skills", () => {
       await waitForNextUpdate();
 
       // TODO: use serializer
-      expect(result.current).to.equal({
-        id: expected.id,
-        ...expected.attributes,
-      });
+      expect(result.current).to.have.property("id", expected.id);
+      expect(result.current).to.have.property("name", expected.attributes.name);
     });
   });
 
@@ -42,12 +40,14 @@ describe("Services/API/Skills", () => {
       await waitForNextUpdate();
 
       // TODO: use serializer
-      expect(result.current).to.equal(
-        skillsFixture.map((expected) => ({
-          id: expected.id,
-          ...expected.attributes,
-        })),
-      );
+      for (let i = 0; i < result.current.length; i++) {
+        const expected = skillsFixture[i];
+        expect(result.current[i]).to.have.property("id", expected.id);
+        expect(result.current[i]).to.have.property(
+          "name",
+          expected.attributes.name,
+        );
+      }
     });
   });
 
