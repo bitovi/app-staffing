@@ -10,11 +10,11 @@ export interface Employee extends BaseData {
   startDate?: Date;
   endDate?: Date;
 
-  assignments?: Assignment[];
-  skills?: Skill[];
+  assignments: Assignment[];
+  skills: Skill[];
 }
 
-export type NewEmployee = Omit<Employee, "id">;
+export type NewEmployee = Partial<Omit<Employee, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Employee>(
   "/employees",

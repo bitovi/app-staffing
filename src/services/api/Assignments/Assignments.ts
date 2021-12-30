@@ -6,14 +6,14 @@ import { Role } from "../Roles";
 
 export interface Assignment extends BaseData {
   id: string;
-  startDate?: Date;
+  startDate: Date;
   endDate?: Date;
 
   employee: Employee;
   role: Role;
 }
 
-export type NewAssignment = Omit<Assignment, "id">;
+export type NewAssignment = Partial<Omit<Assignment, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Assignment>(
   "/assignments",

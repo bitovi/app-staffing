@@ -12,12 +12,12 @@ export interface Role extends BaseData {
   endDate?: Date;
   endConfidence?: number;
 
-  assignments?: Assignment[];
+  assignments: Assignment[];
   project: Project;
-  skills?: Skill[];
+  skills: Skill[];
 }
 
-export type NewRole = Omit<Role, "id">;
+export type NewRole = Partial<Omit<Role, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Role>(
   "/roles",

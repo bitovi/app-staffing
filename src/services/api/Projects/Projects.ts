@@ -8,10 +8,10 @@ export interface Project extends BaseData {
   name: string;
   description?: string;
 
-  roles?: Role[];
+  roles: Role[];
 }
 
-export type NewProject = Omit<Project, "id">;
+export type NewProject = Partial<Omit<Project, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Project>(
   "/projects",
