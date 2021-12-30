@@ -1,8 +1,4 @@
-import type { TimelineData, TimelineConfiguration } from "./interfaces";
-
 import { isBefore, format, setMonth } from "date-fns";
-
-import { TimescaleType } from "./interfaces";
 
 import {
   MILLISECOND,
@@ -29,6 +25,13 @@ import {
   getStaffingWeekNumber,
 } from "./utilities";
 
+export interface TimelineRange {
+  type: string;
+  title: string;
+  startDate: Date;
+  endDate: Date;
+}
+
 /**
  * Gets a minimum of two weeks. If the second week breaks into the next month, all of
  * the following months weeks will be returned as well
@@ -36,12 +39,12 @@ import {
 export const getWeeks = (
   date: Date,
   minimumWeeksShown = MIN_AMOUNT_WEEKS_SHOWN,
-): Array<Omit<TimelineData, "title">> => {
+): Array<Omit<TimelineRange, "title">> => {
   const numberWeeksInMonth = getNumberOfStaffingWeeksInMonth(date);
   const currentWeekNumber = getStaffingWeekNumber(date);
   const remainingWeeks = numberWeeksInMonth - (currentWeekNumber - 1);
 
-  const timeline: Omit<TimelineData, "title">[] = [];
+  const timeline: Omit<TimelineRange, "title">[] = [];
 
   let start = getStartOfWeek(date);
   const end =
@@ -55,7 +58,7 @@ export const getWeeks = (
     timeline.push({
       startDate: start,
       endDate: new Date(startOfNextWeek.getTime() - MILLISECOND),
-      type: TimescaleType.week,
+      type: "week",
     });
 
     start = startOfNextWeek;
@@ -71,13 +74,13 @@ export const getWeeks = (
 export const getMonths = (
   date: Date,
   minimumMonthsShown = MIN_AMOUNT_MONTHS_SHOWN,
-): Array<Omit<TimelineData, "title">> => {
+): Array<Omit<TimelineRange, "title">> => {
   const currentMonth = getStaffingMonth(date) % NUMBER_MONTHS_IN_QUARTERS;
 
   const numberMonthsRemainingInQuarter =
     NUMBER_MONTHS_IN_QUARTERS - currentMonth;
 
-  const timeline: Omit<TimelineData, "title">[] = [];
+  const timeline: Omit<TimelineRange, "title">[] = [];
 
   let start = getStartOfMonth(date);
   const end =
@@ -89,7 +92,7 @@ export const getMonths = (
     timeline.push({
       startDate: start,
       endDate: getEndOfMonth(start),
-      type: TimescaleType.month,
+      type: "month",
     });
 
     start = getNextMonth(start);
@@ -99,11 +102,11 @@ export const getMonths = (
 };
 
 /** Gets one full quarter */
-export const getQuarter = (date: Date): Omit<TimelineData, "title"> => {
+export const getQuarter = (date: Date): Omit<TimelineRange, "title"> => {
   return {
     startDate: getStartOfQuarter(date),
     endDate: getEndOfQuarter(date),
-    type: TimescaleType.quarter,
+    type: "quarter",
   };
 };
 
@@ -126,10 +129,16 @@ export const getQuarter = (date: Date): Omit<TimelineData, "title"> => {
  * @param date The date to create the timeline from
  * @returns The timeline data
  */
-export const getTimeline = (
+export default function getTimeline(
   date: Date,
-  { minimumMonthsShown, minimumWeeksShown }: TimelineConfiguration = {},
-): TimelineData[] => {
+  {
+    minimumMonthsShown,
+    minimumWeeksShown,
+  }: {
+    minimumWeeksShown?: number;
+    minimumMonthsShown?: number;
+  } = {},
+): TimelineRange[] {
   const weeks = getWeeks(date, minimumWeeksShown);
 
   const months = getMonths(
@@ -155,25 +164,25 @@ export const getTimeline = (
   }
 
   return getTimelineDescriptions([...weeks, ...months, ...quarters]);
-};
+}
 
 /** gets the title to displays */
 const getTimelineDescriptions = (
-  timeline: Array<Omit<TimelineData, "title">>,
-): TimelineData[] => {
+  timeline: Array<Omit<TimelineRange, "title">>,
+): TimelineRange[] => {
   return timeline.map((data, i) => {
     let title = "";
     switch (data.type) {
-      case TimescaleType.week:
+      case "week":
         title = format(data.startDate, "MMM do");
         break;
-      case TimescaleType.month:
+      case "month":
         title = format(
           setMonth(new Date(), getStaffingMonth(data.startDate)),
           "MMM",
         ).toUpperCase();
         break;
-      case TimescaleType.quarter:
+      case "quarter":
         title = `Q${getStaffingQuarter(
           data.startDate,
         )} ${data.startDate.getFullYear()}`;

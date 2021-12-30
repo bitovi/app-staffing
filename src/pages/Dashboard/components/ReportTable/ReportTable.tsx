@@ -1,26 +1,26 @@
 import { Flex } from "@chakra-ui/layout";
 import { VStack } from "@chakra-ui/react";
 
+import { useProjection } from "../../../../services/projection";
 import TableRow from "./TableRow";
-import { useProjection } from "../../../../services/projection/useProjection";
 import TableHeader from "./TableHeader";
 
 interface ReportTableProps {
-  reportDate?: Date;
+  date?: Date;
 }
 
 export function ReportTable({
-  reportDate = new Date(),
+  date = new Date(),
 }: ReportTableProps): JSX.Element {
-  const { projections } = useProjection(reportDate);
+  const { timeline, skills } = useProjection(date);
 
   return (
     <Flex flexDirection="column">
-      <TableHeader date={reportDate} columnLabel={"DEPARTMENT"}></TableHeader>
+      <TableHeader timeline={timeline} columnLabel={"DEPARTMENT"}></TableHeader>
 
       <VStack spacing={4} align="stretch">
-        {projections.map((item) => (
-          <TableRow key={item.role.id} rowData={item} />
+        {skills.map(({ skill, projections }) => (
+          <TableRow key={skill.id} skill={skill} projections={projections} />
         ))}
       </VStack>
     </Flex>

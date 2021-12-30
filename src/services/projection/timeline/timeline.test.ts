@@ -1,5 +1,4 @@
-import { getMonths, getTimeline, getWeeks } from "./timeline";
-import { TimescaleType } from "./interfaces";
+import getTimeline, { getMonths, getWeeks } from "./timeline";
 import { weeksFixtures, monthFixtures, timeLineFixtures } from "./fixtures";
 import { MILLISECOND } from "./constants";
 
@@ -15,7 +14,7 @@ describe("timeline", () => {
         expect(timeline[index].endDate).toEqual(
           new Date(end.getTime() - MILLISECOND),
         );
-        expect(timeline[index].type).toEqual(TimescaleType.week);
+        expect(timeline[index].type).toEqual("week");
       }
     },
   );
@@ -31,7 +30,7 @@ describe("timeline", () => {
         expect(timeline[index].endDate).toEqual(
           new Date(end.getTime() - MILLISECOND),
         );
-        expect(timeline[index].type).toEqual(TimescaleType.month);
+        expect(timeline[index].type).toEqual("month");
       }
     },
   );
@@ -42,13 +41,13 @@ describe("timeline", () => {
       const timeline = getTimeline(date);
 
       const tlWeeks = timeline.filter(({ type }) => {
-        return type === TimescaleType.week;
+        return type === "week";
       });
       const tlMonths = timeline.filter(({ type }) => {
-        return type === TimescaleType.month;
+        return type === "month";
       });
       const tlQuarters = timeline.filter(({ type }) => {
-        return type === TimescaleType.quarter;
+        return type === "quarter";
       });
 
       expect(tlWeeks.length).toBe(weeks.length);
@@ -60,7 +59,7 @@ describe("timeline", () => {
         expect(tlWeeks[index].endDate).toEqual(
           new Date(end.getTime() - MILLISECOND),
         );
-        expect(tlWeeks[index].type).toEqual(TimescaleType.week);
+        expect(tlWeeks[index].type).toEqual("week");
       }
 
       for (const [index, [start, end]] of months.entries()) {
@@ -68,7 +67,7 @@ describe("timeline", () => {
         expect(tlMonths[index].endDate).toEqual(
           new Date(end.getTime() - MILLISECOND),
         );
-        expect(tlMonths[index].type).toEqual(TimescaleType.month);
+        expect(tlMonths[index].type).toEqual("month");
       }
 
       for (const [index, [start, end]] of quarters.entries()) {
@@ -76,7 +75,7 @@ describe("timeline", () => {
         expect(tlQuarters[index].endDate).toEqual(
           new Date(end.getTime() - MILLISECOND),
         );
-        expect(tlQuarters[index].type).toEqual(TimescaleType.quarter);
+        expect(tlQuarters[index].type).toEqual("quarter");
       }
     },
   );

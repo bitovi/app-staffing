@@ -1,40 +1,26 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
+import type { TimelineRange } from ".";
 
+import { useEffect, useState } from "react";
 import { Flex } from "@chakra-ui/layout";
 import { Grid } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 
-import {
-  getTimeline,
-  TimelineConfiguration,
-  TimelineData,
-  TimescaleType,
-} from ".";
-import { DatePicker } from "../../components/DatePicker";
-import Text from "../../components/Typography/Heading";
+import { DatePicker } from "../../../components/DatePicker";
+import Text from "../../../components/Typography/Heading";
+
 import { MIN_AMOUNT_MONTHS_SHOWN, MIN_AMOUNT_WEEKS_SHOWN } from "./constants";
+import getTimeline from ".";
 
 const TimelineDateDisplay = ({
   startDate,
   endDate,
   type,
   index,
-}: TimelineData & { index: number }) => {
-  const getType = (type: TimescaleType) => {
-    switch (type) {
-      case TimescaleType.week:
-        return "week";
-      case TimescaleType.month:
-        return "month";
-      case TimescaleType.quarter:
-        return "quarter";
-    }
-  };
-
+}: TimelineRange & { index: number }) => {
   return (
     <>
       <Flex alignItems="center" m="2">
-        <Flex mr="5">{`${getType(type)} ${index + 1}`}</Flex>
+        <Flex mr="5">{`${type} ${index + 1}`}</Flex>
         <Flex direction="column">
           <p>Start: {startDate.toDateString()} </p>
           <p>End: {endDate.toDateString()}</p>
@@ -48,22 +34,25 @@ const TimelineDateDisplay = ({
 const TimelineContainer = ({
   minimumWeeksShown,
   minimumMonthsShown,
-}: TimelineConfiguration): JSX.Element => {
+}: {
+  minimumWeeksShown: number;
+  minimumMonthsShown: number;
+}): JSX.Element => {
   const [date, setDate] = useState(new Date());
-  const [timeline, setTimeline] = useState<TimelineData[]>([]);
+  const [timeline, setTimeline] = useState<TimelineRange[]>([]);
 
   useEffect(() => {
     setTimeline(getTimeline(date, { minimumWeeksShown, minimumMonthsShown }));
   }, [minimumMonthsShown, minimumWeeksShown, date]);
 
   const weeks = timeline.filter(({ type }) => {
-    return type === TimescaleType.week;
+    return type === "week";
   });
   const months = timeline.filter(({ type }) => {
-    return type === TimescaleType.month;
+    return type === "month";
   });
   const quarters = timeline.filter(({ type }) => {
-    return type === TimescaleType.quarter;
+    return type === "quarter";
   });
 
   return (
