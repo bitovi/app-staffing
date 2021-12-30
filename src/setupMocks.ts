@@ -1,5 +1,7 @@
 import { setupWorker } from "msw";
-import mocks from "./mocks";
+import mocks, { loadFixtures } from "./mocks";
+
+loadFixtures();
 
 setupWorker(...mocks).start({
   onUnhandledRequest: "bypass",

@@ -1,3 +1,5 @@
+import type { JSONProject } from "..";
+
 import faker from "faker";
 
 import { skills } from "../skills/fixtures";
@@ -24,25 +26,38 @@ export interface JSONRole {
   };
 }
 
-faker.seed(0);
+const fakerSeedBase = 3000;
+let roleId = 3000;
 
-let roleId = 100;
-export function makeRole(): JSONRole {
+export function makeRole(project: JSONProject): JSONRole {
+  faker.seed(fakerSeedBase + roleId);
+
   return {
     type: "roles",
     id: `${++roleId}`,
     attributes: {
       start_date: faker.date.past(),
-      start_confidence: faker.datatype.number({ min: 0, max: 100 }),
+      start_confidence: faker.datatype.number({
+        min: 0.1,
+        max: 0.9,
+        precision: 0.05,
+      }),
       end_date: faker.date.past(),
-      end_confidence: faker.datatype.number({ min: 0, max: 100 }),
+      end_confidence: faker.datatype.number({
+        min: 0.1,
+        max: 0.9,
+        precision: 0.05,
+      }),
     },
     relationships: {
       assignments: {
-        data: [{ type: "assignments", id: "" }],
+        data: [],
       },
       project: {
-        data: { type: "projects", id: "" },
+        data: {
+          type: project.type,
+          id: project.id,
+        },
       },
       skills: {
         data: faker.random
@@ -53,21 +68,17 @@ export function makeRole(): JSONRole {
   };
 }
 
-export const roles: JSONRole[] = [
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-  makeRole(),
-];
+export const roles: JSONRole[] = [];
+
+export function addRole(project: JSONProject): JSONRole {
+  const role = makeRole(project);
+
+  project.relationships.roles.data.push({
+    type: role.type,
+    id: role.id,
+  });
+
+  roles.push(role);
+
+  return role;
+}

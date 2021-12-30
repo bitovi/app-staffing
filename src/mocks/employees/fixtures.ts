@@ -1,6 +1,10 @@
 import faker from "faker";
 
+import { projects } from "../projects/fixtures";
 import { skills } from "../skills/fixtures";
+
+import { addAssignment } from "../assignments/fixtures";
+import { addRole } from "../roles/fixtures";
 
 export interface JSONEmployee {
   type: "employees";
@@ -20,11 +24,12 @@ export interface JSONEmployee {
   };
 }
 
-faker.seed(0);
-
-let employeeId = 0;
+const fakerSeedBase = 1000;
+let employeeId = 1000;
 
 export function makeEmployee(): JSONEmployee {
+  faker.seed(fakerSeedBase + employeeId);
+
   return {
     type: "employees",
     id: `${++employeeId}`,
@@ -35,7 +40,7 @@ export function makeEmployee(): JSONEmployee {
     },
     relationships: {
       assignments: {
-        data: [{ type: "assignments", id: "" }],
+        data: [],
       },
       skills: {
         data: faker.random
@@ -46,10 +51,20 @@ export function makeEmployee(): JSONEmployee {
   };
 }
 
-export const employees: JSONEmployee[] = [
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-  makeEmployee(),
-];
+export const employees: JSONEmployee[] = [];
+
+export function addEmployee(): void {
+  faker.seed(fakerSeedBase + employeeId);
+
+  const employee = makeEmployee();
+  const project = faker.random.arrayElement(projects);
+
+  const role = addRole(project);
+  addAssignment(employee, role);
+
+  employees.push(employee);
+}
+
+for (let i = 0; i < 15; i++) {
+  addEmployee();
+}

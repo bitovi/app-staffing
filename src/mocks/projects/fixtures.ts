@@ -1,7 +1,5 @@
 import faker from "faker";
 
-import { roles } from "../roles/fixtures";
-
 export interface JSONProject {
   type: "projects";
   id: string;
@@ -16,11 +14,12 @@ export interface JSONProject {
   };
 }
 
-faker.seed(0);
-
-let projectId = 1000;
+const fakerSeedBase = 2000;
+let projectId = 2000;
 
 export function makeProject(): JSONProject {
+  faker.seed(fakerSeedBase + projectId);
+
   return {
     type: "projects",
     id: `${++projectId}`,
@@ -30,15 +29,14 @@ export function makeProject(): JSONProject {
     },
     relationships: {
       roles: {
-        data: faker.random
-          .arrayElements(roles, 3)
-          .map(({ id }) => ({ type: "roles", id })),
+        data: [],
       },
     },
   };
 }
 
 export const projects: JSONProject[] = [
+  makeProject(),
   makeProject(),
   makeProject(),
   makeProject(),

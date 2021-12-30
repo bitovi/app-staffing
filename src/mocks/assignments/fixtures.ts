@@ -1,3 +1,5 @@
+import type { JSONEmployee, JSONRole } from "..";
+
 import faker from "faker";
 
 export interface JSONAssignment {
@@ -17,11 +19,15 @@ export interface JSONAssignment {
   };
 }
 
-faker.seed(0);
+const fakerSeedBase = 4000;
+let assignmentId = 4000;
 
-let assignmentId = 0;
+export function makeAssignment(
+  employee: JSONEmployee,
+  role: JSONRole,
+): JSONAssignment {
+  faker.seed(fakerSeedBase + assignmentId);
 
-export function makeAssignment(): JSONAssignment {
   return {
     type: "assignments",
     id: `${++assignmentId}`,
@@ -32,24 +38,39 @@ export function makeAssignment(): JSONAssignment {
     relationships: {
       employee: {
         data: {
-          type: "employees",
-          id: "",
+          type: employee.type,
+          id: employee.id,
         },
       },
       role: {
         data: {
-          type: "roles",
-          id: "",
+          type: role.type,
+          id: role.id,
         },
       },
     },
   };
 }
 
-export const assignments: JSONAssignment[] = [
-  makeAssignment(),
-  makeAssignment(),
-  makeAssignment(),
-  makeAssignment(),
-  makeAssignment(),
-];
+export const assignments: JSONAssignment[] = [];
+
+export function addAssignment(
+  employee: JSONEmployee,
+  role: JSONRole,
+): JSONAssignment {
+  const assignment = makeAssignment(employee, role);
+
+  employee.relationships.assignments.data.push({
+    type: assignment.type,
+    id: assignment.id,
+  });
+
+  role.relationships.assignments.data.push({
+    type: assignment.type,
+    id: assignment.id,
+  });
+
+  assignments.push(assignment);
+
+  return assignment;
+}

@@ -5,17 +5,13 @@ import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 import { rest } from "msw";
 import deparam from "can-deparam";
 
-import assignmentStoreManager from "../assignments/mocks";
-import employeeStoreManager from "../employees/mocks";
-import projectStoreManager from "../projects/mocks";
-import roleStoreManager from "../roles/mocks";
-import skillStoreManager from "../skills/mocks";
+import { stores } from "..";
 
 interface Relationship {
   type: string;
   id: string;
 }
-interface BaseResource {
+export interface BaseResource {
   type: string;
   id: string;
   attributes: Record<string, unknown>;
@@ -33,14 +29,6 @@ interface MockResponse<
 }
 
 const API_BASE_URL = window.env.API_BASE_URL;
-
-const stores: Record<string, CanLocalStore<BaseResource>> = {
-  assignments: assignmentStoreManager.store,
-  employees: employeeStoreManager.store,
-  projects: projectStoreManager.store,
-  roles: roleStoreManager.store,
-  skills: skillStoreManager.store,
-};
 
 export default function requestCreator<Resource extends BaseResource>(
   resourcePath: string,
@@ -185,38 +173,52 @@ export default function requestCreator<Resource extends BaseResource>(
 async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
   const included: BaseResource[] = [];
   const processing = [...items];
-
   while (processing.length > 0) {
-    const item = processing.splice(1)[0];
-    if (included.find(({ id }) => id === item.id)) continue;
+    const item = processing.pop() as BaseResource;
 
-    if (!item.relationships) continue;
+    if (item.relationships) {
+      for (const key in item.relationships) {
+        const relationships = Array.isArray(item.relationships[key].data)
+          ? (item.relationships[key].data as Relationship[])
+          : [item.relationships[key].data as Relationship];
 
-    for (const key in item.relationships) {
-      const relationships = Array.isArray(item.relationships[key].data)
-        ? (item.relationships[key].data as Relationship[])
-        : [item.relationships[key].data as Relationship];
+        for (const { type, id } of relationships) {
+          if (included.find((item) => item.type === type && item.id === id)) {
+            continue;
+          }
 
-      for (const { type, id } of relationships) {
-        const store = stores[type];
-        if (!store) {
-          throw new Error(
-            `${item.type}[${item.id}].relationships.${key}: Invalid type ${type}`,
-          );
-        }
+          const store = stores[type];
+          if (!store) {
+            throw new Error(
+              `${item.type}[${item.id}].relationships.${key}: Invalid type ${type}`,
+            );
+          }
 
-        try {
-          const data = await store.getData({ id });
-          included.push(data);
-          processing.push(data);
-        } catch (e) {
-          throw new Error(
-            `${item.type}[${item.id}].relationships.${key}: Missing ${type}[${id}]`,
-          );
+          try {
+            const data = await store.getData({ id });
+            included.push(data);
+            processing.push(data);
+          } catch (e) {
+            throw new Error(
+              `${item.type}[${item.id}].relationships.${key}: Missing ${type}[${id}]`,
+            );
+          }
         }
       }
     }
   }
+
+  included.sort((a, b) => {
+    if (a.type !== b.type) {
+      return a.type < b.type ? -1 : 1;
+    }
+
+    if (a.id !== b.id) {
+      return a.id < b.id ? -1 : 1;
+    }
+
+    return 0;
+  });
 
   return included;
 }
