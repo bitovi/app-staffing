@@ -17,7 +17,7 @@ function LoadingProjectList(): JSX.Element {
   return (
     <>
       {/* TODO: pull out loading from header to add to skeleton */}
-      <ProjectsHeader loading addProject={() => null} />
+      <ProjectsHeader loading />
       <Stack data-testid="loading-projects-skeleton">
         <Skeleton height="55px" />
         <Skeleton height="55px" />

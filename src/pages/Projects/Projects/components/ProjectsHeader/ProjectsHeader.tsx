@@ -13,7 +13,7 @@ import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBr
 interface ProjectHeaderProps {
   loading?: boolean;
   name?: string;
-  addProject: (project: NewProject) => void;
+  addProject?: (project: NewProject) => void;
 }
 
 export default function ProjectsHeader({
@@ -70,7 +70,7 @@ export default function ProjectsHeader({
             <AddProjectModal
               isOpen={isOpen}
               onClose={onClose}
-              addProject={addProject}
+              addProject={(project) => addProject?.(project)}
             />
           </>
         )}

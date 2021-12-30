@@ -11,7 +11,13 @@ export default {
 export const Basic: ComponentStory<typeof AddProjectModal> = () => {
   return (
     <Suspense fallback={<Loading />}>
-      <AddProjectModal isOpen={true} onClose={() => Promise.resolve()} />
+      <AddProjectModal
+        addProject={(project) => {
+          console.log();
+        }}
+        isOpen={true}
+        onClose={() => Promise.resolve()}
+      />
     </Suspense>
   );
 };

@@ -45,10 +45,7 @@ export function ProjectDetail({
 
   return (
     <div>
-      {/* TODO: pull out header to top level components since its in 
-      Projects and Project Detail. Should also change
-      the logic for addProject so it optional */}
-      <ProjectsHeader name={project?.name} addProject={() => null} />
+      <ProjectsHeader name={project?.name} />
       {project && (
         <>
           <ProjectDescription onEdit={onSave} project={project} />

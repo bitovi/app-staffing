@@ -1,7 +1,6 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import EmployeeModal from ".";
-import { skills } from "../../../../services/api/mocks/skills/fixtures";
-import { employeeMockData } from "../../../../services/api/mocks/employees/fixtures";
+import { useEmployees, useSkills } from "../../../../services/api";
 import "../../../../theme/fonts/styles.css";
 
 export default {
@@ -9,7 +8,9 @@ export default {
   component: EmployeeModal,
 } as ComponentMeta<typeof EmployeeModal>;
 
-export const works: ComponentStory<typeof EmployeeModal> = () => {
+export const Works: ComponentStory<typeof EmployeeModal> = () => {
+  const skills = useSkills();
+
   return (
     <EmployeeModal
       onSave={() => Promise.resolve()}
@@ -20,7 +21,9 @@ export const works: ComponentStory<typeof EmployeeModal> = () => {
   );
 };
 
-export const serverError: ComponentStory<typeof EmployeeModal> = () => {
+export const ServerError: ComponentStory<typeof EmployeeModal> = () => {
+  const skills = useSkills();
+
   return (
     <EmployeeModal
       onSave={() => {
@@ -34,8 +37,10 @@ export const serverError: ComponentStory<typeof EmployeeModal> = () => {
 };
 
 export const EditEmployee: ComponentStory<typeof EmployeeModal> = () => {
-  const { useEmployeeList } = employeeMockData();
-  const { data: employees } = useEmployeeList({ include: "skills" });
+  // const { useEmployeeList } = employeeMocks();
+  // const { data: employees } = useEmployeeList({ include: "skills" });
+  const employees = useEmployees();
+  const skills = useSkills();
 
   return (
     <EmployeeModal
@@ -48,12 +53,14 @@ export const EditEmployee: ComponentStory<typeof EmployeeModal> = () => {
   );
 };
 
-export const savePending: ComponentStory<typeof EmployeeModal> = () => {
+export const SavePending: ComponentStory<typeof EmployeeModal> = () => {
+  const skills = useSkills();
+
   return (
     <EmployeeModal
       onSave={() => new Promise(() => true)}
       onClose={() => true}
-      isOpen={true}
+      isOpen
       skills={skills}
     />
   );

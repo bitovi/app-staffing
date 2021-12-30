@@ -7,13 +7,13 @@ export default {
 } as ComponentMeta<typeof TableHeader>;
 
 export const Basic: ComponentStory<typeof TableHeader> = ({
-  date,
+  timeline,
   columnLabel,
 }) => {
-  return <TableHeader date={date} columnLabel={columnLabel}></TableHeader>;
+  return <TableHeader timeline={[]} columnLabel={columnLabel}></TableHeader>;
 };
 
 Basic.args = {
-  date: new Date(),
+  timeline: [],
   columnLabel: "DEPARTMENT",
 };

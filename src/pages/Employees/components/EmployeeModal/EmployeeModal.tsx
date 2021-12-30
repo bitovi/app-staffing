@@ -84,6 +84,7 @@ export default function EmployeeModal({
         startDate: data.startDate ? parseISO(data.startDate) : undefined,
         endDate: data.endDate ? parseISO(data.endDate) : undefined,
         skills: employeeSkills,
+        assignments: [],
       });
       reset({ name: "", startDate: "", endDate: "" });
       onClose();

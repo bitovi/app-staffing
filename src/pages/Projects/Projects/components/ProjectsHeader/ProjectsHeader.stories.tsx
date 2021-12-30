@@ -13,23 +13,25 @@ export const Basic: ComponentStory<typeof ProjectsHeader> = ({
   loading?: boolean;
 }) => <ProjectsHeader loading={loading} />;
 
-export const withProject: ComponentStory<typeof ProjectsHeader> = ({
+export const HasProject: ComponentStory<typeof ProjectsHeader> = ({
   loading,
   name,
 }: {
   loading?: boolean;
   name?: string;
-}) => (
-  <BrowserRouter>
-    <ProjectsHeader name={name} loading={loading} />
-  </BrowserRouter>
-);
+}) => {
+  return (
+    <BrowserRouter>
+      <ProjectsHeader name={name} loading={loading} />
+    </BrowserRouter>
+  );
+};
 
 Basic.args = {
   loading: false,
 };
 
-withProject.args = {
+HasProject.args = {
   loading: false,
   name: "Chic-fil-A",
 };
