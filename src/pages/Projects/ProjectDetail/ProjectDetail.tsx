@@ -6,7 +6,6 @@ import { Box } from "@chakra-ui/layout";
 
 import {
   useProject as defaultUseProject,
-  useProjects as defaultUseProjects,
   useRoleMutations as defaultRoleMutation,
   useProjectMutations as defaultUseProjectMutations,
 } from "../../../services/api";
@@ -17,21 +16,17 @@ import RoleList from "../components/RoleList";
 import ProjectsHeader from "../Projects/components/ProjectsHeader";
 interface ProjectDetailProps {
   useProject: typeof defaultUseProject;
-  useProjects: typeof defaultUseProjects;
   useProjectMutations: typeof defaultUseProjectMutations;
   useRoleMutations: typeof defaultRoleMutation;
 }
 
 export function ProjectDetail({
   useProject = defaultUseProject,
-  useProjects = defaultUseProjects,
   useProjectMutations = defaultUseProjectMutations,
   useRoleMutations = defaultRoleMutation,
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const project = useProject(id);
-
-  console.log(project);
 
   const { updateProject, destroyProject } = useProjectMutations();
   const { updateRole, destroyRole } = useRoleMutations();
@@ -70,7 +65,6 @@ export default function ProjectDetailWrapper(): JSX.Element {
     <Suspense fallback={<h1>loading</h1>}>
       <ProjectDetail
         useProject={defaultUseProject}
-        useProjects={defaultUseProjects}
         useProjectMutations={defaultUseProjectMutations}
         useRoleMutations={defaultRoleMutation}
       />

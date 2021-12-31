@@ -13,7 +13,7 @@ interface ProjectProps {
   useProjectMutations: typeof defaultUseProjectMutations;
 }
 
-function LoadingProjectList(): JSX.Element {
+export function LoadingProjectList(): JSX.Element {
   return (
     <>
       <ProjectsHeader loading />

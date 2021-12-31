@@ -69,8 +69,6 @@ export default function restBuilder<Data extends BaseData>(
       async (path) => {
         const response = await fetcher("GET", type, path);
 
-        console.log(response);
-
         const item = serializer.deserialize(type, response) as Data;
         parseDate(item);
 

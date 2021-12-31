@@ -1,7 +1,5 @@
 import AddProjectModal from "./AddProjectModal";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Loading from "../../../../Loading";
-import { Suspense } from "react";
 
 export default {
   title: "Pages/Projects/AddProjectModal",
@@ -10,14 +8,12 @@ export default {
 
 export const Basic: ComponentStory<typeof AddProjectModal> = () => {
   return (
-    <Suspense fallback={<Loading />}>
-      <AddProjectModal
-        addProject={(project) => {
-          console.log();
-        }}
-        isOpen={true}
-        onClose={() => Promise.resolve()}
-      />
-    </Suspense>
+    <AddProjectModal
+      addProject={(project) => {
+        alert(`add ${project}`);
+      }}
+      isOpen={true}
+      onClose={() => Promise.resolve()}
+    />
   );
 };

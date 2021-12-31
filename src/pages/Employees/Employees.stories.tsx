@@ -1,6 +1,9 @@
-import { Flex, Box } from "@chakra-ui/layout";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
+
+import { Flex, Box } from "@chakra-ui/layout";
+
 import { Employees, EmployeePageLoadingLayout } from "./Employees";
+import { useEmployees } from "../../services/api";
 
 export default {
   title: "Pages/Employees",
@@ -14,7 +17,7 @@ export const nonEmpty: ComponentStory<typeof Employees> = ({ ...props }) => (
     <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
       <Employees
         {...props}
-        useEmployees={() => []}
+        useEmployees={useEmployees}
         useEmployeeMutations={() => {
           return {
             createEmployee: (employee) => Promise.resolve(""),

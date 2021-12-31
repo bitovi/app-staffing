@@ -1,6 +1,8 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import ProjectsHeader from "./ProjectsHeader";
+
 import { BrowserRouter } from "react-router-dom";
+
+import ProjectsHeader from "./ProjectsHeader";
 
 export default {
   title: "Pages/Projects/ProjectsHeader",
@@ -28,7 +30,7 @@ export const HasProject: ComponentStory<typeof ProjectsHeader> = ({
 };
 
 Basic.args = {
-  loading: false,
+  loading: true,
 };
 
 HasProject.args = {
