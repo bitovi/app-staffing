@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
 import theme from "../../../../theme";
-//import { employees } from "../../../../services/api/employees/fixtures";
+import { getDeserializedEmployees } from "../../../../mocks/employees/fixtures";
 import EmployeeCard from "./EmployeeCard";
 //import { act } from "react-dom/test-utils";
 
@@ -14,6 +14,7 @@ jest.useFakeTimers("modern");
 
 describe("Components/Layout", () => {
   it("works", () => {
+    const employee = getDeserializedEmployees()[0];
     render(
       <MemoryRouter>
         <StylesProvider value={theme}>
@@ -22,13 +23,7 @@ describe("Components/Layout", () => {
               <EmployeeCard
                 handleEditEmployee={() => Promise.resolve()}
                 handleDeleteEmployee={() => Promise.resolve()}
-                employee={{
-                  id: "",
-                  name: "",
-                  startDate: new Date(),
-                  endDate: new Date(),
-                  skills: [],
-                }}
+                employee={employee}
               />
             </tbody>
           </table>
@@ -37,8 +32,7 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const name = screen.getByRole("row");
-    expect(name).toHaveTextContent("Vitor");
+    expect(screen.getByText(employee.name)).toBeInTheDocument();
   });
 
   /////////////////////////////////////////////

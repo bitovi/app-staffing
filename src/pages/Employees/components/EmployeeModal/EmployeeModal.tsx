@@ -161,17 +161,19 @@ export default function EmployeeModal({
                       key={skill.id}
                       control={control}
                       name={`roles.${skill.id}`}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <Checkbox
-                          value={skill.id}
-                          onChange={onChange}
-                          onBlur={onBlur}
-                          isChecked={Boolean(value)}
-                          textStyle="modal.checkboxLabel"
-                        >
-                          {skill.name}
-                        </Checkbox>
-                      )}
+                      render={({ field: { onChange, onBlur, value } }) => {
+                        return (
+                          <Checkbox
+                            value={skill.id}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            isChecked={Boolean(value)}
+                            textStyle="modal.checkboxLabel"
+                          >
+                            {skill.name}
+                          </Checkbox>
+                        );
+                      }}
                     />
                   ))}
                 </SimpleGrid>

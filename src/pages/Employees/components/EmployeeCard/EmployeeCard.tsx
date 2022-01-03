@@ -17,6 +17,7 @@ import { format } from "date-fns";
 
 import { Tag } from "../../../../components/Tag";
 import { TrashIcon, EditIcon } from "../../../assets";
+import React from "react";
 
 interface EmployeeCardProps {
   employee: Employee;

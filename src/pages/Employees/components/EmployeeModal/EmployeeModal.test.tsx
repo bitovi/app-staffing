@@ -3,7 +3,9 @@ import userEvent from "@testing-library/user-event";
 import parseISO from "date-fns/parseISO";
 
 import EmployeeModal from "./EmployeeModal";
-import { skills } from "../../../../services/api/skills/fixtures";
+import { deserializedSkills } from "../../../../mocks/skills/fixtures";
+import { Employee, Skill } from "../../../../services/api";
+import { getDeserializedEmployees } from "../../../../mocks/employees/fixtures";
 
 describe("EmployeeModal", () => {
   afterEach(cleanup);
@@ -13,8 +15,8 @@ describe("EmployeeModal", () => {
       <EmployeeModal
         onSave={() => Promise.resolve()}
         onClose={() => true}
-        isOpen={true}
-        skills={skills}
+        isOpen
+        skills={deserializedSkills}
       />,
     );
 
@@ -27,7 +29,7 @@ describe("EmployeeModal", () => {
     const onScreenIds = Array.from(checkboxes).map(
       (checkbox) => (checkbox as HTMLInputElement).value,
     );
-    const skillsIds = skills.map((skill) => skill.id);
+    const skillsIds = deserializedSkills.map((skill) => skill.id);
     expect(skillsIds).toStrictEqual(onScreenIds);
 
     userEvent.click(checkboxes[0]);
@@ -42,29 +44,23 @@ describe("EmployeeModal", () => {
   });
 
   it("renders 'edit employee' UI when 'employee' prop is set", async () => {
+    const employee = getDeserializedEmployees()[1];
+
     const { getByText, getByDisplayValue, getByRole, getAllByRole } = render(
       <EmployeeModal
         onSave={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
-        skills={skills}
-        employee={{
-          id: "1",
-          name: "Martin Silenus",
-          startDate: parseISO("2019-01-30"),
-          skills: [
-            { id: "100", name: "Angular" },
-            { id: "103", name: "Node" },
-            { id: "104", name: "React" },
-          ],
-        }}
+        skills={deserializedSkills}
+        employee={employee}
       />,
     );
-    const getSaveButton = () => getByRole("button", { name: "Save & Close" });
-    const getNameInput = () => getByDisplayValue("Martin Silenus");
 
-    getByText("Edit Team Member");
-    getByDisplayValue("2019-01-30");
+    expect(getByText("Edit Team Member")).toBeInTheDocument();
+
+    const getSaveButton = () => getByRole("button", { name: "Save & Close" });
+    const getNameInput = () => getByDisplayValue(employee.name);
+
     const nameInput = getNameInput();
     const saveButton = getSaveButton();
 
@@ -72,7 +68,8 @@ describe("EmployeeModal", () => {
     const ids = Array.from(selectedRoles).map(
       (checkbox) => (checkbox as HTMLInputElement).value,
     );
-    expect(ids).toStrictEqual(["100", "103", "104"]);
+
+    expect(ids).toStrictEqual(employee.skills);
 
     // Save button must be disabled if user has not edited the form
     expect(saveButton).toBeDisabled();
@@ -96,7 +93,7 @@ describe("EmployeeModal", () => {
         onSave={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
-        skills={skills}
+        skills={deserializedSkills}
       />,
     );
 

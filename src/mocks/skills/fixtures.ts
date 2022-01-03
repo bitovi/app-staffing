@@ -1,3 +1,6 @@
+import { Skill } from "../../services/api";
+import serializer from "../../services/api/restBuilder/serializer";
+
 export interface JSONSkill {
   type: "skills";
   id: string;
@@ -14,3 +17,7 @@ export const skills: JSONSkill[] = [
   { type: "skills", id: "105", attributes: { name: "Product" } },
   { type: "skills", id: "106", attributes: { name: "Project Management" } },
 ];
+
+export const deserializedSkills = serializer.deserialize("skills", {
+  data: skills,
+}) as Skill[];
