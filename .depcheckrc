@@ -1,5 +1,6 @@
 ignore-dirs:
   - /build
+  - /chokidar-poller
 ignores:
   - "@chakra-ui/*"
   - "@emotion/*"
