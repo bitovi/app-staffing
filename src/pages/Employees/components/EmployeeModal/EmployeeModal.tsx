@@ -75,7 +75,7 @@ export default function EmployeeModal({
     (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
-    const employeeSkills = getSelectedSkills(data.roles, skills || []);
+    const employeeSkills = getSelectedSkills(data.skills, skills || []);
 
     try {
       setStatus("pending");

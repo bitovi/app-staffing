@@ -27,7 +27,6 @@ export default function RoleDetails({
           <Select<Skill>
             label="Role"
             name="roleSkill"
-            disabled // TODO: look at this once fixtures are in place
             onChange={(skill?: Skill) =>
               skill &&
               updateRole(role.id, {
