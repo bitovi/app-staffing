@@ -15,6 +15,7 @@ cacheBusting:
   timestamp: false
 
 # For the front-end config
+# Note: Please see /public/config.js for information about these values.
 apiBaseURL: http://app-staffing-api.localhost
 # configVolumes:
 # - name: config

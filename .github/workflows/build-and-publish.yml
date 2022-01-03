@@ -81,7 +81,8 @@ jobs:
 
     # attempt4: doesn't stop the job from running
     # if: ${{ github.event_name }} != 'pull_request'
-
+    if: github.event_name != 'pull_request'
+github.event_name != 'pull_request'
     needs: [ publish ]
     runs-on: ubuntu-latest
     steps:
