@@ -35,7 +35,7 @@ interface EmployeeFormData {
   name: string;
   startDate: string;
   endDate: string;
-  roles: Record<string, boolean>;
+  skills: Record<string, boolean>;
 }
 interface EmployeeModalProps {
   onSave: (data: Omit<Employee, "id">) => Promise<void>;
@@ -160,7 +160,7 @@ export default function EmployeeModal({
                     <Controller
                       key={skill.id}
                       control={control}
-                      name={`roles.${skill.id}`}
+                      name={`skills.${skill.id}`}
                       render={({ field: { onChange, onBlur, value } }) => {
                         return (
                           <Checkbox
@@ -276,10 +276,10 @@ function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
 }
 
 function toEmployeeFormData(data: Employee): EmployeeFormData {
-  const roles: Record<string, boolean> = {};
+  const skills: Record<string, boolean> = {};
 
-  data?.skills?.forEach((skill) => {
-    roles[skill.id] = true;
+  data?.skills?.forEach(({ id }) => {
+    skills[id] = true;
   });
 
   return {
@@ -290,6 +290,6 @@ function toEmployeeFormData(data: Employee): EmployeeFormData {
     endDate: data.endDate
       ? formatISO(data.endDate, { representation: "date" })
       : "",
-    roles,
+    skills,
   };
 }

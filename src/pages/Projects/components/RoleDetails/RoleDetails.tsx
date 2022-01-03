@@ -78,7 +78,7 @@ export default function RoleDetails({
           ))}
       </div>
       <div className={styles.controls}>
-        <Button className={styles.button} onClick={() => console.log("todo")}>
+        <Button className={styles.button} onClick={() => alert("todo")}>
           Edit
         </Button>
         <Button className={styles.button} onClick={() => destroyRole(role.id)}>

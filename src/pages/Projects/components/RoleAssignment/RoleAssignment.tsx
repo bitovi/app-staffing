@@ -29,9 +29,8 @@ export default function RoleAssignment({
         label=""
         name="assignedEmployee"
         value={assignment.employee.name}
-        disabled // Todo look into after fixtures are in place
         // onChange={(value) => updateEmployee(value || "")}
-        onChange={console.log}
+        onChange={() => alert("todo")}
         options={[]}
       />
       <label className={styles.date}>
@@ -39,7 +38,7 @@ export default function RoleAssignment({
         <input
           type="date"
           defaultValue={assignment?.startDate?.toString()}
-          onChange={console.log}
+          onChange={() => alert("todo")}
         />
       </label>
       <label className={styles.date}>
@@ -47,7 +46,7 @@ export default function RoleAssignment({
         <input
           type="date"
           defaultValue={assignment?.endDate?.toString()}
-          onChange={console.log}
+          onChange={() => alert("todo")}
         />
       </label>
     </div>

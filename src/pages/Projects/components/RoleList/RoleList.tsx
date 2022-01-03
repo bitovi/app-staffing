@@ -16,7 +16,7 @@ export default function RoleList({
 }): JSX.Element {
   return (
     <>
-      <Button onClick={() => console.log("TODO")}>Add Role</Button>
+      <Button onClick={() => alert("TODO")}>Add Role</Button>
       <div className={styles.skillFilter}>
         {[].map((s) => (
           <p key={s}>{s}</p>

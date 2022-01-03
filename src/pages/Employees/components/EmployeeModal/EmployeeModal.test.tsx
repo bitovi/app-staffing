@@ -1,11 +1,10 @@
 import { render, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import parseISO from "date-fns/parseISO";
 
 import EmployeeModal from "./EmployeeModal";
 import { deserializedSkills } from "../../../../mocks/skills/fixtures";
-import { Employee, Skill } from "../../../../services/api";
 import { getDeserializedEmployees } from "../../../../mocks/employees/fixtures";
+import { ChakraProvider } from "@chakra-ui/react";
 
 describe("EmployeeModal", () => {
   afterEach(cleanup);
@@ -46,14 +45,21 @@ describe("EmployeeModal", () => {
   it("renders 'edit employee' UI when 'employee' prop is set", async () => {
     const employee = getDeserializedEmployees()[1];
 
+    const employeeWithAllSkills = {
+      ...employee,
+      skills: deserializedSkills,
+    };
+
     const { getByText, getByDisplayValue, getByRole, getAllByRole } = render(
-      <EmployeeModal
-        onSave={() => Promise.resolve()}
-        onClose={() => true}
-        isOpen={true}
-        skills={deserializedSkills}
-        employee={employee}
-      />,
+      <ChakraProvider>
+        <EmployeeModal
+          onSave={() => Promise.resolve()}
+          onClose={() => true}
+          isOpen={true}
+          skills={deserializedSkills}
+          employee={employeeWithAllSkills}
+        />
+      </ChakraProvider>,
     );
 
     expect(getByText("Edit Team Member")).toBeInTheDocument();
@@ -65,11 +71,13 @@ describe("EmployeeModal", () => {
     const saveButton = getSaveButton();
 
     const selectedRoles = getAllByRole("checkbox", { checked: true });
-    const ids = Array.from(selectedRoles).map(
+    const ids = selectedRoles.map(
       (checkbox) => (checkbox as HTMLInputElement).value,
     );
 
-    expect(ids).toStrictEqual(employee.skills);
+    expect(ids.sort()).toStrictEqual(
+      employeeWithAllSkills.skills.map(({ id }) => id).sort(),
+    );
 
     // Save button must be disabled if user has not edited the form
     expect(saveButton).toBeDisabled();
