@@ -65,45 +65,12 @@ jobs:
   # https://stackoverflow.com/questions/69479400/get-run-id-after-triggering-a-github-workflow-dispatch-event
   deploy-dev:
     # only deploy dev if not pull request
-
-    ###
-    ### TODO: stop the entire job from running (not just the step)
-    ### attempts:
-    ###
-    # attempt1: doesn't stop the job from running
-    # if: ${{ github.ref }} != 'refs/heads/main'
-
-    # attempt2: doesn't stop the job from running
-    # if: ${{ github.ref != 'refs/heads/main' }}
-
-    # attempt3: doesn't stop the job from running
-    # if: env.GITHUB_EVENT_NAME != 'pull_request'
-
-    # attempt4: doesn't stop the job from running
-    # if: ${{ github.event_name }} != 'pull_request'
-
+    if: github.event_name != 'pull_request'
     needs: [ publish ]
     runs-on: ubuntu-latest
     steps:
-    # - name: debugging
-    #   env:
-    #     GITHUB_CONTEXT_EVENT_NAME: ${{ github.event_name }}
-    #     GITHUB_CONTEXT_REF: ${{ github.ref }}
-    #   run: |
-    #     echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
-    #     echo "GITHUB_CONTEXT_EVENT_NAME: $GITHUB_CONTEXT_EVENT_NAME"
-    #     echo "GITHUB_CONTEXT_REF: $GITHUB_CONTEXT_REF"
-    #     # if [[ $BRANCH == 'master' && $GITHUB_EVENT_NAME == 'push' ]]; then
-    #     #     echo "NEED=true" >> "$GITHUB_ENV"
-    #     # else
-    #     #     echo "NEED=false" >> "$GITHUB_ENV"
-    #     # fi
     - name: Deploy Stage
       uses: actions/github-script@v5
-      # TODO: uncomment
-      # # this will stop the step from running if not pull request, but it'd be better if the whole job could be stopped
-      # https://bitovi.atlassian.net/browse/STAF-157
-      # if: env.GITHUB_EVENT_NAME != 'pull_request'
       env:
         OPERATIONS_REPO: operations-staffing-app
         OPERATIONS_REPO_ORG: bitovi

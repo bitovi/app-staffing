@@ -1,0 +1,20 @@
+{{- if and .Values.serviceAccount.enabled .Values.serviceAccount.enableModifyPods }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.appname }}-modify-pods
+  labels:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+rules:
+  - apiGroups: [""]
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - delete
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+{{- end }}
