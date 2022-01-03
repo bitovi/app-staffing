@@ -7,26 +7,19 @@ metadata:
   labels:
     app: {{ .Values.appname }}
     chart: {{ .Chart.Name }}
+  {{- if .Values.service.annotations }}
   annotations:
-    {{- if .Values.service.annotations }}
     {{- range $key, $val := .Values.service.annotations }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
-    {{- end }}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
   - name: service
     port: {{ .Values.service.port }}
     protocol: TCP
-    targetPort:  {{ .Values.service.targetPort }}
-  {{- if .Values.local.websocketPort.enabled }}
-  - name: websocket
-    port: {{ .Values.local.websocketPort.port }}
-    protocol: TCP
-    targetPort:  {{ .Values.local.websocketPort.targetPort }}
-  {{- end }}
-
+    targetPort: {{ .Values.service.targetPort }}
   selector:
     app: {{ .Values.appname }}
     chart: {{ .Chart.Name }}
@@ -42,12 +35,12 @@ metadata:
   labels:
     app: {{ $.Values.appname }}
     chart: {{ $.Chart.Name }}
+  {{- if $item.annotations }}
   annotations:
-    {{- if $item.annotations }}
     {{- range $key, $val := $item.annotations }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
-    {{- end }}
+  {{- end }}
 spec:
   type: {{ $item.type }}
   ports:

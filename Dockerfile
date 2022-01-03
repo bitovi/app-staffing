@@ -32,10 +32,17 @@ FROM node:14 as development
 # Create app directory
 WORKDIR /usr/src/app
 
+# install kubectl
+ARG KUBECTL_VERSION=1.21.3
+ADD https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl /usr/local/bin/kubectl
+RUN chmod +x /usr/local/bin/kubectl
+
 # get files && install dependencies
 COPY ./package.json ./package-lock.json ./
 RUN npm ci
 COPY . .
+
+
 
 # expose your ports
 EXPOSE 3000
