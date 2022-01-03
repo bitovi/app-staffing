@@ -4,9 +4,9 @@ import { MemoryRouter } from "react-router-dom";
 
 import theme from "../../../../../theme";
 import ProjectCard from "./ProjectCard";
-import { projects } from "../../../../../services/api/mocks/projects/fixtures";
+import { deserializedProjects } from "../../../../../mocks/projects/fixtures";
 
-const project = projects[0];
+const project = deserializedProjects[0];
 
 describe("Components/Layout", () => {
   it("renders project info and view link", () => {

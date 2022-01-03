@@ -4,6 +4,8 @@ import faker from "faker";
 
 import { skills } from "../skills/fixtures";
 
+import serializer from "../../services/api/restBuilder/serializer";
+
 export interface JSONRole {
   type: "roles";
   id: string;
@@ -82,3 +84,8 @@ export function addRole(project: JSONProject): JSONRole {
 
   return role;
 }
+
+export const getDeserializedRoles = () =>
+  serializer.deserialize("roles", {
+    data: roles,
+  });

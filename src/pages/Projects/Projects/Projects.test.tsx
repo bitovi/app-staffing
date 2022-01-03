@@ -1,7 +1,5 @@
 import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import Projects from "./Projects";
-import Loading from "../../Loading";
-import { Suspense } from "react";
 import { clearFixtures, loadFixtures } from "../../../mocks";
 import { MemoryRouter } from "react-router-dom";
 

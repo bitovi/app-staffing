@@ -1,18 +1,24 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
-import { projects } from "../../../../services/api/mocks/projects/fixtures";
+// Fixtures are populated through the employee generator. So in order to get role fixtures
+// employee needs to be added here
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { employees } from "../../../../mocks";
+import { getDeserializedRoles } from "../../../../mocks/roles/fixtures";
 import RoleDate from "./RoleDate";
 
 describe("Pages/Projects/components/RoleDates", () => {
   it("works", async () => {
-    const change = jest.fn();
+    const role = getDeserializedRoles()[0];
 
     render(
       <RoleDate
         title="Start Date"
-        estimatedDate={projects[0].roles[0].startDate}
-        onChange={change}
+        date={role.startDate}
+        confidence={role.confidence}
+        onConfidenceChange={jest.fn()}
+        onDateChange={jest.fn()}
       />,
     );
 
@@ -22,12 +28,15 @@ describe("Pages/Projects/components/RoleDates", () => {
 
   it("fires onBlur/onChange", async () => {
     const change = jest.fn();
+    const role = getDeserializedRoles()[0];
 
     render(
       <RoleDate
         title="Start Date"
-        estimatedDate={projects[0].roles[0].startDate}
-        onChange={change}
+        date={role.startDate}
+        confidence={role.confidence}
+        onConfidenceChange={change}
+        onDateChange={change}
       />,
     );
 
