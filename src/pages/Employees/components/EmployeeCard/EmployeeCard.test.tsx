@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
 import theme from "../../../../theme";
-import { getDeserializedEmployees } from "../../../../mocks/employees/fixtures";
+import { employees } from "../../../../mocks";
 import EmployeeCard from "./EmployeeCard";
 //import { act } from "react-dom/test-utils";
 
@@ -14,7 +14,7 @@ jest.useFakeTimers("modern");
 
 describe("Components/Layout", () => {
   it("works", () => {
-    const employee = getDeserializedEmployees()[0];
+    const employee = employees[0];
     render(
       <MemoryRouter>
         <StylesProvider value={theme}>

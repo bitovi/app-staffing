@@ -2,8 +2,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
-import { projects as projectsFixture } from "../../../mocks/projects/fixtures";
+import { loadFixtures, clearFixtures, projects } from "../../../mocks";
 
 import { useProjects, useProject, useProjectMutations } from "./Projects";
 
@@ -13,7 +12,7 @@ describe("Services/API/Projects", () => {
 
   describe("useProject", () => {
     it("makes the right request", async () => {
-      const expected = projectsFixture[2];
+      const expected = projects[2];
       const { result, waitForNextUpdate } = renderHook(
         () => useProject(expected.id),
         { wrapper },
@@ -25,10 +24,10 @@ describe("Services/API/Projects", () => {
 
       // TODO: use serializer
       expect(result.current).to.have.property("id", expected.id);
-      expect(result.current).to.have.property("name", expected.attributes.name);
+      expect(result.current).to.have.property("name", expected.name);
       expect(result.current).to.have.property(
         "description",
-        expected.attributes.description,
+        expected.description,
       );
     });
   });
@@ -45,16 +44,13 @@ describe("Services/API/Projects", () => {
 
       // TODO: use serializer
       for (let i = 0; i < result.current.length; i++) {
-        const expected = projectsFixture[i];
+        const expected = projects[i];
 
         expect(result.current[i]).to.have.property("id", expected.id);
-        expect(result.current[i]).to.have.property(
-          "name",
-          expected.attributes.name,
-        );
+        expect(result.current[i]).to.have.property("name", expected.name);
         expect(result.current[i]).to.have.property(
           "description",
-          expected.attributes.description,
+          expected.description,
         );
       }
     });

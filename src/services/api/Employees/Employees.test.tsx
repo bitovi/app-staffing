@@ -2,8 +2,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
-import { employees as employeesFixture } from "../../../mocks/employees/fixtures";
+import { loadFixtures, clearFixtures, employees } from "../../../mocks";
 
 import { useEmployees, useEmployee, useEmployeeMutations } from "./Employees";
 
@@ -13,7 +12,7 @@ describe("Services/API/Employees", () => {
 
   describe("useEmployee", () => {
     it("makes the right request", async () => {
-      const expected = employeesFixture[2];
+      const expected = employees[2];
       const { result, waitForNextUpdate } = renderHook(
         () => useEmployee(expected.id),
         { wrapper },
@@ -25,7 +24,7 @@ describe("Services/API/Employees", () => {
 
       // TODO: use serializer
       expect(result.current).to.have.property("id", expected.id);
-      expect(result.current).to.have.property("name", expected.attributes.name);
+      expect(result.current).to.have.property("name", expected.name);
       expect(result.current).to.have.property("startDate").that.is.a("date");
       expect(result.current).to.have.property("endDate").that.is.a("date");
     });
@@ -43,13 +42,10 @@ describe("Services/API/Employees", () => {
 
       // TODO: use serializer
       for (let i = 0; i < result.current.length; i++) {
-        const expected = employeesFixture[i];
+        const expected = employees[i];
 
         expect(result.current[i]).to.have.property("id", expected.id);
-        expect(result.current[i]).to.have.property(
-          "name",
-          expected.attributes.name,
-        );
+        expect(result.current[i]).to.have.property("name", expected.name);
         expect(result.current[i])
           .to.have.property("startDate")
           .that.is.a("date");

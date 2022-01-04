@@ -3,10 +3,11 @@ import { StylesProvider } from "@chakra-ui/system";
 import { MemoryRouter } from "react-router-dom";
 
 import theme from "../../../../../theme";
-import ProjectCard from "./ProjectCard";
-import { deserializedProjects } from "../../../../../mocks/projects/fixtures";
+import { projects } from "../../../../../mocks";
 
-const project = deserializedProjects[0];
+import ProjectCard from "./ProjectCard";
+
+const project = projects[0];
 
 describe("Components/Layout", () => {
   it("renders project info and view link", () => {
@@ -19,7 +20,7 @@ describe("Components/Layout", () => {
     );
 
     expect(screen.getByText(project.name)).toBeInTheDocument();
-    expect(screen.getByText(project.description)).toBeInTheDocument();
+    expect(screen.getByText(project?.description || "")).toBeInTheDocument();
     expect(screen.getByText("View")).toBeInTheDocument();
   });
 });

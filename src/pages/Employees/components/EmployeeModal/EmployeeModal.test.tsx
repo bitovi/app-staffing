@@ -1,10 +1,9 @@
 import { render, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import EmployeeModal from "./EmployeeModal";
-import { deserializedSkills } from "../../../../mocks/skills/fixtures";
-import { getDeserializedEmployees } from "../../../../mocks/employees/fixtures";
-import { ChakraProvider } from "@chakra-ui/react";
+import { skills, employees } from "../../../../mocks";
 
 describe("EmployeeModal", () => {
   afterEach(cleanup);
@@ -15,7 +14,7 @@ describe("EmployeeModal", () => {
         onSave={() => Promise.resolve()}
         onClose={() => true}
         isOpen
-        skills={deserializedSkills}
+        skills={skills}
       />,
     );
 
@@ -28,7 +27,7 @@ describe("EmployeeModal", () => {
     const onScreenIds = Array.from(checkboxes).map(
       (checkbox) => (checkbox as HTMLInputElement).value,
     );
-    const skillsIds = deserializedSkills.map((skill) => skill.id);
+    const skillsIds = skills.map((skill) => skill.id);
     expect(skillsIds).toStrictEqual(onScreenIds);
 
     userEvent.click(checkboxes[0]);
@@ -43,12 +42,7 @@ describe("EmployeeModal", () => {
   });
 
   it("renders 'edit employee' UI when 'employee' prop is set", async () => {
-    const employee = getDeserializedEmployees()[1];
-
-    const employeeWithAllSkills = {
-      ...employee,
-      skills: deserializedSkills,
-    };
+    const employee = employees[1];
 
     const { getByText, getByDisplayValue, getByRole, getAllByRole } = render(
       <ChakraProvider>
@@ -56,8 +50,8 @@ describe("EmployeeModal", () => {
           onSave={() => Promise.resolve()}
           onClose={() => true}
           isOpen={true}
-          skills={deserializedSkills}
-          employee={employeeWithAllSkills}
+          skills={skills}
+          employee={employee}
         />
       </ChakraProvider>,
     );
@@ -76,7 +70,7 @@ describe("EmployeeModal", () => {
     );
 
     expect(ids.sort()).toStrictEqual(
-      employeeWithAllSkills.skills.map(({ id }) => id).sort(),
+      employee.skills.map(({ id }) => id).sort(),
     );
 
     // Save button must be disabled if user has not edited the form
@@ -101,7 +95,7 @@ describe("EmployeeModal", () => {
         onSave={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
-        skills={deserializedSkills}
+        skills={skills}
       />,
     );
 

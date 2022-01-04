@@ -2,8 +2,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
-import { assignments as assignmentsFixture } from "../../../mocks/assignments/fixtures";
+import { loadFixtures, clearFixtures, assignments } from "../../../mocks";
 
 import {
   useAssignments,
@@ -17,7 +16,7 @@ describe("Services/API/Assignments", () => {
 
   describe("useAssignment", () => {
     it("makes the right request", async () => {
-      const expected = assignmentsFixture[2];
+      const expected = assignments[2];
       const { result, waitForNextUpdate } = renderHook(
         () => useAssignment(expected.id),
         { wrapper },
@@ -46,7 +45,7 @@ describe("Services/API/Assignments", () => {
 
       // TODO: use serializer
       for (let i = 0; i < result.current.length; i++) {
-        const expected = assignmentsFixture[i];
+        const expected = assignments[i];
 
         expect(result.current[i]).to.have.property("id", expected.id);
         expect(result.current[i])

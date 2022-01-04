@@ -12,11 +12,7 @@ import projectStoreManager, { projectMocks } from "./projects/mocks";
 import roleStoreManager, { roleMocks } from "./roles/mocks";
 import skillStoreManager, { skillMocks } from "./skills/mocks";
 
-export { assignments } from "./assignments/fixtures";
-export { employees } from "./employees/fixtures";
-export { projects } from "./projects/fixtures";
-export { roles } from "./roles/fixtures";
-export { skills } from "./skills/fixtures";
+export * from "./fixtures";
 
 export default [
   ...assignmentMocks,

@@ -26,22 +26,4 @@ describe("Pages/Projects", () => {
       screen.queryByTestId("loading-projects-skeleton"),
     ).not.toBeInTheDocument();
   });
-
-  it("NEEDED? -- displays error component after api error", async () => {
-    // render(
-    //   <Suspense fallback={<Loading />}>
-    //     <Projects
-    //       useProjects={() => ({
-    //         isLoading: false,
-    //         error: { name: "err", message: "msg" },
-    //         addProject: () => Promise.resolve(""),
-    //         updateProject: () => Promise.resolve(),
-    //         deleteProject: () => Promise.resolve(),
-    //         reset: () => undefined,
-    //       })}
-    //     />
-    //   </Suspense>,
-    // );
-    // expect(await screen.findByText("Service Error")).toBeInTheDocument();
-  });
 });

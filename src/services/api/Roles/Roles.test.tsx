@@ -2,8 +2,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
-import { roles as rolesFixture } from "../../../mocks/roles/fixtures";
+import { loadFixtures, clearFixtures, roles } from "../../../mocks";
 
 import { useRoles, useRole, useRoleMutations } from "./Roles";
 
@@ -13,7 +12,7 @@ describe("Services/API/Roles", () => {
 
   describe("useRole", () => {
     it("makes the right request", async () => {
-      const expected = rolesFixture[2];
+      const expected = roles[2];
       const { result, waitForNextUpdate } = renderHook(
         () => useRole(expected.id),
         { wrapper },
@@ -28,12 +27,12 @@ describe("Services/API/Roles", () => {
       expect(result.current).to.have.property("startDate").that.is.a("date");
       expect(result.current).to.have.property(
         "startConfidence",
-        expected.attributes.start_confidence,
+        expected.startConfidence,
       );
       expect(result.current).to.have.property("endDate").that.is.a("date");
       expect(result.current).to.have.property(
         "endConfidence",
-        expected.attributes.end_confidence,
+        expected.endConfidence,
       );
     });
   });
@@ -50,7 +49,7 @@ describe("Services/API/Roles", () => {
 
       // TODO: use serializer
       for (let i = 0; i < result.current.length; i++) {
-        const expected = rolesFixture[i];
+        const expected = roles[i];
 
         expect(result.current[i]).to.have.property("id", expected.id);
         expect(result.current[i])
@@ -58,12 +57,12 @@ describe("Services/API/Roles", () => {
           .that.is.a("date");
         expect(result.current[i]).to.have.property(
           "startConfidence",
-          expected.attributes.start_confidence,
+          expected.startConfidence,
         );
         expect(result.current[i]).to.have.property("endDate").that.is.a("date");
         expect(result.current[i]).to.have.property(
           "endConfidence",
-          expected.attributes.end_confidence,
+          expected.endConfidence,
         );
       }
     });
