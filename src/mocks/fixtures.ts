@@ -112,9 +112,11 @@ const createAndAddAssignment = (
 
     assignments.push(assignment);
 
-    employeeIdToAssignment[matchingEmployee.id]?.length == 0
-      ? employeeIdToAssignment[matchingEmployee.id].push(assignment)
-      : [assignment];
+    if (!employeeIdToAssignment[matchingEmployee.id]) {
+      employeeIdToAssignment[matchingEmployee.id] = [];
+    }
+
+    employeeIdToAssignment[matchingEmployee.id].push(assignment);
   }
 
   return {
@@ -187,9 +189,11 @@ const createAndAddRoles = (
       assignmentIdToRole[a.id] = role;
     });
 
-    projectIdToRole[matchingProject.id]?.length == 0
-      ? projectIdToRole[matchingProject.id].push(role)
-      : [role];
+    if (!projectIdToRole[matchingProject.id]) {
+      projectIdToRole[matchingProject.id] = [];
+    }
+
+    projectIdToRole[matchingProject.id].push(role);
   }
 
   return {
@@ -241,3 +245,5 @@ const create = (): {
 };
 
 export const { skills, projects, assignments, roles, employees } = create();
+
+console.log({ skills, projects, assignments, roles, employees });
