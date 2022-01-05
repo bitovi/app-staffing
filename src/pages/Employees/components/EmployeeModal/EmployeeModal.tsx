@@ -110,7 +110,13 @@ export default function EmployeeModal({
   useEffect(resetForm, [employee, reset]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md" variant="team_modal">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="md"
+      variant="team_modal"
+      data-testid="employeeModal"
+    >
       <ModalOverlay />
       <ModalContent mt="14vh">
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
@@ -130,6 +136,7 @@ export default function EmployeeModal({
                 })}
                 id="name"
                 placeholder="name"
+                data-testid="name"
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
@@ -255,7 +262,6 @@ function getSubmitButtonProps({
 
   return {
     variant: canSubmitForm ? "primary" : "primaryDisabled",
-    isDisabled: !canSubmitForm,
     onClick,
   };
 }
