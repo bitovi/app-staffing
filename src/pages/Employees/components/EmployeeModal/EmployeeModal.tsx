@@ -230,6 +230,7 @@ export default function EmployeeModal({
               canSubmitForm,
               onClick: handleSubmit((data) => submitForm(data)),
             })}
+            aria-disabled={true}
           >
             {isNewEmployee ? "Add & Close" : "Save & Close"}
           </Button>

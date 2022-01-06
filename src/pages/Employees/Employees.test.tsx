@@ -56,6 +56,7 @@ describe("Pages/Employees", () => {
 
     const modal = await screen.findByRole("dialog");
     const submitButton = within(modal).getByText(/Add & Close/i);
+    expect(submitButton).toHaveAttribute("aria-disabled", "true");
 
     const modalNameInput = await screen.findByPlaceholderText(/name/i);
     fireEvent.change(modalNameInput, {
@@ -136,6 +137,7 @@ describe("Pages/Employees", () => {
     expect(projectManagementCheckbox).toBeChecked();
 
     const submitButton = within(editModal).getByText(/Save & Close/i);
+    expect(submitButton).toHaveAttribute("aria-disabled", "true");
 
     fireEvent.click(within(editModal).getByLabelText("Design"));
     await waitFor(() => expect(submitButton).toBeEnabled());
