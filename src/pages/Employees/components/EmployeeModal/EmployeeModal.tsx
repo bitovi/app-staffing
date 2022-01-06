@@ -110,13 +110,7 @@ export default function EmployeeModal({
   useEffect(resetForm, [employee, reset]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="md"
-      variant="team_modal"
-      data-testid="employeeModal"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} size="md" variant="team_modal">
       <ModalOverlay />
       <ModalContent mt="14vh">
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
@@ -136,7 +130,6 @@ export default function EmployeeModal({
                 })}
                 id="name"
                 placeholder="name"
-                data-testid="name"
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
@@ -230,7 +223,7 @@ export default function EmployeeModal({
               canSubmitForm,
               onClick: handleSubmit((data) => submitForm(data)),
             })}
-            aria-disabled={true}
+            aria-disabled={!canSubmitForm}
           >
             {isNewEmployee ? "Add & Close" : "Save & Close"}
           </Button>
