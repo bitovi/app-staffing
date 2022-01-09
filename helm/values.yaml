@@ -10,12 +10,28 @@ revisionHistoryLimit: 2
 
 image: app-staffing:latest
 
+cacheBusting:
+  # if `true`, chart gets redeployed every time
+  timestamp: false
+
+# For the front-end config
 # Note: Please see /public/config.js for information about these values.
 apiBaseURL: http://app-staffing-api.localhost
+# configVolumes:
+# - name: config
+#   configMap:
+#     name: app-staffing-config
+# configVolumeMounts:
+# - name: config
+#   # for production build
+#   mountPath: /usr/share/nginx/html/config.js
+#   # # for development build
+#   # mountPath: /usr/src/app/public/config.js
+#   subPath: config.js
 
 service:
   port: 80
-  targetPort: 3000
+  targetPort: 80
   type: ClusterIP
   annotations: {}
 
@@ -32,12 +48,20 @@ ingress: []
   #       service: app-staffing
   #       port: 80
 
-
-local:
-  websocketPort:
-    enabled: false
-    port: 35729
-    targetPort: 35729
+# used with local development
+#   enabled automatically when 
+#   MOUNT_APP_STAFFING="1" is set on `_scripts/local/deploy.sh` from the ops repo
+chokidarPollerContainer:
+  enabled: false
+  extraEnv:
+    KUBE_PATH: "/usr/src/kube"
+  # extraVolumes:
+  #   - name: local-files-app-staffing
+  #     hostPath: 
+  #       path: /local-files/app-staffing
+  # extraVolumeMounts:
+  #   - mountPath: /usr/src/app
+  #     name: local-files-app-staffing
 
 cacheBusting:
   timestamp: false
@@ -61,15 +85,15 @@ prometheus:
   enabled: false
 
 # extraVolumes:
-# - name: config
-#   configMap:
-#     name: app-staffing-config
-
+#   - name: local-files-app-staffing
+#     hostPath: 
+#       path: /local-files/app-staffing
 # extraVolumeMounts:
-# - name: config
-#   mountPath: /usr/share/nginx/html/config.js
-#   subPath: config.js
+#   - mountPath: /usr/src/app
+#     name: local-files-app-staffing
 
 # TODO: implement serviceaccount.yaml
 serviceAccount:
   enabled: false
+  # set to true to include a role and role binding to allow sa to modify pods
+  enableModifyPods: false

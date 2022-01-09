@@ -99,12 +99,13 @@ export default function AddProjectModal({
             </FormControl>
           </VStack>
         </ModalBody>
+        <Divider pt={1} />
         <ModalFooter>
-          <Button mr={4} variant="link" onClick={onCloseModal}>
+          <Button variant="outline" mr="8px" onClick={onCloseModal}>
             Cancel
           </Button>
           <Button variant="primary" onClick={addNewProject}>
-            Save
+            Save & Close
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -1,0 +1,13 @@
+{{- if and .Values.serviceAccount.enabled .Values.serviceAccount.enableModifyPods }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.appname }}-modify-pods
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.appname }}
+roleRef:
+  kind: Role
+  name: {{ .Values.appname }}-modify-pods
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

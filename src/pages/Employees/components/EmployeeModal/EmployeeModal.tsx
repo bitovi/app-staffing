@@ -226,6 +226,7 @@ export default function EmployeeModal({
               canSubmitForm,
               onClick: handleSubmit((data) => submitForm(data)),
             })}
+            aria-disabled={!canSubmitForm}
           >
             {isNewEmployee ? "Add & Close" : "Save & Close"}
           </Button>
@@ -258,7 +259,6 @@ function getSubmitButtonProps({
 
   return {
     variant: canSubmitForm ? "primary" : "primaryDisabled",
-    isDisabled: !canSubmitForm,
     onClick,
   };
 }

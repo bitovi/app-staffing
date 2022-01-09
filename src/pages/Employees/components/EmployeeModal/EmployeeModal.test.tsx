@@ -21,7 +21,7 @@ describe("EmployeeModal", () => {
     getByText("Add a New Team Member");
 
     const addButton = getByRole("button", { name: "Add & Close" });
-    expect(addButton).toBeDisabled();
+    expect(addButton).toHaveAttribute("aria-disabled", "true");
 
     const checkboxes = getAllByRole("checkbox", { checked: false });
     const onScreenIds = Array.from(checkboxes).map(
@@ -34,7 +34,7 @@ describe("EmployeeModal", () => {
 
     // Add & Close button still disabled when at least one role is selected
     // but name is not inputed
-    expect(addButton).toBeDisabled();
+    expect(addButton).toHaveAttribute("aria-disabled", "true");
 
     // With name inputed, Add & Close button is enabled
     userEvent.type(getByPlaceholderText("name"), "Johnny Appleseed");
@@ -73,8 +73,8 @@ describe("EmployeeModal", () => {
       employee.skills.map(({ id }) => id).sort(),
     );
 
-    // Save button must be disabled if user has not edited the form
-    expect(saveButton).toBeDisabled();
+    // Save button should appear disabled if user has not edited the form
+    expect(saveButton).toHaveAttribute("aria-disabled", "true");
 
     // Save button must be enabled as soon as the user modifies any input
     userEvent.click(nameInput);

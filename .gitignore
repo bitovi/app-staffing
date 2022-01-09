@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/chokidar-poller/node_modules
 /.pnp
 .pnp.js
 
