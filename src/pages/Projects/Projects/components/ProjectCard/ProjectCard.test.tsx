@@ -3,7 +3,7 @@ import { StylesProvider } from "@chakra-ui/system";
 import { MemoryRouter } from "react-router-dom";
 
 import theme from "../../../../../theme";
-import { projects } from "../../../../../mocks";
+import { projects } from "../../../../../mocks/fixtures";
 
 import ProjectCard from "./ProjectCard";
 

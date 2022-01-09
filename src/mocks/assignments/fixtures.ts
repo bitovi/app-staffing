@@ -1,4 +1,4 @@
-import type { JSONEmployee, JSONRole } from "..";
+import type { JSONEmployee, JSONRole } from "../fixtures";
 
 import faker from "faker";
 

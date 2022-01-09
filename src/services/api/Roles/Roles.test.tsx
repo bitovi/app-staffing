@@ -2,7 +2,8 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures, roles } from "../../../mocks";
+import { loadFixtures, clearFixtures } from "../../../mocks";
+import { roles } from "../../../mocks/fixtures";
 
 import { useRoles, useRole, useRoleMutations } from "./Roles";
 

@@ -1,4 +1,4 @@
-import type { JSONProject } from "..";
+import type { JSONProject } from "../fixtures";
 
 import faker from "faker";
 

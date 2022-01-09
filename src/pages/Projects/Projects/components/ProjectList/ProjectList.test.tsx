@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { projects } from "../../../../../mocks";
+import { projects } from "../../../../../mocks/fixtures";
 import ProjectList from "./ProjectList";
 
 describe("Pages/Projects/ProjectList", () => {

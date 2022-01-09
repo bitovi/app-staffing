@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import EmployeeModal from "./EmployeeModal";
-import { skills, employees } from "../../../../mocks";
+import { skills, employees } from "../../../../mocks/fixtures";
 
 describe("EmployeeModal", () => {
   afterEach(cleanup);

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
-import { projects } from "../../../../mocks";
+import { projects } from "../../../../mocks/fixtures";
 import ProjectDescription from "./ProjectDescription";
 
 describe("Pages/Projects/components/ProjectDescriptions", () => {

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { employees } from "../../../../mocks";
+import { employees } from "../../../../mocks/fixtures";
 import EmployeeTable from "./EmployeeTable";
 
 describe("Components/Layout", () => {

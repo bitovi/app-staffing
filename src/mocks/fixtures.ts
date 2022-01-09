@@ -14,6 +14,12 @@ import { skills as _skills } from "./skills/fixtures";
 
 import serializer from "../services/api/restBuilder/serializer";
 
+export type { JSONAssignment } from "./assignments/fixtures";
+export type { JSONEmployee } from "./employees/fixtures";
+export type { JSONProject } from "./projects/fixtures";
+export type { JSONRole } from "./roles/fixtures";
+export type { JSONSkill } from "./skills/fixtures";
+
 interface DeserializedEmployee
   extends Omit<Employee, "assignments" | "skills"> {
   assignments: string[];
