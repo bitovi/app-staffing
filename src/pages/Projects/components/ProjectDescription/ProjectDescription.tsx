@@ -19,20 +19,11 @@ export default function ProjectDescription({
 
   return (
     <div className={styles.projectDescription}>
-      <input
-        className={styles.sectionLabel}
-        name="name"
+      <textarea
+        name="description"
+        defaultValue={project.description}
         onBlur={updateMainField}
-        defaultValue={project.name}
       />
-      <div>
-        <p className={styles.sectionLabel}>Description:</p>
-        <textarea
-          name="description"
-          defaultValue={project.description}
-          onBlur={updateMainField}
-        />
-      </div>
     </div>
   );
 }

@@ -8,8 +8,9 @@ describe("Pages/Projects/components/ProjectDescriptions", () => {
     const onEditMock = jest.fn();
 
     render(<ProjectDescription project={projects[0]} onEdit={onEditMock} />);
-    expect(screen.getByText(/Description/i)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(projects[0].name)).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue(projects[0].description),
+    ).toBeInTheDocument();
   });
 
   it("fires onBlur", async () => {
@@ -17,10 +18,7 @@ describe("Pages/Projects/components/ProjectDescriptions", () => {
 
     render(<ProjectDescription project={projects[0]} onEdit={onEditMock} />);
 
-    fireEvent.blur(await screen.getByDisplayValue(projects[0].name));
-    expect(onEditMock).toHaveBeenCalledTimes(1);
-
     fireEvent.blur(await screen.findByText(projects[0]?.description || ""));
-    expect(onEditMock).toHaveBeenCalledTimes(2);
+    expect(onEditMock).toHaveBeenCalledTimes(1);
   });
 });

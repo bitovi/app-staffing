@@ -53,7 +53,7 @@ export default function ProjectsHeader({
         justifyContent="space-between"
       >
         <Text textStyle="title" color="gray.700" data-testid="projectListTitle">
-          Projects
+          {name ? name : "Projects"}
         </Text>
         {!name && (
           <>
