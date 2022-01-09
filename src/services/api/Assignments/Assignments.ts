@@ -18,15 +18,15 @@ export type NewAssignment = Partial<Omit<Assignment, "id">>;
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Assignment>(
   "/assignments",
   "assignments",
-  { title: "Team Member" },
+  { title: "Assignment" },
 );
 
 export { useRestList as useAssignments, useRestOne as useAssignment };
 
 export function useAssignmentMutations(): {
-  createAssignment: (assignment: NewAssignment) => Promise<string | undefined>;
-  updateAssignment: (id: string, assignment: Assignment) => Promise<void>;
-  destroyAssignment: (id: string) => Promise<void>;
+  createAssignment: ReturnType<typeof useRestMutations>["create"];
+  updateAssignment: ReturnType<typeof useRestMutations>["update"];
+  destroyAssignment: ReturnType<typeof useRestMutations>["destroy"];
 } {
   const { create, update, destroy } = useRestMutations();
 

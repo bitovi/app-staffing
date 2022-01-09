@@ -16,15 +16,15 @@ export type NewProject = Partial<Omit<Project, "id">>;
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Project>(
   "/projects",
   "projects",
-  { title: "Team Member" },
+  { title: "Project" },
 );
 
 export { useRestList as useProjects, useRestOne as useProject };
 
 export function useProjectMutations(): {
-  createProject: (project: NewProject) => Promise<string | undefined>;
-  updateProject: (id: string, project: Project) => Promise<void>;
-  destroyProject: (id: string) => Promise<void>;
+  createProject: ReturnType<typeof useRestMutations>["create"];
+  updateProject: ReturnType<typeof useRestMutations>["update"];
+  destroyProject: ReturnType<typeof useRestMutations>["destroy"];
 } {
   const { create, update, destroy } = useRestMutations();
 

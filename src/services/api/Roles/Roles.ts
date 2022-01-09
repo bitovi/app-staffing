@@ -22,15 +22,15 @@ export type NewRole = Partial<Omit<Role, "id">>;
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Role>(
   "/roles",
   "roles",
-  { title: "Team Member" },
+  { title: "Role" },
 );
 
 export { useRestList as useRoles, useRestOne as useRole };
 
 export function useRoleMutations(): {
-  createRole: (role: NewRole) => Promise<string | undefined>;
-  updateRole: (id: string, role: Role) => Promise<void>;
-  destroyRole: (id: string) => Promise<void>;
+  createRole: ReturnType<typeof useRestMutations>["create"];
+  updateRole: ReturnType<typeof useRestMutations>["update"];
+  destroyRole: ReturnType<typeof useRestMutations>["destroy"];
 } {
   const { create, update, destroy } = useRestMutations();
 

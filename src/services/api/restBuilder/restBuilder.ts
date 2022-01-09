@@ -15,7 +15,11 @@ interface ListQuery<T> {
   sort?: string;
   page?: number;
   count?: number;
-  include?: string;
+  include?: string | string[];
+}
+
+interface OneQuery {
+  include?: string | string[];
 }
 
 export interface BaseData {
@@ -31,10 +35,10 @@ export default function restBuilder<Data extends BaseData>(
   },
 ): {
   useRestList: (query?: ListQuery<Data>) => Data[];
-  useRestOne: (id: string) => Data;
+  useRestOne: (id: string, query?: OneQuery) => Data;
   useRestMutations: () => {
     create: (data: Partial<Omit<Data, "id">>) => Promise<string | undefined>;
-    update: (id: string, data: Partial<Data> & { id: string }) => Promise<void>;
+    update: (id: string, data: Partial<Data>) => Promise<void>;
     destroy: (id: string) => Promise<void>;
   };
 } {
@@ -42,7 +46,7 @@ export default function restBuilder<Data extends BaseData>(
     const { data, error } = useSWR<Data[], Error>(
       path,
       async (path) => {
-        const response = await fetcher("GET", type, `${path}?${param(query)}`);
+        const response = await fetcher("GET", type, makeUrl(path, query));
 
         const list = serializer.deserialize(type, response) as Data[];
         for (const item of list) {
@@ -63,11 +67,11 @@ export default function restBuilder<Data extends BaseData>(
     return data;
   }
 
-  function useRestOne(id: string): Data {
+  function useRestOne(id: string, query?: OneQuery): Data {
     const { data, error } = useSWR<Data, Error>(
       `${path}/${id}`,
       async (path) => {
-        const response = await fetcher("GET", type, path);
+        const response = await fetcher("GET", type, makeUrl(path, query));
 
         const item = serializer.deserialize(type, response) as Data;
         parseDate(item);
@@ -134,8 +138,8 @@ export default function restBuilder<Data extends BaseData>(
     );
 
     const update = useCallback(
-      async (id: string, data: Partial<Data> & { id: string }) => {
-        const payload = serializer.serialize(type, data);
+      async (id: string, data: Partial<Data>) => {
+        const payload = serializer.serialize(type, { ...data, id });
         const response = await fetcher("PATCH", type, `${path}/${id}`, payload);
         const deserialized = serializer.deserialize(type, response) as Data;
         const identifier = deserialized.name || deserialized.id;
@@ -240,4 +244,17 @@ export default function restBuilder<Data extends BaseData>(
   }
 
   return { useRestOne, useRestList, useRestMutations };
+}
+
+function makeUrl<T extends { include?: string | string[] }>(
+  path: string,
+  query?: T,
+): string {
+  query = { ...query } as T;
+
+  if (Array.isArray(query.include)) {
+    query.include = query.include.join(",");
+  }
+
+  return `${path}?${param(query)}`;
 }

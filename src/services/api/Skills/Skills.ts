@@ -12,15 +12,15 @@ export type NewSkill = Partial<Omit<Skill, "id">>;
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Skill>(
   "/skills",
   "skills",
-  { title: "Team Member" },
+  { title: "Skill" },
 );
 
 export { useRestList as useSkills, useRestOne as useSkill };
 
 export function useSkillMutations(): {
-  createSkill: (skill: NewSkill) => Promise<string | undefined>;
-  updateSkill: (id: string, skill: Skill) => Promise<void>;
-  destroySkill: (id: string) => Promise<void>;
+  createSkill: ReturnType<typeof useRestMutations>["create"];
+  updateSkill: ReturnType<typeof useRestMutations>["update"];
+  destroySkill: ReturnType<typeof useRestMutations>["destroy"];
 } {
   const { create, update, destroy } = useRestMutations();
 

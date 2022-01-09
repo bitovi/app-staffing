@@ -7,10 +7,10 @@ export interface JSONSkill {
 }
 
 export const skills: JSONSkill[] = [
-  { type: "skills", id: "101", attributes: { name: "Angular" } },
-  { type: "skills", id: "102", attributes: { name: "React" } },
-  { type: "skills", id: "103", attributes: { name: "DevOps" } },
-  { type: "skills", id: "104", attributes: { name: "Node" } },
-  { type: "skills", id: "105", attributes: { name: "Product" } },
-  { type: "skills", id: "106", attributes: { name: "Project Management" } },
+  { type: "skills", id: "1001", attributes: { name: "Angular" } },
+  { type: "skills", id: "1002", attributes: { name: "React" } },
+  { type: "skills", id: "1003", attributes: { name: "DevOps" } },
+  { type: "skills", id: "1004", attributes: { name: "Node" } },
+  { type: "skills", id: "1005", attributes: { name: "Product" } },
+  { type: "skills", id: "1006", attributes: { name: "Project Management" } },
 ];

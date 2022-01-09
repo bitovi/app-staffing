@@ -25,9 +25,9 @@ const { useRestOne, useRestList, useRestMutations } = restBuilder<Employee>(
 export { useRestList as useEmployees, useRestOne as useEmployee };
 
 export function useEmployeeMutations(): {
-  createEmployee: (employee: NewEmployee) => Promise<string | undefined>;
-  updateEmployee: (id: string, employee: Employee) => Promise<void>;
-  destroyEmployee: (id: string) => Promise<void>;
+  createEmployee: ReturnType<typeof useRestMutations>["create"];
+  updateEmployee: ReturnType<typeof useRestMutations>["update"];
+  destroyEmployee: ReturnType<typeof useRestMutations>["destroy"];
 } {
   const { create, update, destroy } = useRestMutations();
 
