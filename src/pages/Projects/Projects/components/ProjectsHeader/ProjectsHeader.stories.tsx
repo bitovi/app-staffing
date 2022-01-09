@@ -1,6 +1,8 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import ProjectsHeader from "./ProjectsHeader";
+
 import { BrowserRouter } from "react-router-dom";
+
+import ProjectsHeader from "./ProjectsHeader";
 
 export default {
   title: "Pages/Projects/ProjectsHeader",
@@ -13,23 +15,25 @@ export const Basic: ComponentStory<typeof ProjectsHeader> = ({
   loading?: boolean;
 }) => <ProjectsHeader loading={loading} />;
 
-export const withProject: ComponentStory<typeof ProjectsHeader> = ({
+export const HasProject: ComponentStory<typeof ProjectsHeader> = ({
   loading,
   name,
 }: {
   loading?: boolean;
   name?: string;
-}) => (
-  <BrowserRouter>
-    <ProjectsHeader name={name} loading={loading} />
-  </BrowserRouter>
-);
-
-Basic.args = {
-  loading: false,
+}) => {
+  return (
+    <BrowserRouter>
+      <ProjectsHeader name={name} loading={loading} />
+    </BrowserRouter>
+  );
 };
 
-withProject.args = {
+Basic.args = {
+  loading: true,
+};
+
+HasProject.args = {
   loading: false,
   name: "Chic-fil-A",
 };

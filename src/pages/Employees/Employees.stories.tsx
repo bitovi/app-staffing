@@ -1,9 +1,10 @@
+import type { ComponentStory, ComponentMeta } from "@storybook/react";
+
 import { useEffect } from "react";
 import { Flex, Box } from "@chakra-ui/layout";
-import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import { employeeMockData } from "../../services/api/employees/fixtures";
-import { skills } from "../../services/api/skills/fixtures";
+
 import { Employees, EmployeePageLoadingLayout } from "./Employees";
+import { useEmployees } from "../../services/api";
 
 export default {
   title: "Pages/Employees",
@@ -19,26 +20,15 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
     <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
       <Employees
         {...props}
-        useEmployees={() => {
+        useEmployees={() => []}
+        useEmployeeMutations={() => {
           return {
-            useEmployee: (id: string) => {
-              return { data: undefined };
-            },
-            useEmployeeList: () => {
-              return { data: [] };
-            },
-            useEmployeeActions: () => {
-              return {
-                addEmployee: (employee) => Promise.resolve(""),
-                updateEmployee: (id) => Promise.resolve(),
-                deleteEmployee: (id) => Promise.resolve(),
-              };
-            },
+            createEmployee: (employee) => Promise.resolve(""),
+            updateEmployee: (id) => Promise.resolve(),
+            destroyEmployee: (id) => Promise.resolve(),
           };
         }}
-        useSkills={() => {
-          return { skills: [], isLoading: false };
-        }}
+        useSkills={() => []}
       />
     </Box>
   </Flex>
@@ -68,10 +58,15 @@ function NonEmptyEmployeesPage({ ...props }) {
       <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
         <Employees
           {...props}
-          useEmployees={employeeMockData}
-          useSkills={() => {
-            return { skills, isLoading: false };
+          useEmployees={useEmployees}
+          useEmployeeMutations={() => {
+            return {
+              createEmployee: (employee) => Promise.resolve(""),
+              updateEmployee: (id) => Promise.resolve(),
+              destroyEmployee: (id) => Promise.resolve(),
+            };
           }}
+          useSkills={() => []}
         />
       </Box>
     </Flex>

@@ -1,3 +1,7 @@
+import type { NewProject, Project } from "../../../../../services/api";
+
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   ModalBody,
   ModalFooter,
@@ -15,30 +19,30 @@ import {
   FormLabel,
   Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { Button } from "@chakra-ui/button";
-import { Project, useProjects } from "../../../../../services/api";
 
-type IFormData = Omit<Project, "id">;
+type FormData = Omit<Project, "id">;
 
-const initialFormState: IFormData = { name: "", description: "", roles: [] };
+const initialFormState: FormData = { name: "", description: "", roles: [] };
 
-interface IProps {
+interface AddProjectModalProps {
   onClose: () => void;
   isOpen: boolean;
+  addProject: (project: NewProject) => void;
 }
 
 export default function AddProjectModal({
   isOpen,
   onClose,
-}: IProps): JSX.Element {
-  const { reset, addProject } = useProjects();
+  addProject,
+}: AddProjectModalProps): JSX.Element {
   const history = useHistory();
-  const [newProject, setNewProject] = useState<IFormData>(initialFormState);
+
+  const [newProject, setNewProject] = useState<FormData>(initialFormState);
 
   const addNewProject = async () => {
     const newProjectId = await addProject(newProject);
+
     history.push(`/projects/${newProjectId}`);
   };
 
@@ -53,7 +57,6 @@ export default function AddProjectModal({
   };
 
   const onCloseModal = () => {
-    reset();
     setNewProject(initialFormState);
     onClose();
   };

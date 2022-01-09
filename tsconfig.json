@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "typeRoots": ["./@types", "./node_modules/@types"],
     "noEmit": true,
 
     "strict": true,
@@ -22,8 +23,7 @@
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
-    "strictPropertyInitialization": true,
-    "typeRoots": ["./@types", "./node_modules/@types"]
+    "strictPropertyInitialization": true
   },
   "include": ["src"]
 }

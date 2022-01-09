@@ -1,9 +1,14 @@
+import type { Project } from "../../../../../services/api";
+
+import { Link as ReactRouterLink } from "react-router-dom";
 import { Text } from "@chakra-ui/layout";
 import { Link, Td, Tr } from "@chakra-ui/react";
-import type { Project } from "../../../../../services/api";
-import { Link as ReactRouterLink } from "react-router-dom";
 
-const ProjectCard = ({ project }: { project: Project }): JSX.Element => {
+interface PropjectCardProps {
+  project: Project;
+}
+
+const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
   return (
     <>
       <Tr

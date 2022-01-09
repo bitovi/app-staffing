@@ -27,6 +27,7 @@ describe("Pages/Projects/Components/DeleteProjectModal", () => {
         projectName={projectName}
         isOpen={true}
         onClose={() => undefined}
+        destroyProject={async () => undefined}
       />,
     );
     expect(screen.getByText(/some project/g)).toBeInTheDocument();
@@ -40,24 +41,11 @@ describe("Pages/Projects/Components/DeleteProjectModal", () => {
         projectName="someproject"
         isOpen={true}
         onClose={() => undefined}
+        destroyProject={jest.fn(async (id: string) => undefined)}
       />,
     );
 
     fireEvent.click(screen.getByText(/Yes, Remove & Delete/g));
     await waitFor(() => expect(mockHistoryPush).toBeCalledWith(`/`));
-  });
-
-  it("reset modal on close", async () => {
-    render(
-      <DeleteProjectModal
-        projectId="1"
-        projectName="someproject"
-        isOpen={true}
-        onClose={() => undefined}
-      />,
-    );
-
-    fireEvent.click(screen.getByText(/No, Return to Page/g));
-    expect(mockReset).toBeCalled();
   });
 });

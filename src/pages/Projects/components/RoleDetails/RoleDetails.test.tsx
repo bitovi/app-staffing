@@ -2,7 +2,7 @@
 // import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 // import { projects } from "../../../../services/api/projects/fixtures";
-// import { employeeStoreManager } from "../../../../services/api/employees/mocks";
+// import employeeStoreManager from "../../../../services/api/employees/mocks";
 
 // import RoleDetails from "./RoleDetails";
 

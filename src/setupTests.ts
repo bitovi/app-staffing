@@ -9,13 +9,9 @@ chai.use(chaiDom);
 chai.use(chaiSpies);
 
 import { setupServer } from "msw/node";
-import mocks from "./services/mocks";
-const server = setupServer(...mocks);
+import mocks from "./mocks";
 
-beforeAll(() => {
-  server.listen({
-    onUnhandledRequest: "error",
-  });
-});
+const server = setupServer(...mocks);
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterAll(() => server.close());
 afterEach(() => server.resetHandlers());

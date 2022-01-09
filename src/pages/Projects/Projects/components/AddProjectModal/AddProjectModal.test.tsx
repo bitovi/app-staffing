@@ -10,17 +10,16 @@ jest.mock("react-router-dom", () => ({
 }));
 
 const mockAddProject = jest.fn();
-const mockReset = jest.fn();
-jest.mock("../../../../../services/api", () => ({
-  useProjects: () => ({
-    addProject: mockAddProject,
-    reset: mockReset,
-  }),
-}));
 
 describe("Pages/Projects/Components/AddProjectModal", () => {
   it("renders", async () => {
-    render(<AddProjectModal isOpen={true} onClose={() => undefined} />);
+    render(
+      <AddProjectModal
+        addProject={async () => ""}
+        isOpen={true}
+        onClose={() => undefined}
+      />,
+    );
 
     expect(screen.getByText(/Save/g)).toBeInTheDocument();
   });
@@ -32,7 +31,11 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
     );
 
     const { getByTestId } = render(
-      <AddProjectModal isOpen={true} onClose={() => undefined} />,
+      <AddProjectModal
+        addProject={mockAddProject}
+        isOpen={true}
+        onClose={() => undefined}
+      />,
     );
 
     const projectName = getByTestId("projectInput") as HTMLInputElement;
@@ -54,12 +57,5 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
       description: "Fashion and athletics",
       roles: [],
     });
-  });
-
-  it("reset modal on close", async () => {
-    render(<AddProjectModal isOpen={true} onClose={() => undefined} />);
-
-    fireEvent.click(screen.getByText(/Cancel/g));
-    expect(mockReset).toBeCalled();
   });
 });

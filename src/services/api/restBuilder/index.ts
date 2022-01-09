@@ -1,1 +1,2 @@
-export { default } from "./useRest";
+export { default } from "./restBuilder";
+export * from "./restBuilder";

@@ -1,7 +1,5 @@
-import type {
-  ProjectedData,
-  ProjectionAction,
-} from "../../../../../services/projection";
+import type { Skill } from "../../../../../services/api";
+import type { Projection } from "../../../../../services/projection";
 
 import { useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
@@ -9,19 +7,29 @@ import { Center, Divider } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
-import { SkillColors } from "../../../../../services/api/skills/interfaces";
 
-type TableRowProps = {
-  rowData: ProjectedData;
-};
+export interface TableRowProps {
+  skill: Skill;
+  projections: Projection[];
+}
 
-function TableRow({ rowData }: TableRowProps): JSX.Element {
+function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   const [isExpanded, setExpanded] = useState(false);
 
-  const skillBackgrounds: { [key: string]: string } = SkillColors;
+  const skillBackgrounds: { [key: string]: string } = {
+    Design: "#435BAE",
+    UX: "#AE436A",
+    Angular: "#876363",
+    React: "#61D0D7",
+    Node: "#805AD5",
+    DevOps: "#5FAE43",
+    "UI Designer": "#435BAE",
+    "UX Designer": "#AE436A",
+    "Project Management": "#B55F10",
+  };
 
   const getRowColors = (
-    action: ProjectionAction,
+    action: string,
   ): { highlight: string; background: string; text: string } => {
     switch (action) {
       case "Assign":
@@ -61,11 +69,8 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
         {/* Department Column*/}
         <Center width="3xs" px={3} minH={24}>
           <Flex flex={1} ml={1}>
-            <Badge
-              size="sm"
-              background={skillBackgrounds[rowData.role.name || "React"]}
-            >
-              {rowData.role.name}
+            <Badge size="sm" background={skillBackgrounds[skill.name]}>
+              {skill.name}
             </Badge>
           </Flex>
 
@@ -82,7 +87,7 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
           </Flex>
         </Center>
 
-        {rowData.roleProjection.map(({ action, needed, bench }, index) => {
+        {projections.map(({ action, needed, bench }, index) => {
           const { highlight, background, text } = getRowColors(action);
 
           return (
@@ -95,14 +100,14 @@ function TableRow({ rowData }: TableRowProps): JSX.Element {
             >
               <Flex w="100%" h="100%" flexDirection="column">
                 <Flex flex={1} px={3} justifyContent="end">
-                  <Text color={getLabelColor(needed.length)} textStyle="normal">
-                    {needed.length}
+                  <Text color={getLabelColor(needed)} textStyle="normal">
+                    {needed}
                   </Text>
                 </Flex>
                 <Divider border={1} orientation="horizontal" />
                 <Flex flex={1} px={3} justifyContent="end">
-                  <Text color={getLabelColor(bench.length)} textStyle="normal">
-                    {bench.length}
+                  <Text color={getLabelColor(bench)} textStyle="normal">
+                    {bench}
                   </Text>
                 </Flex>
                 <Divider border={1} orientation="horizontal" />

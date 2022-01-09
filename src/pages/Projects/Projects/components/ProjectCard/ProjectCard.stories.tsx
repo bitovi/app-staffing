@@ -1,17 +1,32 @@
-import { BrowserRouter } from "react-router-dom";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
+
+import { Suspense } from "react";
+import { BrowserRouter } from "react-router-dom";
+
+import { StylesProvider } from "@chakra-ui/react";
+
 import ProjectCard from "./ProjectCard";
-import { projects } from "../../../../../services/api/projects/fixtures";
+import { useProjects } from "../../../../../services/api";
+import theme from "../../../../../theme";
 
 export default {
   title: "Pages/Projects/ProjectCard",
   component: ProjectCard,
+  decorators: [
+    (Story) => (
+      <StylesProvider value={theme}>
+        <Suspense fallback={""}>
+          <BrowserRouter>
+            <Story />
+          </BrowserRouter>
+        </Suspense>
+      </StylesProvider>
+    ),
+  ],
 } as ComponentMeta<typeof ProjectCard>;
 
 export const Basic: ComponentStory<typeof ProjectCard> = () => {
-  return (
-    <BrowserRouter>
-      <ProjectCard project={projects[1]} />
-    </BrowserRouter>
-  );
+  const project = useProjects()[0];
+
+  return <ProjectCard project={project} />;
 };

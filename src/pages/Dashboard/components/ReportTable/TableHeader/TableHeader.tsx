@@ -1,20 +1,18 @@
-import { useProjection } from "../../../../../services/projection";
-import { TimescaleType } from "../../../../../services/timeline";
+import type { TimelineRange } from "../../../../../services/projection";
+
 import { format } from "date-fns";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Center, Text } from "@chakra-ui/react";
 
 type TableHeaderProps = {
-  date?: Date;
+  timeline: TimelineRange[];
   columnLabel?: string;
 };
 
 export default function TableHeader({
-  date = new Date(),
+  timeline,
   columnLabel,
 }: TableHeaderProps): JSX.Element {
-  const { timeline } = useProjection(date);
-
   return (
     <Flex flex={1} height={8} mb={7} alignItems={"start"}>
       {columnLabel && (
@@ -37,8 +35,7 @@ export default function TableHeader({
 
             {/* Sub Heading */}
             <Center height={4} flex={1} justifyContent="start">
-              {(type === TimescaleType.month ||
-                type === TimescaleType.quarter) && (
+              {(type === "month" || type === "quarter") && (
                 <Text color={"#718096"}>{format(startDate, "MMM do")}</Text>
               )}
             </Center>

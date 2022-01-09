@@ -24,7 +24,7 @@ export const Basic: ComponentStory<typeof ReportTable> = (args) => {
       <Flex my="6" />
       <hr />
       <Flex my="6" />
-      <ReportTable reportDate={date} />
+      <ReportTable date={date} />
     </>
   );
 };

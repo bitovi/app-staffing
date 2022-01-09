@@ -17,20 +17,20 @@ import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
 
-interface IEmployeeTable extends BoxProps {
+interface EmployeeTableProps extends BoxProps {
   employees: Employee[] | undefined;
   skills?: Skill[];
-  updateEmployee: (id: string, data: Omit<Employee, "id">) => Promise<void>;
-  deleteEmployee: (employeeId: string) => Promise<void>;
+  updateEmployee: (id: string, data: Employee) => Promise<void>;
+  destroyEmployee: (employeeId: string) => Promise<void>;
 }
 
 export default function EmployeeTable({
   employees,
   updateEmployee,
-  deleteEmployee,
+  destroyEmployee,
   skills,
   ...props
-}: IEmployeeTable): JSX.Element {
+}: EmployeeTableProps): JSX.Element {
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null,
   );
@@ -39,7 +39,7 @@ export default function EmployeeTable({
   const removeEmployee = async () => {
     if (employeeToDelete) {
       try {
-        await deleteEmployee(employeeToDelete.id);
+        await destroyEmployee(employeeToDelete.id);
         setEmployeeToDelete(null);
       } catch (e) {
         //ERROR HANDLING
@@ -47,9 +47,7 @@ export default function EmployeeTable({
     }
   };
 
-  const submitUpdateEmployee = async (
-    employeeToUpdate: Omit<Employee, "id">,
-  ) => {
+  const submitUpdateEmployee = async (employeeToUpdate: Employee) => {
     if (employeeToEdit) {
       const id = employeeToEdit.id;
       await updateEmployee(id, employeeToUpdate);
@@ -80,7 +78,7 @@ export default function EmployeeTable({
       <EmployeeModal
         isOpen={!isEmpty(employeeToEdit)}
         onClose={() => setEmployeeToEdit(null)}
-        onSave={submitUpdateEmployee}
+        onSave={(employee) => submitUpdateEmployee(employee as Employee)}
         skills={skills}
         employee={employeeToEdit ? employeeToEdit : undefined}
       />

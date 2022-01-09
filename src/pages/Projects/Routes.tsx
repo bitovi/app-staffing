@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import { Route, useRouteMatch } from "react-router-dom";
-import { useProjects } from "../../services/api";
 
 const Projects = lazy(() => import("./Projects"));
 const ProjectDetail = lazy(() => import("./ProjectDetail"));
@@ -11,7 +10,7 @@ export default function ProjectRoutes(): JSX.Element {
   return (
     <>
       <Route exact path={path}>
-        <Projects useProjects={useProjects} />
+        <Projects />
       </Route>
       <Route path={`${path}/:id`}>
         <ProjectDetail />

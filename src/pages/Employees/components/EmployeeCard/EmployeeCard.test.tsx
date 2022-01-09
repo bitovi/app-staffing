@@ -1,15 +1,12 @@
 import { StylesProvider } from "@chakra-ui/react";
 import { /*fireEvent,*/ render, screen } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
 //import { select as selectEvent } from "react-select-event";
 
 import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
-import { employeeMockData } from "../../../../services/api/employees/fixtures";
-import { wrapper } from "../../../../services/api/restBuilder/useRest.test";
 import theme from "../../../../theme";
-//import { employees } from "../../../../services/api/employees/fixtures";
+import { employees } from "../../../../mocks/fixtures";
 import EmployeeCard from "./EmployeeCard";
 //import { act } from "react-dom/test-utils";
 
@@ -17,23 +14,17 @@ jest.useFakeTimers("modern");
 
 describe("Components/Layout", () => {
   it("works", () => {
-    const { result } = renderHook(() => employeeMockData(), {
-      wrapper,
-    });
-    const { data: employees } = result.current.useEmployeeList();
+    const employee = employees[0];
     render(
       <MemoryRouter>
         <StylesProvider value={theme}>
           <table>
             <tbody>
-              {employees && (
-                <EmployeeCard
-                  handleEditEmployee={() => Promise.resolve()}
-                  handleDeleteEmployee={() => Promise.resolve()}
-                  key={employees[0].id}
-                  employee={employees[0]}
-                />
-              )}
+              <EmployeeCard
+                handleEditEmployee={() => Promise.resolve()}
+                handleDeleteEmployee={() => Promise.resolve()}
+                employee={employee}
+              />
             </tbody>
           </table>
         </StylesProvider>
@@ -41,8 +32,7 @@ describe("Components/Layout", () => {
       </MemoryRouter>,
     );
 
-    const name = screen.getByRole("row");
-    expect(name).toHaveTextContent("Vitor");
+    expect(screen.getByText(employee.name)).toBeInTheDocument();
   });
 
   /////////////////////////////////////////////

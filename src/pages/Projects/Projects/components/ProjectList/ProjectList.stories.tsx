@@ -2,7 +2,7 @@ import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 
 import ProjectList from ".";
-import { projects } from "../../../../../services/api/projects/fixtures";
+import { useProjects } from "../../../../../services/api";
 
 export default {
   title: "Pages/Projects/ProjectList",
@@ -16,10 +16,10 @@ export default {
   component: ProjectList,
 } as ComponentMeta<typeof ProjectList>;
 
-export const Basic: ComponentStory<typeof ProjectList> = ({ ...props }) => (
-  <ProjectList {...props} />
-);
+export const Basic: ComponentStory<typeof ProjectList> = ({ ...props }) => {
+  const projects = useProjects();
 
-Basic.args = {
-  projects: projects,
+  return <ProjectList {...props} projects={projects} />;
 };
+
+Basic.args = {};

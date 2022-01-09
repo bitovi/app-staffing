@@ -35,7 +35,7 @@ interface EmployeeFormData {
   name: string;
   startDate: string;
   endDate: string;
-  roles: Record<string, boolean>;
+  skills: Record<string, boolean>;
 }
 interface EmployeeModalProps {
   onSave: (data: Omit<Employee, "id">) => Promise<void>;
@@ -75,7 +75,7 @@ export default function EmployeeModal({
     (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
-    const employeeSkills = getSelectedSkills(data.roles, skills || []);
+    const employeeSkills = getSelectedSkills(data.skills, skills || []);
 
     try {
       setStatus("pending");
@@ -84,6 +84,7 @@ export default function EmployeeModal({
         startDate: data.startDate ? parseISO(data.startDate) : undefined,
         endDate: data.endDate ? parseISO(data.endDate) : undefined,
         skills: employeeSkills,
+        assignments: [],
       });
       reset({ name: "", startDate: "", endDate: "" });
       onClose();
@@ -159,18 +160,20 @@ export default function EmployeeModal({
                     <Controller
                       key={skill.id}
                       control={control}
-                      name={`roles.${skill.id}`}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <Checkbox
-                          value={skill.id}
-                          onChange={onChange}
-                          onBlur={onBlur}
-                          isChecked={Boolean(value)}
-                          textStyle="modal.checkboxLabel"
-                        >
-                          {skill.name}
-                        </Checkbox>
-                      )}
+                      name={`skills.${skill.id}`}
+                      render={({ field: { onChange, onBlur, value } }) => {
+                        return (
+                          <Checkbox
+                            value={skill.id}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            isChecked={Boolean(value)}
+                            textStyle="modal.checkboxLabel"
+                          >
+                            {skill.name}
+                          </Checkbox>
+                        );
+                      }}
                     />
                   ))}
                 </SimpleGrid>
@@ -273,10 +276,10 @@ function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
 }
 
 function toEmployeeFormData(data: Employee): EmployeeFormData {
-  const roles: Record<string, boolean> = {};
+  const skills: Record<string, boolean> = {};
 
-  data.skills.forEach((skill) => {
-    roles[skill.id] = true;
+  data?.skills?.forEach(({ id }) => {
+    skills[id] = true;
   });
 
   return {
@@ -287,6 +290,6 @@ function toEmployeeFormData(data: Employee): EmployeeFormData {
     endDate: data.endDate
       ? formatISO(data.endDate, { representation: "date" })
       : "",
-    roles,
+    skills,
   };
 }

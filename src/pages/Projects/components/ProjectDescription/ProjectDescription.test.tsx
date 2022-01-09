@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
-import { projects } from "../../../../services/api/projects/fixtures";
+import { projects } from "../../../../mocks/fixtures";
 import ProjectDescription from "./ProjectDescription";
 
 describe("Pages/Projects/components/ProjectDescriptions", () => {
@@ -20,7 +20,7 @@ describe("Pages/Projects/components/ProjectDescriptions", () => {
     fireEvent.blur(await screen.getByDisplayValue(projects[0].name));
     expect(onEditMock).toHaveBeenCalledTimes(1);
 
-    fireEvent.blur(await screen.findByText(projects[0].description));
+    fireEvent.blur(await screen.findByText(projects[0]?.description || ""));
     expect(onEditMock).toHaveBeenCalledTimes(2);
   });
 });

@@ -1,16 +1,19 @@
 import Select from "../../../../components/Select";
-import type { EstimatedDate } from "../../../../services/api";
 
 import styles from "./RoleDate.module.scss";
 
 export default function RoleDate({
   title,
-  estimatedDate,
-  onChange,
+  date,
+  confidence,
+  onConfidenceChange,
+  onDateChange,
 }: {
   title: "Start Date" | "End Date";
-  estimatedDate: EstimatedDate;
-  onChange: (date: EstimatedDate) => void;
+  date: Date | undefined;
+  confidence: number | undefined;
+  onConfidenceChange: (confidence?: number) => void;
+  onDateChange: (date?: Date) => void;
 }): JSX.Element {
   return (
     <div className={styles.dateContainer}>
@@ -18,24 +21,17 @@ export default function RoleDate({
         {title}
         <input
           type="date"
-          defaultValue={estimatedDate.date?.toString()}
-          onBlur={(e) => {
-            onChange({
-              ...estimatedDate,
-              date: new Date(e.target.value),
-            });
-          }}
+          defaultValue={date?.toString()}
+          onBlur={({ target: { value } }) => onDateChange(new Date(value))}
         />
       </label>
       <Select
         name={`${title.replace(" ", "")}Confidence`}
         label="Confidence:"
-        value={estimatedDate.confidence}
-        onChange={(value) => {
-          value && onChange({ ...estimatedDate, confidence: value });
-        }}
-        options={Array.from(Array(21).keys()).map((n) => ({
-          value: `${n * 5}%`,
+        value={confidence}
+        onChange={onConfidenceChange}
+        options={[...Array(21).keys()].map((n) => ({
+          value: n * 5,
           label: `${n * 5}%`,
         }))}
       />

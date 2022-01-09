@@ -1,18 +1,20 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { select as selectEvent } from "react-select-event";
 
-import { projects } from "../../../../services/api/projects/fixtures";
+import { roles } from "../../../../mocks/fixtures";
 import RoleDate from "./RoleDate";
 
 describe("Pages/Projects/components/RoleDates", () => {
   it("works", async () => {
-    const change = jest.fn();
+    const role = roles[0];
 
     render(
       <RoleDate
         title="Start Date"
-        estimatedDate={projects[0].roles[0].startDate}
-        onChange={change}
+        date={role.startDate}
+        confidence={role.startConfidence}
+        onConfidenceChange={jest.fn()}
+        onDateChange={jest.fn()}
       />,
     );
 
@@ -22,12 +24,15 @@ describe("Pages/Projects/components/RoleDates", () => {
 
   it("fires onBlur/onChange", async () => {
     const change = jest.fn();
+    const role = roles[0];
 
     render(
       <RoleDate
         title="Start Date"
-        estimatedDate={projects[0].roles[0].startDate}
-        onChange={change}
+        date={role.startDate}
+        confidence={role.startConfidence}
+        onConfidenceChange={change}
+        onDateChange={change}
       />,
     );
 

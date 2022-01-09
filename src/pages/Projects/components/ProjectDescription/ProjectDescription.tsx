@@ -7,14 +7,14 @@ export default function ProjectDescription({
   onEdit,
 }: {
   project: Project;
-  onEdit: (project: Project) => void;
+  onEdit: (id: string, project: Partial<Project>) => void;
 }): JSX.Element {
   const updateMainField = ({
     currentTarget,
   }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = currentTarget;
 
-    onEdit({ ...project, [name]: value });
+    onEdit(project.id, { [name]: value });
   };
 
   return (

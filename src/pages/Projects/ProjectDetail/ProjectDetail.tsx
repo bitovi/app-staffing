@@ -1,45 +1,72 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useProjects } from "../../../services/api";
-import { Box } from "@chakra-ui/layout";
 import type { Project } from "../../../services/api";
-import ProjectDeleteButton from "../components/ProjectDeleteButton/ProjectDeleteButton";
+
+import { Suspense } from "react";
+import { useParams } from "react-router-dom";
+import { Box } from "@chakra-ui/layout";
+
+import {
+  useProject as defaultUseProject,
+  useRoleMutations as defaultRoleMutation,
+  useProjectMutations as defaultUseProjectMutations,
+} from "../../../services/api";
+import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
-import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import RoleList from "../components/RoleList";
 
-export default function ProjectDetail(): JSX.Element {
+import ProjectsHeader from "../Projects/components/ProjectsHeader";
+interface ProjectDetailProps {
+  useProject: typeof defaultUseProject;
+  useProjectMutations: typeof defaultUseProjectMutations;
+  useRoleMutations: typeof defaultRoleMutation;
+}
+
+export function ProjectDetail({
+  useProject = defaultUseProject,
+  useProjectMutations = defaultUseProjectMutations,
+  useRoleMutations = defaultRoleMutation,
+}: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
-  const { projects, updateProject } = useProjects();
-  const [projectData, setProjectData] = useState<Project | undefined>(
-    projects?.find((p) => p.id === id),
-  );
+  const project = useProject(id);
 
-  useEffect(() => {
-    if (!projects) return;
+  const { updateProject, destroyProject } = useProjectMutations();
+  const { updateRole, destroyRole } = useRoleMutations();
 
-    setProjectData(projects.find((p) => p.id === id));
-  }, [projects, id]);
-
-  const onSave = (project: Project) => {
-    updateProject(project.id, project);
+  const onSave = (id: string, updated: Partial<Project>) => {
+    updateProject(id, { ...project, ...updated });
   };
 
   return (
     <div>
-      <ProjectsHeader name={projectData?.name} loading={false} />
-      {projectData && (
+      <ProjectsHeader name={project?.name} />
+      {project && (
         <>
-          <ProjectDescription onEdit={onSave} project={projectData} />
-          <RoleList onEdit={onSave} project={projectData} />
+          <ProjectDescription onEdit={onSave} project={project} />
+          <RoleList
+            destroyRole={destroyRole}
+            updateRole={updateRole}
+            project={project}
+          />
           <Box mt={10}>
             <ProjectDeleteButton
-              projectName={projectData.name}
-              projectId={projectData.id}
+              projectName={project.name}
+              projectId={project.id}
+              destroyProject={destroyProject}
             />
           </Box>
         </>
       )}
     </div>
+  );
+}
+
+export default function ProjectDetailWrapper(): JSX.Element {
+  return (
+    <Suspense fallback={<h1>loading</h1>}>
+      <ProjectDetail
+        useProject={defaultUseProject}
+        useProjectMutations={defaultUseProjectMutations}
+        useRoleMutations={defaultRoleMutation}
+      />
+    </Suspense>
   );
 }
