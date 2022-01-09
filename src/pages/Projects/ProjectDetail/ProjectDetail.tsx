@@ -61,7 +61,6 @@ export function ProjectDetail({
 
 export default function ProjectDetailWrapper(): JSX.Element {
   return (
-    // TODO: Skeleton
     <Suspense fallback={<h1>loading</h1>}>
       <ProjectDetail
         useProject={defaultUseProject}

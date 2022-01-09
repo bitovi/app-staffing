@@ -5,12 +5,14 @@ export const isIsoDateTime = (date: string): boolean => {
   );
 };
 
-export default function parseDate(data: any): void {
-  if (typeof data === "undefined") {
+export default function parseDate(input: unknown): void {
+  if (typeof input === "undefined") {
     return;
   }
 
-  if (typeof data === "object" && data !== null) {
+  if (typeof input === "object" && input !== null) {
+    const data = input as Record<string, unknown>;
+
     for (const key in data) {
       const value = data[key];
 
