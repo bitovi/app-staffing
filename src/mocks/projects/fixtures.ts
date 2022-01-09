@@ -1,5 +1,4 @@
 import faker from "faker";
-import serializer from "../../services/api/restBuilder/serializer";
 
 export interface JSONProject {
   type: "projects";
@@ -43,7 +42,3 @@ export const projects: JSONProject[] = [
   makeProject(),
   makeProject(),
 ];
-
-export const deserializedProjects = serializer.deserialize("projects", {
-  data: projects,
-});

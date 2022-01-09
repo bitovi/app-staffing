@@ -5,8 +5,6 @@ import { skills } from "../skills/fixtures";
 
 import { addAssignment } from "../assignments/fixtures";
 import { addRole } from "../roles/fixtures";
-import serializer from "../../services/api/restBuilder/serializer";
-import { Employee } from "../../services/api";
 
 export interface JSONEmployee {
   type: "employees";
@@ -70,6 +68,3 @@ export function addEmployee(): void {
 for (let i = 0; i < 15; i++) {
   addEmployee();
 }
-
-export const getDeserializedEmployees = (): Employee[] =>
-  serializer.deserialize("employees", { data: employees });
