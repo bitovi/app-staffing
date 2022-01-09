@@ -8,7 +8,7 @@ import { useToast } from "../../toast";
 import fetcher from "./fetcher";
 
 import serializer, { SerializerTypes } from "./serializer";
-import { parseDate } from "./parseDate";
+import parseDate from "./parseDate";
 
 interface ListQuery<T> {
   filter?: Filter<T>;
