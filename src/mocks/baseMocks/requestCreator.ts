@@ -4,6 +4,7 @@ import type { RestHandler, DefaultRequestBody, MockedRequest } from "msw";
 
 import { rest } from "msw";
 import deparam from "can-deparam";
+import { v4 as uuidv4 } from "uuid";
 
 import { stores } from "..";
 
@@ -106,7 +107,7 @@ export default function requestCreator<Resource extends BaseResource>(
     create: rest.post<{ data: Omit<Resource, "id"> }, MockResponse<Resource>>(
       `${API_BASE_URL}${resourcePath}`,
       async (req, res, ctx) => {
-        const id = (Math.floor(Math.random() * 1000) + 1).toString();
+        const id = uuidv4();
         const item = { ...req.body.data, id } as Resource; // @TODO: look into typing issue
 
         await store.createData(item);
