@@ -251,5 +251,3 @@ const create = (): {
 };
 
 export const { skills, projects, assignments, roles, employees } = create();
-
-console.log({ skills, projects, assignments, roles, employees });
