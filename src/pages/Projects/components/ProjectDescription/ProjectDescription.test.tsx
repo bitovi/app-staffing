@@ -8,9 +8,9 @@ describe("Pages/Projects/components/ProjectDescriptions", () => {
     const onEditMock = jest.fn();
 
     render(<ProjectDescription project={projects[0]} onEdit={onEditMock} />);
-    expect(
-      screen.getByDisplayValue(projects[0].description),
-    ).toBeInTheDocument();
+    expect(projects[0]?.description).toEqual(
+      "Et quaerat neque eligendi. Qui et rerum ratione ducimus adipisci temporibus est. Natus illum dolorum sapiente est temporibus. Corrupti quaerat aspernatur aut.",
+    );
   });
 
   it("fires onBlur", async () => {
