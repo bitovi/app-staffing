@@ -63,7 +63,7 @@ export default function ProjectList({
 
         {projects && projects.length > 0 && (
           <>
-            <Box maxHeight="80vh" overflowX="hidden">
+            <Box maxHeight="80vh" overflowY="auto">
               <Table variant="unstyled">
                 <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10">
                   <Tr>
