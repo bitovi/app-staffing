@@ -1,5 +1,4 @@
 import type { JSONAPIDocument } from "json-api-serializer";
-import type { SerializerTypes } from "../serializer";
 
 class HttpError extends Error {
   status?: number;
@@ -14,7 +13,6 @@ const API_BASE_URL = window.env.API_BASE_URL;
 
 export default async function fetcher(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
-  type: SerializerTypes,
   url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: Record<string, any>,
