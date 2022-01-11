@@ -18,11 +18,15 @@ import {
   FormControl,
   FormLabel,
   Textarea,
+  Flex,
+  Box,
 } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 // import { useEffect } from "@storybook/addons";
+import { ServiceError } from "../../../../../components/ServiceError";
 
 type FormData = Omit<Project, "id">;
 
@@ -43,15 +47,11 @@ export default function AddProjectModal({
   addProject,
   project,
 }: AddProjectModalProps): JSX.Element {
-  const projectData = project ? toProjectFormData(project) : undefined;
-  console.log("project", project);
-
-  // const [serverError, setServerError] = useState(false);
-  const [status, setStatus] = useState<SaveButtonStatus>("idle");
-
   const history = useHistory();
-
+  const [serverError, setServerError] = useState(false);
+  const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const [newProject, setNewProject] = useState<FormData>(initialFormState);
+  const projectData = project ? toProjectFormData(project) : undefined;
 
   const {
     register,
@@ -70,10 +70,16 @@ export default function AddProjectModal({
     (!isNewProject && formIsDirty && fullNameProvided(projectName));
 
   const addNewProject = async () => {
-    setStatus("pending")
-    const newProjectId = await addProject(newProject);
-    history.push(`/projects/${newProjectId}`);
-    setStatus("idle");
+    try {
+      setStatus("pending");
+      const newProjectId = await addProject(newProject);
+      reset({ name: "", description: "" });
+      onClose();
+      history.push(`/projects/${newProjectId}`);
+      setStatus("idle");
+    } catch (e) {
+      setServerError(!serverError);
+    }
   };
 
   const handleChange = (
@@ -84,12 +90,6 @@ export default function AddProjectModal({
       ...newProject,
       [name]: value,
     }));
-  };
-
-  const onCloseModal = () => {
-    setNewProject(initialFormState);
-    reset({ name: "", description: "" })
-    onClose();
   };
 
   const resetForm = () => {
@@ -106,12 +106,7 @@ export default function AddProjectModal({
   useEffect(resetForm, [project, reset]);
 
   return (
-    <Modal
-      size="md"
-      isOpen={isOpen}
-      onClose={onCloseModal}
-      variant="project_modal"
-    >
+    <Modal size="md" isOpen={isOpen} onClose={onClose} variant="project_modal">
       <ModalOverlay />
       <ModalContent mt="14vh">
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
@@ -146,9 +141,43 @@ export default function AddProjectModal({
             </FormControl>
           </VStack>
         </ModalBody>
+
+        {serverError && (
+          <Flex justifyContent="center" width="100%">
+            <ServiceError
+              mb="25px"
+              bg="red.100"
+              color="gray.700"
+              iconColor="red.500"
+              textStyle="table.title"
+              name="Server Error"
+              width="80%"
+              h="48px"
+            >
+              <Box
+                as="button"
+                onClick={() => setServerError(!serverError)}
+                position="absolute"
+                top="11.75px"
+                right="11.75px"
+                color="gray.700"
+              >
+                <CloseIcon w="8.50px" h="8.50px" />
+              </Box>
+            </ServiceError>
+          </Flex>
+        )}
+
         <Divider pt={1} />
         <ModalFooter>
-          <Button variant="outline" mr="8px" onClick={onCloseModal}>
+          <Button
+            variant="outline"
+            mr="8px"
+            onClick={() => {
+              resetForm();
+              onClose();
+            }}
+          >
             Cancel
           </Button>
           <Button variant="primary" onClick={addNewProject}>
@@ -161,7 +190,7 @@ export default function AddProjectModal({
 }
 
 function fullNameProvided(name: string) {
-  return name ? name.split("").length >= 1 : false;
+  return name ? name.trim().split("").length >= 2 : false;
 }
 
 function toProjectFormData(data: Project): ProjectFormData {
