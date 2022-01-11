@@ -11,7 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
-import { isEmpty } from "lodash";
+import isEmpty from "lodash/isEmpty";
 import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
@@ -36,17 +36,6 @@ export default function EmployeeTable({
   );
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
 
-  const removeEmployee = async () => {
-    if (employeeToDelete) {
-      try {
-        await destroyEmployee(employeeToDelete.id);
-        setEmployeeToDelete(null);
-      } catch (e) {
-        //ERROR HANDLING
-      }
-    }
-  };
-
   const submitUpdateEmployee = async (employeeToUpdate: Employee) => {
     if (employeeToEdit) {
       const id = employeeToEdit.id;
@@ -60,20 +49,11 @@ export default function EmployeeTable({
 
   return (
     <>
-      <ConfirmationModal
-        isOpen={!isEmpty(employeeToDelete)}
-        onClose={() => {
-          setEmployeeToDelete(null);
-        }}
-        onConfirm={removeEmployee}
-        title="Delete Team Member"
-        message={`You are about to remove ${
-          employeeToDelete ? employeeToDelete.name : "no one"
-        }. This can't be undone.`}
-        closeText="Cancel"
-        confirmText="Delete Team Member"
-        confirmButtonVariant="modalConfirm"
-        modalSize="lg"
+      <DeleteConfirmationModal
+        key={employeeToDelete ? employeeToDelete.id : null}
+        employee={employeeToDelete}
+        setEmployee={setEmployeeToDelete}
+        destroyEmployee={destroyEmployee}
       />
       <EmployeeModal
         isOpen={!isEmpty(employeeToEdit)}
@@ -177,5 +157,59 @@ function EmployeeTableRow({
       {/* add space between rows */}
       {!lastChild && <Tr height={4} />}
     </>
+  );
+}
+
+function DeleteConfirmationModal({
+  employee,
+  setEmployee,
+  destroyEmployee,
+}: {
+  employee: Employee | null;
+  setEmployee: (employee: Employee | null) => void;
+  destroyEmployee: (employeeId: string) => Promise<void>;
+}) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const isOpen = employee != null;
+
+  const onClose = () => {
+    setEmployee(null);
+  };
+
+  const onConfirm = async () => {
+    if (!employee) return;
+
+    setIsLoading(true);
+
+    try {
+      await destroyEmployee(employee.id);
+      setIsLoading(false);
+      setEmployee(null);
+    } catch (error) {
+      setIsLoading(false);
+      setError((error as Error).message);
+    }
+  };
+
+  return (
+    <ConfirmationModal
+      isOpen={isOpen}
+      error={error || undefined}
+      isLoading={isLoading}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      title="Delete Team Member"
+      closeText="Cancel"
+      confirmText="Delete Team Member"
+      confirmButtonVariant="modalConfirm"
+      confirmLoadingText="Deleting Team Member ..."
+      modalSize="lg"
+      message={
+        employee
+          ? `You are about to remove ${employee.name}. This can't be undone.`
+          : ""
+      }
+    />
   );
 }

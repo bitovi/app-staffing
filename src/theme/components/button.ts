@@ -51,6 +51,11 @@ const button: StyleConfig = {
       lineHeight: "24px",
       fontSize: "16px",
       fontWeight: "600",
+      _hover: {
+        _disabled: {
+          backgroundColor: "red.500",
+        },
+      },
     },
   },
   sizes: {
