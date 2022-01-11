@@ -1,6 +1,6 @@
 import type { NewProject, Project } from "../../../../../services/api";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
   ModalBody,
@@ -20,6 +20,9 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
+import { useForm } from "react-hook-form";
+import { isEmpty } from "lodash";
+// import { useEffect } from "@storybook/addons";
 
 type FormData = Omit<Project, "id">;
 
@@ -29,21 +32,48 @@ interface AddProjectModalProps {
   onClose: () => void;
   isOpen: boolean;
   addProject: (project: NewProject) => void;
+  project?: Project;
 }
+
+type SaveButtonStatus = "idle" | "pending";
 
 export default function AddProjectModal({
   isOpen,
   onClose,
   addProject,
+  project,
 }: AddProjectModalProps): JSX.Element {
+  const projectData = project ? toProjectFormData(project) : undefined;
+  console.log("project", project);
+
+  // const [serverError, setServerError] = useState(false);
+  const [status, setStatus] = useState<SaveButtonStatus>("idle");
+
   const history = useHistory();
 
   const [newProject, setNewProject] = useState<FormData>(initialFormState);
 
-  const addNewProject = async () => {
-    const newProjectId = await addProject(newProject);
+  const {
+    register,
+    watch,
+    handleSubmit,
+    reset,
+    formState: { isDirty: formIsDirty },
+  } = useForm<ProjectFormData>({
+    defaultValues: projectData,
+  });
 
+  const isNewProject = isEmpty(projectData);
+  const projectName = watch("name");
+  const canSubmitForm =
+    (isNewProject && fullNameProvided(projectName)) ||
+    (!isNewProject && formIsDirty && fullNameProvided(projectName));
+
+  const addNewProject = async () => {
+    setStatus("pending")
+    const newProjectId = await addProject(newProject);
     history.push(`/projects/${newProjectId}`);
+    setStatus("idle");
   };
 
   const handleChange = (
@@ -58,8 +88,22 @@ export default function AddProjectModal({
 
   const onCloseModal = () => {
     setNewProject(initialFormState);
+    reset({ name: "", description: "" })
     onClose();
   };
+
+  const resetForm = () => {
+    reset(
+      project
+        ? toProjectFormData(project)
+        : {
+            name: "",
+            description: "",
+          },
+    );
+  };
+
+  useEffect(resetForm, [project, reset]);
 
   return (
     <Modal
@@ -80,11 +124,14 @@ export default function AddProjectModal({
             <FormControl isRequired>
               <FormLabel>Project Name</FormLabel>
               <Input
-                name="name"
-                label="Project name"
-                data-testid="projectInput"
+                {...register("name", {
+                  required: "Project Name not filled out",
+                  validate: (name) =>
+                    fullNameProvided(name) || "Full name required",
+                })}
                 onChange={handleChange}
-                value={newProject.name}
+                data-testid="projectInput"
+                id="projectName"
               />
             </FormControl>
             <FormControl>
@@ -111,4 +158,45 @@ export default function AddProjectModal({
       </ModalContent>
     </Modal>
   );
+}
+
+function fullNameProvided(name: string) {
+  return name ? name.split("").length >= 1 : false;
+}
+
+function toProjectFormData(data: Project): ProjectFormData {
+  const roles: Record<string, boolean> = {};
+
+  data?.roles?.forEach(({ id }) => {
+    roles[id] = true;
+  });
+
+  return {
+    name: data.name,
+    description: data.description,
+    roles,
+  };
+}
+
+function getSubmitButtonProps({
+  status,
+  canSubmitForm,
+  onClick,
+}: {
+  status: SaveButtonStatus;
+  canSubmitForm: boolean;
+  onClick: () => Promise<void>;
+}) {
+  if (status === "pending") {
+    return {
+      isLoading: true,
+      isDisabled: true,
+      loadingText: "Saving",
+    };
+  }
+
+  return {
+    variant: canSubmitForm ? "primary" : "primaryDisabled",
+    onClick,
+  };
 }

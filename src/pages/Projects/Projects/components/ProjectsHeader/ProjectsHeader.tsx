@@ -1,4 +1,4 @@
-import type { NewProject } from "../../../../../services/api";
+import type { Project, NewProject } from "../../../../../services/api";
 
 import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
@@ -14,12 +14,14 @@ interface ProjectHeaderProps {
   loading?: boolean;
   name?: string;
   addProject?: (project: NewProject) => void;
+  project?: Project;
 }
 
 export default function ProjectsHeader({
   loading,
   name,
   addProject,
+  project,
 }: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -77,6 +79,7 @@ export default function ProjectsHeader({
               isOpen={isOpen}
               onClose={onClose}
               addProject={(project) => addProject?.(project)}
+              project={project}
             />
           </>
         )}
