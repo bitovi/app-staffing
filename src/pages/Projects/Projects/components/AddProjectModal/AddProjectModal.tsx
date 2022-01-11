@@ -25,7 +25,6 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
-// import { useEffect } from "@storybook/addons";
 import { ServiceError } from "../../../../../components/ServiceError";
 
 type FormData = Omit<Project, "id">;
@@ -112,7 +111,13 @@ export default function AddProjectModal({
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
           Add Project
         </ModalHeader>
-        <ModalCloseButton mt={2} />
+        <ModalCloseButton
+          mt={2}
+          onClick={() => {
+            resetForm();
+            onClose();
+          }}
+        />
         <Divider pt={2} />
         <ModalBody pt={4}>
           <VStack spacing="16px" pb={6}>
