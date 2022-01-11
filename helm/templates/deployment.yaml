@@ -64,6 +64,31 @@ spec:
       {{- end }}
 
       containers:
+
+      # Using a different container for storybook rather than
+      # running two servers in the same container
+      {{- if .Values.storybook.enabled }}
+      - name: {{ .Values.appname }}-storybook
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+
+        command: ["npm"]
+        args: ["run", "storybook"]
+
+        {{- if .Values.storybook.extraEnv }}
+        env:
+        {{- range $key, $value := .Values.storybook.extraEnv }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+
+        ports:
+        - name: storybook
+          containerPort: {{ .Values.storybook.service.targetPort }}
+          protocol: TCP
+      {{- end }}
+
       {{- if .Values.chokidarPollerContainer.enabled }}
       - name: {{ .Values.appname }}-chokidar-poller
         image: {{ .Values.image }}

@@ -41,6 +41,7 @@ RUN chmod +x /usr/local/bin/kubectl
 COPY ./package.json ./package-lock.json ./
 RUN npm ci
 COPY . .
+RUN npm run storybook:build
 
 
 
