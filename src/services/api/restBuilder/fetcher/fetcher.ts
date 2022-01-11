@@ -33,5 +33,9 @@ export default async function fetcher(
     );
   }
 
+  // 204 responses do not include content, calling response.json() throws an
+  // exception.
+  if (response.status === 204) return {};
+
   return await response.json();
 }

@@ -160,14 +160,13 @@ export default function requestCreator<Resource extends BaseResource>(
           return res(
             ctx.status(404),
             ctx.json({
-              error: `Project ${id} not found.`,
+              error: `Resource with id: ${id} not found.`,
             }),
           );
         }
 
         await store.destroyData(resourceToDelete);
-
-        return res(ctx.status(200), ctx.json({}));
+        return res(ctx.status(204));
       },
     ),
   };

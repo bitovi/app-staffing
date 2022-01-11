@@ -1,5 +1,8 @@
 import { HStack, Text } from "@chakra-ui/layout";
 import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,6 +21,7 @@ interface ConfirmationModalProps {
   message: string;
   closeText: string;
   confirmText: string;
+  confirmLoadingText?: string;
   error?: string;
   isLoading?: boolean;
   confirmButtonVariant?: ButtonVariant;
@@ -33,6 +37,7 @@ export default function ConfirmationModal({
   message,
   closeText,
   confirmText,
+  confirmLoadingText,
   error,
   isLoading,
   confirmButtonVariant = "primary",
@@ -51,13 +56,13 @@ export default function ConfirmationModal({
         <ModalCloseButton />
         <ModalHeader>{title}</ModalHeader>
         <ModalBody>
-          {/* // TODO: Should have a common error component across the application */}
-          {error && (
-            <Text mb={4} color="red">
-              {error}
-            </Text>
-          )}
           <Text textStyle="modal.text">{message}</Text>
+          {error && (
+            <Alert status="error" mt="15px">
+              <AlertIcon />
+              <AlertTitle mr={2}>{error}</AlertTitle>
+            </Alert>
+          )}
         </ModalBody>
         <ModalFooter>
           <HStack flexGrow={1} justifyContent="flex-end">
@@ -74,6 +79,7 @@ export default function ConfirmationModal({
               onClick={onConfirm}
               variant={confirmButtonVariant}
               aria-label="confirm button"
+              loadingText={confirmLoadingText}
             >
               {confirmText}
             </Button>
