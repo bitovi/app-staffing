@@ -17,6 +17,7 @@ import {
   Divider,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Textarea,
   Flex,
   Box,
@@ -57,7 +58,7 @@ export default function AddProjectModal({
     watch,
     handleSubmit,
     reset,
-    formState: { isDirty: formIsDirty },
+    formState: { errors, isDirty: formIsDirty },
   } = useForm<ProjectFormData>({
     defaultValues: projectData,
   });
@@ -109,7 +110,7 @@ export default function AddProjectModal({
       <ModalOverlay />
       <ModalContent mt="14vh">
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
-          Add Project
+          {isNewProject ? "Add Project" : "Edit Project Name and Description"}
         </ModalHeader>
         <ModalCloseButton
           mt={2}
@@ -121,7 +122,7 @@ export default function AddProjectModal({
         <Divider pt={2} />
         <ModalBody pt={4}>
           <VStack spacing="16px" pb={6}>
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={errors.name ? true : false}>
               <FormLabel>Project Name</FormLabel>
               <Input
                 {...register("name", {
@@ -129,10 +130,11 @@ export default function AddProjectModal({
                   validate: (name) =>
                     fullNameProvided(name) || "Full name required",
                 })}
+                label="Project Name"
                 onChange={handleChange}
                 data-testid="projectInput"
-                id="projectName"
               />
+              <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
             <FormControl>
               <FormLabel>Description</FormLabel>
@@ -140,7 +142,6 @@ export default function AddProjectModal({
                 label="Description"
                 onChange={handleChange}
                 name="description"
-                data-testid="projectDescription"
                 value={newProject.description}
               />
             </FormControl>
@@ -195,7 +196,7 @@ export default function AddProjectModal({
 }
 
 function fullNameProvided(name: string) {
-  return name ? name.trim().split("").length >= 2 : false;
+  return name ? name.trim().split("").length >= 1 : false;
 }
 
 function toProjectFormData(data: Project): ProjectFormData {
