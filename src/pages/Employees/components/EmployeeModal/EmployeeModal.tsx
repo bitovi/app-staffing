@@ -116,7 +116,13 @@ export default function EmployeeModal({
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
           {isNewEmployee ? "Add a New Team Member" : "Edit Team Member"}
         </ModalHeader>
-        <ModalCloseButton mt={2} />
+        <ModalCloseButton
+          mt={2}
+          onClick={() => {
+            resetForm();
+            onClose();
+          }}
+        />
         <Divider pt={2} />
         <ModalBody pt={4}>
           <VStack spacing="16px" pb={6}>

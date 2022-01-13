@@ -101,6 +101,7 @@ export default function AddProjectModal({
             description: "",
           },
     );
+    setNewProject(initialFormState);
   };
 
   useEffect(resetForm, [project, reset]);
