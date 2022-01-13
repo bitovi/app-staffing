@@ -20,18 +20,19 @@ watcher.on("all", notify)
 
 function notify(event, file) {
   const filename = path.join(watcher.options.cwd, file)
+  const kubectlCpFile = "/usr/src/app/chokidar-poller/kubectl-cp.sh"
+  const command = `bash ${kubectlCpFile}`
+  let kubepath = "/usr/src/kube"
+  if(process.env.KUBE_PATH){
+      kubepath = process.env.KUBE_PATH
+  }
+
   console.log(`Handling event (${event}) for file (${filename}).`)
 
     if(event === "delete" || event === "unlink"){
         console.log("TODO: removing file from main container...")
     }else{
         console.log("copying file to main container...")
-        let kubepath = "/usr/src/kube"
-        if(process.env.KUBE_PATH){
-            kubepath = process.env.KUBE_PATH
-        }
-        const kubectlCpFile = "/usr/src/app/chokidar-poller/kubectl-cp.sh"
-        const command = `bash ${kubectlCpFile}`
         const myShellScript = exec(command, {
             env: {
                 KUBECONFIG: `${kubepath}/kubeconfig`,
@@ -40,6 +41,7 @@ function notify(event, file) {
                 CONTAINER: `app-staffing`
             }
         }, (error, stdout, stderr) => {
+            console.log("copying file to main container - Done")
             if (error) {
               console.error(`exec error: ${error}`);
               return;
@@ -47,6 +49,26 @@ function notify(event, file) {
             console.log(`stdout: ${stdout}`);
             console.error(`stderr: ${stderr}`);
         });
+
+        if(process.env.STORYBOOK_ENABLED){
+            console.log("copying file to storybook container...")
+            const myShellScript = exec(command, {
+                env: {
+                    KUBECONFIG: `${kubepath}/kubeconfig`,
+                    CURRENT_POD: `${process.env.HOSTNAME}`,
+                    FILEPATH: `${filename}`,
+                    CONTAINER: `app-staffing-storybook`
+                }
+            }, (error, stdout, stderr) => {
+                console.log("copying file to storybook container - Done")
+                if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+                }
+                console.log(`stdout: ${stdout}`);
+                console.error(`stderr: ${stderr}`);
+            });
+        }
     }
     console.log("")   
 }

@@ -13,6 +13,19 @@ image: app-staffing:latest
 cacheBusting:
   # if `true`, chart gets redeployed every time
   timestamp: false
+  # TODO: implement the following to deploy chart only when relevant templates change
+  # helmfiles: false
+
+# the above requires something along the lines of the following:
+# spec:
+#   template:
+#     metadata:
+#       annotations:
+#         {{- if .Values.cacheBusting.helmfiles }}
+#         cachebusting-helmfiles/deployment: {{ include (print $.Template.BasePath "/deployment.yaml") . | sha256sum }}
+#         cachebusting-helmfiles/service: {{ include (print $.Template.BasePath "/service.yaml") . | sha256sum }}
+#         {{- end }}
+
 
 # For the front-end config
 # Note: Please see /public/config.js for information about these values.
@@ -48,36 +61,6 @@ ingress: []
   #       service: app-staffing
   #       port: 80
 
-# used with local development
-#   enabled automatically when 
-#   MOUNT_APP_STAFFING="1" is set on `_scripts/local/deploy.sh` from the ops repo
-chokidarPollerContainer:
-  enabled: false
-  extraEnv:
-    KUBE_PATH: "/usr/src/kube"
-  # extraVolumes:
-  #   - name: local-files-app-staffing
-  #     hostPath: 
-  #       path: /local-files/app-staffing
-  # extraVolumeMounts:
-  #   - mountPath: /usr/src/app
-  #     name: local-files-app-staffing
-
-cacheBusting:
-  timestamp: false
-  # TODO: implement the following to deploy chart only when relevant templates change
-  # helmfiles: false
-
-# the above requires something along the lines of the following:
-# spec:
-#   template:
-#     metadata:
-#       annotations:
-#         {{- if .Values.cacheBusting.helmfiles }}
-#         cachebusting-helmfiles/deployment: {{ include (print $.Template.BasePath "/deployment.yaml") . | sha256sum }}
-#         cachebusting-helmfiles/service: {{ include (print $.Template.BasePath "/service.yaml") . | sha256sum }}
-#         {{- end }}
-
 extraEnv: {}
   # APP_PORT: 3000
 
@@ -97,3 +80,55 @@ serviceAccount:
   enabled: false
   # set to true to include a role and role binding to allow sa to modify pods
   enableModifyPods: false
+
+
+# used with local development
+#   enabled automatically when 
+#   MOUNT_APP_STAFFING="1" is set on `_scripts/local/deploy.sh` from the ops repo
+chokidarPollerContainer:
+  enabled: false
+  extraEnv:
+    KUBE_PATH: "/usr/src/kube"
+  # extraVolumes:
+  #   - name: local-files-app-staffing
+  #     hostPath: 
+  #       path: /local-files/app-staffing
+  # extraVolumeMounts:
+  #   - mountPath: /usr/src/app
+  #     name: local-files-app-staffing
+
+# used with local development
+# must be used with Dockerfile target=development
+storybook:
+  enabled: false
+  extraEnv: {}
+  service:
+    enabled: false
+    port: 80
+    # storybook.service.targetPort must be different than the root service.port
+    # because the containers are in the same pod
+    targetPort: 6006
+    type: ClusterIP
+    annotations: {}
+  ingress:
+    enabled: false
+    # class: nginx
+    # name: storybook
+    # host: storybook.localhost
+    # tls: false
+    # extraAnnotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   # https://stackoverflow.com/questions/68543549/websocket-connection-to-wss-sockjs-node-failed-for-cra-and-nginx-reverse-proxy
+    #   # https://docs.nginx.com/nginx-ingress-controller/configuration/ingress-resources/advanced-configuration-with-annotations/
+    #   nginx.org/server-snippets: |
+    #     location /sockjs-node {
+    #         proxy_pass http://app-staffing-storybook.staffing-app.svc.cluster.local/sockjs-node;
+    #         proxy_http_version 1.1;
+    #         proxy_set_header Upgrade $http_upgrade;
+    #         proxy_set_header Connection "upgrade";
+    #     }
+    # paths:
+    #   - path: /
+    #     pathType: Prefix
+    #     service: app-staffing-storybook
+    #     port: 80

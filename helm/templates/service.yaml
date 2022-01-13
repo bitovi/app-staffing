@@ -25,6 +25,33 @@ spec:
     chart: {{ .Chart.Name }}
 {{- end }}
 
+{{- if and .Values.storybook.enabled .Values.storybook.service.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appname }}-storybook
+  labels:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+  {{- if .Values.storybook.service.annotations }}
+  annotations:
+    {{- range $key, $val := .Values.storybook.service.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.storybook.service.type }}
+  ports:
+  - name: service
+    port: {{ .Values.storybook.service.port }}
+    protocol: TCP
+    targetPort: {{ .Values.storybook.service.targetPort }}
+  selector:
+    app: {{ .Values.appname }}
+    chart: {{ .Chart.Name }}
+{{- end }}
+
 
 {{- range $index, $item := .Values.extraServices }}
 ---

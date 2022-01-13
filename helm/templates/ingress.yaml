@@ -58,3 +58,58 @@ spec:
       {{- end }}
       {{- end}}
 {{- end}}
+
+
+{{- if and .Values.storybook.enabled .Values.storybook.ingress.enabled }}
+---
+{{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+{{- else }}
+apiVersion: networking.k8s.io/v1
+{{- end }}
+
+kind: Ingress
+metadata:
+  name: app-staffing-storybook
+  labels:
+    app: {{ $.Values.appname }}
+    chart: {{ $.Chart.Name }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.storybook.ingress.class }}
+    {{- range $key, $val := .Values.storybook.ingress.extraAnnotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+
+spec:
+  {{- if .Values.storybook.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.storybook.ingress.host }}
+    secretName: {{ .Values.storybook.ingress.host }}-tls
+  {{- end }}
+
+  rules:
+  {{- if .Values.storybook.ingress.host }}
+  - host: {{ .Values.storybook.ingress.host }}
+    http:
+  {{- else }}
+  - http:
+  {{- end }}
+      paths:
+      {{- range .Values.storybook.ingress.paths }}
+      {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+        - path: "{{ .path }}"
+          backend:
+            serviceName: {{ .service }}
+            servicePort: {{ .port }}
+      {{- else }}
+        - path: "{{ .path }}"
+          pathType: "{{ .pathType }}"
+          backend:
+            service:
+              name: {{ .service }}
+              port:
+                number: {{ .port }}
+      {{- end }}
+      {{- end}}
+{{- end}}
