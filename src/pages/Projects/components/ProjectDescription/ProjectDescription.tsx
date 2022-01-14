@@ -1,6 +1,5 @@
 import type { Project } from "../../../../services/api";
 import { Textarea } from "@chakra-ui/react";
-import styles from "./ProjectDescription.module.scss";
 
 export default function ProjectDescription({
   project,
@@ -18,12 +17,15 @@ export default function ProjectDescription({
   };
 
   return (
-    <div className={styles.projectDescription}>
+    <>
       <Textarea
         name="description"
         defaultValue={project.description}
         onBlur={updateMainField}
+        isFullWidth
+        resize="none"
+        variant="unstyled"
       />
-    </div>
+    </>
   );
 }

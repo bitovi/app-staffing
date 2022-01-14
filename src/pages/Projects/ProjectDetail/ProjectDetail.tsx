@@ -112,6 +112,7 @@ export function ProjectDetail({
           border="1px solid #eee"
           borderRadius="4px"
           alignItems="center"
+          marginTop="25px"
         >
           <Image
             height="100px"

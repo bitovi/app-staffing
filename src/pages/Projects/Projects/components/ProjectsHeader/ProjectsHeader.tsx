@@ -24,7 +24,7 @@ export default function ProjectsHeader({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box mb="48px">
+    <Box mb={name ? "" : "48px"}>
       <Breadcrumb
         spacing="8px"
         marginBottom="16px"
