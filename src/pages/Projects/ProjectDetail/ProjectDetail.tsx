@@ -40,7 +40,7 @@ export function LoadingProjectDetails(): JSX.Element {
           minHeight="30px"
           alignItems="center"
         >
-          <Skeleton height="55px" width="800px" mr="2rem" />
+          <Skeleton height="55px" width="100%" mr="2rem" />
           <Skeleton width="3rem" height="30px" mr="0.5rem" />
           <Skeleton width="3rem" height="30px" />
         </Flex>

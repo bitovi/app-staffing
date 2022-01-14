@@ -10,8 +10,7 @@ import {
   IconButton,
   Text,
 } from "@chakra-ui/react";
-import { LoadingProjectDetails } from "./ProjectDetail";
-import ProjectDetail from ".";
+import { LoadingProjectDetails, ProjectDetail } from "./ProjectDetail";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
 // import RoleList from "../components/RoleList";
@@ -28,7 +27,7 @@ const backgroundColor = "gray.10";
 export const ProjectDetailStory: ComponentStory<typeof ProjectDetail> = () => {
   const projects = useProjects();
   const project = projects[0];
-
+  // Recreated ProjectDetail page because the props were breaking the Story.
   return (
     <div>
       <Box backgroundColor={backgroundColor} h={"75%"}>
