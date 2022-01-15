@@ -201,9 +201,14 @@ async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
             included.push(data);
             processing.push(data);
           } catch (e) {
-            throw new Error(
-              `${item.type}[${item.id}].relationships.${key}: Missing ${type}[${id}]`,
-            );
+            // Clear joins that point to missing records.
+            if (Array.isArray(item.relationships[key].data)) {
+              item.relationships[key].data = (
+                item.relationships[key].data as Relationship[]
+              ).filter((item) => item.id !== id);
+            } else {
+              delete item.relationships[key];
+            }
           }
         }
       }
