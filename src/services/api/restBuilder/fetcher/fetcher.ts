@@ -1,5 +1,3 @@
-import type { JSONAPIDocument } from "json-api-serializer";
-
 class HttpError extends Error {
   status?: number;
 
@@ -11,12 +9,12 @@ class HttpError extends Error {
 
 const API_BASE_URL = window.env.API_BASE_URL;
 
-export default async function fetcher(
+export default async function fetcher<T>(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
   url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: Record<string, any>,
-): Promise<JSONAPIDocument> {
+): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${url}`, {
     method,
     headers: {
@@ -33,9 +31,10 @@ export default async function fetcher(
     );
   }
 
-  // 204 responses do not include content, calling response.json() throws an
-  // exception.
-  if (response.status === 204) return {};
+  if (!response.headers.get("content-length")) {
+    // @ts-expect-error: cannot call .json when there's an empty body.
+    return undefined;
+  }
 
   return await response.json();
 }

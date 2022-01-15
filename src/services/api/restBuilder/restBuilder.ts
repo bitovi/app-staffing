@@ -1,3 +1,4 @@
+import type { JSONAPIDocument } from "json-api-serializer";
 import type { Filter } from "can-query-logic";
 
 import { useCallback } from "react";
@@ -46,7 +47,10 @@ export default function restBuilder<Data extends BaseData>(
     const { data, error } = useSWR<Data[], Error>(
       path,
       async (path) => {
-        const response = await fetcher("GET", makeUrl(path, query));
+        const response = await fetcher<JSONAPIDocument>(
+          "GET",
+          makeUrl(path, query),
+        );
 
         const list = serializer.deserialize(type, response) as Data[];
         for (const item of list) {
@@ -71,7 +75,10 @@ export default function restBuilder<Data extends BaseData>(
     const { data, error } = useSWR<Data, Error>(
       `${path}/${id}`,
       async (path) => {
-        const response = await fetcher("GET", makeUrl(path, query));
+        const response = await fetcher<JSONAPIDocument>(
+          "GET",
+          makeUrl(path, query),
+        );
 
         const item = serializer.deserialize(type, response) as Data;
         parseDate(item);
@@ -97,7 +104,7 @@ export default function restBuilder<Data extends BaseData>(
     const create = useCallback(
       async (data: Partial<Omit<Data, "id">>) => {
         const payload = serializer.serialize(type, data);
-        const response = await fetcher("POST", path, payload);
+        const response = await fetcher<JSONAPIDocument>("POST", path, payload);
         const deserialized = serializer.deserialize(type, response) as Data;
         const identifier = deserialized.name || deserialized.id;
 
@@ -140,7 +147,11 @@ export default function restBuilder<Data extends BaseData>(
     const update = useCallback(
       async (id: string, data: Partial<Data>) => {
         const payload = serializer.serialize(type, { ...data, id });
-        const response = await fetcher("PATCH", `${path}/${id}`, payload);
+        const response = await fetcher<JSONAPIDocument>(
+          "PATCH",
+          `${path}/${id}`,
+          payload,
+        );
         const deserialized = serializer.deserialize(type, response) as Data;
         const identifier = deserialized.name || deserialized.id;
 
@@ -192,7 +203,7 @@ export default function restBuilder<Data extends BaseData>(
 
     const destroy = useCallback(
       async (id: string) => {
-        await fetcher("DELETE", `${path}/${id}`);
+        await fetcher<undefined>("DELETE", `${path}/${id}`);
         let identifier: string | undefined = undefined;
 
         // mutate list cache
