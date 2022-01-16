@@ -16,7 +16,10 @@ export interface BaseResource {
   type: string;
   id: string;
   attributes: Record<string, unknown>;
-  relationships?: Record<string, { data: Relationship | Relationship[] }>;
+  relationships?: Record<
+    string,
+    { data: Relationship | Relationship[] } | undefined
+  >;
 }
 
 interface MockResponse<
@@ -180,9 +183,12 @@ async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
 
     if (item.relationships) {
       for (const key in item.relationships) {
-        const relationships = Array.isArray(item.relationships[key].data)
-          ? (item.relationships[key].data as Relationship[])
-          : [item.relationships[key].data as Relationship];
+        const relationship = item.relationships[key];
+        if (!relationship?.data) continue;
+
+        const relationships = Array.isArray(relationship.data)
+          ? relationship.data
+          : [relationship.data];
 
         for (const { type, id } of relationships) {
           if (included.find((item) => item.type === type && item.id === id)) {
@@ -201,11 +207,15 @@ async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
             included.push(data);
             processing.push(data);
           } catch (e) {
-            // Clear joins that point to missing records.
-            if (Array.isArray(item.relationships[key].data)) {
-              item.relationships[key].data = (
-                item.relationships[key].data as Relationship[]
-              ).filter((item) => item.id !== id);
+            // Clear joins that reference missing records.
+            if (Array.isArray(relationship.data)) {
+              relationship.data = relationship.data.filter(
+                (item) => item.id !== id,
+              );
+
+              if (relationship.data.length === 0) {
+                delete item.relationships[key];
+              }
             } else {
               delete item.relationships[key];
             }

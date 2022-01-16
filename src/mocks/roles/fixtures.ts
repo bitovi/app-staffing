@@ -14,13 +14,13 @@ export interface JSONRole {
     end_confidence?: number;
   };
   relationships: {
-    assignments: {
+    assignments?: {
       data: Array<{ type: "assignments"; id: string }>;
     };
-    project: {
+    project?: {
       data: { type: "projects"; id: string };
     };
-    skills: {
+    skills?: {
       data: Array<{ type: "skills"; id: string }>;
     };
   };
@@ -73,6 +73,9 @@ export const roles: JSONRole[] = [];
 export function addRole(project: JSONProject): JSONRole {
   const role = makeRole(project);
 
+  if (!project.relationships.roles) {
+    project.relationships.roles = { data: [] };
+  }
   project.relationships.roles.data.push({
     type: role.type,
     id: role.id,

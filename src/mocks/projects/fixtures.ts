@@ -8,7 +8,7 @@ export interface JSONProject {
     description?: string;
   };
   relationships: {
-    roles: {
+    roles?: {
       data: Array<{ type: "roles"; id: string }>;
     };
   };

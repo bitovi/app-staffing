@@ -10,10 +10,10 @@ export interface JSONAssignment {
     end_date?: Date;
   };
   relationships: {
-    employee: {
+    employee?: {
       data: { type: "employees"; id: string };
     };
-    role: {
+    role?: {
       data: { type: "roles"; id: string };
     };
   };
@@ -60,11 +60,17 @@ export function addAssignment(
 ): JSONAssignment {
   const assignment = makeAssignment(employee, role);
 
+  if (!employee.relationships.assignments) {
+    employee.relationships.assignments = { data: [] };
+  }
   employee.relationships.assignments.data.push({
     type: assignment.type,
     id: assignment.id,
   });
 
+  if (!role.relationships.assignments) {
+    role.relationships.assignments = { data: [] };
+  }
   role.relationships.assignments.data.push({
     type: assignment.type,
     id: assignment.id,
