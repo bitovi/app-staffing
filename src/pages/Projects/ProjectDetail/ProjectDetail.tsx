@@ -67,7 +67,7 @@ export function ProjectDetail({
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
   };
-
+console.log("project", project);
   return (
     <div>
       <ProjectsHeader project={project} />
@@ -91,7 +91,7 @@ export function ProjectDetail({
             />
           <ProjectDescription onEdit={onSave} project={project} />
           <RoleList
-          createRole={createRole}
+            createRole={createRole}
             destroyRole={destroyRole}
             updateRole={updateRole}
             project={project}

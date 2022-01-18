@@ -72,10 +72,13 @@ export default function RoleModal({
   const submitForm = async (data: RoleFormData) => {
     const projectRoles = getSelectedSkills(data.skills, skills || []);
     console.log("projectRoles", projectRoles);
+    console.log("data", data);
     try {
       setStatus("pending");
       await onSave({
         startDate: data.startDate ? parseISO(data.startDate) : undefined,
+        startConfidence: data.startConfidence,
+        endConfidence: data.endConfidence,
         endDate: data.endDate ? parseISO(data.endDate) : undefined,
         assignments: [],
         project: project,
@@ -145,10 +148,10 @@ export default function RoleModal({
                   {...register("startConfidence")}
                   id="role_start_confidence"
                 >
-                  <option value="0%">0%</option>
-                  <option value="25%">25%</option>
-                  <option value="50%">50%</option>
-                  <option value="100%">100%</option>
+                  <option value={0}>0%</option>
+                  <option value={0.25}>25%</option>
+                  <option value={0.5}>50%</option>
+                  <option value={1}>100%</option>
                 </Select>
               </FormControl>
 
@@ -168,10 +171,10 @@ export default function RoleModal({
                   {...register("endConfidence")}
                   id="role_end_confidence"
                 >
-                  <option value="0%">0%</option>
-                  <option value="25%">25%</option>
-                  <option value="50%">50%</option>
-                  <option value="100%">100%</option>
+                  <option value={0}>0%</option>
+                  <option value={0.25}>25%</option>
+                  <option value={0.5}>50%</option>
+                  <option value={1}>100%</option>
                 </Select>
               </FormControl>
             </HStack>
@@ -281,9 +284,11 @@ function toRoleFormData(data: Role[]): RoleFormData[] {
       startDate: roles.startDate
         ? formatISO(roles.startDate, { representation: "date" })
         : "",
+      startConfidence: Number(roles.startConfidence),
       endDate: roles.endDate
         ? formatISO(roles.endDate, { representation: "date" })
         : "",
+      endConfidence: roles.endConfidence,
     });
   }
   return rolesArray;
