@@ -1,5 +1,8 @@
-import { Project, Role, useSkills } from "../../../../services/api";
-// import { Skill } from "../../../../services/api";
+import {
+  Project,
+  Role,
+  useSkills as useSkillsDefault,
+} from "../../../../services/api";
 import RoleDetails from "../RoleDetails";
 import Button from "../../../../components/Button";
 import RoleModal from "../RoleModal";
@@ -9,15 +12,22 @@ import styles from "./RoleList.module.scss";
 
 export default function RoleList({
   project,
+  createRole,
   updateRole,
   destroyRole,
 }: {
   project: Project;
+  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
   updateRole: (id: string, project: Role) => Promise<void>;
   destroyRole: (id: string) => Promise<void>;
 }): JSX.Element {
   const [roleModal, setRoleModal] = useState<boolean>(false);
-  const skills = useSkills();
+  const skills = useSkillsDefault();
+
+const addNewRole = async (data: Omit<Role, "id">) => {
+  await createRole(data);
+}
+
   return (
     <>
       <Button onClick={() => setRoleModal(true)}>Add Role</Button>
@@ -40,6 +50,7 @@ export default function RoleList({
         onClose={() => setRoleModal(false)}
         skills={skills}
         project={project}
+        onSave={addNewRole}
       />
     </>
   );

@@ -62,7 +62,7 @@ export function ProjectDetail({
   });
 
   const { updateProject, destroyProject } = useProjectMutations();
-  const { updateRole, destroyRole } = useRoleMutations();
+  const { createRole, updateRole, destroyRole } = useRoleMutations();
 
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
@@ -89,6 +89,14 @@ export function ProjectDetail({
               icon={<EditIcon fill="currentColor" />}
               onClick={() => alert("TODO")}
             />
+          <ProjectDescription onEdit={onSave} project={project} />
+          <RoleList
+          createRole={createRole}
+            destroyRole={destroyRole}
+            updateRole={updateRole}
+            project={project}
+          />
+          <Box mt={10}>
             <ProjectDeleteButton
               projectName={project.name}
               projectId={project.id}
