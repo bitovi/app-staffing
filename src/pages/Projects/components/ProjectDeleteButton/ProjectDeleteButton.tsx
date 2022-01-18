@@ -1,9 +1,10 @@
+import { IconButton } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { useRef } from "react";
 import { useHistory } from "react-router-dom";
 
-import Button from "../../../../components/Button";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
+import { TrashIcon } from "../../../assets";
 
 interface ProjectDeleteButtonProps {
   projectId: string;
@@ -33,9 +34,14 @@ const ProjectDeleteButton = ({
 
   return (
     <>
-      <Button onClick={onOpen} variant="primary">
-        Delete
-      </Button>
+      <IconButton
+        ml="8px"
+        variant="deleteAction"
+        aria-label="Delete Project"
+        fontSize="20px"
+        icon={<TrashIcon fill="currentColor" />}
+        onClick={onOpen}
+      />
 
       <ConfirmationModal
         onConfirm={() => onDelete(projectId)}
