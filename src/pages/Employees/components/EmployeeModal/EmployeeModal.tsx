@@ -237,7 +237,7 @@ export default function EmployeeModal({
 }
 
 function fullNameProvided(name: string) {
-  return name ? name.trim().split(" ").length >= 2 : false;
+  return name ? name.trim().split(" ").length >= 1 : false;
 }
 
 function getSubmitButtonProps({
