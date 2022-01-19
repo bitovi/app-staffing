@@ -1,8 +1,8 @@
 import type { Role } from "../../../../services/api";
 import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
-
-import { Tag } from "../../../../components/Tag";
+import Badge from "../../../../components/Badge";
+// import { Tag } from "../../../../components/Tag";
 import { TrashIcon, EditIcon } from "../../../assets";
 
 interface RoleCardProps {
@@ -16,6 +16,18 @@ export default function RoleCard({
   updateRole,
   destroyRole,
 }: RoleCardProps): JSX.Element {
+  const skillBackgrounds: { [key: string]: string } = {
+    Design: "#435BAE",
+    UX: "#AE436A",
+    Angular: "#876363",
+    React: "#61D0D7",
+    Node: "#805AD5",
+    DevOps: "#5FAE43",
+    "UI Designer": "#435BAE",
+    "UX Designer": "#AE436A",
+    "Project Management": "#B55F10",
+  };
+
   return (
     <>
       <Tr
@@ -27,17 +39,13 @@ export default function RoleCard({
         <Td>
           <Wrap spacing="8px">
             {roles?.skills?.map((skill) => (
-              <Tag variant="primary" key={skill.id}>
-                <Text
-                  fontFamily="Inter"
-                  fontStyle="normal"
-                  fontWeight="500"
-                  fontSize="12px"
-                  lineHeight="16px"
-                >
-                  {skill.name}
-                </Text>
-              </Tag>
+              <Badge
+                size="sm"
+                background={skillBackgrounds[skill.name]}
+                key={skill.id}
+              >
+                {skill.name}
+              </Badge>
             ))}
           </Wrap>
         </Td>

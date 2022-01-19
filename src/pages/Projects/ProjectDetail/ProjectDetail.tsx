@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { useParams } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
 import {
+  Box,
   Flex,
   Text,
   IconButton,
@@ -67,7 +68,7 @@ export function ProjectDetail({
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
   };
-console.log("project", project);
+
   return (
     <div>
       <ProjectsHeader project={project} />
@@ -89,14 +90,7 @@ console.log("project", project);
               icon={<EditIcon fill="currentColor" />}
               onClick={() => alert("TODO")}
             />
-          <ProjectDescription onEdit={onSave} project={project} />
-          <RoleList
-            createRole={createRole}
-            destroyRole={destroyRole}
-            updateRole={updateRole}
-            project={project}
-          />
-          <Box mt={10}>
+            <Box mt={10} />
             <ProjectDeleteButton
               projectName={project.name}
               projectId={project.id}
@@ -104,6 +98,7 @@ console.log("project", project);
             />
           </Flex>
           <RoleList
+            createRole={createRole}
             destroyRole={destroyRole}
             updateRole={updateRole}
             project={project}

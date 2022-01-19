@@ -3,7 +3,7 @@ import type {
   Role,
 } from "../../../../services/api";
 import { useSkills as useSkillsDefault } from "../../../../services/api";
-import RoleDetails from "../RoleDetails";
+// import RoleDetails from "../RoleDetails";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
 import RoleModal from "../RoleModal";
@@ -95,14 +95,14 @@ export default function RoleList({
         </>
       )}
 
-      {project?.roles?.map((role) => (
+      {/* {project?.roles?.map((role) => (
         <RoleDetails
           key={role.id}
           role={role}
           updateRole={updateRole}
           destroyRole={destroyRole}
         />
-      ))}
+      ))} */}
       <RoleModal
         isOpen={roleModal}
         onClose={() => setRoleModal(false)}
