@@ -71,8 +71,8 @@ export default function EmployeeModal({
   const isNewEmployee = isEmpty(employeeData);
   const employeeName = watch("name");
   const canSubmitForm =
-    (isNewEmployee && fullNameProvided(employeeName)) ||
-    (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
+    (isNewEmployee && nameProvided(employeeName)) ||
+    (!isNewEmployee && formIsDirty && nameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
     const employeeSkills = getSelectedSkills(data.skills, skills || []);
@@ -127,7 +127,7 @@ export default function EmployeeModal({
                 {...register("name", {
                   required: "Name not filled out",
                   validate: (name) =>
-                    fullNameProvided(name) || "Full name required",
+                    nameProvided(name) || "Full name required",
                 })}
                 id="name"
                 placeholder="name"
@@ -236,8 +236,8 @@ export default function EmployeeModal({
   );
 }
 
-function fullNameProvided(name: string) {
-  return name ? name.trim().split(" ").length >= 2 : false;
+function nameProvided(name: string) {
+  return name ? name.trim().length >= 1 : false;
 }
 
 function getSubmitButtonProps({
