@@ -29,6 +29,7 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
           };
         }}
         useSkills={() => []}
+        useAssignments={() => []}
       />
     </Box>
   </Flex>
@@ -67,6 +68,7 @@ function NonEmptyEmployeesPage({ ...props }) {
             };
           }}
           useSkills={() => []}
+          useAssignments={() => []}
         />
       </Box>
     </Flex>

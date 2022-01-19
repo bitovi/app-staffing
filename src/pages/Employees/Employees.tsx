@@ -5,6 +5,7 @@ import {
   useEmployees as useEmployeesDefault,
   useEmployeeMutations as useEmployeeMutationsDefault,
   useSkills as useSkillsDefault,
+  useAssignments as useAssignmentsDefault,
 } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
@@ -16,6 +17,7 @@ interface EmployeesProps {
   useEmployees: typeof useEmployeesDefault;
   useEmployeeMutations: typeof useEmployeeMutationsDefault;
   useSkills: typeof useSkillsDefault;
+  useAssignments: typeof useAssignmentsDefault;
 }
 
 export function EmployeePageLoadingLayout(): JSX.Element {
@@ -56,6 +58,7 @@ export default function EmployeesWrapper(): JSX.Element {
         useEmployees={useEmployeesDefault}
         useEmployeeMutations={useEmployeeMutationsDefault}
         useSkills={useSkillsDefault}
+        useAssignments={useAssignmentsDefault}
       />
     </Suspense>
   );
@@ -65,11 +68,14 @@ export function Employees({
   useEmployees,
   useEmployeeMutations,
   useSkills,
+  useAssignments,
 }: EmployeesProps): JSX.Element {
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
   const employees = useEmployees({ include: "skills" });
   const skills = useSkills();
+  const assignments = useAssignments();
+  console.log("assignments", assignments);
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   const addNewEmployee = async (data: Omit<Employee, "id">) => {

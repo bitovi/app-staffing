@@ -57,7 +57,7 @@ export default function RoleModal({
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
-  const roleData = project ? toRoleFormData(project?.roles) : undefined;
+  const roleData = project?.roles ? toRoleFormData(project?.roles) : undefined;
   console.log("roleData", roleData);
   const {
     register,
@@ -272,6 +272,7 @@ function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
 function toRoleFormData(data: Role[]): RoleFormData[] {
   const skills: Record<string, boolean> = {};
   const rolesArray = [];
+  console.log("form data", data);
   for (let i = 0; i < data.length; i++) {
     const roles = data[i];
 
@@ -284,7 +285,7 @@ function toRoleFormData(data: Role[]): RoleFormData[] {
       startDate: roles.startDate
         ? formatISO(roles.startDate, { representation: "date" })
         : "",
-      startConfidence: Number(roles.startConfidence),
+      startConfidence:roles.startConfidence,
       endDate: roles.endDate
         ? formatISO(roles.endDate, { representation: "date" })
         : "",
