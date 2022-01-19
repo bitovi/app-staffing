@@ -1,0 +1,4 @@
+- name: Home
+  url: http://localhost:3001
+- name: Team Members
+  url: http://localhost:3001/team-members
