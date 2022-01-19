@@ -57,7 +57,7 @@ describe("Pages/Employees", () => {
 
     const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
 
-    expect(employeesBreadcrumb?.tagName.toLowerCase()).toBe('span');
+    expect(employeesBreadcrumb?.tagName.toLowerCase()).toBe("span");
   });
 
   it("Creates employee", async () => {

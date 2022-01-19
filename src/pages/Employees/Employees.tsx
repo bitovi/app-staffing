@@ -98,7 +98,11 @@ export function Employees({
         </BreadcrumbItem>
 
         <BreadcrumbItem isCurrentPage color="gray.800">
-          <BreadcrumbLink data-testid="employeesBreadcrumb" cursor="default" _hover={{ textDecoration: 'none' }}>
+          <BreadcrumbLink
+            data-testid="employeesBreadcrumb"
+            cursor="default"
+            _hover={{ textDecoration: "none" }}
+          >
             Team Members
           </BreadcrumbLink>
         </BreadcrumbItem>
