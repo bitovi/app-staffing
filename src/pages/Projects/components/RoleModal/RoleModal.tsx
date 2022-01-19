@@ -135,7 +135,9 @@ export default function RoleModal({
               <FormControl isInvalid={errors.startDate ? true : false}>
                 <FormLabel>Start Date</FormLabel>
                 <Input
-                  {...register("startDate")}
+                  {...register("startDate", {
+                    required: "Date is required.",
+                  })}
                   id="role_start_date"
                   type="date"
                 />
@@ -285,7 +287,7 @@ function toRoleFormData(data: Role[]): RoleFormData[] {
       startDate: roles.startDate
         ? formatISO(roles.startDate, { representation: "date" })
         : "",
-      startConfidence:roles.startConfidence,
+      startConfidence: roles.startConfidence,
       endDate: roles.endDate
         ? formatISO(roles.endDate, { representation: "date" })
         : "",
