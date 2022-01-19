@@ -1,5 +1,4 @@
 import type { Role } from "../../../../services/api";
-// import { Role } from "../../../../services/api";
 import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
 
@@ -17,7 +16,6 @@ export default function RoleCard({
   updateRole,
   destroyRole,
 }: RoleCardProps): JSX.Element {
-  console.log("roles", roles);
   return (
     <>
       <Tr

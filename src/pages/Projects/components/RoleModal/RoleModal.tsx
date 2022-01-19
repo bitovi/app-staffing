@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/modal";
 import {
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
   HStack,
@@ -132,15 +133,21 @@ export default function RoleModal({
             </FormControl>
 
             <HStack spacing="8px" width="100%">
-              <FormControl isInvalid={errors.startDate ? true : false}>
+              <FormControl
+                isRequired
+                isInvalid={errors.startDate ? true : false}
+              >
                 <FormLabel>Start Date</FormLabel>
                 <Input
                   {...register("startDate", {
-                    required: "Date is required.",
+                    required: "Date is required",
                   })}
                   id="role_start_date"
                   type="date"
                 />
+                <FormErrorMessage>
+                  {errors?.startDate?.message}
+                </FormErrorMessage>
               </FormControl>
 
               <FormControl>
