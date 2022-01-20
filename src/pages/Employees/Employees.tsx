@@ -118,7 +118,12 @@ export function Employees({
         position="sticky"
         top="0"
       >
-        <Heading as="h1" textStyle="title" color="gray.700">
+        <Heading
+          as="h1"
+          textStyle="title"
+          color="gray.700"
+          data-testid="employeesTitle"
+        >
           Team Members
         </Heading>
 

@@ -63,7 +63,7 @@ describe("Pages/Employees", () => {
   it("Renders h1 tag for page title", () => {
     render(<EmployeesWrapper />);
 
-    const pageTitle = screen.getByText("Team Members");
+    const pageTitle = screen.getByTestId("employeesTitle");
 
     expect(pageTitle).toBeInTheDocument();
     expect(pageTitle?.tagName).toBe("H1");
