@@ -1,5 +1,5 @@
 import { Suspense, useState } from "react";
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
@@ -28,9 +28,9 @@ export function EmployeePageLoadingLayout(): JSX.Element {
         display="flex"
         justifyContent="space-between"
       >
-        <Text textStyle="title" color="gray.700">
+        <Heading as="h1" textStyle="title" color="gray.700">
           Team Members
-        </Text>
+        </Heading>
 
         <Button
           size="lg"
@@ -118,9 +118,9 @@ export function Employees({
         position="sticky"
         top="0"
       >
-        <Text textStyle="title" color="gray.700">
+        <Heading as="h1" textStyle="title" color="gray.700">
           Team Members
-        </Text>
+        </Heading>
 
         <Button
           size="lg"
