@@ -20,9 +20,9 @@
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook --quiet -s public -o build/storybook",
     "build": "react-scripts build",
-    "percy:pages": "PERCY_TOKEN=c3a01c9e52fb2f54e9a74a6dcde23aa68ad3cb3fb6dc7a38fd52ad9b7be9e1b2 percy snapshot snapshots.yml",
-    "percy:react": "PERCY_TOKEN=c3a01c9e52fb2f54e9a74a6dcde23aa68ad3cb3fb6dc7a38fd52ad9b7be9e1b2 percy exec -- react-scripts test --watchAll=false",
-    "percy:storybook": "PERCY_TOKEN=648ab9d11202645099752c6173b5810a4a67a6be010486eae767db90547ffd0e percy storybook:start --port=9009 --static-dir=./public",
+    "percy:pages": "percy snapshot snapshots.yml",
+    "percy:react": "percy exec -- react-scripts test --watchAll=false",
+    "percy:storybook": "percy storybook:start --port=9009 --static-dir=./public",
     "percy:all": "npm run percy:pages && npm run percy:storybook"
   },
   "eslintConfig": {
