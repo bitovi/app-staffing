@@ -80,6 +80,32 @@ describe("Pages/Employees", () => {
     expect(newEmployeeRow).toBeInTheDocument();
   });
 
+  it("resets modal form fields when closed", async () => {
+    render(<EmployeesWrapper />);
+
+    const addButton = screen.getByText(/add team member/i);
+
+    fireEvent.click(addButton);
+
+    const modal = await screen.findByRole("dialog");
+    const cancelButton = within(modal).getByText(/Cancel/i);
+
+    const modalNameInput = await screen.findByPlaceholderText(/name/i);
+    fireEvent.change(modalNameInput, {
+      target: { value: "Johnny Appleseed" },
+    });
+    expect(modalNameInput).toHaveValue("Johnny Appleseed");
+
+    fireEvent.click(cancelButton);
+
+    await waitFor(() => expect(modal).not.toBeInTheDocument());
+
+    fireEvent.click(addButton);
+
+    const modalNameInput2 = await screen.findByPlaceholderText(/name/i);
+    expect(modalNameInput2).toHaveValue("");
+  });
+
   // it("Edits employee", async () => {
   //   render(<EmployeesWrapper />);
 
