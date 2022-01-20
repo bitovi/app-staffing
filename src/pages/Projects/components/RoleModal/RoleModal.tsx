@@ -61,7 +61,6 @@ export default function RoleModal({
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
-
   const {
     register,
     handleSubmit,
@@ -76,7 +75,6 @@ export default function RoleModal({
     const projectRoles = getSelectedSkills(data.skills, skills || []);
     try {
       if (project) {
-
         setStatus("pending");
         await createRole({
           startDate: data.startDate ? parseISO(data.startDate) : undefined,
@@ -84,7 +82,7 @@ export default function RoleModal({
           endConfidence: data.endConfidence,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
           assignments: [],
-          project,
+          project: project,
           skills: projectRoles,
         });
 
@@ -287,4 +285,3 @@ function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
     (entry: string) => skills.find((skill) => skill.id === entry) as Skill,
   );
 }
-

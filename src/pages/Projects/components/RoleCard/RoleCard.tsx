@@ -68,7 +68,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {roles?.startConfidence}
+            {roles?.startConfidence && `${(roles.startConfidence * 100).toFixed(2)}%`}
           </Text>
         </Td>
         <Td>
@@ -90,7 +90,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {roles?.endConfidence}
+            {roles?.endConfidence && `${(roles.endConfidence * 100).toFixed(2)}%`}
           </Text>
         </Td>
 
