@@ -34,6 +34,32 @@ describe("Pages/Employees", () => {
     ).toBeDefined();
   });
 
+  it("renders breadcrumbs", () => {
+    const { queryByTestId } = render(<EmployeesWrapper />);
+
+    const homeBreadcrumb = queryByTestId("homeBreadcrumb");
+    const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
+
+    expect(homeBreadcrumb).toBeInTheDocument();
+    expect(employeesBreadcrumb).toBeInTheDocument();
+  });
+
+  it("renders home breadcrumb with the correct link", () => {
+    const { queryByTestId } = render(<EmployeesWrapper />);
+
+    const homeBreadcrumb = queryByTestId("homeBreadcrumb");
+
+    expect(homeBreadcrumb?.closest("a")).toHaveAttribute("href", "/");
+  });
+
+  it("renders team member breadcrumb as span", () => {
+    const { queryByTestId } = render(<EmployeesWrapper />);
+
+    const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
+
+    expect(employeesBreadcrumb?.tagName.toLowerCase()).toBe("span");
+  });
+
   it("Creates employee", async () => {
     render(<EmployeesWrapper />);
 
