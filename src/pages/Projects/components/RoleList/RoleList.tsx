@@ -2,34 +2,46 @@ import type {
   Project,
   Role,
 } from "../../../../services/api";
-import { useSkills as useSkillsDefault } from "../../../../services/api";
+import { useSkills as useSkillsDefault, useRoles as useRolesDefault } from "../../../../services/api";
 // import RoleDetails from "../RoleDetails";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
 import RoleModal from "../RoleModal";
 import { useState } from "react";
-
+import isEmpty from "lodash/isEmpty";
 import styles from "./RoleList.module.scss";
 
 import { Box, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 
 export default function RoleList({
   project,
+  updateProject,
   createRole,
   updateRole,
   destroyRole,
 }: {
   project: Project;
-  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
+  updateProject: (id: string, data: Project) => void;
+  createRole: (data: Omit<Role, "id">) => Promise<string | undefined>;
   updateRole: (id: string, project: Role) => Promise<void>;
   destroyRole: (id: string) => Promise<void>;
 }): JSX.Element {
-  const [roleModal, setRoleModal] = useState<boolean>(false);
+  const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const skills = useSkillsDefault();
+  const roles = useRolesDefault();
 
   const addNewRole = async (data: Omit<Role, "id">) => {
     await createRole(data);
   };
+
+  const submitUpdateProject = async (projectToUpdate: Project) => {
+    if (projectToEdit) {
+      const id = projectToEdit.id;
+      debugger;
+      await updateProject(id, projectToUpdate);
+    }
+  };
+
 
   const lastRoleIndex = Array.isArray(project?.roles)
     ? project?.roles.length - 1
@@ -37,7 +49,7 @@ export default function RoleList({
 
   return (
     <>
-      <Button onClick={() => setRoleModal(true)}>Add Role</Button>
+      <Button onClick={() => setProjectToEdit(project)}>Add Role</Button>
       <div className={styles.skillFilter}>
         {[].map((s) => (
           <p key={s}>{s}</p>
@@ -75,7 +87,7 @@ export default function RoleList({
                     textStyle="table.title"
                     isNumeric
                   >
-                    ACTIONS
+                    Actions
                   </Th>
                 </Tr>
               </Thead>
@@ -104,11 +116,13 @@ export default function RoleList({
         />
       ))} */}
       <RoleModal
-        isOpen={roleModal}
-        onClose={() => setRoleModal(false)}
+        isOpen={!isEmpty(projectToEdit)}
+        onClose={() => setProjectToEdit(null)}
         skills={skills}
-        project={project}
-        onSave={addNewRole}
+        project={projectToEdit ? projectToEdit : undefined}
+        createRole={addNewRole}
+        onSave={(project) => submitUpdateProject(project as Project)}
+        roles={roles}
       />
     </>
   );

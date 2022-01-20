@@ -28,15 +28,16 @@ import { useForm, Controller } from "react-hook-form";
 import type { Project, Skill, Role } from "../../../../services/api";
 import { AddIcon } from "@chakra-ui/icons";
 import { isEmpty, pickBy } from "lodash";
-import formatISO from "date-fns/formatISO";
 import parseISO from "date-fns/parseISO";
 
 interface RoleModalProps {
-  onSave: (data: Omit<Role, "id">) => Promise<void>;
+  onSave: (data: Omit<Project, "id">) => Promise<void>;
+  createRole: (data: Omit<Role, "id">) => Promise<void>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
-  project: Project;
+  project?: Project;
+  roles: Role[];
 }
 
 interface RoleFormData {
@@ -51,15 +52,16 @@ type SaveButtonStatus = "idle" | "pending";
 
 export default function RoleModal({
   onSave,
-  isOpen,
+  createRole,
   onClose,
+  isOpen,
   skills,
   project,
+  roles,
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
-  const roleData = project?.roles ? toRoleFormData(project?.roles) : undefined;
-  console.log("roleData", roleData);
+
   const {
     register,
     handleSubmit,
@@ -70,21 +72,29 @@ export default function RoleModal({
 
   const canSubmitForm = true;
 
-  const submitForm = async (data: RoleFormData) => {
+  const submitForm = async (data: any) => {
     const projectRoles = getSelectedSkills(data.skills, skills || []);
-    console.log("projectRoles", projectRoles);
-    console.log("data", data);
     try {
-      setStatus("pending");
-      await onSave({
-        startDate: data.startDate ? parseISO(data.startDate) : undefined,
-        startConfidence: data.startConfidence,
-        endConfidence: data.endConfidence,
-        endDate: data.endDate ? parseISO(data.endDate) : undefined,
-        assignments: [],
-        project: project,
-        skills: projectRoles,
-      });
+      if (project) {
+
+        setStatus("pending");
+        await createRole({
+          startDate: data.startDate ? parseISO(data.startDate) : undefined,
+          startConfidence: data.startConfidence,
+          endConfidence: data.endConfidence,
+          endDate: data.endDate ? parseISO(data.endDate) : undefined,
+          assignments: [],
+          project,
+          skills: projectRoles,
+        });
+
+        await onSave({
+          name: project.name,
+          description: project.description,
+          // @TODO: update project with newly created role instead of updating with entire roles array
+          roles: roles,
+        });
+      }
       reset({ startDate: "", endDate: "" });
       onClose();
       setStatus("idle");
@@ -278,28 +288,3 @@ function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
   );
 }
 
-function toRoleFormData(data: Role[]): RoleFormData[] {
-  const skills: Record<string, boolean> = {};
-  const rolesArray = [];
-  console.log("form data", data);
-  for (let i = 0; i < data.length; i++) {
-    const roles = data[i];
-
-    roles.skills?.forEach(({ id }) => {
-      skills[id] = true;
-    });
-
-    rolesArray.push({
-      skills,
-      startDate: roles.startDate
-        ? formatISO(roles.startDate, { representation: "date" })
-        : "",
-      startConfidence: roles.startConfidence,
-      endDate: roles.endDate
-        ? formatISO(roles.endDate, { representation: "date" })
-        : "",
-      endConfidence: roles.endConfidence,
-    });
-  }
-  return rolesArray;
-}

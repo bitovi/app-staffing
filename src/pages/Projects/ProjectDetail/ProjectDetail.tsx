@@ -12,9 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import {
-  useProject as defaultUseProject,
-  useRoleMutations as defaultRoleMutation,
-  useProjectMutations as defaultUseProjectMutations,
+  useProject as useProjectDefault,
+  useProjectMutations as useProjectMutationsDefault,
+  useRole as useRoleDefault,
+  useRoleMutations as useRoleMutationsDefault,
 } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
@@ -24,9 +25,10 @@ import { EditIcon } from "./../../assets";
 import type { Project } from "../../../services/api";
 
 interface ProjectDetailProps {
-  useProject: typeof defaultUseProject;
-  useProjectMutations: typeof defaultUseProjectMutations;
-  useRoleMutations: typeof defaultRoleMutation;
+  useProject: typeof useProjectDefault;
+  useProjectMutations: typeof useProjectMutationsDefault;
+  useRole: typeof useRoleDefault;
+  useRoleMutations: typeof useRoleMutationsDefault;
 }
 
 export function LoadingProjectDetails(): JSX.Element {
@@ -53,9 +55,10 @@ export function LoadingProjectDetails(): JSX.Element {
 }
 
 export function ProjectDetail({
-  useProject = defaultUseProject,
-  useProjectMutations = defaultUseProjectMutations,
-  useRoleMutations = defaultRoleMutation,
+  useProject = useProjectDefault,
+  useProjectMutations = useProjectMutationsDefault,
+  useRole = useRoleDefault,
+  useRoleMutations = useRoleMutationsDefault,
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const project = useProject(id, {
@@ -64,6 +67,9 @@ export function ProjectDetail({
 
   const { updateProject, destroyProject } = useProjectMutations();
   const { createRole, updateRole, destroyRole } = useRoleMutations();
+  // const roles = useRole();
+  console.log("project", project);
+  // console.log("roles", roles);
 
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
@@ -102,6 +108,7 @@ export function ProjectDetail({
             destroyRole={destroyRole}
             updateRole={updateRole}
             project={project}
+            updateProject={updateProject}
           />
         </>
       )}
@@ -138,9 +145,10 @@ export default function ProjectDetailWrapper(): JSX.Element {
   return (
     <Suspense fallback={<LoadingProjectDetails />}>
       <ProjectDetail
-        useProject={defaultUseProject}
-        useProjectMutations={defaultUseProjectMutations}
-        useRoleMutations={defaultRoleMutation}
+        useProject={useProjectDefault}
+        useProjectMutations={useProjectMutationsDefault}
+        useRole={useRoleDefault}
+        useRoleMutations={useRoleMutationsDefault}
       />
     </Suspense>
   );

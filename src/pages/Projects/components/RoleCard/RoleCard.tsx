@@ -95,15 +95,18 @@ export default function RoleCard({
         </Td>
 
         <Td>
-          <Text
-            color="gray.600"
-            fontWeight="600"
-            fontSize="16px"
-            lineHeight="20px"
-            letterSpacing="0.25px"
-          >
-            {roles?.assignments[0]?.employee?.name}
-          </Text>
+          {/* {roles?.assignments?.employee?.name} */}
+          {roles?.assignments?.map((employee) => {
+            <Text
+              color="gray.600"
+              fontWeight="600"
+              fontSize="16px"
+              lineHeight="20px"
+              letterSpacing="0.25px"
+            >
+              {employee}
+            </Text>;
+          })}
         </Td>
 
         <Td>
