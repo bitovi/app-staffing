@@ -75,12 +75,14 @@ export function Employees({
   };
   return (
     <Box>
-      <EmployeeModal
-        isOpen={employeeModal}
-        onClose={() => setEmployeeModal(false)}
-        onSave={addNewEmployee}
-        skills={skills}
-      />
+      {employeeModal &&
+        <EmployeeModal
+          isOpen={employeeModal}
+          onClose={() => setEmployeeModal(false)}
+          onSave={addNewEmployee}
+          skills={skills}
+        />
+      }
 
       <Flex
         width="full"
