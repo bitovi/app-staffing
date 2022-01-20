@@ -2,42 +2,42 @@ import { NavLink } from "react-router-dom";
 
 import styles from "./SideNav.module.scss";
 
-import bitoviLogo from "./assets/bitovi.png";
-import homeIcon from "./assets/Home.svg";
-import userIcon from "./assets/User.svg";
-import projectIcon from "./assets/Activity.svg";
+import bitoviLogo from "./assets/bitovi-logo-text.png";
+import dashboardIcon from "./assets/dashboard.svg";
+import teamMembersIcon from "./assets/team-members.svg";
+import projectsIcon from "./assets/projects.svg";
 
 export default function SideNav(): JSX.Element {
   const links = [
     {
       exact: true,
       link: "/",
-      label: "Home",
-      icon: homeIcon,
+      label: "Dashboard",
+      icon: dashboardIcon,
     },
     {
       link: "/team-members",
-      label: "Employees",
-      icon: userIcon,
+      label: "Team Members",
+      icon: teamMembersIcon,
     },
     {
       link: "/projects",
       label: "Projects",
-      icon: projectIcon,
+      icon: projectsIcon,
     },
   ];
 
   return (
-    <div className={styles.wrapper}>
-      <img src={bitoviLogo} alt="Bitovi" className={styles.image} />
+    <div className={styles.sidenav}>
+      <img src={bitoviLogo} alt="Bitovi" className={styles.logo} />
 
       {links.map(({ exact, link, label, icon }) => (
         <NavLink
           exact={exact}
           key={label}
           to={link}
-          activeClassName={styles.activeLink}
-          className={styles.inactiveLink}
+          activeClassName={styles.active}
+          className={styles.link}
         >
           <img src={icon} alt={label} className={styles.icon} />
           {label}
