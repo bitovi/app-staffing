@@ -6,13 +6,13 @@ import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
 
 interface RoleCardProps {
-  roles: Role;
+  role: Role;
   updateRole: (id: string, role: Role) => void;
   destroyRole: (id: string) => Promise<void>;
 }
 
 export default function RoleCard({
-  roles,
+  role,
   updateRole,
   destroyRole,
 }: RoleCardProps): JSX.Element {
@@ -38,7 +38,7 @@ export default function RoleCard({
       >
         <Td>
           <Wrap spacing="8px">
-            {roles?.skills?.map((skill) => (
+            {role?.skills?.map((skill) => (
               <Badge
                 size="sm"
                 background={skillBackgrounds[skill.name]}
@@ -57,7 +57,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {roles?.startDate && format(roles?.startDate, "MM/dd/yyyy")}
+            {role?.startDate && format(role?.startDate, "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -68,7 +68,8 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {roles?.startConfidence && `${(roles.startConfidence * 100).toFixed(2)}%`}
+            {role?.startConfidence &&
+              `${(role.startConfidence * 100).toFixed(2)}%`}
           </Text>
         </Td>
         <Td>
@@ -79,7 +80,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {roles?.endDate && format(roles?.endDate, "MM/dd/yyyy")}
+            {role?.endDate && format(role?.endDate, "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -90,13 +91,11 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {roles?.endConfidence && `${(roles.endConfidence * 100).toFixed(2)}%`}
+            {role?.endConfidence && `${(role.endConfidence * 100).toFixed(2)}%`}
           </Text>
         </Td>
-
-        <Td>
-          {/* {roles?.assignments?.employee?.name} */}
-          {roles?.assignments?.map((employee) => {
+        {role?.assignments && (
+          <Td>
             <Text
               color="gray.600"
               fontWeight="600"
@@ -104,10 +103,10 @@ export default function RoleCard({
               lineHeight="20px"
               letterSpacing="0.25px"
             >
-              {employee}
-            </Text>;
-          })}
-        </Td>
+              {role?.assignments[0]?.employee?.name}
+            </Text>
+          </Td>
+        )}
 
         <Td>
           <Flex justifyContent="end" justifySelf="end">
@@ -116,7 +115,7 @@ export default function RoleCard({
               aria-label="Edit Member"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
-              onClick={() => updateRole(roles.id, roles)}
+              onClick={() => updateRole(role.id, role)}
             />
             <IconButton
               ml="8px"
@@ -124,7 +123,7 @@ export default function RoleCard({
               aria-label="Delete Member"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
-              onClick={() => destroyRole(roles.id)}
+              onClick={() => destroyRole(role.id)}
             />
           </Flex>
         </Td>

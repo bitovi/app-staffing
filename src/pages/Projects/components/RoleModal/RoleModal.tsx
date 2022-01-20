@@ -85,7 +85,7 @@ export default function RoleModal({
           project: project,
           skills: projectRoles,
         });
-
+        // onSave updates the project with the new role
         await onSave({
           name: project.name,
           description: project.description,

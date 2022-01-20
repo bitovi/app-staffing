@@ -142,7 +142,7 @@ function RoleListRow({
   return (
     <>
       <RoleCard
-        roles={roles}
+        role={roles}
         updateRole={updateRole}
         destroyRole={destroyRole}
       />
