@@ -1,7 +1,5 @@
 import { Suspense, useState } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
-import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Employee,
   useEmployees as useEmployeesDefault,
@@ -12,6 +10,7 @@ import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
+import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
 
 interface EmployeesProps {
   useEmployees: typeof useEmployeesDefault;
@@ -22,6 +21,7 @@ interface EmployeesProps {
 export function EmployeePageLoadingLayout(): JSX.Element {
   return (
     <Box>
+      <EmployeesBreadcrumbs />
       <Flex
         width="full"
         fontFamily="Arial, Helvetica, sans-serif"
@@ -86,29 +86,7 @@ export function Employees({
         />
       )}
 
-      <Breadcrumb
-        spacing="8px"
-        marginBottom="16px"
-        fontSize="14px"
-        color="gray.500"
-        separator={<ChevronRightIcon />}
-      >
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/" data-testid="homeBreadcrumb">
-            Home
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-
-        <BreadcrumbItem isCurrentPage color="gray.800">
-          <BreadcrumbLink
-            data-testid="employeesBreadcrumb"
-            cursor="default"
-            _hover={{ textDecoration: "none" }}
-          >
-            Team Members
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <EmployeesBreadcrumbs />
 
       <Flex
         width="full"
