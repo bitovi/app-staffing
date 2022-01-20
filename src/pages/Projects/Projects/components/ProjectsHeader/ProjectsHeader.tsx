@@ -1,6 +1,6 @@
 import type { NewProject } from "../../../../../services/api";
 
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
@@ -52,9 +52,15 @@ export default function ProjectsHeader({
         display="flex"
         justifyContent="space-between"
       >
-        <Text textStyle="title" color="gray.700" data-testid="projectListTitle">
+        <Heading
+          as="h1"
+          textStyle="title"
+          color="gray.700"
+          data-testid="projectListTitle"
+        >
           {name ? name : "Projects"}
-        </Text>
+        </Heading>
+
         {!name && (
           <>
             <Button

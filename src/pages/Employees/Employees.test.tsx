@@ -60,6 +60,16 @@ describe("Pages/Employees", () => {
     expect(employeesBreadcrumb?.tagName.toLowerCase()).toBe("span");
   });
 
+  it("Renders h1 tag for page title", () => {
+    render(<EmployeesWrapper />);
+
+    const pageTitle = screen.getByTestId("employeesTitle");
+
+    expect(pageTitle).toBeInTheDocument();
+    expect(pageTitle?.tagName).toBe("H1");
+    expect(pageTitle?.innerHTML).toBe("Team Members");
+  });
+
   it("Creates employee", async () => {
     render(<EmployeesWrapper />);
 

@@ -61,4 +61,20 @@ describe("Components/Projects/ProjectsHeader", () => {
     );
     expect(singleProjectBreadcrumb.closest("a")).toHaveAttribute("href", "/");
   });
+
+  it("renders h1 tag for page title", () => {
+    const { getByTestId } = render(
+      <BrowserRouter>
+        <Suspense fallback={<Loading />}>
+          <ProjectsHeader name="Nike Store" />
+        </Suspense>
+      </BrowserRouter>,
+    );
+
+    const pageTitle = getByTestId("projectListTitle");
+
+    expect(pageTitle).toBeInTheDocument();
+    expect(pageTitle?.tagName).toBe("H1");
+    expect(pageTitle?.innerHTML).toBe("Nike Store");
+  });
 });
