@@ -81,10 +81,9 @@ export default function EmployeeModal({
       setStatus("pending");
       await onSave({
         name: data.name,
-        startDate: data.startDate ? parseISO(data.startDate) : undefined,
-        endDate: data.endDate ? parseISO(data.endDate) : undefined,
+        startDate: data.startDate ? parseISO(data.startDate) : null,
+        endDate: data.endDate ? parseISO(data.endDate) : null,
         skills: employeeSkills,
-        assignments: [],
       });
       reset({ name: "", startDate: "", endDate: "" });
       onClose();

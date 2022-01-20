@@ -128,4 +128,42 @@ describe("EmployeeModal", () => {
     expect(nameInput).toHaveValue("");
     expect(checkboxes.filter(isChecked)).toHaveLength(0);
   });
+
+  // This allows the front end to "remove" an existing date value from a team member
+  it("should call onSave with date fields set to null when fields are empty", async () => {
+    const onSave = jest.fn();
+
+    const {
+      getByText,
+      getByRole,
+      getAllByRole,
+      getByPlaceholderText,
+      findByText,
+    } = render(
+      <EmployeeModal
+        isOpen
+        skills={skills}
+        onSave={onSave}
+        onClose={() => true}
+      />,
+    );
+
+    getByText("Add a New Team Member");
+
+    const addButton = getByRole("button", { name: "Add & Close" });
+    expect(addButton).toHaveAttribute("aria-disabled", "true");
+
+    const checkboxes = getAllByRole("checkbox", { checked: false });
+    userEvent.type(getByPlaceholderText("name"), "Johnny Appleseed");
+    userEvent.click(checkboxes[0]);
+    expect(addButton).not.toHaveAttribute("aria-disabled", "true");
+
+    userEvent.click(addButton);
+    await findByText(/saving/i);
+
+    expect(onSave).toHaveBeenCalledTimes(1);
+    const employeeToSave = onSave.mock.calls[0][0];
+    expect(employeeToSave.startDate).toBeNull();
+    expect(employeeToSave.endDate).toBeNull();
+  });
 });

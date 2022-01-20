@@ -50,7 +50,7 @@ export default function EmployeeTable({
   return (
     <>
       <DeleteConfirmationModal
-        key={employeeToDelete ? employeeToDelete.id : null}
+        key={employeeToDelete ? employeeToDelete.id : undefined}
         employee={employeeToDelete}
         setEmployee={setEmployeeToDelete}
         destroyEmployee={destroyEmployee}
