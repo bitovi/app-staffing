@@ -13,7 +13,7 @@ import {
 import { LoadingProjectDetails, ProjectDetail } from "./ProjectDetail";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
-// import RoleList from "../components/RoleList";
+import RoleList from "../components/RoleList";
 import { useProjects } from "../../../services/api";
 import { EditIcon } from "../../assets";
 
@@ -24,7 +24,7 @@ export default {
 
 const backgroundColor = "gray.10";
 
-export const ProjectDetailStory: ComponentStory<typeof ProjectDetail> = () => {
+export const Empty: ComponentStory<typeof ProjectDetail> = () => {
   const projects = useProjects();
   const project = projects[0];
   // Recreated ProjectDetail page because the props were breaking the Story.
@@ -101,6 +101,73 @@ export const ProjectDetailStory: ComponentStory<typeof ProjectDetail> = () => {
           </Text>
         </Flex>
         {/* <RoleList onEdit={() => Promise.resolve()} project={project} /> */}
+      </Box>
+    </div>
+  );
+};
+
+export const NonEmpty: ComponentStory<typeof ProjectDetail> = () => {
+  const projects = useProjects();
+  const project = projects[3];
+  // Recreated ProjectDetail page because the props were breaking the Story.
+  return (
+    <div>
+      <Box backgroundColor={backgroundColor} h={"75%"}>
+        <Breadcrumb
+          fontWeight="medium"
+          fontSize="sm"
+          separator={<ChevronRightIcon />}
+        >
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Projects</BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Nike Store</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+
+        <Text textStyle="title" color="gray.700">
+          Nike Store
+        </Text>
+        <Flex
+          width="100%"
+          flexDirection="row"
+          minHeight="30px"
+          alignItems="center"
+        >
+          <ProjectDescription
+            onEdit={() => Promise.resolve()}
+            project={project}
+          />
+
+          <IconButton
+            variant="editAction"
+            aria-label="Edit Project"
+            fontSize="20px"
+            icon={<EditIcon fill="currentColor" />}
+            onClick={() => alert("TODO")}
+          />
+
+          <ProjectDeleteButton
+            projectName={project.name}
+            projectId={project.id}
+            destroyProject={async (id: string) => {
+              alert(`delete project ${id}`);
+            }}
+          />
+        </Flex>
+        <RoleList
+          project={project}
+          updateProject={() => Promise.resolve()}
+          createRole={() => Promise.resolve("")}
+          updateRole={() => Promise.resolve()}
+          destroyRole={() => Promise.resolve()}
+        />
       </Box>
     </div>
   );

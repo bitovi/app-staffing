@@ -67,9 +67,6 @@ export function ProjectDetail({
 
   const { updateProject, destroyProject } = useProjectMutations();
   const { createRole, updateRole, destroyRole } = useRoleMutations();
-  // const roles = useRole();
-  console.log("project", project);
-  // console.log("roles", roles);
 
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
