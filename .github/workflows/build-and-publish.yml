@@ -32,6 +32,14 @@ jobs:
 
       - name: Test
         run: npm run test:ci
+      - name: Test - Visual Regression Pages
+        run: npm run percy:pages
+        env: 
+          PERCY_TOKEN: ${{ secrets.PERCY_SNAPSHOT_TOKEN }}
+      - name: Test - Visual Regression Storybook
+        run: npm run percy:storybook
+        env: 
+          PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
 
       - name: Build App
         run: npm run build
