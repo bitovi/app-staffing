@@ -114,6 +114,7 @@
     "@percy/core": "^1.0.0-beta.73",
     "@percy/react": "^0.4.6",
     "@percy/sdk-utils": "^1.0.0-beta.73",
+    "@percy/storybook": "^4.1.0",
     "@snek-at/storybook-addon-chakra-ui": "^1.0.0-beta.1",
     "@storybook/addon-actions": "^6.3.7",
     "@storybook/addon-docs": "^6.3.9",
