@@ -30,6 +30,12 @@ import { ServiceError } from "../../../../../components/ServiceError";
 
 type FormData = Omit<Project, "id">;
 
+interface ProjectFormData {
+  name: string;
+  description?: string;
+  roles: Record<string, boolean>;
+}
+
 const initialFormState: FormData = { name: "", description: "" };
 
 interface AddProjectModalProps {
@@ -104,7 +110,7 @@ export default function AddProjectModal({
     setNewProject(initialFormState);
   };
 
-  useEffect(resetForm, [project, reset]);
+  useEffect(resetForm, [reset, project]);
 
   return (
     <Modal size="md" isOpen={isOpen} onClose={onClose} variant="project_modal">
@@ -187,8 +193,15 @@ export default function AddProjectModal({
           >
             Cancel
           </Button>
-          <Button variant="primary" onClick={addNewProject}>
-            Save &amp; Close
+          <Button
+            {...getSubmitButtonProps({
+              status,
+              canSubmitForm,
+              onClick: handleSubmit(() => addNewProject()),
+            })}
+            aria-disabled={!canSubmitForm}
+          >
+            {isNewProject ? "Add & Close" : "Save & Close"}
           </Button>
         </ModalFooter>
       </ModalContent>
