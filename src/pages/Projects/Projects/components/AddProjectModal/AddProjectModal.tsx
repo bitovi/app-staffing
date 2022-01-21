@@ -23,7 +23,7 @@ import { Button } from "@chakra-ui/button";
 
 type FormData = Omit<Project, "id">;
 
-const initialFormState: FormData = { name: "", description: "", roles: [] };
+const initialFormState: FormData = { name: "", description: "" };
 
 interface AddProjectModalProps {
   onClose: () => void;
@@ -105,7 +105,7 @@ export default function AddProjectModal({
             Cancel
           </Button>
           <Button variant="primary" onClick={addNewProject}>
-            Save & Close
+            Save &amp; Close
           </Button>
         </ModalFooter>
       </ModalContent>
