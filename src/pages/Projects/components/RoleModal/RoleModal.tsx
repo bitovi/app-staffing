@@ -37,7 +37,7 @@ interface RoleModalProps {
   isOpen: boolean;
   skills: Skill[];
   project?: Project;
-  roles: Role[];
+  roles?: Role[];
 }
 
 interface RoleFormData {
@@ -74,7 +74,7 @@ export default function RoleModal({
   const submitForm = async (data: any) => {
     const projectRoles = getSelectedSkills(data.skills, skills || []);
     try {
-      if (project) {
+      if (project && roles) {
         setStatus("pending");
         await createRole({
           startDate: data.startDate ? parseISO(data.startDate) : undefined,
@@ -152,6 +152,8 @@ export default function RoleModal({
                   })}
                   id="role_start_date"
                   type="date"
+                  data-testid="startDate"
+                  name="startDate"
                 />
                 <FormErrorMessage>
                   {errors?.startDate?.message}
@@ -244,7 +246,7 @@ export default function RoleModal({
             })}
             aria-disabled={!canSubmitForm}
           >
-            Save & Close
+            Save &amp; Close
           </Button>
         </ModalFooter>
       </ModalContent>

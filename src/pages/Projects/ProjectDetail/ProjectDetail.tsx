@@ -14,7 +14,6 @@ import { Image } from "@chakra-ui/image";
 import {
   useProject as useProjectDefault,
   useProjectMutations as useProjectMutationsDefault,
-  useRole as useRoleDefault,
   useRoleMutations as useRoleMutationsDefault,
 } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
@@ -27,7 +26,6 @@ import type { Project } from "../../../services/api";
 interface ProjectDetailProps {
   useProject: typeof useProjectDefault;
   useProjectMutations: typeof useProjectMutationsDefault;
-  useRole: typeof useRoleDefault;
   useRoleMutations: typeof useRoleMutationsDefault;
 }
 
@@ -57,7 +55,6 @@ export function LoadingProjectDetails(): JSX.Element {
 export function ProjectDetail({
   useProject = useProjectDefault,
   useProjectMutations = useProjectMutationsDefault,
-  useRole = useRoleDefault,
   useRoleMutations = useRoleMutationsDefault,
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -76,39 +73,35 @@ export function ProjectDetail({
     <div>
       <ProjectsHeader project={project} />
 
-      {project && (
-        <>
-          <Flex
-            width="100%"
-            flexDirection="row"
-            minHeight="30px"
-            alignItems="center"
-          >
-            <ProjectDescription onEdit={onSave} project={project} />
-            <Spacer />
-            <IconButton
-              variant="editAction"
-              aria-label="Edit Project"
-              fontSize="20px"
-              icon={<EditIcon fill="currentColor" />}
-              onClick={() => alert("TODO")}
-            />
-            <Box mt={10} />
-            <ProjectDeleteButton
-              projectName={project.name}
-              projectId={project.id}
-              destroyProject={destroyProject}
-            />
-          </Flex>
-          <RoleList
-            createRole={createRole}
-            destroyRole={destroyRole}
-            updateRole={updateRole}
-            project={project}
-            updateProject={updateProject}
-          />
-        </>
-      )}
+      <Flex
+        width="100%"
+        flexDirection="row"
+        minHeight="30px"
+        alignItems="center"
+      >
+        <ProjectDescription onEdit={onSave} project={project} />
+        <Spacer />
+        <IconButton
+          variant="editAction"
+          aria-label="Edit Project"
+          fontSize="20px"
+          icon={<EditIcon fill="currentColor" />}
+          onClick={() => alert("TODO")}
+        />
+        <Box mt={10} />
+        <ProjectDeleteButton
+          projectName={project.name}
+          projectId={project.id}
+          destroyProject={destroyProject}
+        />
+      </Flex>
+      <RoleList
+        createRole={createRole}
+        destroyRole={destroyRole}
+        updateRole={updateRole}
+        project={project}
+        updateProject={updateProject}
+      />
 
       {isEmpty(project.roles) && (
         <Flex
@@ -144,7 +137,6 @@ export default function ProjectDetailWrapper(): JSX.Element {
       <ProjectDetail
         useProject={useProjectDefault}
         useProjectMutations={useProjectMutationsDefault}
-        useRole={useRoleDefault}
         useRoleMutations={useRoleMutationsDefault}
       />
     </Suspense>
