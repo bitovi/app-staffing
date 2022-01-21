@@ -1,7 +1,6 @@
-import type { Project } from "../../../services/api";
-
 import { Suspense } from "react";
 import { useParams } from "react-router-dom";
+import isEmpty from "lodash/isEmpty";
 import {
   Flex,
   Text,
@@ -10,17 +9,18 @@ import {
   Skeleton,
   Stack,
 } from "@chakra-ui/react";
+import { Image } from "@chakra-ui/image";
 import {
   useProject as defaultUseProject,
   useRoleMutations as defaultRoleMutation,
   useProjectMutations as defaultUseProjectMutations,
 } from "../../../services/api";
-import { Image } from "@chakra-ui/image";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
 import RoleList from "../components/RoleList";
 import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import { EditIcon } from "./../../assets";
+import type { Project } from "../../../services/api";
 
 interface ProjectDetailProps {
   useProject: typeof defaultUseProject;
@@ -101,7 +101,7 @@ export function ProjectDetail({
         </>
       )}
 
-      {project.roles.length === 0 && (
+      {isEmpty(project.roles) && (
         <Flex
           width="100%"
           flexDirection="column"

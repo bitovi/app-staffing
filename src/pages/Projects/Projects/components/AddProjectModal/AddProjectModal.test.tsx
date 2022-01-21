@@ -55,7 +55,6 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
     expect(mockAddProject).toBeCalledWith({
       name: "Adidas",
       description: "Fashion and athletics",
-      roles: [],
     });
   });
 });
