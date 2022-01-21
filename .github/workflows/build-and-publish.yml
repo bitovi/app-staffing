@@ -34,10 +34,16 @@ jobs:
         run: npm run test:ci
       - name: Test - Visual Regression Pages
         run: npm run percy:pages
+        with: 
+          start: npm run dev
+          wait-on: http://localhost:3000
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_SNAPSHOT_TOKEN }}
       - name: Test - Visual Regression Storybook
         run: npm run percy:storybook
+        with: 
+          start: npm run storybook
+          wait-on: http://localhost:6006
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
 
