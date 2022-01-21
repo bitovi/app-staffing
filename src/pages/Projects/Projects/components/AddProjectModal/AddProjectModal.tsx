@@ -33,7 +33,6 @@ type FormData = Omit<Project, "id">;
 interface ProjectFormData {
   name: string;
   description?: string;
-  roles: Record<string, boolean>;
 }
 
 const initialFormState: FormData = { name: "", description: "" };
@@ -57,7 +56,6 @@ export default function AddProjectModal({
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const [newProject, setNewProject] = useState<FormData>(initialFormState);
-  const projectData = project ? toProjectFormData(project) : undefined;
 
   const {
     register,
@@ -66,10 +64,10 @@ export default function AddProjectModal({
     reset,
     formState: { errors, isDirty: formIsDirty },
   } = useForm<ProjectFormData>({
-    defaultValues: projectData,
+    defaultValues: project ? project : undefined,
   });
 
-  const isNewProject = isEmpty(projectData);
+  const isNewProject = isEmpty(project);
   const projectName = watch("name");
   const canSubmitForm =
     (isNewProject && fullNameProvided(projectName)) ||
@@ -79,9 +77,9 @@ export default function AddProjectModal({
     try {
       setStatus("pending");
       const newProjectId = await addProject(newProject);
-      reset({ name: "", description: "" });
-      onClose();
       history.push(`/projects/${newProjectId}`);
+      resetForm();
+      onClose();
       setStatus("idle");
     } catch (e) {
       setServerError(!serverError);
@@ -99,14 +97,7 @@ export default function AddProjectModal({
   };
 
   const resetForm = () => {
-    reset(
-      project
-        ? toProjectFormData(project)
-        : {
-            name: "",
-            description: "",
-          },
-    );
+    reset({ name: "", description: "" });
     setNewProject(initialFormState);
   };
 
@@ -211,20 +202,6 @@ export default function AddProjectModal({
 
 function fullNameProvided(name: string) {
   return name ? name.trim().split("").length >= 1 : false;
-}
-
-function toProjectFormData(data: Project): ProjectFormData {
-  const roles: Record<string, boolean> = {};
-
-  data?.roles?.forEach(({ id }) => {
-    roles[id] = true;
-  });
-
-  return {
-    name: data.name,
-    description: data.description,
-    roles,
-  };
 }
 
 function getSubmitButtonProps({
