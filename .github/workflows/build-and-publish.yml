@@ -32,26 +32,28 @@ jobs:
 
       - name: Test
         run: npm run test:ci
+
       - name: Test - Visual Regression Pages
-        run: npm run percy:pages
-        with: 
-          start: npm run dev
-          wait-on: http://localhost:3000
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_SNAPSHOT_TOKEN }}
-      - name: Test - Visual Regression Storybook
-        run: npm run percy:storybook
+        uses: BerniWittmann/background-server-action@latest
         with: 
-          start: npm run storybook
-          wait-on: http://localhost:6006
+          command: npm run percy:pages
+          start: npm run dev
+          wait-on: 'http://localhost:3000'
+      - name: Test - Visual Regression Storybook
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
+        uses: BerniWittmann/background-server-action@latest
+        with: 
+          command: npm run percy:storybook
+          start: npm run storybook
+          wait-on: 'http://localhost:6006'
 
       - name: Build App
         run: npm run build
       - name: Build Storybook
         run: npm run storybook:build
-
 
 
   publish:
