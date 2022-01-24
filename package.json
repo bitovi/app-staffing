@@ -19,7 +19,8 @@
     "test:ci": "CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook --quiet -s public -o build/storybook",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "serve": "http-server build"
   },
   "eslintConfig": {
     "root": true,
