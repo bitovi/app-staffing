@@ -1,8 +1,8 @@
-import type {
-  Project,
-  Role,
+import type { Project, Role } from "../../../../services/api";
+import {
+  useSkills as useSkillsDefault,
+  useRoles as useRolesDefault,
 } from "../../../../services/api";
-import { useSkills as useSkillsDefault, useRoles as useRolesDefault } from "../../../../services/api";
 // import RoleDetails from "../RoleDetails";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
@@ -22,7 +22,7 @@ export default function RoleList({
 }: {
   project: Project;
   updateProject: (id: string, data: Project) => void;
-  createRole: (data: Omit<Role, "id">) => Promise<string | undefined>;
+  createRole: (data: Omit<Role, "id">) => Promise<string | undefined | Role[]>;
   updateRole: (id: string, project: Role) => Promise<void>;
   destroyRole: (id: string) => Promise<void>;
 }): JSX.Element {
@@ -34,14 +34,12 @@ export default function RoleList({
     await createRole(data);
   };
 
-  const submitUpdateProject = async (projectToUpdate: Project) => {
+  const submitUpdateProject = async (projectToUpdate: any) => {
     if (projectToEdit) {
       const id = projectToEdit.id;
-      debugger;
       await updateProject(id, projectToUpdate);
     }
   };
-
 
   const lastRoleIndex = Array.isArray(project?.roles)
     ? project?.roles.length - 1

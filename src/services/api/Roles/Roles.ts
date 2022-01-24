@@ -12,7 +12,7 @@ export interface Role extends BaseData {
   endDate?: Date;
   endConfidence?: number;
 
-  assignments: Assignment[];
+  assignments?: Assignment[];
   project: Project;
   skills: Skill[];
 }

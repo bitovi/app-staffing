@@ -76,12 +76,12 @@ export default function RoleModal({
     try {
       if (project && roles) {
         setStatus("pending");
-        await createRole({
+       await createRole({
           startDate: data.startDate ? parseISO(data.startDate) : undefined,
           startConfidence: data.startConfidence,
           endConfidence: data.endConfidence,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          assignments: [],
+          // assignments: [],
           project: project,
           skills: projectRoles,
         });
