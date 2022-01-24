@@ -36,7 +36,7 @@ jobs:
       - name: Test - Visual Regression Pages
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_SNAPSHOT_TOKEN }}
-        uses: BerniWittmann/background-server-action@v1.0.4
+        uses: BerniWittmann/background-server-action@v1.0.3
         with: 
           command: npm run percy:pages
           start: npm run dev
@@ -44,7 +44,7 @@ jobs:
       - name: Test - Visual Regression Storybook
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
-        uses: BerniWittmann/background-server-action@v1.0.4
+        uses: BerniWittmann/background-server-action@v1.0.3
         with: 
           command: npm run percy:storybook
           start: npm run storybook
