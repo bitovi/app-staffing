@@ -29,19 +29,19 @@ jobs:
         run: npm run prettier
       - name: Depcheck
         run: npm run depcheck
+      # - name: Build Storybook
+      #   run: npm run storybook:build
+      # - name: Build App
+      #   run: npm run build
+
       - name: Serve
         run: npm run dev & npm run storybook & sleep 10
-
-      - name: Build App
-        run: npm run build
       - name: Test - Visual Regression Pages
         run: npx percy snapshot snapshots.yml
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_SNAPSHOT_TOKEN }}
-      - name: Build Storybook
-        run: npm run storybook:build
       - name: Test - Visual Regression Storybook
-        run: npx percy storybook ./build/storybook
+        run: npx percy storybook http://localhost:6006
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
 
