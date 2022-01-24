@@ -6,6 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import App from "./App";
 import theme from "./theme";
 
+// Remember to disable mocks before creating a pull request
 // import "./setupMocks";
 import "./theme/fonts/styles.css";
 
