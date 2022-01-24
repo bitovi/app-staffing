@@ -56,7 +56,7 @@ export default function RoleList({
         ))}
       </div>
 
-      {project && project.roles.length > 0 && (
+      {project && project?.roles && project.roles.length > 0 && (
         <>
           <Box maxHeight="80vh" overflowY="auto">
             <Table>
