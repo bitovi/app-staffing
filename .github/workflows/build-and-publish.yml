@@ -29,9 +29,8 @@ jobs:
         run: npm run prettier
       - name: Depcheck
         run: npm run depcheck
-
-      # - name: Test
-      #   run: npm run test:ci
+      - name: Serve
+        run: npm run dev & npm run storybook & sleep 10
 
       - name: Build App
         run: npm run build
@@ -41,10 +40,10 @@ jobs:
           PERCY_TOKEN: ${{ secrets.PERCY_SNAPSHOT_TOKEN }}
       - name: Build Storybook
         run: npm run storybook:build
-      # - name: Test - Visual Regression Storybook
-      #   run: npx percy storybook ./build/storybook
-      #   env: 
-      #     PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
+      - name: Test - Visual Regression Storybook
+        run: npx percy storybook ./build/storybook
+        env: 
+          PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
 
   publish:
     needs: [ build ]
