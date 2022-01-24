@@ -44,7 +44,9 @@ describe("Components/Projects/ProjectsHeader", () => {
     expect(homeBreadcrumb).toBeInTheDocument();
     expect(projectsBreadcrumb).toBeInTheDocument();
     expect(projectListTitle).toBeInTheDocument();
-    expect(singleProjectBreadcrumb?.innerHTML).toBe("Dynamic Investor Configuration Agents");
+    expect(singleProjectBreadcrumb?.innerHTML).toBe(
+      "Dynamic Investor Configuration Agents",
+    );
   });
 
   it("renders breadcrumbs with the correct link", async () => {

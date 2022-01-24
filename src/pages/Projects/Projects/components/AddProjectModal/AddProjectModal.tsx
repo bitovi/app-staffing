@@ -117,7 +117,6 @@ export default function AddProjectModal({
             onClose();
           }}
         />
-        <Divider pt={2} />
         <ModalBody pt={4}>
           <VStack spacing="16px" pb={6}>
             <FormControl isRequired isInvalid={errors.name ? true : false}>

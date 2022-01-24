@@ -8,7 +8,6 @@ export default {
   component: ProjectsHeader,
 } as ComponentMeta<typeof ProjectsHeader>;
 
-
 export const Basic: ComponentStory<typeof ProjectsHeader> = ({
   loading,
 }: {
