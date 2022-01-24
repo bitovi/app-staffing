@@ -20,10 +20,6 @@
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook --quiet -s public -o build/storybook",
     "build": "react-scripts build",
-    "percy:pages": "percy snapshot snapshots.yml",
-    "percy:react": "percy exec -- react-scripts test --watchAll=false",
-    "percy:storybook": "percy storybook:start --port=9009 --static-dir=./public",
-    "percy:all": "npm run percy:pages && npm run percy:storybook"
   },
   "eslintConfig": {
     "root": true,
