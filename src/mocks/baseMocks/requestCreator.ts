@@ -112,7 +112,8 @@ export default function requestCreator<Resource extends BaseResource>(
 
         await store.createData(item);
 
-        return res(ctx.status(201), ctx.json({ data: item }));
+        const included = await getIncluded([item]);
+        return res(ctx.status(201), ctx.json({ data: item, included }));
       },
     ),
     update: rest.patch<
@@ -143,10 +144,12 @@ export default function requestCreator<Resource extends BaseResource>(
         );
       }
 
+      const included = await getIncluded([updatedItem]);
       return res(
         ctx.status(201),
         ctx.json({
           data: updatedItem,
+          included,
         }),
       );
     }),
