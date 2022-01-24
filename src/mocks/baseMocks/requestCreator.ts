@@ -109,10 +109,22 @@ export default function requestCreator<Resource extends BaseResource>(
       async (req, res, ctx) => {
         const id = uuidv4();
         const item = { ...req.body.data, id } as Resource; // @TODO: look into typing issue
+        let included = [];
 
-        await store.createData(item);
+        try {
+          await store.createData(item);
+          included = await getIncluded([item]);
+        } catch (error) {
+          return res(
+            ctx.status(500),
+            ctx.json({
+              error: `Mock API failed to create resource\n${
+                (error as Error).message
+              }`,
+            }),
+          );
+        }
 
-        const included = await getIncluded([item]);
         return res(ctx.status(201), ctx.json({ data: item, included }));
       },
     ),

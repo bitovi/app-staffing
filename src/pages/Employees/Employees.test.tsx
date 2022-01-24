@@ -4,9 +4,12 @@ import {
   within,
   waitFor,
   cleanup,
+  waitForElementToBeRemoved,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import userEvent from "@testing-library/user-event";
+import { toast } from "@chakra-ui/react";
+
 import { clearFixtures, loadFixtures } from "../../mocks";
 
 import EmployeesWrapper from "./Employees";
@@ -18,6 +21,13 @@ describe("Pages/Employees", () => {
 
   beforeEach(async () => {
     await loadFixtures();
+
+    // close all toasts before each tests and wait for them to be removed
+    toast.closeAll();
+    const toasts = screen.queryAllByRole("listitem");
+    await Promise.all(
+      toasts.map((toasts) => waitForElementToBeRemoved(toasts)),
+    );
   });
 
   afterEach(async () => {
@@ -81,7 +91,6 @@ describe("Pages/Employees", () => {
     render(<EmployeesWrapper />);
 
     const addButton = screen.getByText(/add team member/i);
-
     userEvent.click(addButton);
 
     const modal = await screen.findByRole("dialog");
@@ -92,7 +101,9 @@ describe("Pages/Employees", () => {
     userEvent.type(modalNameInput, "Johnny Appleseed");
     expect(modalNameInput).toHaveValue("Johnny Appleseed");
 
-    await waitFor(() => expect(submitButton).toBeEnabled());
+    await waitFor(() =>
+      expect(submitButton).not.toHaveAttribute("aria-disabled", "true"),
+    );
 
     const angularCheckBox = screen.getByLabelText("Angular");
     const reactCheckbox = screen.getByLabelText("React");
@@ -107,6 +118,9 @@ describe("Pages/Employees", () => {
     expect(reactCheckbox).toBeChecked();
 
     userEvent.click(submitButton);
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
 
     const toastMessage = await screen.findByText("Team member added", {
       exact: false,
