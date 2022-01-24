@@ -22,7 +22,7 @@ export default function ProjectDescription({
         name="description"
         defaultValue={project.description}
         onBlur={updateMainField}
-        isFullWidth
+        isfullwidth={true}
         resize="none"
         variant="unstyled"
       />

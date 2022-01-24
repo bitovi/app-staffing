@@ -12,21 +12,19 @@ import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBr
 
 interface ProjectHeaderProps {
   loading?: boolean;
-  name?: string;
   addProject?: (project: NewProject) => void;
   project?: Project;
 }
 
 export default function ProjectsHeader({
   loading,
-  name,
   addProject,
   project,
 }: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box mb={name ? "" : "48px"}>
+    <Box mb={project ? "" : "48px"}>
       <Breadcrumb
         spacing="8px"
         marginBottom="16px"
@@ -41,8 +39,8 @@ export default function ProjectsHeader({
         </BreadcrumbItem>
 
         {/* Conditionals for Breadcrumb focus */}
-        {name ? (
-          <SingleProjectBreadCrumb name={name} loading={loading} />
+        {project ? (
+          <SingleProjectBreadCrumb name={project.name} loading={loading} />
         ) : (
           <ProjectsBreadCrumb loading={loading} />
         )}
@@ -60,10 +58,10 @@ export default function ProjectsHeader({
           color="gray.700"
           data-testid="projectListTitle"
         >
-          {name ? name : "Projects"}
+          {project ? project.name : "Projects"}
         </Heading>
 
-        {!name && (
+        {!project && (
           <>
             <Button
               size="lg"
