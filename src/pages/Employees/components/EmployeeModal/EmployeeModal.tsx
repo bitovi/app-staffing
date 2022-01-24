@@ -252,7 +252,7 @@ function getSubmitButtonProps({
     return {
       isLoading: true,
       isDisabled: true,
-      loadingText: "Saving",
+      loadingText: "Adding team member",
     };
   }
 

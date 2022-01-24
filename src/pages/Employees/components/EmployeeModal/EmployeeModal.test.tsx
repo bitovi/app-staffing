@@ -86,7 +86,7 @@ describe("EmployeeModal", () => {
 
     // Save button will be in "pending" state when clicked
     await waitFor(() => {
-      expect(getByText("Saving")).toBeInTheDocument();
+      expect(getByText("Adding team member")).toBeInTheDocument();
     });
   });
 
