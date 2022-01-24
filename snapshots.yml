@@ -1,4 +1,4 @@
 - name: Home
-  url: http://localhost:3000
+  url: http://localhost:8080
 - name: Team Members
-  url: http://localhost:3000/team-members
+  url: http://localhost:8080/team-members
