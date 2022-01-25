@@ -68,7 +68,7 @@ export function ProjectDetail({
 
   return (
     <div>
-      <ProjectsHeader name={project?.name} />
+      <ProjectsHeader project={project} />
 
       {project && (
         <>
