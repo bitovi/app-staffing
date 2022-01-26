@@ -223,6 +223,7 @@ export default function EmployeeModal({
             {...getSubmitButtonProps({
               status,
               canSubmitForm,
+              isNewEmployee,
               onClick: handleSubmit((data) => submitForm(data)),
             })}
             aria-disabled={!canSubmitForm}
@@ -242,13 +243,21 @@ function nameProvided(name: string) {
 function getSubmitButtonProps({
   status,
   canSubmitForm,
+  isNewEmployee,
   onClick,
 }: {
   status: SaveButtonStatus;
   canSubmitForm: boolean;
+  isNewEmployee: boolean;
   onClick: () => Promise<void>;
 }) {
-  if (status === "pending") {
+  if (status === "pending" && !isNewEmployee) {
+    return {
+      isLoading: true,
+      isDisabled: true,
+      loadingText: "Editing team member",
+    };
+  } else if (status === "pending" && isNewEmployee) {
     return {
       isLoading: true,
       isDisabled: true,
