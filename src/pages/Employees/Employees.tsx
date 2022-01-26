@@ -9,7 +9,7 @@ import {
 import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
-import EmployeeModal from "./components/EmployeeModal";
+import EmployeeModal from "./components/EmployeeModal/EmployeeModal";
 import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
 
 interface EmployeesProps {

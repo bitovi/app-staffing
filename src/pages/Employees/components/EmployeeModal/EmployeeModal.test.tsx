@@ -159,7 +159,7 @@ describe("EmployeeModal", () => {
     expect(addButton).not.toHaveAttribute("aria-disabled", "true");
 
     userEvent.click(addButton);
-    await findByText(/saving/i);
+    await findByText(/Adding team member/i);
 
     expect(onSave).toHaveBeenCalledTimes(1);
     const employeeToSave = onSave.mock.calls[0][0];
