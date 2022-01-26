@@ -41,7 +41,7 @@ jobs:
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_SNAPSHOT_TOKEN }}
       - name: Test - Visual Regression Storybook
-        run: npx percy storybook http://localhost:8080/storybook
+        run: npx percy storybook:start --port=6006 --static-dir=./public
         env: 
           PERCY_TOKEN: ${{ secrets.PERCY_STORYBOOK_TOKEN }}
 
