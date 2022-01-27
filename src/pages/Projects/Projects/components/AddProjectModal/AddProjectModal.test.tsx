@@ -55,7 +55,7 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
 
     // Save button will be in "pending" state when clicked
     await waitFor(() => {
-      expect(getByText("Saving")).toBeInTheDocument();
+      expect(getByText("Adding Project")).toBeInTheDocument();
     });
 
     await waitFor(() => expect(mockHistoryPush).toHaveBeenCalled());
