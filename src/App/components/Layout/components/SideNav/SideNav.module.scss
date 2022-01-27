@@ -1,35 +1,25 @@
-.wrapper {
+.sidenav {
   width: 20%;
   min-width: 200px;
-  background-color: #474746;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  padding: 20px 0 0 20px;
+  background-color: #2d3748;
 }
 
-.image {
-  padding-bottom: 60px;
-  align-self: flex-start;
+.logo {
+  width: 83px;
+  height: 25px;
+  margin: 32px;
 }
 
-.inactiveLink {
-  padding: 20px 0;
+.link {
+  border-left: 8px solid #2d3748;
+  padding: 10px 16px;
   text-decoration: none;
   color: white;
-
-  .icon {
-    margin-right: 5px;
-    filter: invert(100%);
-  }
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.activeLink {
-  color: rgb(191, 92, 88);
-
-  .icon {
-    // https://codepen.io/sosuke/pen/Pjoqqp
-    filter: invert(38%) sepia(30%) saturate(1289%) hue-rotate(314deg)
-      brightness(104%) contrast(68%);
-  }
+.active {
+  border-left: 8px solid #319795;
 }

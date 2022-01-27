@@ -11,9 +11,9 @@ describe("Side Nav", () => {
       </MemoryRouter>,
     );
 
-    let link = screen.getByText("Employees");
-    expect(link).to.have.class("activeLink");
-    link = screen.getByText("Home");
-    expect(link).to.have.class("inactiveLink");
+    let link = screen.getByText("Team Members");
+    expect(link).to.have.class("active");
+    link = screen.getByText("Dashboard");
+    expect(link).to.not.have.class("active");
   });
 });

@@ -1,5 +1,5 @@
 import { Suspense, useState } from "react";
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading } from "@chakra-ui/layout";
 import {
   Employee,
   useEmployees as useEmployeesDefault,
@@ -10,6 +10,7 @@ import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
+import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
 
 interface EmployeesProps {
   useEmployees: typeof useEmployeesDefault;
@@ -20,15 +21,16 @@ interface EmployeesProps {
 export function EmployeePageLoadingLayout(): JSX.Element {
   return (
     <Box>
+      <EmployeesBreadcrumbs />
       <Flex
         width="full"
         fontFamily="Arial, Helvetica, sans-serif"
         display="flex"
         justifyContent="space-between"
       >
-        <Text textStyle="title" color="gray.700">
+        <Heading as="h1" textStyle="title" color="gray.700">
           Team Members
-        </Text>
+        </Heading>
 
         <Button
           size="lg"
@@ -75,12 +77,16 @@ export function Employees({
   };
   return (
     <Box>
-      <EmployeeModal
-        isOpen={employeeModal}
-        onClose={() => setEmployeeModal(false)}
-        onSave={addNewEmployee}
-        skills={skills}
-      />
+      {employeeModal && (
+        <EmployeeModal
+          isOpen={employeeModal}
+          onClose={() => setEmployeeModal(false)}
+          onSave={addNewEmployee}
+          skills={skills}
+        />
+      )}
+
+      <EmployeesBreadcrumbs />
 
       <Flex
         width="full"
@@ -90,9 +96,14 @@ export function Employees({
         position="sticky"
         top="0"
       >
-        <Text textStyle="title" color="gray.700">
+        <Heading
+          as="h1"
+          textStyle="title"
+          color="gray.700"
+          data-testid="employeesTitle"
+        >
           Team Members
-        </Text>
+        </Heading>
 
         <Button
           size="lg"

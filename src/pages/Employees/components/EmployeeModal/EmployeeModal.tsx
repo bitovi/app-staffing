@@ -71,8 +71,8 @@ export default function EmployeeModal({
   const isNewEmployee = isEmpty(employeeData);
   const employeeName = watch("name");
   const canSubmitForm =
-    (isNewEmployee && fullNameProvided(employeeName)) ||
-    (!isNewEmployee && formIsDirty && fullNameProvided(employeeName));
+    (isNewEmployee && nameProvided(employeeName)) ||
+    (!isNewEmployee && formIsDirty && nameProvided(employeeName));
 
   const submitForm = async (data: EmployeeFormData) => {
     const employeeSkills = getSelectedSkills(data.skills, skills || []);
@@ -81,10 +81,9 @@ export default function EmployeeModal({
       setStatus("pending");
       await onSave({
         name: data.name,
-        startDate: data.startDate ? parseISO(data.startDate) : undefined,
-        endDate: data.endDate ? parseISO(data.endDate) : undefined,
+        startDate: data.startDate ? parseISO(data.startDate) : null,
+        endDate: data.endDate ? parseISO(data.endDate) : null,
         skills: employeeSkills,
-        assignments: [],
       });
       reset({ name: "", startDate: "", endDate: "" });
       onClose();
@@ -127,7 +126,7 @@ export default function EmployeeModal({
                 {...register("name", {
                   required: "Name not filled out",
                   validate: (name) =>
-                    fullNameProvided(name) || "Full name required",
+                    nameProvided(name) || "Full name required",
                 })}
                 id="name"
                 placeholder="name"
@@ -224,6 +223,7 @@ export default function EmployeeModal({
             {...getSubmitButtonProps({
               status,
               canSubmitForm,
+              isNewEmployee,
               onClick: handleSubmit((data) => submitForm(data)),
             })}
             aria-disabled={!canSubmitForm}
@@ -236,24 +236,32 @@ export default function EmployeeModal({
   );
 }
 
-function fullNameProvided(name: string) {
-  return name ? name.trim().split(" ").length >= 2 : false;
+function nameProvided(name: string) {
+  return name ? name.trim().length >= 1 : false;
 }
 
 function getSubmitButtonProps({
   status,
   canSubmitForm,
+  isNewEmployee,
   onClick,
 }: {
   status: SaveButtonStatus;
   canSubmitForm: boolean;
+  isNewEmployee: boolean;
   onClick: () => Promise<void>;
 }) {
-  if (status === "pending") {
+  if (status === "pending" && !isNewEmployee) {
     return {
       isLoading: true,
       isDisabled: true,
-      loadingText: "Saving",
+      loadingText: "Editing team member",
+    };
+  } else if (status === "pending" && isNewEmployee) {
+    return {
+      isLoading: true,
+      isDisabled: true,
+      loadingText: "Adding team member",
     };
   }
 

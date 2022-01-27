@@ -1,11 +1,12 @@
 import {
-  fireEvent,
   render,
   screen,
   within,
   waitFor,
+  cleanup,
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
+import userEvent from "@testing-library/user-event";
 import { clearFixtures, loadFixtures } from "../../mocks";
 
 import EmployeesWrapper from "./Employees";
@@ -15,8 +16,14 @@ describe("Pages/Employees", () => {
   jest.useFakeTimers();
   jest.runAllTimers();
 
-  beforeEach(async () => loadFixtures());
-  afterEach(async () => clearFixtures());
+  beforeEach(async () => {
+    await loadFixtures();
+  });
+
+  afterEach(async () => {
+    await clearFixtures();
+    cleanup();
+  });
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
@@ -34,21 +41,55 @@ describe("Pages/Employees", () => {
     ).toBeDefined();
   });
 
-  it("Creates employee", async () => {
+  it("renders breadcrumbs", () => {
+    const { queryByTestId } = render(<EmployeesWrapper />);
+
+    const homeBreadcrumb = queryByTestId("homeBreadcrumb");
+    const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
+
+    expect(homeBreadcrumb).toBeInTheDocument();
+    expect(employeesBreadcrumb).toBeInTheDocument();
+  });
+
+  it("renders home breadcrumb with the correct link", () => {
+    const { queryByTestId } = render(<EmployeesWrapper />);
+
+    const homeBreadcrumb = queryByTestId("homeBreadcrumb");
+
+    expect(homeBreadcrumb?.closest("a")).toHaveAttribute("href", "/");
+  });
+
+  it("renders team member breadcrumb as span", () => {
+    const { queryByTestId } = render(<EmployeesWrapper />);
+
+    const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
+
+    expect(employeesBreadcrumb?.tagName.toLowerCase()).toBe("span");
+  });
+
+  it("Renders h1 tag for page title", () => {
+    render(<EmployeesWrapper />);
+
+    const pageTitle = screen.getByTestId("employeesTitle");
+
+    expect(pageTitle).toBeInTheDocument();
+    expect(pageTitle?.tagName).toBe("H1");
+    expect(pageTitle?.innerHTML).toBe("Team Members");
+  });
+
+  it.skip("Creates employee", async () => {
     render(<EmployeesWrapper />);
 
     const addButton = screen.getByText(/add team member/i);
 
-    fireEvent.click(addButton);
+    userEvent.click(addButton);
 
     const modal = await screen.findByRole("dialog");
     const submitButton = within(modal).getByText(/Add & Close/i);
     expect(submitButton).toHaveAttribute("aria-disabled", "true");
 
     const modalNameInput = await screen.findByPlaceholderText(/name/i);
-    fireEvent.change(modalNameInput, {
-      target: { value: "Johnny Appleseed" },
-    });
+    userEvent.type(modalNameInput, "Johnny Appleseed");
     expect(modalNameInput).toHaveValue("Johnny Appleseed");
 
     await waitFor(() => expect(submitButton).toBeEnabled());
@@ -59,13 +100,13 @@ describe("Pages/Employees", () => {
     expect(angularCheckBox).not.toBeChecked();
     expect(reactCheckbox).not.toBeChecked();
 
-    fireEvent.click(angularCheckBox);
-    fireEvent.click(reactCheckbox);
+    userEvent.click(angularCheckBox);
+    userEvent.click(reactCheckbox);
 
     expect(angularCheckBox).toBeChecked();
     expect(reactCheckbox).toBeChecked();
 
-    fireEvent.click(submitButton);
+    userEvent.click(submitButton);
 
     const toastMessage = await screen.findByText("Team member added", {
       exact: false,
@@ -78,53 +119,76 @@ describe("Pages/Employees", () => {
       exact: false,
     });
     expect(newEmployeeRow).toBeInTheDocument();
+
+    // Make sure roles are listed in the team member row
+    within(newEmployeeRow).getByText("Angular");
+    within(newEmployeeRow).getByText("React");
   });
 
-  // it("Edits employee", async () => {
-  //   render(<EmployeesWrapper />);
+  it("resets modal form fields when closed", async () => {
+    render(<EmployeesWrapper />);
 
-  //   await screen.findAllByRole("button", {
-  //     name: "Edit Member",
-  //     exact: false,
-  //   });
-  //   const memberRows = await screen.findAllByRole("row");
-  //   const editMember = await within(memberRows[1]).findByLabelText(
-  //     "Edit Member",
-  //   );
-  //   //before we edit Employee to add this skill, they do not have it.
-  //   expect(within(memberRows[1]).queryByText("Design")).not.toBeInTheDocument();
+    const addButton = screen.getByText(/add team member/i);
 
-  //   fireEvent.click(editMember);
-  //   const editModal = await screen.findByRole("dialog");
-  //   await screen.findByText("Edit Team Member");
+    userEvent.click(addButton);
 
-  //   const reactCheckBox = within(editModal).getByLabelText("React");
-  //   const projectManagementCheckbox =
-  //     within(editModal).getByLabelText("Project Management");
+    const modal = await screen.findByRole("dialog");
+    const cancelButton = within(modal).getByText(/Cancel/i);
 
-  //   expect(reactCheckBox).toBeChecked();
-  //   expect(projectManagementCheckbox).toBeChecked();
+    const modalNameInput = await screen.findByPlaceholderText(/name/i);
+    userEvent.type(modalNameInput, "Johnny Appleseed");
+    expect(modalNameInput).toHaveValue("Johnny Appleseed");
 
-  //   const submitButton = within(editModal).getByText(/Save & Close/i);
-  //   expect(submitButton).toHaveAttribute("aria-disabled", "true");
+    userEvent.click(cancelButton);
 
-  //   fireEvent.click(within(editModal).getByLabelText("Design"));
-  //   await waitFor(() => expect(submitButton).toBeEnabled());
+    await waitFor(() => expect(modal).not.toBeInTheDocument());
 
-  //   fireEvent.click(submitButton);
-  //   await waitFor(() => expect(editModal).not.toBeInTheDocument());
+    userEvent.click(addButton);
 
-  //   // check for toast message
-  //   const toastMessage = await screen.findByText("Team member updated", {
-  //     exact: false,
-  //   });
+    const modalNameInput2 = await screen.findByPlaceholderText(/name/i);
+    expect(modalNameInput2).toHaveValue("");
+  });
 
-  //   await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
+  it("Edits employee", async () => {
+    render(<EmployeesWrapper />);
 
-  //   const editedEmployee = await within(memberRows[1]).findByText("Design");
-  //   //we now check for the same skill, and the Employee has it
-  //   expect(editedEmployee).toBeInTheDocument();
-  // });
+    const memberRows = await screen.findAllByRole("row");
+    const editMember = await within(memberRows[1]).findByLabelText(
+      "Edit Member",
+    );
+
+    userEvent.click(editMember);
+    const editModal = await screen.findByRole("dialog");
+    await within(editModal).findByText("Edit Team Member");
+
+    const checkboxes = within(editModal).getAllByRole(
+      "checkbox",
+    ) as HTMLInputElement[];
+    const isChecked = (el: unknown) => (el as HTMLInputElement).checked;
+    const unchecked = checkboxes.filter((el) => !isChecked(el));
+
+    // fail the test in case the fixture data changes
+    if (!unchecked[0]) throw new Error("At least one role must be unselected");
+
+    const submitButton = within(editModal).getByText(/Save & Close/i);
+    expect(submitButton).toHaveAttribute("aria-disabled", "true");
+
+    userEvent.click(unchecked[0]);
+    await waitFor(() =>
+      expect(submitButton).not.toHaveAttribute("aria-disabled", "true"),
+    );
+
+    userEvent.click(submitButton);
+    await waitFor(() => expect(editModal).not.toBeInTheDocument());
+
+    // check for toast message
+    await screen.findAllByText("Team member updated", {
+      exact: false,
+    });
+
+    const newRole = getInputLabel(unchecked[0]) || "unknown role label";
+    await within(memberRows[1]).findByText(newRole);
+  });
 
   it("Deletes employee", async () => {
     render(
@@ -146,14 +210,14 @@ describe("Pages/Employees", () => {
       "Delete Member",
     );
 
-    deleteMember.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    userEvent.click(deleteMember);
 
     const deleteModal = await screen.findByRole("dialog");
     expect(deleteModal).toBeInTheDocument();
 
     const deleteButton = await screen.findByLabelText(/confirm button/i);
 
-    deleteButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    userEvent.click(deleteButton);
 
     const toastMessage = await screen.findByText(
       `${employeeName} was successfully deleted`,
@@ -162,7 +226,11 @@ describe("Pages/Employees", () => {
       },
     );
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
-
-    expect(employeeToDelete).not.toBeInTheDocument;
+    expect(employeeToDelete).not.toBeInTheDocument();
   });
+
+  function getInputLabel(el: HTMLInputElement) {
+    if (el.labels == null) return null;
+    return el.labels[0].textContent;
+  }
 });

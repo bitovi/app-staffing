@@ -1,6 +1,6 @@
-import type { NewProject } from "../../../../../services/api";
+import type { Project, NewProject } from "../../../../../services/api";
 
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
@@ -12,19 +12,19 @@ import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBr
 
 interface ProjectHeaderProps {
   loading?: boolean;
-  name?: string;
   addProject?: (project: NewProject) => void;
+  project?: Project;
 }
 
 export default function ProjectsHeader({
   loading,
-  name,
   addProject,
+  project,
 }: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box mb="48px">
+    <Box mb={project ? "" : "48px"}>
       <Breadcrumb
         spacing="8px"
         marginBottom="16px"
@@ -39,8 +39,8 @@ export default function ProjectsHeader({
         </BreadcrumbItem>
 
         {/* Conditionals for Breadcrumb focus */}
-        {name ? (
-          <SingleProjectBreadCrumb name={name} loading={loading} />
+        {project ? (
+          <SingleProjectBreadCrumb name={project.name} loading={loading} />
         ) : (
           <ProjectsBreadCrumb loading={loading} />
         )}
@@ -52,10 +52,16 @@ export default function ProjectsHeader({
         display="flex"
         justifyContent="space-between"
       >
-        <Text textStyle="title" color="gray.700" data-testid="projectListTitle">
-          Projects
-        </Text>
-        {!name && (
+        <Heading
+          as="h1"
+          textStyle="title"
+          color="gray.700"
+          data-testid="projectListTitle"
+        >
+          {project ? project.name : "Projects"}
+        </Heading>
+
+        {!project && (
           <>
             <Button
               size="lg"
@@ -71,6 +77,7 @@ export default function ProjectsHeader({
               isOpen={isOpen}
               onClose={onClose}
               addProject={(project) => addProject?.(project)}
+              project={project}
             />
           </>
         )}

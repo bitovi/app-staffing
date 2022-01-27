@@ -1,6 +1,5 @@
 import type { Project } from "../../../../services/api";
-
-import styles from "./ProjectDescription.module.scss";
+import { Textarea } from "@chakra-ui/react";
 
 export default function ProjectDescription({
   project,
@@ -18,21 +17,15 @@ export default function ProjectDescription({
   };
 
   return (
-    <div className={styles.projectDescription}>
-      <input
-        className={styles.sectionLabel}
-        name="name"
+    <>
+      <Textarea
+        name="description"
+        defaultValue={project.description}
         onBlur={updateMainField}
-        defaultValue={project.name}
+        isfullwidth="true"
+        resize="none"
+        variant="unstyled"
       />
-      <div>
-        <p className={styles.sectionLabel}>Description:</p>
-        <textarea
-          name="description"
-          defaultValue={project.description}
-          onBlur={updateMainField}
-        />
-      </div>
-    </div>
+    </>
   );
 }

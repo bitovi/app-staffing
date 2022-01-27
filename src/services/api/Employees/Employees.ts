@@ -7,10 +7,10 @@ import { Skill } from "../Skills";
 export interface Employee extends BaseData {
   id: string;
   name: string;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: Date | null;
+  endDate?: Date | null;
 
-  assignments: Assignment[];
+  assignments?: Assignment[];
   skills: Skill[];
 }
 
