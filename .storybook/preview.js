@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { StylesProvider } from "@chakra-ui/react";
 
 import theme from "../src/theme/";
 
@@ -8,13 +7,13 @@ import "../src/setupMocks";
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   chakra: { theme },
-  actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/,
     },
   },
+  percy: {}
 };
 
 const pathPrefix =
@@ -22,10 +21,8 @@ const pathPrefix =
 
 export const decorators = [
   (Story) => (
-    <StylesProvider value={theme}>
-      <Suspense fallback={<h1>Storybook Fallback</h1>}>
-        <Story />
-      </Suspense>
-    </StylesProvider>
+    <Suspense fallback={<h1>Storybook Fallback</h1>}>
+      <Story />
+    </Suspense>
   ),
 ];
