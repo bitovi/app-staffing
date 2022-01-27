@@ -187,6 +187,7 @@ export default function AddProjectModal({
             {...getSubmitButtonProps({
               status,
               canSubmitForm,
+              isNewProject,
               onClick: handleSubmit(() => addNewProject()),
             })}
             aria-disabled={!canSubmitForm}
@@ -206,17 +207,25 @@ function fullNameProvided(name: string) {
 function getSubmitButtonProps({
   status,
   canSubmitForm,
+  isNewProject,
   onClick,
 }: {
   status: SaveButtonStatus;
   canSubmitForm: boolean;
+  isNewProject: boolean;
   onClick: () => Promise<void>;
 }) {
-  if (status === "pending") {
+  if (status === "pending" && !isNewProject) {
     return {
       isLoading: true,
       isDisabled: true,
-      loadingText: "Saving",
+      loadingText: "Editing Project",
+    };
+  } else if (status === "pending" && isNewProject) {
+    return {
+      isLoading: true,
+      isDisabled: true,
+      loadingText: "Adding Project",
     };
   }
 
