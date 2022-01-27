@@ -11,7 +11,7 @@ import {
   Tr,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/image";
+import { FolderWithFilesIcon } from "../../../../assets/Icons";
 
 import ProjectCard from "../ProjectCard";
 import { Project } from "../../../../../services/api";
@@ -49,12 +49,7 @@ export default function ProjectList({
             borderRadius="4px"
             alignItems="center"
           >
-            <Image
-              height="100px"
-              width="100px"
-              src="assets/images/folderWithFile.png"
-              alt="Folder With File"
-            />
+            <FolderWithFilesIcon height="100" width="100" />
             <Text fontWeight="bold" fontSize="16px" lineHeight="24px">
               There are currently no projects available.
             </Text>
