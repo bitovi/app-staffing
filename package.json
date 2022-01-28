@@ -17,7 +17,7 @@
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "test:ci": "CI=true react-scripts test --coverage",
-    "storybook": "start-storybook -s public -p 6006",
+    "storybook": "cross-env STORYBOOK_SKIP_MOCKS=true start-storybook -s public -p 6006",
     "storybook:build": "build-storybook --quiet -s public -o build-storybook",
     "build": "react-scripts build"
   },
@@ -140,6 +140,7 @@
     "chai": "^4.3.4",
     "chai-dom": "^1.9.0",
     "chai-spies": "^1.0.0",
+    "cross-env": "^7.0.3",
     "depcheck": "^1.4.2",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "prettier": "^2.3.2",

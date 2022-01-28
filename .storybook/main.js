@@ -10,4 +10,9 @@ module.exports = {
     "../src/**/*.stories.mdx",
     "../src/**/*.stories.@(ts|tsx)",
   ],
+  refs: {
+    '@chakra-ui/react': {
+      disable: true
+    }
+  }
 };

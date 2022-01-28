@@ -2,7 +2,20 @@ import { Suspense } from "react";
 
 import theme from "../src/theme/";
 
-import "../src/setupMocks";
+import { setupWorker } from "msw";
+import mocks, { loadFixtures } from "../src/mocks";
+
+
+if (!process.env.STORYBOOK_SKIP_MOCKS) {
+  loadFixtures();
+  
+  setupWorker(...mocks).start({
+    onUnhandledRequest: "bypass",
+    serviceWorker: {
+      url: `${process.env.PUBLIC_URL}/mockServiceWorker.js`,
+    },
+  });
+}
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -26,3 +39,5 @@ export const decorators = [
     </Suspense>
   ),
 ];
+
+
