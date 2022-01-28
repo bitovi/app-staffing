@@ -32,18 +32,24 @@ interface MockResponse<
   error?: string;
 }
 
+interface RelatedStore {
+  relatedStoreName: string;
+  relationReference: string;
+}
+
 const API_BASE_URL = window.env.API_BASE_URL;
 
 export default function requestCreator<Resource extends BaseResource>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
+  relatedStores?: RelatedStore[],
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
   return {
     getOne: rest.get<undefined, MockResponse<Resource>, { id: string }>(
       `${API_BASE_URL}${resourcePath}/:id`,
       async (req, res, ctx) => {
         const id = req.params.id;
-        const data = await store.getData({ id });
+        let data = await store.getData({ id });
 
         if (!data) {
           return res(
@@ -52,6 +58,36 @@ export default function requestCreator<Resource extends BaseResource>(
               error: `Resource ${id} not found.`,
             }),
           );
+        }
+
+        if (relatedStores?.length) {
+          for (const relatedStore of relatedStores) {
+            const related: BaseResource[] = [];
+            const { relatedStoreName, relationReference } = relatedStore;
+
+            // We first get all data from the related store
+            const relatedDataList = await stores[
+              relatedStoreName
+            ].getListData();
+
+            // We filter the data to keep only what is related to
+            // this particular entity
+            relatedDataList.data.forEach((relatedData) => {
+              const relation =
+                relatedData.relationships?.[relationReference]?.data;
+              if (!Array.isArray(relation)) {
+                if (id === relation?.id) {
+                  related.push(relatedData);
+                }
+              }
+            });
+
+            // We update the response data with the relationships
+            data = {
+              ...data,
+              relationships: { [relatedStoreName]: { data: related } },
+            };
+          }
         }
 
         const included = await getIncluded([data]);
