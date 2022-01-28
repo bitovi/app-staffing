@@ -100,7 +100,7 @@ export function ProjectDetail({
         destroyRole={destroyRole}
         updateRole={updateRole}
         project={project}
-        updateProject={updateProject}
+        updateProject={onSave}
       />
 
       {isEmpty(project.roles) && (

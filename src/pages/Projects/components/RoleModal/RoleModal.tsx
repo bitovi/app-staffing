@@ -31,13 +31,12 @@ import { isEmpty, pickBy } from "lodash";
 import parseISO from "date-fns/parseISO";
 
 interface RoleModalProps {
-  onSave: (data: Omit<Project, "id">) => Promise<void>;
-  createRole: (data: Omit<Role, "id">) => Promise<void>;
+  onSave: (data: Partial<Omit<Project, "id">>) => Promise<void>;
+  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
   project?: Project;
-  roles?: Role[];
 }
 
 interface RoleFormData {
@@ -57,7 +56,7 @@ export default function RoleModal({
   isOpen,
   skills,
   project,
-  roles,
+
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
@@ -72,27 +71,25 @@ export default function RoleModal({
   const canSubmitForm = true;
 
   const submitForm = async (data: any) => {
-    const projectRoles = getSelectedSkills(data.skills, skills || []);
+    const projectSkillsFromRoles = getSelectedSkills(data.skills, skills || []);
     try {
-      if (project && roles) {
-        setStatus("pending");
-       await createRole({
+      setStatus("pending");
+       const newRoleId = await createRole({
           startDate: data.startDate ? parseISO(data.startDate) : undefined,
           startConfidence: data.startConfidence,
           endConfidence: data.endConfidence,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          // assignments: [],
+          assignments: [],
           project: project,
-          skills: projectRoles,
+          skills: projectSkillsFromRoles,
         });
+
         // onSave updates the project with the new role
-        await onSave({
-          name: project.name,
-          description: project.description,
-          // @TODO: update project with newly created role instead of updating with entire roles array
-          roles: roles,
+        onSave({
+          // @TODO: update project with newly created role
+          roles: [newRoleId, data],
         });
-      }
+      
       reset({ startDate: "", endDate: "" });
       onClose();
       setStatus("idle");

@@ -1,7 +1,7 @@
 import type { Project, Role } from "../../../../services/api";
 import {
   useSkills as useSkillsDefault,
-  useRoles as useRolesDefault,
+
 } from "../../../../services/api";
 // import RoleDetails from "../RoleDetails";
 import RoleCard from "../RoleCard";
@@ -21,20 +21,21 @@ export default function RoleList({
   destroyRole,
 }: {
   project: Project;
-  updateProject: (id: string, data: Project) => void;
-  createRole: (data: Omit<Role, "id">) => Promise<string | undefined | Role[]>;
+  updateProject: (id: string, data: Partial<Project>) => void;
+  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
   updateRole: (id: string, project: Role) => Promise<void>;
   destroyRole: (id: string) => Promise<void>;
 }): JSX.Element {
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const skills = useSkillsDefault();
-  const roles = useRolesDefault();
 
-  const addNewRole = async (data: Omit<Role, "id">) => {
-    await createRole(data);
+
+  const addNewRole = async (data: Partial<Omit<Role, "id">>) => {
+    const newRoleId = await createRole(data);
+    return newRoleId;
   };
 
-  const submitUpdateProject = async (projectToUpdate: any) => {
+  const submitUpdateProject = async (projectToUpdate: Project) => {
     if (projectToEdit) {
       const id = projectToEdit.id;
       await updateProject(id, projectToUpdate);
@@ -120,7 +121,7 @@ export default function RoleList({
         project={projectToEdit ? projectToEdit : undefined}
         createRole={addNewRole}
         onSave={(project) => submitUpdateProject(project as Project)}
-        roles={roles}
+  
       />
     </>
   );
