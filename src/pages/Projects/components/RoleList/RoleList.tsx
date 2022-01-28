@@ -35,12 +35,12 @@ export default function RoleList({
     return newRoleId;
   };
 
-  const submitUpdateProject = async (projectToUpdate: Project) => {
-    if (projectToEdit) {
-      const id = projectToEdit.id;
-      await updateProject(id, projectToUpdate);
-    }
-  };
+  // const submitUpdateProject = async (projectToUpdate: Project) => {
+  //   if (projectToEdit) {
+  //     const id = projectToEdit.id;
+  //     await updateProject(id, projectToUpdate);
+  //   }
+  // };
 
   const lastRoleIndex = Array.isArray(project?.roles)
     ? project?.roles.length - 1
@@ -120,7 +120,7 @@ export default function RoleList({
         skills={skills}
         project={projectToEdit ? projectToEdit : undefined}
         createRole={addNewRole}
-        onSave={(project) => submitUpdateProject(project as Project)}
+        // onSave={(project) => submitUpdateProject(project as Project)}
   
       />
     </>

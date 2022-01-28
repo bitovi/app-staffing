@@ -27,11 +27,11 @@ import { Image } from "@chakra-ui/image";
 import { useForm, Controller } from "react-hook-form";
 import type { Project, Skill, Role } from "../../../../services/api";
 import { AddIcon } from "@chakra-ui/icons";
-import { isEmpty, pickBy } from "lodash";
+// import { isEmpty, pickBy } from "lodash";
 import parseISO from "date-fns/parseISO";
 
 interface RoleModalProps {
-  onSave: (data: Partial<Omit<Project, "id">>) => Promise<void>;
+  onSave?: (data: Partial<Omit<Project, "id">>) => Promise<void>;
   createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
   onClose: () => void;
   isOpen: boolean;
@@ -56,7 +56,6 @@ export default function RoleModal({
   isOpen,
   skills,
   project,
-
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
@@ -71,25 +70,26 @@ export default function RoleModal({
   const canSubmitForm = true;
 
   const submitForm = async (data: any) => {
-    const projectSkillsFromRoles = getSelectedSkills(data.skills, skills || []);
+    // const projectSkillsFromRoles = getSelectedSkills(data.skills, skills || []);
     try {
       setStatus("pending");
-       const newRoleId = await createRole({
-          startDate: data.startDate ? parseISO(data.startDate) : undefined,
-          startConfidence: data.startConfidence,
-          endConfidence: data.endConfidence,
-          endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          assignments: [],
-          project: project,
-          skills: projectSkillsFromRoles,
-        });
+      await createRole({
+        startDate: data.startDate ? parseISO(data.startDate) : undefined,
+        startConfidence: data.startConfidence,
+        endConfidence: data.endConfidence,
+        endDate: data.endDate ? parseISO(data.endDate) : undefined,
 
-        // onSave updates the project with the new role
-        onSave({
-          // @TODO: update project with newly created role
-          roles: [newRoleId, data],
-        });
-      
+        // assignments: [],
+        // project: project,
+        // skills: projectSkillsFromRoles,
+      });
+
+      // // onSave updates the project with the new role
+      // onSave({
+      //   // @TODO: update project with newly created role
+      //   roles: [newRoleId, data],
+      // });
+
       reset({ startDate: "", endDate: "" });
       onClose();
       setStatus("idle");
@@ -276,11 +276,11 @@ function getSubmitButtonProps({
 
 //Retrieve the selected skills from the object bound to the Role form
 
-function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
-  if (isEmpty(roles)) return [];
+// function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
+//   if (isEmpty(roles)) return [];
 
-  const selected = pickBy(roles, (checked) => !!checked);
-  return Object.keys(selected).map(
-    (entry: string) => skills.find((skill) => skill.id === entry) as Skill,
-  );
-}
+//   const selected = pickBy(roles, (checked) => !!checked);
+//   return Object.keys(selected).map(
+//     (entry: string) => skills.find((skill) => skill.id === entry) as Skill,
+//   );
+// }
