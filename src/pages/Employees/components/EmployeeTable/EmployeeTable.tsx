@@ -154,6 +154,8 @@ function EmployeeTableRow({
         handleEditEmployee={handleEditEmployee}
         handleDeleteEmployee={handleDeleteEmployee}
       />
+      {/* add space between rows */}
+      {!lastChild && <Tr height={4} />}
     </>
   );
 }

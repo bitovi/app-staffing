@@ -66,8 +66,6 @@ export function ProjectDetail({
     updateProject(id, { ...project, ...updated });
   };
 
-  if (!project) return <></>;
-
   return (
     <div>
       <ProjectsHeader project={project} />
