@@ -4,16 +4,11 @@ import { fireEvent } from "@testing-library/dom";
 import { skills } from "../../../../mocks/fixtures";
 import userEvent from "@testing-library/user-event";
 
-// jest.mock("./RoleModal", () => ({
-//   submitForm: jest.fn(),
-// }));
-
 describe("Pages/Projects/components/RoleModal", () => {
   it("will not save unless startDate is filled out", async () => {
     const { getByText } = render(
       <RoleModal
-        onSave={() => Promise.resolve()}
-        createRole={() => Promise.resolve()}
+        createRole={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -31,8 +26,7 @@ describe("Pages/Projects/components/RoleModal", () => {
   it("will save when startDate is filled out", async () => {
     const { getByText, getAllByRole, getByTestId, getByDisplayValue } = render(
       <RoleModal
-        onSave={() => Promise.resolve()}
-        createRole={() => Promise.resolve()}
+        createRole={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -56,6 +50,5 @@ describe("Pages/Projects/components/RoleModal", () => {
 
     const addButton = getByText("Save & Close");
     userEvent.click(addButton);
-
   });
 });

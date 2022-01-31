@@ -146,11 +146,16 @@ export default function RoleModal({
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl>
+              <FormControl
+                isRequired
+                isInvalid={errors.startConfidence ? true : false}
+              >
                 <FormLabel>Confidence</FormLabel>
                 <Select
                   placeholder=" "
-                  {...register("startConfidence")}
+                  {...register("startConfidence", {
+                    required: "Confidence is required",
+                  })}
                   id="role_start_confidence"
                 >
                   <option value={1}>10%</option>
@@ -164,6 +169,10 @@ export default function RoleModal({
                   <option value={9}>90%</option>
                   <option value={10}>100%</option>
                 </Select>
+
+                <FormErrorMessage>
+                  {errors?.startConfidence?.message}
+                </FormErrorMessage>
               </FormControl>
 
               <FormControl>

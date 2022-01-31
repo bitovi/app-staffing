@@ -1,8 +1,5 @@
 import type { Project, Role } from "../../../../services/api";
-import {
-  useSkills as useSkillsDefault,
-
-} from "../../../../services/api";
+import { useSkills as useSkillsDefault } from "../../../../services/api";
 // import RoleDetails from "../RoleDetails";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
@@ -115,9 +112,7 @@ function RoleListRow({
 }) {
   return (
     <>
-      <RoleCard
-        role={roles}
-      />
+      <RoleCard role={roles} />
       {/* add space between rows */}
       {!lastChild && <Tr height={4} />}
     </>

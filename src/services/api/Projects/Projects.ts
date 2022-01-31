@@ -7,7 +7,7 @@ export interface Project extends BaseData {
   id: string;
   name: string;
   description?: string;
-  
+
   roles?: Role[];
 }
 
