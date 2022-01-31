@@ -31,8 +31,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import parseISO from "date-fns/parseISO";
 
 interface RoleModalProps {
-  onSave?: (data: Partial<Omit<Project, "id">>) => Promise<void>;
-  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
+  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
@@ -50,7 +49,6 @@ interface RoleFormData {
 type SaveButtonStatus = "idle" | "pending";
 
 export default function RoleModal({
-  onSave,
   createRole,
   onClose,
   isOpen,
@@ -73,22 +71,18 @@ export default function RoleModal({
     // const projectSkillsFromRoles = getSelectedSkills(data.skills, skills || []);
     try {
       setStatus("pending");
-      await createRole({
-        startDate: data.startDate ? parseISO(data.startDate) : undefined,
-        startConfidence: data.startConfidence,
-        endConfidence: data.endConfidence,
-        endDate: data.endDate ? parseISO(data.endDate) : undefined,
+      if (project) {
+        await createRole({
+          startDate: data.startDate ? parseISO(data.startDate) : undefined,
+          startConfidence: Number(data.startConfidence),
+          endConfidence: Number(data.endConfidence),
+          endDate: data.endDate ? parseISO(data.endDate) : undefined,
 
-        // assignments: [],
-        // project: project,
-        // skills: projectSkillsFromRoles,
-      });
-
-      // // onSave updates the project with the new role
-      // onSave({
-      //   // @TODO: update project with newly created role
-      //   roles: [newRoleId, data],
-      // });
+          // assignments: [],
+          project_id: project?.id,
+          // skills: projectSkillsFromRoles,
+        });
+      }
 
       reset({ startDate: "", endDate: "" });
       onClose();
@@ -165,9 +159,9 @@ export default function RoleModal({
                   id="role_start_confidence"
                 >
                   <option value={0}>0%</option>
-                  <option value={0.25}>25%</option>
-                  <option value={0.5}>50%</option>
-                  <option value={1}>100%</option>
+                  <option value={2}>25%</option>
+                  <option value={5}>50%</option>
+                  <option value={10}>100%</option>
                 </Select>
               </FormControl>
 
@@ -188,9 +182,9 @@ export default function RoleModal({
                   id="role_end_confidence"
                 >
                   <option value={0}>0%</option>
-                  <option value={0.25}>25%</option>
-                  <option value={0.5}>50%</option>
-                  <option value={1}>100%</option>
+                  <option value={2}>25%</option>
+                  <option value={5}>50%</option>
+                  <option value={10}>100%</option>
                 </Select>
               </FormControl>
             </HStack>

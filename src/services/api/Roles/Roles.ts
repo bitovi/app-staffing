@@ -11,6 +11,7 @@ export interface Role extends BaseData {
   startConfidence?: number;
   endDate?: Date;
   endConfidence?: number;
+  project_id?: string;
 
   assignments?: Assignment[];
   project: Project;

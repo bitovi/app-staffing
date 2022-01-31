@@ -19,10 +19,6 @@ export const Works: ComponentStory<typeof RoleModal> = () => {
       skills={skills}
       project={project}
       createRole={() => Promise.resolve("")}
-      onSave={() => {
-        throw new Error("DOES NOT WORK");
-      }}
-
     />
   );
 };
@@ -36,7 +32,6 @@ export const SavePending: ComponentStory<typeof RoleModal> = () => {
       onClose={() => true}
       skills={skills}
       createRole={() => Promise.resolve("")}
-      onSave={() => new Promise(() => true)}
     />
   );
 };

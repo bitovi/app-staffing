@@ -163,10 +163,7 @@ export const NonEmpty: ComponentStory<typeof ProjectDetail> = () => {
         </Flex>
         <RoleList
           project={project}
-          updateProject={() => Promise.resolve()}
           createRole={() => Promise.resolve("")}
-          updateRole={() => Promise.resolve()}
-          destroyRole={() => Promise.resolve()}
         />
       </Box>
     </div>

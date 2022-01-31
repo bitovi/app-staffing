@@ -7,14 +7,10 @@ import { TrashIcon, EditIcon } from "../../../assets";
 
 interface RoleCardProps {
   role: Role;
-  updateRole: (id: string, role: Role) => void;
-  destroyRole: (id: string) => Promise<void>;
 }
 
 export default function RoleCard({
   role,
-  updateRole,
-  destroyRole,
 }: RoleCardProps): JSX.Element {
   const skillBackgrounds: { [key: string]: string } = {
     Design: "#435BAE",
@@ -115,7 +111,7 @@ export default function RoleCard({
               aria-label="Edit Member"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
-              onClick={() => updateRole(role.id, role)}
+             
             />
             <IconButton
               ml="8px"
@@ -123,7 +119,7 @@ export default function RoleCard({
               aria-label="Delete Member"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
-              onClick={() => destroyRole(role.id)}
+             
             />
           </Flex>
         </Td>

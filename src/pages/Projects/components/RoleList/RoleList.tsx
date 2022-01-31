@@ -15,32 +15,13 @@ import { Box, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 
 export default function RoleList({
   project,
-  updateProject,
   createRole,
-  updateRole,
-  destroyRole,
 }: {
   project: Project;
-  updateProject: (id: string, data: Partial<Project>) => void;
   createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
-  updateRole: (id: string, project: Role) => Promise<void>;
-  destroyRole: (id: string) => Promise<void>;
 }): JSX.Element {
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const skills = useSkillsDefault();
-
-
-  const addNewRole = async (data: Partial<Omit<Role, "id">>) => {
-    const newRoleId = await createRole(data);
-    return newRoleId;
-  };
-
-  // const submitUpdateProject = async (projectToUpdate: Project) => {
-  //   if (projectToEdit) {
-  //     const id = projectToEdit.id;
-  //     await updateProject(id, projectToUpdate);
-  //   }
-  // };
 
   const lastRoleIndex = Array.isArray(project?.roles)
     ? project?.roles.length - 1
@@ -94,8 +75,6 @@ export default function RoleList({
                 {project?.roles.map((role, index) => (
                   <RoleListRow
                     key={role.id}
-                    updateRole={updateRole}
-                    destroyRole={destroyRole}
                     roles={role}
                     lastChild={lastRoleIndex === index}
                   />
@@ -119,9 +98,7 @@ export default function RoleList({
         onClose={() => setProjectToEdit(null)}
         skills={skills}
         project={projectToEdit ? projectToEdit : undefined}
-        createRole={addNewRole}
-        // onSave={(project) => submitUpdateProject(project as Project)}
-  
+        createRole={createRole}
       />
     </>
   );
@@ -129,21 +106,17 @@ export default function RoleList({
 
 function RoleListRow({
   roles,
-  updateRole,
-  destroyRole,
+
   lastChild = false,
 }: {
   roles: Role;
-  updateRole: (id: string, role: Role) => void;
-  destroyRole: (id: string) => Promise<void>;
+
   lastChild: boolean;
 }) {
   return (
     <>
       <RoleCard
         role={roles}
-        updateRole={updateRole}
-        destroyRole={destroyRole}
       />
       {/* add space between rows */}
       {!lastChild && <Tr height={4} />}
