@@ -22,16 +22,3 @@ export const Works: ComponentStory<typeof RoleModal> = () => {
     />
   );
 };
-
-export const SavePending: ComponentStory<typeof RoleModal> = () => {
-  const skills = useSkills();
-
-  return (
-    <RoleModal
-      isOpen
-      onClose={() => true}
-      skills={skills}
-      createRole={() => Promise.resolve("")}
-    />
-  );
-};
