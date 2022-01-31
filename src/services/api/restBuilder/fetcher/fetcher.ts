@@ -14,7 +14,7 @@ export default async function fetcher<T>(
   url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: Record<string, any>,
-): Promise<T> {
+): Promise<T | undefined> {
   const response = await fetch(`${API_BASE_URL}${url}`, {
     method,
     headers: {
@@ -31,10 +31,9 @@ export default async function fetcher<T>(
     );
   }
 
-  if (!response.headers.get("content-length")) {
-    // @ts-expect-error: cannot call .json when there's an empty body.
+  try {
+    return await response.json();
+  } catch (e) {
     return undefined;
   }
-
-  return await response.json();
 }

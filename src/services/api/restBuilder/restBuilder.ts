@@ -52,12 +52,16 @@ export default function restBuilder<Data extends BaseData>(
           makeUrl(path, query),
         );
 
-        const list = serializer.deserialize(type, response) as Data[];
-        for (const item of list) {
-          parseDate(item);
-        }
+        if (response) {
+          const list = serializer.deserialize(type, response) as Data[];
+          for (const item of list) {
+            parseDate(item);
+          }
 
-        return list;
+          return list;
+        } else {
+          return [];
+        }
       },
       {
         suspense: true,
@@ -80,10 +84,14 @@ export default function restBuilder<Data extends BaseData>(
           makeUrl(path, query),
         );
 
-        const item = serializer.deserialize(type, response) as Data;
-        parseDate(item);
+        if (response) {
+          const item = serializer.deserialize(type, response) as Data;
+          parseDate(item);
 
-        return item;
+          return item;
+        } else {
+          return {} as Data;
+        }
       },
       {
         suspense: true,
@@ -105,41 +113,44 @@ export default function restBuilder<Data extends BaseData>(
       async (data: Partial<Omit<Data, "id">>) => {
         const payload = serializer.serialize(type, data);
         const response = await fetcher<JSONAPIDocument>("POST", path, payload);
-        const deserialized = serializer.deserialize(type, response) as Data;
-        const identifier = deserialized.name || deserialized.id;
 
-        parseDate(deserialized);
+        if (response) {
+          const deserialized = serializer.deserialize(type, response) as Data;
+          const identifier = deserialized.name || deserialized.id;
 
-        // mutate list cache
-        await mutate(
-          path,
-          async (cache: Data[] | undefined) => {
-            if (!cache) {
-              return cache;
-            }
+          parseDate(deserialized);
 
-            return [...cache, deserialized];
-          },
-          false,
-        );
+          // mutate list cache
+          await mutate(
+            path,
+            async (cache: Data[] | undefined) => {
+              if (!cache) {
+                return cache;
+              }
 
-        // mutate individual cache
-        await mutate(
-          `${path}/${deserialized.id}`,
-          async (cache: Data) => {
-            return deserialized;
-          },
-          false,
-        );
+              return [...cache, deserialized];
+            },
+            false,
+          );
 
-        if (messages) {
-          toast({
-            title: `${messages.title} added`,
-            description: `${identifier} was succesfully added!`,
-          });
+          // mutate individual cache
+          await mutate(
+            `${path}/${deserialized.id}`,
+            async (cache: Data) => {
+              return deserialized;
+            },
+            false,
+          );
+
+          if (messages) {
+            toast({
+              title: `${messages.title} added`,
+              description: `${identifier} was succesfully added!`,
+            });
+          }
+
+          return deserialized.id;
         }
-
-        return deserialized.id;
       },
       [toast, mutate],
     );
@@ -152,50 +163,53 @@ export default function restBuilder<Data extends BaseData>(
           `${path}/${id}`,
           payload,
         );
-        const deserialized = serializer.deserialize(type, response) as Data;
-        const identifier = deserialized.name || deserialized.id;
 
-        parseDate(deserialized);
+        if (response) {
+          const deserialized = serializer.deserialize(type, response) as Data;
+          const identifier = deserialized.name || deserialized.id;
 
-        // mutate list cache
-        await mutate(
-          path,
-          async (cache: Data[] | undefined) => {
-            if (!cache) {
-              return cache;
-            }
+          parseDate(deserialized);
 
-            const index = cache.findIndex(
-              (item) => item.id === deserialized.id,
-            );
+          // mutate list cache
+          await mutate(
+            path,
+            async (cache: Data[] | undefined) => {
+              if (!cache) {
+                return cache;
+              }
 
-            if (index > -1) {
-              return [
-                ...cache.slice(0, index),
-                deserialized,
-                ...cache.slice(index + 1),
-              ];
-            }
+              const index = cache.findIndex(
+                (item) => item.id === deserialized.id,
+              );
 
-            return [...cache, deserialized];
-          },
-          false,
-        );
+              if (index > -1) {
+                return [
+                  ...cache.slice(0, index),
+                  deserialized,
+                  ...cache.slice(index + 1),
+                ];
+              }
 
-        // mutate individual cache
-        await mutate(
-          `${path}/${id}`,
-          async (cache: Data) => {
-            return deserialized;
-          },
-          false,
-        );
+              return [...cache, deserialized];
+            },
+            false,
+          );
 
-        if (messages) {
-          toast({
-            title: `${messages.title} updated`,
-            description: `${identifier} was succesfully updated!`,
-          });
+          // mutate individual cache
+          await mutate(
+            `${path}/${id}`,
+            async (cache: Data) => {
+              return deserialized;
+            },
+            false,
+          );
+
+          if (messages) {
+            toast({
+              title: `${messages.title} updated`,
+              description: `${identifier} was succesfully updated!`,
+            });
+          }
         }
       },
       [toast, mutate],
