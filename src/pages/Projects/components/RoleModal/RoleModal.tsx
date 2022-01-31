@@ -27,11 +27,10 @@ import { Image } from "@chakra-ui/image";
 import { useForm, Controller } from "react-hook-form";
 import type { Project, Skill, Role } from "../../../../services/api";
 import { AddIcon } from "@chakra-ui/icons";
-// import { isEmpty, pickBy } from "lodash";
 import parseISO from "date-fns/parseISO";
 
 interface RoleModalProps {
-  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>
+  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
@@ -67,8 +66,7 @@ export default function RoleModal({
 
   const canSubmitForm = true;
 
-  const submitForm = async (data: any) => {
-    // const projectSkillsFromRoles = getSelectedSkills(data.skills, skills || []);
+  const submitForm = async (data: RoleFormData) => {
     try {
       setStatus("pending");
       if (project) {
@@ -77,10 +75,7 @@ export default function RoleModal({
           startConfidence: Number(data.startConfidence),
           endConfidence: Number(data.endConfidence),
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-
-          // assignments: [],
-          project_id: project?.id,
-          // skills: projectSkillsFromRoles,
+          project_id: project.id,
         });
       }
 
@@ -158,9 +153,15 @@ export default function RoleModal({
                   {...register("startConfidence")}
                   id="role_start_confidence"
                 >
-                  <option value={0}>0%</option>
-                  <option value={2}>25%</option>
+                  <option value={1}>10%</option>
+                  <option value={2}>20%</option>
+                  <option value={3}>30%</option>
+                  <option value={4}>40%</option>
                   <option value={5}>50%</option>
+                  <option value={6}>60%</option>
+                  <option value={7}>70%</option>
+                  <option value={8}>80%</option>
+                  <option value={9}>90%</option>
                   <option value={10}>100%</option>
                 </Select>
               </FormControl>
@@ -181,9 +182,15 @@ export default function RoleModal({
                   {...register("endConfidence")}
                   id="role_end_confidence"
                 >
-                  <option value={0}>0%</option>
-                  <option value={2}>25%</option>
+                  <option value={1}>10%</option>
+                  <option value={2}>20%</option>
+                  <option value={3}>30%</option>
+                  <option value={4}>40%</option>
                   <option value={5}>50%</option>
+                  <option value={6}>60%</option>
+                  <option value={7}>70%</option>
+                  <option value={8}>80%</option>
+                  <option value={9}>90%</option>
                   <option value={10}>100%</option>
                 </Select>
               </FormControl>
@@ -267,14 +274,3 @@ function getSubmitButtonProps({
     onClick,
   };
 }
-
-//Retrieve the selected skills from the object bound to the Role form
-
-// function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
-//   if (isEmpty(roles)) return [];
-
-//   const selected = pickBy(roles, (checked) => !!checked);
-//   return Object.keys(selected).map(
-//     (entry: string) => skills.find((skill) => skill.id === entry) as Skill,
-//   );
-// }

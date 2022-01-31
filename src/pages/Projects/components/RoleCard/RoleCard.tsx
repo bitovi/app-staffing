@@ -9,9 +9,7 @@ interface RoleCardProps {
   role: Role;
 }
 
-export default function RoleCard({
-  role,
-}: RoleCardProps): JSX.Element {
+export default function RoleCard({ role }: RoleCardProps): JSX.Element {
   const skillBackgrounds: { [key: string]: string } = {
     Design: "#435BAE",
     UX: "#AE436A",
@@ -65,7 +63,7 @@ export default function RoleCard({
             letterSpacing="0.25px"
           >
             {role?.startConfidence &&
-              `${(role.startConfidence * 100).toFixed(2)}%`}
+              `${(role.startConfidence * 10).toFixed(2)}%`}
           </Text>
         </Td>
         <Td>
@@ -87,11 +85,11 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.endConfidence && `${(role.endConfidence * 100).toFixed(2)}%`}
+            {role?.endConfidence && `${(role.endConfidence * 10).toFixed(2)}%`}
           </Text>
         </Td>
-        {role?.assignments && (
-          <Td>
+        <Td>
+          {role?.assignments && (
             <Text
               color="gray.600"
               fontWeight="600"
@@ -101,8 +99,8 @@ export default function RoleCard({
             >
               {role?.assignments[0]?.employee?.name}
             </Text>
-          </Td>
-        )}
+          )}
+        </Td>
 
         <Td>
           <Flex justifyContent="end" justifySelf="end">
@@ -111,7 +109,6 @@ export default function RoleCard({
               aria-label="Edit Member"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
-             
             />
             <IconButton
               ml="8px"
@@ -119,7 +116,6 @@ export default function RoleCard({
               aria-label="Delete Member"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
-             
             />
           </Flex>
         </Td>

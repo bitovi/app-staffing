@@ -95,10 +95,7 @@ export function ProjectDetail({
           destroyProject={destroyProject}
         />
       </Flex>
-      <RoleList
-        createRole={createRole}
-        project={project}
-      />
+      <RoleList createRole={createRole} project={project} />
 
       {isEmpty(project.roles) && (
         <Flex
