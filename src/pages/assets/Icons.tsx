@@ -28,10 +28,7 @@ export const FolderWithFilesIcon = createIcon({
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
-      <path
-        d="M130 0H0V108H130V0Z"
-        fill="url(#pattern0)"
-      />
+      <path d="M130 0H0V108H130V0Z" fill="url(#pattern0)" />
       <defs>
         <pattern
           id="pattern0"
