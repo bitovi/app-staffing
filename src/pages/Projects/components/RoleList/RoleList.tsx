@@ -1,6 +1,5 @@
 import type { Project, Role } from "../../../../services/api";
 import { useSkills as useSkillsDefault } from "../../../../services/api";
-// import RoleDetails from "../RoleDetails";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
 import RoleModal from "../RoleModal";
@@ -33,7 +32,7 @@ export default function RoleList({
         ))}
       </div>
 
-      {project && project?.roles && project.roles.length > 0 && (
+      {!isEmpty(project?.roles) && (
         <>
           <Box maxHeight="80vh" overflowY="auto">
             <Table>
@@ -69,7 +68,7 @@ export default function RoleList({
                 </Tr>
               </Thead>
               <Tbody>
-                {project?.roles.map((role, index) => (
+                {project?.roles?.map((role, index) => (
                   <RoleListRow
                     key={role.id}
                     roles={role}
@@ -81,15 +80,6 @@ export default function RoleList({
           </Box>
         </>
       )}
-
-      {/* {project?.roles?.map((role) => (
-        <RoleDetails
-          key={role.id}
-          role={role}
-          updateRole={updateRole}
-          destroyRole={destroyRole}
-        />
-      ))} */}
       <RoleModal
         isOpen={!isEmpty(projectToEdit)}
         onClose={() => setProjectToEdit(null)}

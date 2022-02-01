@@ -2,7 +2,6 @@ import type { Role } from "../../../../services/api";
 import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
 import Badge from "../../../../components/Badge";
-// import { Tag } from "../../../../components/Tag";
 import { TrashIcon, EditIcon } from "../../../assets";
 
 interface RoleCardProps {
