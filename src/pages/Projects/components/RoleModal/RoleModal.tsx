@@ -58,13 +58,16 @@ export default function RoleModal({
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const {
     register,
+    watch,
     handleSubmit,
     reset,
     control,
     formState: { errors },
   } = useForm<RoleFormData>();
 
-  const canSubmitForm = true;
+  const roleStartDate = watch("startDate");
+  const roleStartConfidence = watch("startConfidence");
+  const canSubmitForm = roleStartDate && roleStartConfidence ? true : false;
 
   const submitForm = async (data: RoleFormData) => {
     try {
