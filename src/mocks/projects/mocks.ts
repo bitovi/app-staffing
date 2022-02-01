@@ -23,7 +23,11 @@ const queryLogic = new QueryLogic<JSONProject>({
 });
 
 const relatedStores = [
-  { relatedStoreName: "roles", relationReference: "project" },
+  {
+    source: "roles",
+    sourceRelationship: "project",
+    targetRelationship: "roles",
+  },
 ];
 
 const storeManager = createStoreManager("projects", projects, queryLogic);

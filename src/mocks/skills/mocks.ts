@@ -16,7 +16,7 @@ const queryLogic = new QueryLogic<JSONSkill>({
 const storeManager = createStoreManager("skills", skills, queryLogic);
 
 export const skillMocks = Object.values(
-  requestCreator("/skills", storeManager.store),
+  requestCreator("/skills", storeManager.store, []),
 );
 
 export default storeManager;

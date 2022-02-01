@@ -33,8 +33,9 @@ interface MockResponse<
 }
 
 interface RelatedStore {
-  relatedStoreName: string;
-  relationReference: string;
+  source: string;
+  sourceRelationship: string;
+  targetRelationship: string;
 }
 
 const API_BASE_URL = window.env.API_BASE_URL;
@@ -42,7 +43,7 @@ const API_BASE_URL = window.env.API_BASE_URL;
 export default function requestCreator<Resource extends BaseResource>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
-  relatedStores?: RelatedStore[],
+  relatedStores: RelatedStore[],
 ): { [requestType: string]: RestHandler<MockedRequest<DefaultRequestBody>> } {
   return {
     getOne: rest.get<undefined, MockResponse<Resource>, { id: string }>(
@@ -60,34 +61,21 @@ export default function requestCreator<Resource extends BaseResource>(
           );
         }
 
-        if (relatedStores?.length) {
-          for (const relatedStore of relatedStores) {
-            const related: BaseResource[] = [];
-            const { relatedStoreName, relationReference } = relatedStore;
+        // Parameter that indicates which relationships to include
+        // in the response data
+        let { include } = deparam(req.url.searchParams.toString());
+        include = include?.split(",");
 
-            // We first get all data from the related store
-            const relatedDataList = await stores[
-              relatedStoreName
-            ].getListData();
+        const relationships = await getRelationships(
+          id,
+          relatedStores,
+          include,
+        );
 
-            // We filter the data to keep only what is related to
-            // this particular entity
-            relatedDataList.data.forEach((relatedData) => {
-              const relation =
-                relatedData.relationships?.[relationReference]?.data;
-              if (!Array.isArray(relation)) {
-                if (id === relation?.id) {
-                  related.push(relatedData);
-                }
-              }
-            });
-
-            // We update the response data with the relationships
-            data = {
-              ...data,
-              relationships: { [relatedStoreName]: { data: related } },
-            };
-          }
+        // If we get at least one relationship,
+        // we add it to the response data
+        if (Object.keys(relationships).length > 0) {
+          data = { ...data, relationships };
         }
 
         const included = await getIncluded([data]);
@@ -277,4 +265,34 @@ async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
   });
 
   return included;
+}
+
+async function getRelationships(
+  entityId: string,
+  relatedStores: RelatedStore[],
+  include: string[],
+): Promise<Record<string, unknown>> {
+  const relationships: Record<string, unknown> = {};
+
+  for (const relatedStore of relatedStores) {
+    const { source, sourceRelationship, targetRelationship } = relatedStore;
+
+    // We check that the query asks for this relationship to be included
+    if (include.includes(targetRelationship)) {
+      // We first get all data from the related store
+      const relatedStoreDataList = await stores[source].getListData();
+
+      // We filter the data to keep only what is related to
+      // this particular entity
+      const filteredData = relatedStoreDataList.data.filter((relatedData) => {
+        const data = relatedData.relationships?.[sourceRelationship]?.data;
+        return !Array.isArray(data) && data?.id === entityId;
+      });
+
+      // Finally we add a new entry in our relationships object
+      // with the corresponding data
+      relationships[targetRelationship] = { data: filteredData };
+    }
+  }
+  return relationships;
 }

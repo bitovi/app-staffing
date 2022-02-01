@@ -25,7 +25,7 @@ const queryLogic = new QueryLogic<JSONAssignment>({
 const storeManager = createStoreManager("assignments", assignments, queryLogic);
 
 export const assignmentMocks = Object.values(
-  requestCreator("/assignments", storeManager.store),
+  requestCreator("/assignments", storeManager.store, []),
 );
 
 export default storeManager;

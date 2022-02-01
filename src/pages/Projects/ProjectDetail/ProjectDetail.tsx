@@ -57,7 +57,9 @@ export function ProjectDetail({
   useRoleMutations = defaultRoleMutation,
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
-  const project = useProject(id);
+  const project = useProject(id, {
+    include: ["roles", "roles.assignments", "roles.assignments.employee"],
+  });
 
   const { updateProject, destroyProject } = useProjectMutations();
   const { updateRole, destroyRole } = useRoleMutations();
