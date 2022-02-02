@@ -61,8 +61,7 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.startConfidence &&
-              `${(role.startConfidence * 10).toFixed(2)}%`}
+            {role?.startConfidence && `${role.startConfidence * 10}%`}
           </Text>
         </Td>
         <Td>
@@ -84,7 +83,7 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.endConfidence && `${(role.endConfidence * 10).toFixed(2)}%`}
+            {role?.endConfidence && `${role.endConfidence * 10}%`}
           </Text>
         </Td>
         <Td>
