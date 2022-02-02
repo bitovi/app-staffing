@@ -75,8 +75,8 @@ export default function RoleModal({
       if (project) {
         await createRole({
           startDate: data.startDate ? parseISO(data.startDate) : undefined,
-          startConfidence: Number(data.startConfidence),
-          endConfidence: Number(data.endConfidence),
+          startConfidence: data?.startConfidence,
+          endConfidence: data?.endConfidence,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
           project_id: project.id,
         });
@@ -161,16 +161,11 @@ export default function RoleModal({
                   })}
                   id="role_start_confidence"
                 >
-                  <option value={1}>10%</option>
-                  <option value={2}>20%</option>
-                  <option value={3}>30%</option>
-                  <option value={4}>40%</option>
-                  <option value={5}>50%</option>
-                  <option value={6}>60%</option>
-                  <option value={7}>70%</option>
-                  <option value={8}>80%</option>
-                  <option value={9}>90%</option>
-                  <option value={10}>100%</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, index) => (
+                    <option value={num} key={index}>
+                      {num * 10}%
+                    </option>
+                  ))}
                 </Select>
 
                 <FormErrorMessage>
@@ -194,16 +189,11 @@ export default function RoleModal({
                   {...register("endConfidence")}
                   id="role_end_confidence"
                 >
-                  <option value={1}>10%</option>
-                  <option value={2}>20%</option>
-                  <option value={3}>30%</option>
-                  <option value={4}>40%</option>
-                  <option value={5}>50%</option>
-                  <option value={6}>60%</option>
-                  <option value={7}>70%</option>
-                  <option value={8}>80%</option>
-                  <option value={9}>90%</option>
-                  <option value={10}>100%</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, index) => (
+                    <option value={num} key={index}>
+                      {num * 10}%
+                    </option>
+                  ))}
                 </Select>
               </FormControl>
             </HStack>
@@ -277,7 +267,7 @@ function getSubmitButtonProps({
     return {
       isLoading: true,
       isDisabled: true,
-      loadingText: "Saving",
+      loadingText: "Adding New Role",
     };
   }
 

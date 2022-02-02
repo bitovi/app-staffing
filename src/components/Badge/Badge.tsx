@@ -9,13 +9,7 @@ type BadgeProps = {
 
 function Badge({ background, size, children }: BadgeProps): JSX.Element {
   return (
-    <ChakraTag
-      bg={background}
-      borderRadius="full"
-      variant="solid"
-      color="white"
-      size={size}
-    >
+    <ChakraTag bg={background} variant="solid" color="white" size={size}>
       {children}
     </ChakraTag>
   );

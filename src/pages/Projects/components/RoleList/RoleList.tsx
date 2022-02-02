@@ -5,8 +5,6 @@ import Button from "../../../../components/Button";
 import RoleModal from "../RoleModal";
 import { useState } from "react";
 import isEmpty from "lodash/isEmpty";
-import styles from "./RoleList.module.scss";
-
 import { Box, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 
 export default function RoleList({
@@ -25,12 +23,9 @@ export default function RoleList({
 
   return (
     <>
-      <Button onClick={() => setProjectToEdit(project)}>Add Role</Button>
-      <div className={styles.skillFilter}>
-        {[].map((s) => (
-          <p key={s}>{s}</p>
-        ))}
-      </div>
+      <Button mb={4} onClick={() => setProjectToEdit(project)}>
+        Add Role
+      </Button>
 
       {!isEmpty(project?.roles) && (
         <>
@@ -93,11 +88,9 @@ export default function RoleList({
 
 function RoleListRow({
   roles,
-
   lastChild = false,
 }: {
   roles: Role;
-
   lastChild: boolean;
 }) {
   return (
