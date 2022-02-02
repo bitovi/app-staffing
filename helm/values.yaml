@@ -30,6 +30,8 @@ cacheBusting:
 # For the front-end config
 # Note: Please see /public/config.js for information about these values.
 apiBaseURL: http://app-staffing-api.localhost
+# apiAuthToken: <base64 encoded username:password>
+
 # configVolumes:
 # - name: config
 #   configMap:
