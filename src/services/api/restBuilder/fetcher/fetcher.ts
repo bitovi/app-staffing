@@ -16,13 +16,18 @@ export default async function fetcher<T>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: Record<string, any>,
 ): Promise<T | undefined> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/vnd.api+json",
+    Accept: "application/vnd.api+json",
+  };
+
+  if (API_AUTH_TOKEN) {
+    headers.Authorization = `BASIC ${API_AUTH_TOKEN}`;
+  }
+
   const response = await fetch(`${API_BASE_URL}${url}`, {
     method,
-    headers: {
-      "Content-Type": "application/vnd.api+json",
-      Accept: "application/vnd.api+json",
-      Authorization: `BASIC ${API_AUTH_TOKEN}`,
-    },
+    headers,
     body: body && JSON.stringify(body),
   });
 
