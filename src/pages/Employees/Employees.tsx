@@ -70,6 +70,7 @@ export function Employees({
     useEmployeeMutations();
   const employees = useEmployees({ include: "skills" });
   const skills = useSkills();
+
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   const addNewEmployee = async (data: Omit<Employee, "id">) => {

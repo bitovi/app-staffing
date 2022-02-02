@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { useParams } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
 import {
+  Box,
   Flex,
   Text,
   IconButton,
@@ -11,9 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import {
-  useProject as defaultUseProject,
-  useRoleMutations as defaultRoleMutation,
-  useProjectMutations as defaultUseProjectMutations,
+  useProject as useProjectDefault,
+  useProjectMutations as useProjectMutationsDefault,
+  useRoleMutations as useRoleMutationsDefault,
 } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
@@ -23,9 +24,9 @@ import { EditIcon } from "./../../assets";
 import type { Project } from "../../../services/api";
 
 interface ProjectDetailProps {
-  useProject: typeof defaultUseProject;
-  useProjectMutations: typeof defaultUseProjectMutations;
-  useRoleMutations: typeof defaultRoleMutation;
+  useProject: typeof useProjectDefault;
+  useProjectMutations: typeof useProjectMutationsDefault;
+  useRoleMutations: typeof useRoleMutationsDefault;
 }
 
 export function LoadingProjectDetails(): JSX.Element {
@@ -52,9 +53,9 @@ export function LoadingProjectDetails(): JSX.Element {
 }
 
 export function ProjectDetail({
-  useProject = defaultUseProject,
-  useProjectMutations = defaultUseProjectMutations,
-  useRoleMutations = defaultRoleMutation,
+  useProject = useProjectDefault,
+  useProjectMutations = useProjectMutationsDefault,
+  useRoleMutations = useRoleMutationsDefault,
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const project = useProject(id, {
@@ -62,7 +63,7 @@ export function ProjectDetail({
   });
 
   const { updateProject, destroyProject } = useProjectMutations();
-  const { updateRole, destroyRole } = useRoleMutations();
+  const { createRole } = useRoleMutations();
 
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
@@ -72,36 +73,29 @@ export function ProjectDetail({
     <div>
       <ProjectsHeader project={project} />
 
-      {project && (
-        <>
-          <Flex
-            width="100%"
-            flexDirection="row"
-            minHeight="30px"
-            alignItems="center"
-          >
-            <ProjectDescription onEdit={onSave} project={project} />
-            <Spacer />
-            <IconButton
-              variant="editAction"
-              aria-label="Edit Project"
-              fontSize="20px"
-              icon={<EditIcon fill="currentColor" />}
-              onClick={() => alert("TODO")}
-            />
-            <ProjectDeleteButton
-              projectName={project.name}
-              projectId={project.id}
-              destroyProject={destroyProject}
-            />
-          </Flex>
-          <RoleList
-            destroyRole={destroyRole}
-            updateRole={updateRole}
-            project={project}
-          />
-        </>
-      )}
+      <Flex
+        width="100%"
+        flexDirection="row"
+        minHeight="30px"
+        alignItems="center"
+      >
+        <ProjectDescription onEdit={onSave} project={project} />
+        <Spacer />
+        <IconButton
+          variant="editAction"
+          aria-label="Edit Project"
+          fontSize="20px"
+          icon={<EditIcon fill="currentColor" />}
+          onClick={() => alert("TODO")}
+        />
+        <Box mt={10} />
+        <ProjectDeleteButton
+          projectName={project.name}
+          projectId={project.id}
+          destroyProject={destroyProject}
+        />
+      </Flex>
+      <RoleList createRole={createRole} project={project} />
 
       {isEmpty(project.roles) && (
         <Flex
@@ -135,9 +129,9 @@ export default function ProjectDetailWrapper(): JSX.Element {
   return (
     <Suspense fallback={<LoadingProjectDetails />}>
       <ProjectDetail
-        useProject={defaultUseProject}
-        useProjectMutations={defaultUseProjectMutations}
-        useRoleMutations={defaultRoleMutation}
+        useProject={useProjectDefault}
+        useProjectMutations={useProjectMutationsDefault}
+        useRoleMutations={useRoleMutationsDefault}
       />
     </Suspense>
   );
