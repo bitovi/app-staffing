@@ -11,5 +11,5 @@ data:
   config.js: |
     window.env = {
       API_BASE_URL: "{{ .Values.apiBaseURL }}",
-      API_AUTH_TOKEN: "{{ .Values.apiAuthToken }}",
+      {{- if .Values.apiAuthToken }}API_AUTH_TOKEN: "{{ .Values.apiAuthToken }}",{{- end }}
     };
