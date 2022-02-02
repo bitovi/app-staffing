@@ -58,7 +58,7 @@ export function ProjectDetail({
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const project = useProject(id, {
-    include: ["roles", "roles.assignments", "roles.assignments.employee"],
+    include: ["roles"],
   });
 
   const { updateProject, destroyProject } = useProjectMutations();

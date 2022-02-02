@@ -73,14 +73,6 @@ export const roles: JSONRole[] = [];
 export function addRole(project: JSONProject): JSONRole {
   const role = makeRole(project);
 
-  // if (!project.relationships.roles) {
-  //   project.relationships.roles = { data: [] };
-  // }
-  // project.relationships.roles.data.push({
-  //   type: role.type,
-  //   id: role.id,
-  // });
-
   roles.push(role);
 
   return role;
