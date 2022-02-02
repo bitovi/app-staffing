@@ -270,7 +270,7 @@ async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
 async function getRelationships(
   entityId: string,
   relatedStores: RelatedStore[],
-  include: string[],
+  include: string[] = [],
 ): Promise<Record<string, unknown>> {
   const relationships: Record<string, unknown> = {};
 
