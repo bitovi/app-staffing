@@ -32,7 +32,7 @@ export function Projects({
   useProjectMutations = defaultUseProjectMutations,
 }: ProjectProps): JSX.Element {
   const { createProject } = useProjectMutations();
-  const projects = useProjects();
+  const projects = useProjects({ sort: "name" });
 
   return (
     <>
