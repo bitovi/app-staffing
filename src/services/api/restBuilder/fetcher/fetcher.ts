@@ -8,6 +8,7 @@ class HttpError extends Error {
 }
 
 const API_BASE_URL = window.env.API_BASE_URL;
+const API_AUTH_TOKEN = window.env.API_AUTH_TOKEN;
 
 export default async function fetcher<T>(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
@@ -20,6 +21,7 @@ export default async function fetcher<T>(
     headers: {
       "Content-Type": "application/vnd.api+json",
       Accept: "application/vnd.api+json",
+      Authorization: `BASIC ${API_AUTH_TOKEN}`,
     },
     body: body && JSON.stringify(body),
   });
