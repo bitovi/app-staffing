@@ -18,7 +18,7 @@ const queryLogic = new QueryLogic<JSONEmployee>({
 const storeManager = createStoreManager("employees", employees, queryLogic);
 
 export const employeeMocks = Object.values(
-  requestCreator("/employees", storeManager.store),
+  requestCreator("/employees", storeManager.store, []),
 );
 
 export default storeManager;

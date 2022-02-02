@@ -7,11 +7,6 @@ export interface JSONProject {
     name: string;
     description?: string;
   };
-  relationships: {
-    roles: {
-      data: Array<{ type: "roles"; id: string }>;
-    };
-  };
 }
 
 const fakerSeedBase = 2000;
@@ -26,11 +21,6 @@ export function makeProject(): JSONProject {
     attributes: {
       name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,
       description: faker.lorem.sentences(4),
-    },
-    relationships: {
-      roles: {
-        data: [],
-      },
     },
   };
 }

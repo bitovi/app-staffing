@@ -28,7 +28,7 @@ export default function RoleAssignment({
         className={styles.employee}
         label=""
         name="assignedEmployee"
-        value={assignment.employee.name}
+        value={assignment.employee?.name}
         // onChange={(value) => updateEmployee(value || "")}
         onChange={() => alert("todo")}
         options={[]}

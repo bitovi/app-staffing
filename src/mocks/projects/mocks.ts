@@ -22,10 +22,18 @@ const queryLogic = new QueryLogic<JSONProject>({
   },
 });
 
+const relatedStores = [
+  {
+    source: "roles",
+    sourceRelationship: "project",
+    targetRelationship: "roles",
+  },
+];
+
 const storeManager = createStoreManager("projects", projects, queryLogic);
 
 export const projectMocks = Object.values(
-  requestCreator("/projects", storeManager.store),
+  requestCreator("/projects", storeManager.store, relatedStores),
 );
 
 export default storeManager;

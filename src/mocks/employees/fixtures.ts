@@ -15,10 +15,10 @@ export interface JSONEmployee {
     end_date?: Date;
   };
   relationships: {
-    assignments: {
+    assignments?: {
       data: Array<{ type: "assignments"; id: string }>;
     };
-    skills: {
+    skills?: {
       data: Array<{ type: "skills"; id: string }>;
     };
   };

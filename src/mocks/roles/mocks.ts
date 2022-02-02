@@ -34,7 +34,7 @@ const queryLogic = new QueryLogic<JSONRole>({
 const storeManager = createStoreManager("roles", roles, queryLogic);
 
 export const roleMocks = Object.values(
-  requestCreator("/roles", storeManager.store),
+  requestCreator("/roles", storeManager.store, []),
 );
 
 export default storeManager;
