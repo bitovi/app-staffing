@@ -65,8 +65,7 @@ jobs:
   deploy-dev:
     # only deploy dev if not pull request
 
-    # TODO: uncomment before merge
-    # if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request'
 
     # TODO: uncomment before merge
     # needs: [ publish ]
