@@ -69,7 +69,6 @@ export default function ProjectsHeader({
               arialabel="Add Project"
               onClick={onOpen}
               data-testid="addProjectButton"
-              style={{ padding: "10px 30px" }}
             >
               Add Project
             </Button>
