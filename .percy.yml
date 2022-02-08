@@ -1,0 +1,20 @@
+version: 2
+snapshot:
+  widths:
+    - 375
+    - 1280
+  min-height: 1024
+  percy-css: ""
+  enable-javascript: true
+discovery:
+  allowed-hostnames:
+    - '*'
+  network-idle-timeout: 100
+static:
+  clean-urls: false
+upload:
+  files: "**/*.{png,jpg,jpeg}"
+  ignore: ""
+  strip-extensions: false
+storybook:
+  include: ['^Component*']

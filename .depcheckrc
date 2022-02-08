@@ -4,12 +4,14 @@ ignore-dirs:
 ignores:
   - "@chakra-ui/*"
   - "@emotion/*"
+  - "@percy/*"
   - "@snek-at/storybook-addon-chakra-ui"
   - "@storybook/*"
   - "@testing-library/*"
   - "@types/*"
   - "@typescript-eslint/*"
   - babel-*
+  - cross-env
   - eslint-*
   - storybook-*
   - identity-obj-proxy

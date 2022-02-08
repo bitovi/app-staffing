@@ -11,7 +11,7 @@ import { clearFixtures, loadFixtures } from "../../mocks";
 
 import EmployeesWrapper from "./Employees";
 
-describe("Pages/Employees", () => {
+xdescribe("Pages/Employees", () => {
   jest.setTimeout(30000);
   jest.useFakeTimers();
   jest.runAllTimers();

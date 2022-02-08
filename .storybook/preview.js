@@ -1,20 +1,32 @@
 import { Suspense } from "react";
-import { StylesProvider } from "@chakra-ui/react";
 
 import theme from "../src/theme/";
 
-import "../src/setupMocks";
+import { setupWorker } from "msw";
+import mocks, { loadFixtures } from "../src/mocks";
+
+
+if (!process.env.STORYBOOK_SKIP_MOCKS) {
+  loadFixtures();
+  
+  setupWorker(...mocks).start({
+    onUnhandledRequest: "bypass",
+    serviceWorker: {
+      url: `${process.env.PUBLIC_URL}/mockServiceWorker.js`,
+    },
+  });
+}
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   chakra: { theme },
-  actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/,
     },
   },
+  percy: {}
 };
 
 const pathPrefix =
@@ -22,10 +34,10 @@ const pathPrefix =
 
 export const decorators = [
   (Story) => (
-    <StylesProvider value={theme}>
-      <Suspense fallback={<h1>Storybook Fallback</h1>}>
-        <Story />
-      </Suspense>
-    </StylesProvider>
+    <Suspense fallback={<h1>Storybook Fallback</h1>}>
+      <Story />
+    </Suspense>
   ),
 ];
+
+
