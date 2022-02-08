@@ -2,3 +2,5 @@
   url: http://localhost:8080
 - name: Team Members
   url: http://localhost:8080/team-members
+- name: Projects
+  url: http://localhost:8080/projects
