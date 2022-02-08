@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy Stage
-      uses: bitovi/github-actions-bitops-ci-cd@0.2.0
+      uses: bitovi/github-actions-bitops-ci-cd@0.3.0
       with:
         github-token: ${{ secrets.OPERATIONS_REPO_TOKEN }}
         org: bitovi
