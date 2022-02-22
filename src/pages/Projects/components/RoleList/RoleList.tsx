@@ -6,15 +6,19 @@ import RoleModal from "../RoleModal";
 import { useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import { Box, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
+import DeleteRoleModal from "../DeleteRoleModal";
 
 export default function RoleList({
   project,
   createRole,
+  destroyRole,
 }: {
   project: Project;
   createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
+  destroyRole: (roleId: string) => Promise<void>;
 }): JSX.Element {
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
+  const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
   const skills = useSkillsDefault();
 
   const lastRoleIndex = Array.isArray(project?.roles)
@@ -66,8 +70,9 @@ export default function RoleList({
                 {project?.roles?.map((role, index) => (
                   <RoleListRow
                     key={role.id}
-                    roles={role}
+                    role={role}
                     lastChild={lastRoleIndex === index}
+                    handleDeleteRole={setRoleToDelete}
                   />
                 ))}
               </Tbody>
@@ -82,20 +87,29 @@ export default function RoleList({
         project={projectToEdit ? projectToEdit : undefined}
         createRole={createRole}
       />
+
+      <DeleteRoleModal
+        role={roleToDelete}
+        setRole={setRoleToDelete}
+        destroyRole={destroyRole}
+        projectId={project.id}
+      />
     </>
   );
 }
 
 function RoleListRow({
-  roles,
+  role,
   lastChild = false,
+  handleDeleteRole,
 }: {
-  roles: Role;
+  role: Role;
   lastChild: boolean;
+  handleDeleteRole: (role: Role) => void;
 }) {
   return (
     <>
-      <RoleCard role={roles} />
+      <RoleCard role={role} handleDeleteRole={handleDeleteRole} />
       {/* add space between rows */}
       {!lastChild && <Tr height={4} />}
     </>

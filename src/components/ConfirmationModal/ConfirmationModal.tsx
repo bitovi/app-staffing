@@ -56,7 +56,9 @@ export default function ConfirmationModal({
         <ModalCloseButton />
         <ModalHeader>{title}</ModalHeader>
         <ModalBody>
-          <Text textStyle="modal.text">{message}</Text>
+          <Text textStyle="modal.text" whiteSpace="pre-wrap">
+            {message}
+          </Text>
           {error && (
             <Alert status="error" mt="15px">
               <AlertIcon />

@@ -63,7 +63,7 @@ export function ProjectDetail({
   });
 
   const { updateProject, destroyProject } = useProjectMutations();
-  const { createRole } = useRoleMutations();
+  const { createRole, destroyRole } = useRoleMutations();
 
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
@@ -95,7 +95,11 @@ export function ProjectDetail({
           destroyProject={destroyProject}
         />
       </Flex>
-      <RoleList createRole={createRole} project={project} />
+      <RoleList
+        createRole={createRole}
+        project={project}
+        destroyRole={destroyRole}
+      />
 
       {isEmpty(project.roles) && (
         <Flex
