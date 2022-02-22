@@ -12,8 +12,8 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
     render(
       <DeleteRoleModal
         role={role}
-        setRole={() => {}}
-        destroyRole={() => {}}
+        setRole={() => undefined}
+        destroyRole={() => undefined}
         projectId="project1"
       />,
     );
@@ -25,9 +25,10 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
   it("does not open if selected role is null", async () => {
     render(
       <DeleteRoleModal
+        // eslint-disable-next-line jsx-a11y/aria-role
         role={null}
-        setRole={() => {}}
-        destroyRole={() => {}}
+        setRole={() => undefined}
+        destroyRole={() => undefined}
         projectId="project1"
       />,
     );
@@ -39,8 +40,8 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
     render(
       <DeleteRoleModal
         role={role}
-        setRole={() => {}}
-        destroyRole={() => {}}
+        setRole={() => undefined}
+        destroyRole={() => undefined}
         projectId="project1"
       />,
     );
@@ -58,8 +59,8 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
     render(
       <DeleteRoleModal
         role={role}
-        setRole={() => {}}
-        destroyRole={() => {}}
+        setRole={() => undefined}
+        destroyRole={() => undefined}
         projectId="project1"
       />,
     );
