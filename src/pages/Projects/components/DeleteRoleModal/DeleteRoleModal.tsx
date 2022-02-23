@@ -4,31 +4,31 @@ import { Role } from "../../../../services/api";
 import { mutate } from "swr";
 
 const DeleteRoleModal = ({
-  role,
+  roleToDelete,
   setRole,
   destroyRole,
   projectId,
 }: {
-  role: Role | null;
+  roleToDelete: Role | null;
   setRole: (role: Role | null) => void;
   destroyRole: (roleId: string) => void;
   projectId: string;
 }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const isOpen = role != null;
+  const isOpen = roleToDelete != null;
 
   const onClose = () => {
     setRole(null);
   };
 
   const onConfirm = async () => {
-    if (!role) return;
+    if (!roleToDelete) return;
 
     setIsLoading(true);
 
     try {
-      await destroyRole(role.id);
+      await destroyRole(roleToDelete.id);
       setIsLoading(false);
       setRole(null);
 
@@ -54,8 +54,8 @@ const DeleteRoleModal = ({
       confirmLoadingText="Deleting Role ..."
       modalSize="lg"
       message={
-        role
-          ? `Are you sure you want to delete the ${role.skills?.[0].name} role?\nThis can't be undone.`
+        roleToDelete
+          ? `Are you sure you want to delete the ${roleToDelete.skills?.[0].name} role?\nThis can't be undone.`
           : ""
       }
     />

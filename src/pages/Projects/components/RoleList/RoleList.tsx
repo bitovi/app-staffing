@@ -89,7 +89,7 @@ export default function RoleList({
       />
 
       <DeleteRoleModal
-        role={roleToDelete}
+        roleToDelete={roleToDelete}
         setRole={setRoleToDelete}
         destroyRole={destroyRole}
         projectId={project.id}
