@@ -1,18 +1,15 @@
 import { useState } from "react";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { Role } from "../../../../services/api";
-import { mutate } from "swr";
 
 const DeleteRoleModal = ({
   roleToDelete,
   setRole,
   destroyRole,
-  projectId,
 }: {
   roleToDelete: Role | null;
   setRole: (role: Role | null) => void;
   destroyRole: (roleId: string) => void;
-  projectId: string;
 }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,9 +28,6 @@ const DeleteRoleModal = ({
       await destroyRole(roleToDelete.id);
       setIsLoading(false);
       setRole(null);
-
-      // Refresh the role list data after deleting the role
-      mutate(`/projects/${projectId}`);
     } catch (error) {
       setIsLoading(false);
       setError((error as Error).message);
