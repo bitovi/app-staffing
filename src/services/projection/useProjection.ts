@@ -5,13 +5,20 @@ import { useMemo } from "react";
 
 import getTimeline from "./timeline";
 import getProjections from "./projections";
+import { Skill } from "../api";
 
-export default function useProjection(date: Date = new Date()): {
+export default function useProjection(
+  date: Date = new Date(),
+  availableSkills: Skill[],
+): {
   timeline: TimelineRange[];
   skills: ProjectionGroup[];
 } {
   const timeline = useMemo(() => getTimeline(date), [date]);
-  const skills = useMemo(() => getProjections(timeline), [timeline]);
+  const skills = useMemo(
+    () => getProjections(timeline, availableSkills),
+    [timeline, availableSkills],
+  );
 
   return {
     timeline,

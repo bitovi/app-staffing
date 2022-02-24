@@ -8,7 +8,33 @@ export default {
 } as ComponentMeta<typeof TableHeader>;
 
 export const Basic: ComponentStory<typeof TableHeader> = ({ columnLabel }) => {
-  const { timeline } = useProjection();
+  const skills = [
+    {
+      id: "1001",
+      name: "Angular",
+    },
+    {
+      id: "1002",
+      name: "React",
+    },
+    {
+      id: "1003",
+      name: "DevOps",
+    },
+    {
+      id: "1004",
+      name: "Node",
+    },
+    {
+      id: "1005",
+      name: "Product",
+    },
+    {
+      id: "1006",
+      name: "Project Management",
+    },
+  ];
+  const { timeline } = useProjection(new Date(), skills);
   return (
     <TableHeader timeline={timeline} columnLabel={columnLabel}></TableHeader>
   );
