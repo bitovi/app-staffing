@@ -7,15 +7,15 @@ import { Skill } from "../Skills";
 
 export interface Role extends BaseData {
   id: string;
-  startDate?: Date;
-  startConfidence?: number;
+  startDate: Date;
+  startConfidence: number;
   endDate?: Date;
   endConfidence?: number;
-  project_id?: string;
-
   assignments?: Assignment[];
   project: Project;
   skills: Skill[];
+  // needed for filter[project_id][$eq]
+  project_id?: string;
 }
 
 export type NewRole = Partial<Omit<Role, "id">>;

@@ -1,3 +1,4 @@
+import faker from "faker";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import DeleteRoleModal from ".";
@@ -5,6 +6,8 @@ import DeleteRoleModal from ".";
 describe("Pages/Projects/Components/DeleteRoleModal", () => {
   const role = {
     id: "test",
+    startDate: faker.date.recent(),
+    startConfidence: 1,
     project: { id: "project1", name: "project1" },
     skills: [{ id: "1001", name: "React" }],
   };
@@ -14,7 +17,6 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={role}
         setRole={() => undefined}
         destroyRole={() => undefined}
-        projectId="project1"
       />,
     );
 
@@ -28,7 +30,6 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={null}
         setRole={() => undefined}
         destroyRole={() => undefined}
-        projectId="project1"
       />,
     );
 
@@ -41,7 +42,6 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={role}
         setRole={() => undefined}
         destroyRole={() => undefined}
-        projectId="project1"
       />,
     );
 
@@ -60,7 +60,6 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={role}
         setRole={() => undefined}
         destroyRole={() => undefined}
-        projectId="project1"
       />,
     );
 

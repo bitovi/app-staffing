@@ -54,7 +54,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.startDate && format(role?.startDate, "MM/dd/yyyy")}
+            {format(role.startDate, "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -65,7 +65,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.startConfidence && `${role.startConfidence * 10}%`}
+            {`${role.startConfidence * 100}%`}
           </Text>
         </Td>
         <Td>
@@ -76,7 +76,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.endDate && format(role?.endDate, "MM/dd/yyyy")}
+            {role.endDate && format(role.endDate, "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -87,11 +87,11 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.endConfidence && `${role.endConfidence * 10}%`}
+            {role.endConfidence && `${role.endConfidence * 100}%`}
           </Text>
         </Td>
         <Td>
-          {role?.assignments && (
+          {role.assignments && (
             <Text
               color="gray.600"
               fontWeight="600"
@@ -99,7 +99,7 @@ export default function RoleCard({
               lineHeight="20px"
               letterSpacing="0.25px"
             >
-              {role?.assignments[0]?.employee?.name}
+              {role.assignments[0]?.employee?.name}
             </Text>
           )}
         </Td>
