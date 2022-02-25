@@ -13,10 +13,18 @@ const queryLogic = new QueryLogic<JSONSkill>({
   },
 });
 
+const relatedStores = [
+  {
+    source: "employees",
+    sourceRelationship: "skills",
+    targetRelationship: "employees",
+  },
+];
+
 const storeManager = createStoreManager("skills", skills, queryLogic);
 
 export const skillMocks = Object.values(
-  requestCreator("/skills", storeManager.store, []),
+  requestCreator("/skills", storeManager.store, relatedStores),
 );
 
 export default storeManager;

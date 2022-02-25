@@ -1,3 +1,4 @@
+import { Employee } from "..";
 import type { BaseData } from "../restBuilder";
 
 import restBuilder from "../restBuilder";
@@ -5,6 +6,8 @@ import restBuilder from "../restBuilder";
 export interface Skill extends BaseData {
   id: string;
   name: string;
+
+  employees?: Employee[];
 }
 
 export type NewSkill = Partial<Omit<Skill, "id">>;

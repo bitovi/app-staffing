@@ -107,7 +107,7 @@ export default function requestCreator<Resource extends BaseResource>(
         count = 25,
       } = deparam(req.url.searchParams.toString());
 
-      const { data, count: total } = await store.getListData({
+      const listData = await store.getListData({
         filter,
         sort,
         page: {
@@ -115,6 +115,37 @@ export default function requestCreator<Resource extends BaseResource>(
           end: page * count - 1,
         },
       });
+
+      let { data } = listData;
+      const { count: total } = listData;
+
+      // Parameter that indicates which relationships to include
+      // in the response data
+      let { include } = deparam(req.url.searchParams.toString());
+      include = include?.split(",");
+
+      if (
+        include &&
+        relatedStores.some((store: RelatedStore) =>
+          include.includes(store.targetRelationship),
+        )
+      ) {
+        data = await Promise.all(
+          data.map(async (item) => {
+            const relationships = await getRelationships(
+              item.id,
+              relatedStores,
+              include,
+            );
+
+            if (Object.keys(relationships).length > 0) {
+              return { ...item, relationships };
+            }
+
+            return item;
+          }),
+        );
+      }
 
       const included = await getIncluded(data);
 
@@ -286,7 +317,11 @@ async function getRelationships(
       // this particular entity
       const filteredData = relatedStoreDataList.data.filter((relatedData) => {
         const data = relatedData.relationships?.[sourceRelationship]?.data;
-        return !Array.isArray(data) && data?.id === entityId;
+        if (Array.isArray(data)) {
+          return data.some((item) => item.id === entityId);
+        } else {
+          return data?.id === entityId;
+        }
       });
 
       // Finally we add a new entry in our relationships object
