@@ -50,7 +50,7 @@ describe("Services/API/Skills", () => {
       }
     });
 
-    it("loads skills with corresponding employees", async () => {
+    it("loads skills with corresponding employees if asked to include", async () => {
       const { result, waitForNextUpdate } = renderHook(
         () => useSkills({ include: "employees" }),
         {
@@ -63,11 +63,14 @@ describe("Services/API/Skills", () => {
       await waitForNextUpdate();
 
       for (let i = 0; i < result.current.length; i++) {
-        for (const employee of result.current[i].employees) {
-          expect(employee.skills).to.deep.include({
-            id: result.current[i].id,
-            name: result.current[i].name,
-          });
+        const skill = result.current[i];
+        if (skill.employees) {
+          for (const employee of skill.employees) {
+            expect(employee.skills).to.deep.include({
+              id: result.current[i].id,
+              name: result.current[i].name,
+            });
+          }
         }
       }
     });
