@@ -49,6 +49,28 @@ describe("Services/API/Skills", () => {
         );
       }
     });
+
+    it("loads skills with corresponding employees", async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => useSkills({ include: "employees" }),
+        {
+          wrapper,
+        },
+      );
+
+      expect(result.current).to.equal(undefined);
+
+      await waitForNextUpdate();
+
+      for (let i = 0; i < result.current.length; i++) {
+        for (const employee of result.current[i].employees) {
+          expect(employee.skills).to.deep.include({
+            id: result.current[i].id,
+            name: result.current[i].name,
+          });
+        }
+      }
+    });
   });
 
   describe("useSkillMutations", () => {
