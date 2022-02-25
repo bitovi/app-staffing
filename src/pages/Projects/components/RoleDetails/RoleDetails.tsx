@@ -1,7 +1,7 @@
+import isUndefined from "lodash/isUndefined";
+
 import type { Assignment, Role, Skill } from "../../../../services/api";
-
 import { useSkills } from "../../../../services/api";
-
 import Button from "../../../../components/Button";
 import Select from "../../../../components/Select";
 import RoleAssignment from "../RoleAssignment";
@@ -46,12 +46,16 @@ export default function RoleDetails({
             title="Start Date"
             date={role.startDate}
             confidence={role.startConfidence}
-            onConfidenceChange={(startConfidence) =>
-              updateRole(role.id, { ...role, startConfidence })
-            }
-            onDateChange={(startDate) =>
-              updateRole(role.id, { ...role, startDate })
-            }
+            onConfidenceChange={(startConfidence) => {
+              if (!isUndefined(startConfidence)) {
+                updateRole(role.id, { ...role, startConfidence });
+              }
+            }}
+            onDateChange={(startDate) => {
+              if (!isUndefined(startDate)) {
+                updateRole(role.id, { ...role, startDate });
+              }
+            }}
           />
           <RoleDate
             title="End Date"

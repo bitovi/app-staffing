@@ -15,12 +15,12 @@ import {
   Input,
   HStack,
   VStack,
-  Checkbox,
   Flex,
   SimpleGrid,
   Select,
   Text,
-  Divider,
+  RadioGroup,
+  Radio,
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import { Image } from "@chakra-ui/image";
@@ -28,6 +28,9 @@ import { useForm, Controller } from "react-hook-form";
 import type { Project, Skill, Role } from "../../../../services/api";
 import { AddIcon } from "@chakra-ui/icons";
 import parseISO from "date-fns/parseISO";
+import range from "lodash/range";
+import omit from "lodash/omit";
+import isNil from "lodash/isNil";
 
 interface RoleModalProps {
   createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
@@ -38,11 +41,11 @@ interface RoleModalProps {
 }
 
 interface RoleFormData {
-  skills: Record<string, boolean>;
+  skillId: string;
   startDate: string;
   startConfidence?: number;
   endDate: string;
-  endConfidence?: number;
+  endConfidence?: number | null;
 }
 
 type SaveButtonStatus = "idle" | "pending";
@@ -63,73 +66,83 @@ export default function RoleModal({
     reset,
     control,
     formState: { errors },
-  } = useForm<RoleFormData>();
+  } = useForm<RoleFormData>({
+    defaultValues: {
+      startConfidence: 1,
+    },
+  });
 
   const roleStartDate = watch("startDate");
   const roleStartConfidence = watch("startConfidence");
   const canSubmitForm = roleStartDate && roleStartConfidence ? true : false;
+
+  const resetForm = () => {
+    reset({
+      startDate: "",
+      startConfidence: 1,
+      endDate: "",
+      endConfidence: null,
+      skillId: "",
+    });
+  };
 
   const submitForm = async (data: RoleFormData) => {
     try {
       setStatus("pending");
       if (project) {
         await createRole({
+          project: omit(project, ["roles"]),
+          skills: skills.filter((skill) => skill.id === data.skillId),
           startDate: data.startDate ? parseISO(data.startDate) : undefined,
-          startConfidence: data?.startConfidence,
-          endConfidence: data?.endConfidence,
+          startConfidence: data.startConfidence,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          project_id: project.id,
+          ...(isNil(data.endConfidence)
+            ? null
+            : { endConfidence: data.endConfidence }),
         });
       }
-
-      reset({ startDate: "", endDate: "" });
-      onClose();
+      resetForm();
       setStatus("idle");
+      onClose();
     } catch (e) {
       setServerError(!serverError);
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
           Add a New Role
         </ModalHeader>
         <ModalCloseButton mt={2} />
-        <Divider pt={2} />
         <ModalBody pt={4}>
-          <VStack spacing="16px" pb={6}>
+          <VStack spacing="30px" pb={6}>
             <FormControl>
               <FormLabel>Select Role</FormLabel>
-              <Flex mt={4} flexGrow={1}>
-                <SimpleGrid columns={2} spacingX={24} spacingY={4}>
-                  {skills?.map((skill) => (
-                    <Controller
-                      key={skill.id}
-                      control={control}
-                      name={`skills.${skill.id}`}
-                      render={({ field: { onChange, onBlur, value } }) => {
-                        return (
-                          <Checkbox
-                            value={skill.id}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            isChecked={Boolean(value)}
-                            textStyle="modal.checkboxLabel"
-                          >
-                            {skill.name}
-                          </Checkbox>
-                        );
-                      }}
-                    />
-                  ))}
-                </SimpleGrid>
-              </Flex>
+              <Controller
+                control={control}
+                name="skillId"
+                render={({ field }) => (
+                  <RadioGroup
+                    name="skillId"
+                    onChange={field.onChange}
+                    value={field.value}
+                  >
+                    <SimpleGrid columns={3} spacingY={2}>
+                      {skills.map((skill) => (
+                        <Radio key={skill.id} value={skill.id}>
+                          {skill.name}
+                        </Radio>
+                      ))}
+                    </SimpleGrid>
+                  </RadioGroup>
+                )}
+              />
             </FormControl>
 
-            <HStack spacing="8px" width="100%">
+            <HStack spacing="8px" width="100%" align="flex-start">
               <FormControl
                 isRequired
                 isInvalid={errors.startDate ? true : false}
@@ -141,10 +154,10 @@ export default function RoleModal({
                   })}
                   id="role_start_date"
                   type="date"
-                  data-testid="startDate"
+                  data-testid="startDateInput"
                   name="startDate"
                 />
-                <FormErrorMessage>
+                <FormErrorMessage fontSize="small">
                   {errors?.startDate?.message}
                 </FormErrorMessage>
               </FormControl>
@@ -153,47 +166,44 @@ export default function RoleModal({
                 isRequired
                 isInvalid={errors.startConfidence ? true : false}
               >
-                <FormLabel>Confidence</FormLabel>
+                <FormLabel htmlFor="role_start_confidence">
+                  Confidence
+                </FormLabel>
                 <Select
-                  placeholder=" "
                   {...register("startConfidence", {
                     required: "Confidence is required",
                   })}
+                  aria-label="Start Date Confidence"
                   id="role_start_confidence"
+                  name="startConfidence"
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, index) => (
-                    <option value={num} key={index}>
-                      {num * 10}%
-                    </option>
-                  ))}
+                  {makeConfidenceOptions()}
                 </Select>
 
-                <FormErrorMessage>
+                <FormErrorMessage fontSize="small">
                   {errors?.startConfidence?.message}
                 </FormErrorMessage>
               </FormControl>
 
               <FormControl>
-                <FormLabel>End Date</FormLabel>
+                <FormLabel htmlFor="role_end_date">End Date</FormLabel>
                 <Input
                   {...register("endDate")}
                   id="role_end_date"
                   type="date"
+                  data-testid="endDateInput"
                 />
               </FormControl>
 
               <FormControl>
-                <FormLabel>Confidence</FormLabel>
+                <FormLabel htmlFor="role_end_confidence">Confidence</FormLabel>
                 <Select
-                  placeholder=" "
                   {...register("endConfidence")}
+                  placeholder=" "
                   id="role_end_confidence"
+                  aria-label="End Date Confidence"
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, index) => (
-                    <option value={num} key={index}>
-                      {num * 10}%
-                    </option>
-                  ))}
+                  {makeConfidenceOptions()}
                 </Select>
               </FormControl>
             </HStack>
@@ -235,7 +245,14 @@ export default function RoleModal({
         </ModalBody>
 
         <ModalFooter>
-          <Button variant="outline" mr="8px" onClick={onClose}>
+          <Button
+            variant="outline"
+            mr="8px"
+            onClick={() => {
+              resetForm();
+              onClose();
+            }}
+          >
             Cancel
           </Button>
           <Button
@@ -272,7 +289,19 @@ function getSubmitButtonProps({
   }
 
   return {
+    isLoading: false,
+    isDisabled: false,
     variant: canSubmitForm ? "primary" : "primaryDisabled",
     onClick,
   };
+}
+
+function makeConfidenceOptions() {
+  return range(11)
+    .map((i) => i / 10)
+    .map((num, index) => (
+      <option value={num} key={index}>
+        {num * 100}%
+      </option>
+    ));
 }

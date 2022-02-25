@@ -6,9 +6,13 @@ import { TrashIcon, EditIcon } from "../../../assets";
 
 interface RoleCardProps {
   role: Role;
+  handleDeleteRole: (role: Role) => void;
 }
 
-export default function RoleCard({ role }: RoleCardProps): JSX.Element {
+export default function RoleCard({
+  role,
+  handleDeleteRole,
+}: RoleCardProps): JSX.Element {
   const skillBackgrounds: { [key: string]: string } = {
     Design: "#435BAE",
     UX: "#AE436A",
@@ -50,7 +54,7 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.startDate && format(role?.startDate, "MM/dd/yyyy")}
+            {format(role.startDate, "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -61,7 +65,7 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.startConfidence && `${role.startConfidence * 10}%`}
+            {`${role.startConfidence * 100}%`}
           </Text>
         </Td>
         <Td>
@@ -72,7 +76,7 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.endDate && format(role?.endDate, "MM/dd/yyyy")}
+            {role.endDate && format(role.endDate, "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -83,11 +87,11 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role?.endConfidence && `${role.endConfidence * 10}%`}
+            {role.endConfidence && `${role.endConfidence * 100}%`}
           </Text>
         </Td>
         <Td>
-          {role?.assignments && (
+          {role.assignments && (
             <Text
               color="gray.600"
               fontWeight="600"
@@ -95,7 +99,7 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
               lineHeight="20px"
               letterSpacing="0.25px"
             >
-              {role?.assignments[0]?.employee?.name}
+              {role.assignments[0]?.employee?.name}
             </Text>
           )}
         </Td>
@@ -114,6 +118,7 @@ export default function RoleCard({ role }: RoleCardProps): JSX.Element {
               aria-label="Delete Member"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
+              onClick={() => handleDeleteRole(role)}
             />
           </Flex>
         </Td>

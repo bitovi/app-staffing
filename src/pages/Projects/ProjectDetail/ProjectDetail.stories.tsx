@@ -161,7 +161,11 @@ export const NonEmpty: ComponentStory<typeof ProjectDetail> = () => {
             }}
           />
         </Flex>
-        <RoleList project={project} createRole={() => Promise.resolve("")} />
+        <RoleList
+          project={project}
+          createRole={() => Promise.resolve("")}
+          destroyRole={() => Promise.resolve()}
+        />
       </Box>
     </div>
   );

@@ -1,25 +1,33 @@
-import type { Project, Role } from "../../../../services/api";
-import { useSkills as useSkillsDefault } from "../../../../services/api";
-import RoleCard from "../RoleCard";
-import Button from "../../../../components/Button";
-import RoleModal from "../RoleModal";
 import { useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import { Box, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
+import DeleteRoleModal from "../DeleteRoleModal";
+import RoleCard from "../RoleCard";
+import Button from "../../../../components/Button";
+import RoleModal from "../RoleModal";
+import { Project, Role, useSkills, useRoles } from "../../../../services/api";
+
+type NewRole = Partial<Omit<Role, "id">>;
+
+interface RoleListProps {
+  project: Project;
+  createRole: (data: NewRole) => Promise<string | undefined>;
+  destroyRole: (roleId: string) => Promise<void>;
+}
 
 export default function RoleList({
   project,
   createRole,
-}: {
-  project: Project;
-  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
-}): JSX.Element {
+  destroyRole,
+}: RoleListProps): JSX.Element {
+  const skills = useSkills();
+  const roles = useRoles({
+    filter: { project_id: { $eq: project.id } },
+    include: ["skills"],
+  });
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
-  const skills = useSkillsDefault();
-
-  const lastRoleIndex = Array.isArray(project?.roles)
-    ? project?.roles.length - 1
-    : -1;
+  const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
+  const lastRoleIndex = Array.isArray(roles) ? roles.length - 1 : -1;
 
   return (
     <>
@@ -27,54 +35,19 @@ export default function RoleList({
         Add Role
       </Button>
 
-      {!isEmpty(project?.roles) && (
-        <>
-          <Box maxHeight="80vh" overflowY="auto">
-            <Table>
-              <Thead py={4}>
-                <Tr>
-                  <Th color="gray.800" textStyle="table.title">
-                    Roles
-                  </Th>
-                  <Th color="gray.800" textStyle="table.title">
-                    Start Date
-                  </Th>
-                  <Th color="gray.800" textStyle="table.title">
-                    Confidence
-                  </Th>
-                  <Th color="gray.800" textStyle="table.title">
-                    End Date
-                  </Th>
-                  <Th color="gray.800" textStyle="table.title">
-                    Confidence
-                  </Th>
-                  <Th color="gray.800" textStyle="table.title">
-                    Current Employees
-                  </Th>
-                  <Th
-                    py={4}
-                    pr={12}
-                    color="gray.800"
-                    textStyle="table.title"
-                    isNumeric
-                  >
-                    Actions
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {project?.roles?.map((role, index) => (
-                  <RoleListRow
-                    key={role.id}
-                    roles={role}
-                    lastChild={lastRoleIndex === index}
-                  />
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
-        </>
+      {isEmpty(roles) ? null : (
+        <RolesTable>
+          {roles.map((role, index) => (
+            <RoleTableRow
+              key={role.id}
+              role={role}
+              lastChild={lastRoleIndex === index}
+              handleDeleteRole={setRoleToDelete}
+            />
+          ))}
+        </RolesTable>
       )}
+
       <RoleModal
         isOpen={!isEmpty(projectToEdit)}
         onClose={() => setProjectToEdit(null)}
@@ -82,20 +55,69 @@ export default function RoleList({
         project={projectToEdit ? projectToEdit : undefined}
         createRole={createRole}
       />
+
+      <DeleteRoleModal
+        roleToDelete={roleToDelete}
+        setRole={setRoleToDelete}
+        destroyRole={destroyRole}
+      />
     </>
   );
 }
 
-function RoleListRow({
-  roles,
+function RolesTable({ children }: { children: React.ReactNode }) {
+  return (
+    <Box maxHeight="80vh" overflowY="auto">
+      <Table>
+        <Thead py={4}>
+          <Tr>
+            <Th color="gray.800" textStyle="table.title">
+              Roles
+            </Th>
+            <Th color="gray.800" textStyle="table.title">
+              Start Date
+            </Th>
+            <Th color="gray.800" textStyle="table.title">
+              Confidence
+            </Th>
+            <Th color="gray.800" textStyle="table.title">
+              End Date
+            </Th>
+            <Th color="gray.800" textStyle="table.title">
+              Confidence
+            </Th>
+            <Th color="gray.800" textStyle="table.title">
+              Current Employees
+            </Th>
+            <Th
+              py={4}
+              pr={12}
+              color="gray.800"
+              textStyle="table.title"
+              isNumeric
+            >
+              Actions
+            </Th>
+          </Tr>
+        </Thead>
+        <Tbody>{children}</Tbody>
+      </Table>
+    </Box>
+  );
+}
+
+function RoleTableRow({
+  role,
   lastChild = false,
+  handleDeleteRole,
 }: {
-  roles: Role;
+  role: Role;
   lastChild: boolean;
+  handleDeleteRole: (role: Role) => void;
 }) {
   return (
     <>
-      <RoleCard role={roles} />
+      <RoleCard role={role} handleDeleteRole={handleDeleteRole} />
       {/* add space between rows */}
       {!lastChild && <Tr height={4} />}
     </>

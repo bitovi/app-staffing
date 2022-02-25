@@ -1,26 +1,36 @@
-// RoleList calls the RoleDetails component which calls useEmployees hook which is currently under construction
-// import { expect } from "chai";
-// import { Suspense } from "react";
-// import { render, screen } from "@testing-library/react";
+import { Suspense } from "react";
+import { render } from "@testing-library/react";
+import { clearFixtures, loadFixtures } from "../../../../mocks";
+import { projects } from "../../../../mocks/projects/fixtures";
+import Serializer from "../../../../services/api/restBuilder/serializer";
+import RoleList from "./RoleList";
 
-// import { projects } from "../../../../services/api/projects/fixtures";
+describe("Pages/Projects/components/RoleList", function () {
+  jest.setTimeout(30000);
+  jest.useFakeTimers();
+  jest.runAllTimers();
 
-// import RoleList from "./RoleList";
+  beforeEach(async () => {
+    await loadFixtures();
+  });
 
-describe("Pages/Projects/components/RoleLists", () => {
-  // it("works", () => {
-  //   render(
-  //     <Suspense fallback={<div>Loading...</div>}>
-  //     <RoleList project={projects[0]} onEdit={jest.fn()} />,
-  //     </Suspense>,
-  //   );
+  afterEach(async () => {
+    await clearFixtures();
+  });
 
-  //   const node = screen.getAllByText("Node");
-  //   expect(node[0]).to.have.tagName("p");
-  // });
+  it("renders button to add a new role", async function () {
+    const project = Serializer.deserialize("projects", { data: projects[0] });
 
-  it("needs to be fixed", () => {
-    expect(true).toBe(true);
+    const { findByRole } = render(
+      <Suspense fallback={<div>Loading...</div>}>
+        <RoleList
+          project={project}
+          createRole={() => Promise.resolve("")}
+          destroyRole={() => Promise.resolve()}
+        />
+      </Suspense>,
+    );
+
+    await findByRole("button", { name: "Add Role" });
   });
 });
-export {};
