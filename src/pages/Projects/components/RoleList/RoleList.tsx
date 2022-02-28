@@ -5,7 +5,7 @@ import DeleteRoleModal from "../DeleteRoleModal";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
 import RoleModal from "../RoleModal";
-import { Project, Role, useSkills, useRoles } from "../../../../services/api";
+import { Project, Role, useSkills } from "../../../../services/api";
 
 type NewRole = Partial<Omit<Role, "id">>;
 
@@ -21,13 +21,13 @@ export default function RoleList({
   destroyRole,
 }: RoleListProps): JSX.Element {
   const skills = useSkills();
-  const roles = useRoles({
-    filter: { project_id: { $eq: project.id } },
-    include: ["skills"],
-  });
+
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
-  const lastRoleIndex = Array.isArray(roles) ? roles.length - 1 : -1;
+
+  const lastRoleIndex = Array.isArray(project?.roles)
+    ? project?.roles.length - 1
+    : -1;
 
   return (
     <>
@@ -35,9 +35,9 @@ export default function RoleList({
         Add Role
       </Button>
 
-      {isEmpty(roles) ? null : (
+      {isEmpty(project?.roles) ? null : (
         <RolesTable>
-          {roles.map((role, index) => (
+          {project?.roles?.map((role, index) => (
             <RoleTableRow
               key={role.id}
               role={role}
@@ -60,6 +60,7 @@ export default function RoleList({
         roleToDelete={roleToDelete}
         setRole={setRoleToDelete}
         destroyRole={destroyRole}
+        projectId={project.id}
       />
     </>
   );
@@ -67,7 +68,7 @@ export default function RoleList({
 
 function RolesTable({ children }: { children: React.ReactNode }) {
   return (
-    <Box maxHeight="80vh" overflowY="auto">
+    <Box maxHeight="75vh" overflowY="auto">
       <Table>
         <Thead py={4}>
           <Tr>

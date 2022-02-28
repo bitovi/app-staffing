@@ -33,7 +33,10 @@ import omit from "lodash/omit";
 import isNil from "lodash/isNil";
 
 interface RoleModalProps {
-  createRole: (data: Partial<Omit<Role, "id">>) => Promise<string | undefined>;
+  createRole: (
+    data: Partial<Omit<Role, "id">>,
+    identifier: string,
+  ) => Promise<string | undefined>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
@@ -90,16 +93,19 @@ export default function RoleModal({
     try {
       setStatus("pending");
       if (project) {
-        await createRole({
-          project: omit(project, ["roles"]),
-          skills: skills.filter((skill) => skill.id === data.skillId),
-          startDate: data.startDate ? parseISO(data.startDate) : undefined,
-          startConfidence: data.startConfidence,
-          endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          ...(isNil(data.endConfidence)
-            ? null
-            : { endConfidence: data.endConfidence }),
-        });
+        await createRole(
+          {
+            project: omit(project, ["roles"]),
+            skills: skills.filter((skill) => skill.id === data.skillId),
+            startDate: data.startDate ? parseISO(data.startDate) : undefined,
+            startConfidence: data.startConfidence,
+            endDate: data.endDate ? parseISO(data.endDate) : undefined,
+            ...(isNil(data.endConfidence)
+              ? null
+              : { endConfidence: data.endConfidence }),
+          },
+          skills.filter((skill) => skill.id === data.skillId)?.[0]?.name,
+        );
       }
       resetForm();
       setStatus("idle");

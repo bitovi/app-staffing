@@ -6,10 +6,12 @@ const DeleteRoleModal = ({
   roleToDelete,
   setRole,
   destroyRole,
+  projectId,
 }: {
   roleToDelete: Role | null;
   setRole: (role: Role | null) => void;
-  destroyRole: (roleId: string) => void;
+  destroyRole: (roleId: string, projectId: string, identifier: string) => void;
+  projectId: string;
 }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +27,11 @@ const DeleteRoleModal = ({
     setIsLoading(true);
 
     try {
-      await destroyRole(roleToDelete.id);
+      await destroyRole(
+        roleToDelete.id,
+        projectId,
+        roleToDelete.skills?.[0]?.name,
+      );
       setIsLoading(false);
       setRole(null);
     } catch (error) {

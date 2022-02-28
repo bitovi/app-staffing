@@ -64,7 +64,7 @@ export default function requestCreator<Resource extends BaseResource>(
         // Parameter that indicates which relationships to include
         // in the response data
         let { include } = deparam(req.url.searchParams.toString());
-        include = include?.split(",");
+        include = include?.split(".").join(",").split(",");
 
         const relationships = await getRelationships(
           id,

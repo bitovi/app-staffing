@@ -20,10 +20,13 @@ export interface Role extends BaseData {
 
 export type NewRole = Partial<Omit<Role, "id">>;
 
+const parentStore = { path: "/projects", sourceRelationship: "project" };
+
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Role>(
   "/roles",
   "roles",
   { title: "Role" },
+  parentStore,
 );
 
 export { useRestList as useRoles, useRestOne as useRole };

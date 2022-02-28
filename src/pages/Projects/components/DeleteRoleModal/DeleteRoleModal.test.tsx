@@ -17,6 +17,7 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={role}
         setRole={() => undefined}
         destroyRole={() => undefined}
+        projectId="project1"
       />,
     );
 
@@ -30,6 +31,7 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={null}
         setRole={() => undefined}
         destroyRole={() => undefined}
+        projectId="project1"
       />,
     );
 
@@ -42,6 +44,7 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={role}
         setRole={() => undefined}
         destroyRole={() => undefined}
+        projectId="project1"
       />,
     );
 
@@ -60,6 +63,7 @@ describe("Pages/Projects/Components/DeleteRoleModal", () => {
         roleToDelete={role}
         setRole={() => undefined}
         destroyRole={() => undefined}
+        projectId="project1"
       />,
     );
 
