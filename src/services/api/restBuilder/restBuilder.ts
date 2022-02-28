@@ -10,7 +10,6 @@ import fetcher from "./fetcher";
 
 import serializer, { SerializerTypes } from "./serializer";
 import parseDate from "./parseDate";
-import { ScopedMutator } from "swr/dist/types";
 
 interface ListQuery<T> {
   filter?: Filter<T>;
@@ -316,7 +315,7 @@ function makeUrl<T extends { include?: string | string[] }>(
 }
 
 async function mutateParentCache(
-  mutate: ScopedMutator<any>,
+  mutate: any,
   type: string,
   parentStore: ParentStore,
   parentId: string,
@@ -327,7 +326,6 @@ async function mutateParentCache(
   await mutate(
     `${parentStore.path}/${parentId}`,
     async (parentCache: BaseData | undefined) => {
-      console.log(parentCache);
       if (!parentCache) {
         return parentCache;
       }
