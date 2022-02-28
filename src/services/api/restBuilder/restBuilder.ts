@@ -3,6 +3,7 @@ import type { Filter } from "can-query-logic";
 
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
+import type { mutate as Mutate } from "swr";
 import param from "can-param";
 import { useToast } from "../../toast";
 
@@ -315,7 +316,7 @@ function makeUrl<T extends { include?: string | string[] }>(
 }
 
 async function mutateParentCache(
-  mutate: any,
+  mutate: typeof Mutate,
   type: string,
   parentStore: ParentStore,
   parentId: string,
