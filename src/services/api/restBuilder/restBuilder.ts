@@ -3,6 +3,7 @@ import type { Filter } from "can-query-logic";
 
 import { useCallback } from "react";
 import useSWR, { useSWRConfig } from "swr";
+import type { mutate as Mutate } from "swr";
 import param from "can-param";
 import { useToast } from "../../toast";
 
@@ -28,12 +29,18 @@ export interface BaseData {
   name?: string;
 }
 
+interface ParentStore {
+  path: string;
+  sourceRelationship: string;
+}
+
 export default function restBuilder<Data extends BaseData>(
   path: string,
   type: SerializerTypes,
   messages?: {
     title: string;
   },
+  parentStore?: ParentStore,
 ): {
   useRestList: (query?: ListQuery<Data>) => Data[];
   useRestOne: (id: string, query?: OneQuery) => Data;
@@ -110,13 +117,14 @@ export default function restBuilder<Data extends BaseData>(
     const { mutate } = useSWRConfig();
 
     const create = useCallback(
-      async (data: Partial<Omit<Data, "id">>) => {
+      async (data: Partial<Omit<Data, "id">>, identifier?: string) => {
         const payload = serializer.serialize(type, data);
         const response = await fetcher<JSONAPIDocument>("POST", path, payload);
 
         if (response) {
           const deserialized = serializer.deserialize(type, response) as Data;
-          const identifier = deserialized.name || deserialized.id;
+
+          if (!identifier) identifier = deserialized.name || deserialized.id;
 
           parseDate(deserialized);
 
@@ -125,6 +133,19 @@ export default function restBuilder<Data extends BaseData>(
             path,
             async (cache: Data[] | undefined) => {
               if (!cache) {
+                if (parentStore) {
+                  const source = deserialized[
+                    parentStore.sourceRelationship as keyof BaseData
+                  ] as unknown as BaseData;
+                  mutateParentCache(
+                    mutate,
+                    type,
+                    parentStore,
+                    source.id,
+                    "Create",
+                    deserialized,
+                  );
+                }
                 return cache;
               }
 
@@ -216,15 +237,25 @@ export default function restBuilder<Data extends BaseData>(
     );
 
     const destroy = useCallback(
-      async (id: string) => {
+      async (id: string, parentId?: string, identifier?: string) => {
         await fetcher<undefined>("DELETE", `${path}/${id}`);
-        let identifier: string | undefined = undefined;
 
         // mutate list cache
         await mutate(
           path,
           async (cache: Data[] | undefined) => {
             if (!cache) {
+              if (parentStore && parentId) {
+                mutateParentCache(
+                  mutate,
+                  type,
+                  parentStore,
+                  parentId,
+                  "Delete",
+                  undefined,
+                  id,
+                );
+              }
               return cache;
             }
 
@@ -282,4 +313,39 @@ function makeUrl<T extends { include?: string | string[] }>(
   }
 
   return `${path}?${param(query)}`;
+}
+
+async function mutateParentCache(
+  mutate: typeof Mutate,
+  type: string,
+  parentStore: ParentStore,
+  parentId: string,
+  operation: "Create" | "Update" | "Delete",
+  deserialized?: BaseData,
+  id?: string,
+) {
+  await mutate(
+    `${parentStore.path}/${parentId}`,
+    async (parentCache: BaseData | undefined) => {
+      if (!parentCache) {
+        return parentCache;
+      }
+
+      let cache = parentCache[type as keyof BaseData] as unknown as BaseData[];
+
+      switch (operation) {
+        case "Create":
+          if (deserialized) cache.push(deserialized);
+          break;
+        case "Update":
+        // To do
+        case "Delete":
+          cache = cache.filter((item) => item.id !== id);
+          break;
+        default:
+      }
+
+      return { ...parentCache, [type as keyof BaseData]: cache };
+    },
+  );
 }
