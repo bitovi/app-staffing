@@ -11,11 +11,12 @@ describe("Pages/Projects/components/RoleModal", () => {
         onClose={() => true}
         isOpen={true}
         skills={skills}
+        createAssignment={() => Promise.resolve("")}
       />,
     );
 
     // check each skill has an associated radio button on screen
-    const radios = getAllByRole("radio", { checked: false });
+    const radios = await getAllByRole("radio", { checked: false });
     const onScreenIds = Array.from(radios).map(getValue);
     const skillsIds = skills.map((skill) => skill.id);
     expect(skillsIds).toStrictEqual(onScreenIds);
@@ -47,6 +48,7 @@ describe("Pages/Projects/components/RoleModal", () => {
         onClose={() => true}
         isOpen={true}
         skills={skills}
+        createAssignment={() => Promise.resolve("")}
       />,
     );
 
@@ -67,6 +69,7 @@ describe("Pages/Projects/components/RoleModal", () => {
         onClose={() => true}
         isOpen={true}
         skills={skills}
+        createAssignment={() => Promise.resolve("")}
       />,
     );
 
@@ -97,6 +100,7 @@ describe("Pages/Projects/components/RoleModal", () => {
         onClose={() => true}
         isOpen={true}
         skills={skills}
+        createAssignment={() => Promise.resolve("")}
       />,
     );
     getByText("Add a New Role");

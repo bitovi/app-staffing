@@ -27,6 +27,7 @@ const relatedStores = [
     source: "roles",
     sourceRelationship: "project",
     targetRelationship: "roles",
+    sourceNestedRelationships: "role",
   },
 ];
 

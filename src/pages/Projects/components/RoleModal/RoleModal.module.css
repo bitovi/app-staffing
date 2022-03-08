@@ -1,0 +1,25 @@
+.assignmentSelect__control {
+  padding: 20px;
+}
+
+.assignmentSelect div[class$="control"] svg {
+  margin-left: 10px;
+  opacity: 0.5;
+}
+
+.assignmentSelect div[class$="ValueContainer"] {
+  padding: 2px 5px;
+}
+
+.assignmentSelect div[class$="MenuList"]::-webkit-scrollbar {
+  width: 6px;
+}
+
+.assignmentSelect div[class$="MenuList"]::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(196, 196, 196, 0.8);
+}
+
+.assignmentSelect div[class$="menu"] div[class$="option"] {
+  padding: 4px 34px;
+}

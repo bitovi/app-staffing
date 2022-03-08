@@ -18,6 +18,7 @@ const relatedStores = [
     source: "employees",
     sourceRelationship: "skills",
     targetRelationship: "employees",
+    sourceNestedRelationships: "employee",
   },
 ];
 

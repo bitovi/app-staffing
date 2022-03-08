@@ -5,7 +5,12 @@ import DeleteRoleModal from "../DeleteRoleModal";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
 import RoleModal from "../RoleModal";
-import { Project, Role, useSkills } from "../../../../services/api";
+import {
+  Project,
+  Role,
+  useAssignmentMutations,
+  useSkills,
+} from "../../../../services/api";
 
 type NewRole = Partial<Omit<Role, "id">>;
 
@@ -21,6 +26,7 @@ export default function RoleList({
   destroyRole,
 }: RoleListProps): JSX.Element {
   const skills = useSkills();
+  const { createAssignment } = useAssignmentMutations();
 
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
@@ -54,6 +60,7 @@ export default function RoleList({
         skills={skills}
         project={projectToEdit ? projectToEdit : undefined}
         createRole={createRole}
+        createAssignment={createAssignment}
       />
 
       <DeleteRoleModal

@@ -19,6 +19,7 @@ export const Works: ComponentStory<typeof RoleModal> = () => {
       skills={skills}
       project={project}
       createRole={() => Promise.resolve("")}
+      createAssignment={() => Promise.resolve("")}
     />
   );
 };

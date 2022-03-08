@@ -36,6 +36,7 @@ interface RelatedStore {
   source: string;
   sourceRelationship: string;
   targetRelationship: string;
+  sourceNestedRelationships: string;
 }
 
 const API_BASE_URL = window.env.API_BASE_URL;
@@ -64,7 +65,7 @@ export default function requestCreator<Resource extends BaseResource>(
         // Parameter that indicates which relationships to include
         // in the response data
         let { include } = deparam(req.url.searchParams.toString());
-        include = include?.split(".").join(",").split(",");
+        include = include?.split(",");
 
         const relationships = await getRelationships(
           id,
@@ -298,6 +299,27 @@ async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
   return included;
 }
 
+function arrayToObject(myArray: string[]) {
+  const [key, ...rest] = myArray;
+  return { [key]: rest };
+}
+
+function arrayToMap(includeArray: string[]): Map<string, string[]> {
+  const includeMap = new Map();
+  for (let i = 0; i < includeArray.length; i++) {
+    const store = includeArray[i].split(".");
+    const [key, ...rest] = store;
+
+    if (!includeMap.has(key)) {
+      includeMap.set(key, rest.length > 0 ? [arrayToObject(rest)] : null);
+    } else {
+      includeMap.get(key).push(arrayToObject(rest));
+    }
+  }
+
+  return includeMap;
+}
+
 async function getRelationships(
   entityId: string,
   relatedStores: RelatedStore[],
@@ -305,11 +327,18 @@ async function getRelationships(
 ): Promise<Record<string, unknown>> {
   const relationships: Record<string, unknown> = {};
 
+  const includeMap: Map<string, string[]> = arrayToMap(include);
+
   for (const relatedStore of relatedStores) {
-    const { source, sourceRelationship, targetRelationship } = relatedStore;
+    const {
+      source,
+      sourceRelationship,
+      targetRelationship,
+      sourceNestedRelationships,
+    } = relatedStore;
 
     // We check that the query asks for this relationship to be included
-    if (include.includes(targetRelationship)) {
+    if (Array.from(includeMap.keys()).includes(targetRelationship)) {
       // We first get all data from the related store
       const relatedStoreDataList = await stores[source].getListData();
 
@@ -323,6 +352,42 @@ async function getRelationships(
           return data?.id === entityId;
         }
       });
+
+      // We check if this relationship has nested relationships
+      const nestedRelations = includeMap.get(targetRelationship);
+
+      if (nestedRelations) {
+        // If it does, for each item of the parent data, we add the corresponding nested relation data
+        for (const parentItem of filteredData) {
+          for (const nestedRelation of nestedRelations) {
+            const nestedKey = Object.keys(nestedRelation)[0];
+            const nestedRelationData = await stores[
+              Object.keys(nestedRelation)[0]
+            ]?.getListData();
+
+            const filteredNestedData = nestedRelationData.data.filter(
+              (relatedData) => {
+                const data =
+                  relatedData.relationships?.[sourceNestedRelationships]?.data;
+                if (Array.isArray(data)) {
+                  return data.some((item) => item.id === parentItem.id);
+                } else {
+                  return data?.id === parentItem.id;
+                }
+              },
+            );
+
+            if (parentItem.relationships && filteredNestedData?.length) {
+              parentItem.relationships[nestedKey as keyof BaseResource] = {
+                data: filteredNestedData.map((nestedData) => ({
+                  id: nestedData?.id,
+                  type: nestedKey,
+                })),
+              };
+            }
+          }
+        }
+      }
 
       // Finally we add a new entry in our relationships object
       // with the corresponding data
