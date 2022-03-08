@@ -1,5 +1,5 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import { useProjects, useSkills } from "../../../../services/api";
+import { useEmployees, useProjects, useSkills } from "../../../../services/api";
 import RoleModal from "./RoleModal";
 
 export default {
@@ -9,6 +9,7 @@ export default {
 
 export const Works: ComponentStory<typeof RoleModal> = () => {
   const skills = useSkills();
+  const employees = useEmployees();
   const projects = useProjects();
   const project = projects[0];
 
@@ -17,6 +18,7 @@ export const Works: ComponentStory<typeof RoleModal> = () => {
       isOpen={true}
       onClose={() => true}
       skills={skills}
+      employees={employees}
       project={project}
       createRole={() => Promise.resolve("")}
       createAssignment={() => Promise.resolve("")}

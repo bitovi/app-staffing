@@ -1,6 +1,6 @@
 import { render, waitFor } from "@testing-library/react";
 import RoleModal from "./RoleModal";
-import { skills } from "../../../../mocks/fixtures";
+import { employees, skills } from "../../../../mocks/fixtures";
 import userEvent from "@testing-library/user-event";
 
 describe("Pages/Projects/components/RoleModal", () => {
@@ -8,10 +8,11 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText, getByTestId, getByRole, getAllByRole } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
-        createAssignment={() => Promise.resolve("")}
+        employees={employees}
       />,
     );
 
@@ -45,10 +46,11 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
-        createAssignment={() => Promise.resolve("")}
+        employees={employees}
       />,
     );
 
@@ -66,10 +68,11 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText, getAllByRole, getByTestId, queryByText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
-        createAssignment={() => Promise.resolve("")}
+        employees={employees}
       />,
     );
 
@@ -97,10 +100,11 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText, getByRole, getAllByRole, getByTestId } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
-        createAssignment={() => Promise.resolve("")}
+        employees={employees}
       />,
     );
     getByText("Add a New Role");
@@ -154,4 +158,21 @@ describe("Pages/Projects/components/RoleModal", () => {
   function getValue(input: HTMLElement) {
     return (input as HTMLInputElement).value;
   }
+});
+
+it("Should initially display empty team member message", async () => {
+  const { getByText } = render(
+    <RoleModal
+      createRole={() => Promise.resolve("")}
+      createAssignment={() => Promise.resolve("")}
+      onClose={() => true}
+      isOpen={true}
+      skills={skills}
+      employees={employees}
+    />,
+  );
+
+  expect(
+    getByText(/There are currently no team members assigned to/g),
+  ).toBeInTheDocument();
 });

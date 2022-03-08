@@ -35,7 +35,6 @@ import {
   Project,
   Skill,
   Role,
-  useEmployees,
   NewAssignment,
   Employee,
 } from "../../../../services/api";
@@ -55,14 +54,15 @@ interface RoleModalProps {
     data: NewRole,
     identifier: string,
   ) => Promise<string | undefined>;
-  onClose: () => void;
-  isOpen: boolean;
-  skills: Skill[];
-  project?: Project;
   createAssignment: (
     data: NewAssignment,
     identifier: string | undefined,
   ) => Promise<string | undefined>;
+  onClose: () => void;
+  isOpen: boolean;
+  skills: Skill[];
+  employees: Employee[];
+  project?: Project;
 }
 
 interface RoleFormData {
@@ -84,14 +84,13 @@ interface AssignmentFormData {
 
 export default function RoleModal({
   createRole,
+  createAssignment,
   onClose,
   isOpen,
   skills,
+  employees,
   project,
-  createAssignment,
 }: RoleModalProps): JSX.Element {
-  const employees: Employee[] = useEmployees({ include: "skills" });
-
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const {
