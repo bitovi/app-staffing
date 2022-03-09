@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, within, fireEvent } from "@testing-library/react";
 import RoleModal from "./RoleModal";
 import { employees, skills } from "../../../../mocks/fixtures";
 import userEvent from "@testing-library/user-event";
@@ -155,24 +155,194 @@ describe("Pages/Projects/components/RoleModal", () => {
     expect(getValue(endConfidenceSelect)).toEqual("");
   });
 
+  it("Should initially display empty team member message", async () => {
+    const { getByText } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    expect(
+      getByText(/There are currently no team members assigned to/g),
+    ).toBeInTheDocument();
+  });
+
+  it("adds a team member input when clicking on the add button and removes the empty message", async () => {
+    const { getByTestId, getAllByTestId, queryByText } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    const addButton = getByTestId("add-team-member");
+    userEvent.click(addButton);
+
+    expect(
+      queryByText(/There are currently no team members assigned to/g),
+    ).not.toBeInTheDocument();
+
+    const teamMemberRow = getAllByTestId("team-member-row");
+
+    expect(teamMemberRow.length).toEqual(1);
+  });
+
+  it("has the correct form labels", async () => {
+    const { getByTestId, getAllByTestId } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    const addButton = getByTestId("add-team-member");
+    userEvent.click(addButton);
+
+    const teamMemberRow = getAllByTestId("team-member-row");
+
+    within(teamMemberRow[0]).queryByText(/'Employee Name'/g);
+    within(teamMemberRow[0]).queryByText(/'Start Date'/g);
+    within(teamMemberRow[0]).queryByText(/'End Date'/g);
+  });
+
+  it("correctly adds and remove team members input with the add and remove buttons", async () => {
+    const { getByTestId, getAllByTestId } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    const addButton = getByTestId("add-team-member");
+
+    userEvent.click(addButton);
+
+    let teamMemberRow = getAllByTestId("team-member-row");
+
+    expect(teamMemberRow.length).toEqual(1);
+
+    userEvent.click(addButton);
+    userEvent.click(addButton);
+
+    teamMemberRow = getAllByTestId("team-member-row");
+
+    expect(teamMemberRow.length).toEqual(3);
+
+    const removeButton = getAllByTestId("remove-team-member")[0];
+
+    userEvent.click(removeButton);
+
+    teamMemberRow = getAllByTestId("team-member-row");
+
+    expect(teamMemberRow.length).toEqual(2);
+  });
+
+  it("selects employees", async () => {
+    const { getByTestId, getByText, queryByText, getAllByLabelText } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    const addButton = getByTestId("add-team-member");
+
+    userEvent.click(addButton);
+
+    const selectElement = getAllByLabelText("Employee Name")[0];
+
+    const selectItem = getSelectItem(selectElement, getByText);
+
+    await selectItem(employees[0].name);
+
+    expect(queryByText(employees[0].name)).toBeInTheDocument();
+  });
+
+  it("selects employees and removes the right inputs when clickng on the remove button", async () => {
+    const {
+      getByTestId,
+      getByText,
+      queryByText,
+      getAllByLabelText,
+      getAllByTestId,
+    } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    const addButton = getByTestId("add-team-member");
+
+    userEvent.click(addButton);
+    userEvent.click(addButton);
+    userEvent.click(addButton);
+
+    const selectElement1 = getAllByLabelText("Employee Name")[0];
+    const selectElement2 = getAllByLabelText("Employee Name")[1];
+    const selectElement3 = getAllByLabelText("Employee Name")[2];
+
+    const selectItem1 = getSelectItem(selectElement1, getByText);
+    const selectItem2 = getSelectItem(selectElement2, getByText);
+    const selectItem3 = getSelectItem(selectElement3, getByText);
+
+    await selectItem1(employees[0].name);
+    await selectItem2(employees[1].name);
+    await selectItem3(employees[2].name);
+
+    expect(queryByText(employees[0].name)).toBeInTheDocument();
+    expect(queryByText(employees[1].name)).toBeInTheDocument();
+    expect(queryByText(employees[2].name)).toBeInTheDocument();
+
+    const removeButton = getAllByTestId("remove-team-member");
+    userEvent.click(removeButton[1]);
+
+    expect(queryByText(employees[1].name)).not.toBeInTheDocument();
+
+    userEvent.click(removeButton[0]);
+
+    expect(queryByText(employees[0].name)).not.toBeInTheDocument();
+    expect(queryByText(employees[2].name)).toBeInTheDocument();
+  });
+
   function getValue(input: HTMLElement) {
     return (input as HTMLInputElement).value;
   }
-});
 
-it("Should initially display empty team member message", async () => {
-  const { getByText } = render(
-    <RoleModal
-      createRole={() => Promise.resolve("")}
-      createAssignment={() => Promise.resolve("")}
-      onClose={() => true}
-      isOpen={true}
-      skills={skills}
-      employees={employees}
-    />,
-  );
-
-  expect(
-    getByText(/There are currently no team members assigned to/g),
-  ).toBeInTheDocument();
+  const getSelectItem =
+    (
+      selectElement: HTMLElement,
+      getByText: (arg0: string) => Document | Node | Element | Window,
+    ) =>
+    async (itemText: string) => {
+      const DOWN_ARROW = { keyCode: 40 };
+      fireEvent.keyDown(selectElement, DOWN_ARROW);
+      await waitFor(() => getByText(itemText));
+      fireEvent.click(getByText(itemText));
+    };
 });

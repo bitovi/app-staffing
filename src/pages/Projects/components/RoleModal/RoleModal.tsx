@@ -93,6 +93,16 @@ export default function RoleModal({
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
+
+  const initialValues = {
+    startDate: "",
+    startConfidence: 1,
+    endDate: "",
+    endConfidence: null,
+    skillId: "",
+    assignments: [],
+  };
+
   const {
     register,
     watch,
@@ -101,9 +111,8 @@ export default function RoleModal({
     control,
     formState: { errors },
   } = useForm<RoleFormData>({
-    defaultValues: {
-      startConfidence: 1,
-    },
+    shouldUnregister: true,
+    defaultValues: initialValues,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -121,7 +130,9 @@ export default function RoleModal({
       startDate: "",
       endDate: "",
     };
-    append(newAssignment, { focusName: "employeeId" });
+    append(newAssignment, {
+      focusName: `assignments.${fields.length}.employeeId`,
+    });
   };
 
   const removeTeamMember = (index: number) => {
@@ -146,14 +157,7 @@ export default function RoleModal({
   };
 
   const resetForm = () => {
-    reset({
-      startDate: "",
-      startConfidence: 1,
-      endDate: "",
-      endConfidence: null,
-      skillId: "",
-      assignments: undefined,
-    });
+    reset(initialValues);
   };
 
   const addAssignmentsToRole = async (
@@ -168,9 +172,8 @@ export default function RoleModal({
         },
         assignment.employee?.name,
       );
-
-      mutate(`/projects/${project?.id}`);
     }
+    mutate(`/projects/${project?.id}`);
   };
 
   const submitForm = async (data: RoleFormData) => {
@@ -215,7 +218,14 @@ export default function RoleModal({
   }));
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        resetForm();
+        onClose();
+      }}
+      size="3xl"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
@@ -343,26 +353,30 @@ export default function RoleModal({
                         gap="8px"
                         marginBottom="1em !important"
                         width="100%"
+                        data-testid="team-member-row"
                       >
                         <FormControl width="40%">
                           {index < 1 ? (
-                            <FormLabel>Employee Name</FormLabel>
+                            <FormLabel id="employee-name">
+                              Employee Name
+                            </FormLabel>
                           ) : null}
                           <Controller
                             control={control}
                             name={`assignments.${index}.employeeId` as const}
-                            render={({ field: { onChange, value, ref } }) => (
+                            render={({ field }) => (
                               <ReactSelect
-                                inputRef={ref}
+                                ref={field.ref}
+                                aria-labelledby="employee-name"
                                 options={assignmentsOptions}
                                 value={assignmentsOptions.find(
-                                  (c) => c.value === value,
+                                  (c) => c.value === field.value,
                                 )}
-                                onChange={(val) => onChange(val?.value)}
+                                onChange={(val) => field.onChange(val?.value)}
                                 className={styles.assignmentSelect}
                                 classNamePrefix={styles.assignmentSelect}
                                 placeholder="Assign Employee"
-                                innerRef={ref}
+                                blurInputOnSelect
                                 components={{
                                   IndicatorSeparator: null,
                                   DropdownIndicator: (props) => (
@@ -415,6 +429,7 @@ export default function RoleModal({
                           marginBottom="4px"
                           icon={<TrashIcon fill="currentColor" />}
                           onClick={() => removeTeamMember(index)}
+                          data-testid="remove-team-member"
                         />
                       </Flex>
                     ))}
@@ -449,6 +464,7 @@ export default function RoleModal({
               _hover={{ color: "#2C7A7B" }}
               width="fit-content"
               onClick={addTeamMember}
+              data-testid="add-team-member"
             >
               <AddIcon />
               <Text ml={2}>Add Team Member to this Role</Text>

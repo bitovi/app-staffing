@@ -20,7 +20,7 @@ export default function Button({
   ...props
 }: ButtonProps): JSX.Element {
   return (
-    <ChakraButton {...props} variant={variant}>
+    <ChakraButton {...props} variant={variant} ref={props.innerref}>
       {children}
     </ChakraButton>
   );
