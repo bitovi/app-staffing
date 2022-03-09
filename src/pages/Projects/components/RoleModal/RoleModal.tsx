@@ -157,7 +157,12 @@ export default function RoleModal({
   };
 
   const resetForm = () => {
-    reset(initialValues);
+    setTimeout(() => reset(initialValues));
+  };
+
+  const handleClose = async () => {
+    await resetForm();
+    onClose();
   };
 
   const addAssignmentsToRole = async (
@@ -165,13 +170,15 @@ export default function RoleModal({
     roleId: Role,
   ) => {
     for (const assignment of assignments) {
-      await createAssignment(
-        {
-          ...assignment,
-          role: roleId,
-        },
-        assignment.employee?.name,
-      );
+      if (assignment.employee && assignment.startDate) {
+        await createAssignment(
+          {
+            ...assignment,
+            role: roleId,
+          },
+          assignment.employee?.name,
+        );
+      }
     }
     mutate(`/projects/${project?.id}`);
   };
@@ -204,9 +211,8 @@ export default function RoleModal({
         }
       }
 
-      resetForm();
       setStatus("idle");
-      onClose();
+      handleClose();
     } catch (e) {
       setServerError(!serverError);
     }
@@ -218,14 +224,7 @@ export default function RoleModal({
   }));
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => {
-        resetForm();
-        onClose();
-      }}
-      size="3xl"
-    >
+    <Modal isOpen={isOpen} onClose={handleClose} size="3xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
@@ -473,14 +472,7 @@ export default function RoleModal({
         </ModalBody>
 
         <ModalFooter>
-          <Button
-            variant="outline"
-            mr="8px"
-            onClick={() => {
-              resetForm();
-              onClose();
-            }}
-          >
+          <Button variant="outline" mr="8px" onClick={handleClose}>
             Cancel
           </Button>
           <Button

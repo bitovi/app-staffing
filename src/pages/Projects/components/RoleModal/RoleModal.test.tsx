@@ -4,6 +4,8 @@ import { employees, skills } from "../../../../mocks/fixtures";
 import userEvent from "@testing-library/user-event";
 
 describe("Pages/Projects/components/RoleModal", () => {
+  jest.setTimeout(30000);
+
   it("renders with correct default values", async function () {
     const { getByText, getByTestId, getByRole, getAllByRole } = render(
       <RoleModal
@@ -148,7 +150,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     userEvent.click(cancelButton);
 
     // make sure form fields were reset
-    expect(radios.filter(isChecked)).toHaveLength(0);
+    await waitFor(() => expect(radios.filter(isChecked)).toHaveLength(0));
     expect(getValue(startDateInput)).toEqual("");
     expect(getValue(endDateInput)).toEqual("");
     expect(getValue(startConfidenceSelect)).toEqual("1");
