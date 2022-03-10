@@ -99,7 +99,10 @@ export default function RoleCard({
               lineHeight="20px"
               letterSpacing="0.25px"
             >
-              {role.assignments[0]?.employee?.name}
+              {role.assignments.map(
+                (assignment, index) =>
+                  `${index ? ", " : ""}${assignment?.employee?.name || ""}`,
+              )}
             </Text>
           )}
         </Td>

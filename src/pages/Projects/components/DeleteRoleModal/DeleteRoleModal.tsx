@@ -58,6 +58,7 @@ const DeleteRoleModal = ({
           ? `Are you sure you want to delete the ${roleToDelete.skills?.[0]?.name} role?\nThis can't be undone.`
           : ""
       }
+      focusConfirmationButton
     />
   );
 };

@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
+import { useRef } from "react";
 import Button, { ButtonVariant } from "../Button";
 
 interface ConfirmationModalProps {
@@ -27,6 +28,7 @@ interface ConfirmationModalProps {
   confirmButtonVariant?: ButtonVariant;
   modalSize?: string;
   isCentered?: boolean;
+  focusConfirmationButton?: boolean;
 }
 
 export default function ConfirmationModal({
@@ -43,13 +45,17 @@ export default function ConfirmationModal({
   confirmButtonVariant = "primary",
   modalSize = "md",
   isCentered = false,
+  focusConfirmationButton = false,
 }: ConfirmationModalProps): JSX.Element {
+  const initialRef = useRef<HTMLButtonElement>(null);
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       size={modalSize}
       isCentered={isCentered}
+      initialFocusRef={initialRef}
     >
       <ModalOverlay />
       <ModalContent mt="14vh">
@@ -82,6 +88,7 @@ export default function ConfirmationModal({
               variant={confirmButtonVariant}
               aria-label="confirm button"
               loadingText={confirmLoadingText}
+              innerref={focusConfirmationButton ? initialRef : null}
             >
               {confirmText}
             </Button>
