@@ -26,6 +26,7 @@ describe("Pages/Projects/components/RoleList", function () {
         <RoleList
           project={project}
           createRole={() => Promise.resolve("")}
+          updateRole={() => Promise.resolve()}
           destroyRole={() => Promise.resolve()}
         />
       </Suspense>,

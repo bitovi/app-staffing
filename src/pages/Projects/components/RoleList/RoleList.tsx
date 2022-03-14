@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import { Box, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import DeleteRoleModal from "../DeleteRoleModal";
@@ -19,12 +19,14 @@ type NewRole = Partial<Omit<Role, "id">>;
 interface RoleListProps {
   project: Project;
   createRole: (data: NewRole) => Promise<string | undefined>;
+  updateRole: (id: string, data: Partial<Role>) => Promise<void>;
   destroyRole: (roleId: string) => Promise<void>;
 }
 
 export default function RoleList({
   project,
   createRole,
+  updateRole,
   destroyRole,
 }: RoleListProps): JSX.Element {
   const skills = useSkills();
@@ -32,7 +34,15 @@ export default function RoleList({
   const { createAssignment } = useAssignmentMutations();
 
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
+
+  const [roleToEdit, setRoleToEdit] = useState<Role>();
   const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
+
+  useEffect(() => {
+    if (roleToEdit) {
+      setProjectToEdit(project);
+    }
+  }, [roleToEdit, project]);
 
   const lastRoleIndex = Array.isArray(project?.roles)
     ? project?.roles.length - 1
@@ -52,6 +62,7 @@ export default function RoleList({
               role={role}
               lastChild={lastRoleIndex === index}
               handleDeleteRole={setRoleToDelete}
+              handleEditRole={setRoleToEdit}
             />
           ))}
         </RolesTable>
@@ -65,6 +76,9 @@ export default function RoleList({
         project={projectToEdit ? projectToEdit : undefined}
         createRole={createRole}
         createAssignment={createAssignment}
+        roleToEdit={roleToEdit}
+        setRoleToEdit={setRoleToEdit}
+        updateRole={updateRole}
       />
 
       <DeleteRoleModal
@@ -122,14 +136,20 @@ function RoleTableRow({
   role,
   lastChild = false,
   handleDeleteRole,
+  handleEditRole,
 }: {
   role: Role;
   lastChild: boolean;
   handleDeleteRole: (role: Role) => void;
+  handleEditRole: (role: Role) => void;
 }) {
   return (
     <>
-      <RoleCard role={role} handleDeleteRole={handleDeleteRole} />
+      <RoleCard
+        role={role}
+        handleDeleteRole={handleDeleteRole}
+        handleEditRole={handleEditRole}
+      />
       {/* add space between rows */}
       {!lastChild && <Tr height={4} />}
     </>

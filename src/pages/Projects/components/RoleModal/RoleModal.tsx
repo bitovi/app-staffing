@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   ModalBody,
@@ -22,6 +22,8 @@ import {
   RadioGroup,
   Radio,
   IconButton,
+  Heading,
+  Box,
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import { Image } from "@chakra-ui/image";
@@ -37,15 +39,18 @@ import {
   Role,
   NewAssignment,
   Employee,
+  Assignment,
 } from "../../../../services/api";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import parseISO from "date-fns/parseISO";
+import formatISO from "date-fns/formatISO";
 import range from "lodash/range";
 import omit from "lodash/omit";
 import isNil from "lodash/isNil";
 import { TrashIcon, SearchIcon, UserIcon } from "../../../assets";
 import styles from "./RoleModal.module.css";
 import { mutate } from "swr";
+import { ServiceError } from "../../../../components/ServiceError";
 
 type NewRole = Partial<Omit<Role, "id">>;
 
@@ -58,11 +63,18 @@ interface RoleModalProps {
     data: NewAssignment,
     identifier: string | undefined,
   ) => Promise<string | undefined>;
+  updateRole: (
+    id: string,
+    data: Partial<Role>,
+    identifier: string,
+  ) => Promise<void>;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
   employees: Employee[];
   project?: Project;
+  roleToEdit?: Role;
+  setRoleToEdit?: (role: Role | undefined) => void;
 }
 
 interface RoleFormData {
@@ -90,6 +102,9 @@ export default function RoleModal({
   skills,
   employees,
   project,
+  roleToEdit,
+  setRoleToEdit,
+  updateRole,
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
@@ -103,12 +118,17 @@ export default function RoleModal({
     assignments: [],
   };
 
+  const formatDate = (date: Date) => {
+    return formatISO(date).substring(0, 10);
+  };
+
   const {
     register,
     watch,
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<RoleFormData>({
     shouldUnregister: true,
@@ -122,7 +142,78 @@ export default function RoleModal({
 
   const roleStartDate = watch("startDate");
   const roleStartConfidence = watch("startConfidence");
-  const canSubmitForm = roleStartDate && roleStartConfidence ? true : false;
+
+  const roleEndDateInput = register("endDate", {
+    onChange: (e) => {
+      handleEndDateEdgeCases(e.target.value);
+    },
+  });
+  const roleEndDate = watch("endDate");
+
+  const roleEndConfidenceInput = register("endConfidence", {
+    onChange: (e) => {
+      handleEndConfidenceEdgeCases(e.target.value);
+    },
+  });
+  const roleEndConfidence = watch("endConfidence");
+
+  const canSubmitForm = (): boolean => {
+    if (roleToEdit) {
+      if (
+        formatDate(roleToEdit.startDate) !== roleStartDate ||
+        roleToEdit.startConfidence !== roleStartConfidence ||
+        (roleToEdit.endDate &&
+          formatDate(roleToEdit.endDate) !== roleEndDate) ||
+        roleToEdit.endConfidence !== roleEndConfidence
+      ) {
+        return true;
+      }
+      return false;
+    } else {
+      return roleStartDate && roleStartConfidence ? true : false;
+    }
+  };
+
+  useEffect(() => {
+    function parseAssignmentsInitialValues(assignments: Assignment[]) {
+      return assignments.map((assignment) => ({
+        employeeId: assignment.employee.id,
+        startDate: assignment.startDate ? formatDate(assignment.startDate) : "",
+        endDate: assignment.endDate ? formatDate(assignment.endDate) : "",
+      }));
+    }
+
+    const initialValuesEdit = roleToEdit && {
+      startDate: roleToEdit.startDate ? formatDate(roleToEdit.startDate) : "",
+      startConfidence: roleToEdit.startConfidence,
+      endDate: roleToEdit.endDate ? formatDate(roleToEdit.endDate) : "",
+      endConfidence: roleToEdit.endConfidence,
+      skillId: undefined,
+      assignments: roleToEdit.assignments
+        ? parseAssignmentsInitialValues(roleToEdit.assignments)
+        : [],
+    };
+
+    if (roleToEdit) {
+      reset(initialValuesEdit);
+    }
+  }, [roleToEdit, reset]);
+
+  const handleEndDateEdgeCases = (endDate: string) => {
+    if (endDate === "") {
+      setValue("endConfidence", null);
+    } else if (endDate && !roleEndConfidence) {
+      setValue("endConfidence", 1);
+    }
+  };
+
+  const handleEndConfidenceEdgeCases = (endConfidence: string) => {
+    if (endConfidence === "") {
+      setValue("endDate", "");
+    } else if (endConfidence && !roleEndDate) {
+      setValue("endDate", formatDate(new Date()));
+    }
+  };
 
   const addTeamMember = () => {
     const newAssignment: AssignmentFormData = {
@@ -157,7 +248,11 @@ export default function RoleModal({
   };
 
   const resetForm = () => {
-    setTimeout(() => reset(initialValues));
+    setTimeout(() => {
+      reset(initialValues);
+      if (roleToEdit && setRoleToEdit) setRoleToEdit(undefined);
+      setServerError(false);
+    });
   };
 
   const handleClose = async () => {
@@ -186,7 +281,9 @@ export default function RoleModal({
   const submitForm = async (data: RoleFormData) => {
     try {
       setStatus("pending");
-      if (project) {
+      if (roleToEdit && project) {
+        await submitEditRole(roleToEdit, data);
+      } else if (project) {
         const newRole = {
           project: omit(project, ["roles"]),
           skills: skills.filter((skill) => skill.id === data.skillId),
@@ -195,7 +292,7 @@ export default function RoleModal({
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
           ...(isNil(data.endConfidence)
             ? null
-            : { endConfidence: data.endConfidence }),
+            : { endConfidence: Number(data.endConfidence) }),
         };
         const newRoleId = await createRole(
           newRole,
@@ -214,9 +311,31 @@ export default function RoleModal({
       setStatus("idle");
       handleClose();
     } catch (e) {
-      setServerError(!serverError);
+      setServerError(true);
+      setStatus("idle");
     }
   };
+
+  async function submitEditRole(roleToEdit: Role, data: RoleFormData) {
+    try {
+      await updateRole(
+        roleToEdit.id,
+        {
+          project: project,
+          skills: roleToEdit.skills,
+          startDate: parseISO(data.startDate),
+          startConfidence: data.startConfidence || 1,
+          endDate: data.endDate ? parseISO(data.endDate) : undefined,
+          ...(isNil(data.endConfidence)
+            ? null
+            : { endConfidence: Number(data.endConfidence) }),
+        },
+        roleToEdit.skills[0].name,
+      );
+    } catch (e) {
+      throw e;
+    }
+  }
 
   const assignmentsOptions = employees.map((employee) => ({
     value: employee.id,
@@ -228,37 +347,43 @@ export default function RoleModal({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
-          Add a New Role
+          {roleToEdit ? "Edit Role" : "Add a New Role"}
         </ModalHeader>
         <ModalCloseButton mt={2} />
         <ModalBody pt={4}>
-          <VStack spacing="30px" pb={6}>
-            <FormControl>
-              <FormLabel>Select Role</FormLabel>
-              <Controller
-                control={control}
-                name="skillId"
-                render={({ field }) => (
-                  <RadioGroup
-                    name="skillId"
-                    onChange={field.onChange}
-                    value={field.value}
-                  >
-                    <SimpleGrid columns={3} spacingY={2}>
-                      {skills.map((skill) => (
-                        <Radio
-                          key={skill.id}
-                          value={skill.id}
-                          aria-describedby={skill.id}
-                        >
-                          {skill.name}
-                        </Radio>
-                      ))}
-                    </SimpleGrid>
-                  </RadioGroup>
-                )}
-              />
-            </FormControl>
+          <VStack spacing="30px" pb={6} align="start">
+            {roleToEdit ? (
+              <Heading as="h4" size="16px">
+                {roleToEdit.skills[0]?.name}
+              </Heading>
+            ) : (
+              <FormControl>
+                <FormLabel>Select Role</FormLabel>
+                <Controller
+                  control={control}
+                  name="skillId"
+                  render={({ field }) => (
+                    <RadioGroup
+                      name="skillId"
+                      onChange={field.onChange}
+                      value={field.value}
+                    >
+                      <SimpleGrid columns={3} spacingY={2}>
+                        {skills.map((skill) => (
+                          <Radio
+                            key={skill.id}
+                            value={skill.id}
+                            aria-describedby={skill.id}
+                          >
+                            {skill.name}
+                          </Radio>
+                        ))}
+                      </SimpleGrid>
+                    </RadioGroup>
+                  )}
+                />
+              </FormControl>
+            )}
 
             <HStack spacing="8px" width="100%" align="flex-start">
               <FormControl
@@ -290,10 +415,12 @@ export default function RoleModal({
                 <Select
                   {...register("startConfidence", {
                     required: "Confidence is required",
+                    valueAsNumber: true,
                   })}
                   aria-label="Start Date Confidence"
                   id="role_start_confidence"
                   name="startConfidence"
+                  data-testid="startConfidenceInput"
                 >
                   {makeConfidenceOptions()}
                 </Select>
@@ -306,7 +433,7 @@ export default function RoleModal({
               <FormControl>
                 <FormLabel htmlFor="role_end_date">End Date</FormLabel>
                 <Input
-                  {...register("endDate")}
+                  {...roleEndDateInput}
                   id="role_end_date"
                   type="date"
                   data-testid="endDateInput"
@@ -316,10 +443,11 @@ export default function RoleModal({
               <FormControl>
                 <FormLabel htmlFor="role_end_confidence">Confidence</FormLabel>
                 <Select
-                  {...register("endConfidence")}
+                  {...roleEndConfidenceInput}
                   placeholder=" "
                   id="role_end_confidence"
                   aria-label="End Date Confidence"
+                  data-testid="endConfidenceInput"
                 >
                   {makeConfidenceOptions()}
                 </Select>
@@ -469,6 +597,31 @@ export default function RoleModal({
               <Text ml={2}>Add Team Member to this Role</Text>
             </Flex>
           </FormControl>
+
+          {serverError && (
+            <Flex justifyContent="center" width="100%" marginTop="20px">
+              <ServiceError
+                bg="red.100"
+                color="gray.700"
+                iconColor="red.500"
+                textStyle="table.title"
+                name="Server Error"
+                width="95%"
+                h="48px"
+              >
+                <Box
+                  as="button"
+                  onClick={() => setServerError(false)}
+                  position="absolute"
+                  top="11.75px"
+                  right="11.75px"
+                  color="gray.700"
+                >
+                  <CloseIcon w="8.50px" h="8.50px" />
+                </Box>
+              </ServiceError>
+            </Flex>
+          )}
         </ModalBody>
 
         <ModalFooter>
@@ -481,7 +634,7 @@ export default function RoleModal({
               canSubmitForm,
               onClick: handleSubmit((data) => submitForm(data)),
             })}
-            aria-disabled={!canSubmitForm}
+            aria-disabled={!canSubmitForm()}
           >
             Save &amp; Close
           </Button>
@@ -497,7 +650,7 @@ function getSubmitButtonProps({
   onClick,
 }: {
   status: SaveButtonStatus;
-  canSubmitForm: boolean;
+  canSubmitForm: () => boolean;
   onClick: () => Promise<void>;
 }) {
   if (status === "pending") {
@@ -511,7 +664,7 @@ function getSubmitButtonProps({
   return {
     isLoading: false,
     isDisabled: false,
-    variant: canSubmitForm ? "primary" : "primaryDisabled",
+    variant: canSubmitForm() ? "primary" : "primaryDisabled",
     onClick,
   };
 }

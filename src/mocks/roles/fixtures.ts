@@ -40,13 +40,13 @@ export function makeRole(project: JSONProject): JSONRole {
       start_confidence: faker.datatype.number({
         min: 0.1,
         max: 0.9,
-        precision: 0.05,
+        precision: 0.1,
       }),
       end_date: faker.date.past(),
       end_confidence: faker.datatype.number({
         min: 0.1,
         max: 0.9,
-        precision: 0.05,
+        precision: 0.1,
       }),
     },
     relationships: {
@@ -61,7 +61,7 @@ export function makeRole(project: JSONProject): JSONRole {
       },
       skills: {
         data: faker.random
-          .arrayElements(skills, faker.datatype.number({ min: 1, max: 3 }))
+          .arrayElements(skills, faker.datatype.number({ min: 1, max: 1 }))
           .map(({ id }) => ({ type: "skills", id })),
       },
     },

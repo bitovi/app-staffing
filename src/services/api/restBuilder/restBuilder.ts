@@ -177,7 +177,7 @@ export default function restBuilder<Data extends BaseData>(
     );
 
     const update = useCallback(
-      async (id: string, data: Partial<Data>) => {
+      async (id: string, data: Partial<Data>, identifier?: string) => {
         const payload = serializer.serialize(type, { ...data, id });
         const response = await fetcher<JSONAPIDocument>(
           "PATCH",
@@ -187,7 +187,8 @@ export default function restBuilder<Data extends BaseData>(
 
         if (response) {
           const deserialized = serializer.deserialize(type, response) as Data;
-          const identifier = deserialized.name || deserialized.id;
+
+          if (!identifier) identifier = deserialized.name || deserialized.id;
 
           parseDate(deserialized);
 
@@ -196,6 +197,19 @@ export default function restBuilder<Data extends BaseData>(
             path,
             async (cache: Data[] | undefined) => {
               if (!cache) {
+                if (parentStore) {
+                  const source = deserialized[
+                    parentStore.sourceRelationship as keyof BaseData
+                  ] as unknown as BaseData;
+                  mutateParentCache(
+                    mutate,
+                    type,
+                    parentStore,
+                    source.id,
+                    "Update",
+                    deserialized,
+                  );
+                }
                 return cache;
               }
 
