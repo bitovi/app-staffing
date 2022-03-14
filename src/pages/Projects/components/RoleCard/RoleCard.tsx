@@ -7,11 +7,13 @@ import { TrashIcon, EditIcon } from "../../../assets";
 interface RoleCardProps {
   role: Role;
   handleDeleteRole: (role: Role) => void;
+  handleEditRole: (role: Role) => void;
 }
 
 export default function RoleCard({
   role,
   handleDeleteRole,
+  handleEditRole,
 }: RoleCardProps): JSX.Element {
   const skillBackgrounds: { [key: string]: string } = {
     Design: "#435BAE",
@@ -114,6 +116,7 @@ export default function RoleCard({
               aria-label="Edit Member"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
+              onClick={() => handleEditRole(role)}
             />
             <IconButton
               ml="8px"

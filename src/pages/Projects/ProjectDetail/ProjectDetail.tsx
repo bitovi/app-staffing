@@ -14,7 +14,6 @@ import { Image } from "@chakra-ui/image";
 import {
   useProject as useProjectDefault,
   useProjectMutations as useProjectMutationsDefault,
-  useRoleMutations as useRoleMutationsDefault,
 } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
@@ -26,7 +25,6 @@ import type { Project } from "../../../services/api";
 interface ProjectDetailProps {
   useProject: typeof useProjectDefault;
   useProjectMutations: typeof useProjectMutationsDefault;
-  useRoleMutations: typeof useRoleMutationsDefault;
 }
 
 export function LoadingProjectDetails(): JSX.Element {
@@ -55,7 +53,6 @@ export function LoadingProjectDetails(): JSX.Element {
 export function ProjectDetail({
   useProject = useProjectDefault,
   useProjectMutations = useProjectMutationsDefault,
-  useRoleMutations = useRoleMutationsDefault,
 }: ProjectDetailProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const project = useProject(id, {
@@ -63,7 +60,6 @@ export function ProjectDetail({
   });
 
   const { updateProject, destroyProject } = useProjectMutations();
-  const { createRole, destroyRole } = useRoleMutations();
 
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, { ...project, ...updated });
@@ -95,11 +91,7 @@ export function ProjectDetail({
           destroyProject={destroyProject}
         />
       </Flex>
-      <RoleList
-        createRole={createRole}
-        project={project}
-        destroyRole={destroyRole}
-      />
+      <RoleList project={project} />
 
       {isEmpty(project.roles) && (
         <Flex
@@ -135,7 +127,6 @@ export default function ProjectDetailWrapper(): JSX.Element {
       <ProjectDetail
         useProject={useProjectDefault}
         useProjectMutations={useProjectMutationsDefault}
-        useRoleMutations={useRoleMutationsDefault}
       />
     </Suspense>
   );

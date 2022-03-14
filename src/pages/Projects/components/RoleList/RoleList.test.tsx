@@ -23,11 +23,7 @@ describe("Pages/Projects/components/RoleList", function () {
 
     const { findByRole } = render(
       <Suspense fallback={<div>Loading...</div>}>
-        <RoleList
-          project={project}
-          createRole={() => Promise.resolve("")}
-          destroyRole={() => Promise.resolve()}
-        />
+        <RoleList project={project} />
       </Suspense>,
     );
 

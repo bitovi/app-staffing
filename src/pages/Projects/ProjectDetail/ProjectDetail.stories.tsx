@@ -100,7 +100,6 @@ export const Empty: ComponentStory<typeof ProjectDetail> = () => {
             There are currently no roles available.
           </Text>
         </Flex>
-        {/* <RoleList onEdit={() => Promise.resolve()} project={project} /> */}
       </Box>
     </div>
   );
@@ -161,11 +160,7 @@ export const NonEmpty: ComponentStory<typeof ProjectDetail> = () => {
             }}
           />
         </Flex>
-        <RoleList
-          project={project}
-          createRole={() => Promise.resolve("")}
-          destroyRole={() => Promise.resolve()}
-        />
+        <RoleList project={project} />
       </Box>
     </div>
   );

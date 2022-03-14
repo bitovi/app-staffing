@@ -1,7 +1,8 @@
 import { render, waitFor, within, fireEvent } from "@testing-library/react";
 import RoleModal from "./RoleModal";
-import { employees, skills } from "../../../../mocks/fixtures";
+import { employees, skills, roles } from "../../../../mocks/fixtures";
 import userEvent from "@testing-library/user-event";
+import formatISO from "date-fns/formatISO";
 
 describe("Pages/Projects/components/RoleModal", () => {
   jest.setTimeout(30000);
@@ -11,6 +12,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -49,6 +51,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -71,6 +74,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -103,6 +107,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -162,6 +167,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -179,6 +185,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -203,6 +210,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -225,6 +233,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -261,6 +270,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -292,6 +302,7 @@ describe("Pages/Projects/components/RoleModal", () => {
       <RoleModal
         createRole={() => Promise.resolve("")}
         createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -330,6 +341,116 @@ describe("Pages/Projects/components/RoleModal", () => {
 
     expect(queryByText(employees[0].name)).not.toBeInTheDocument();
     expect(queryByText(employees[2].name)).toBeInTheDocument();
+  });
+
+  it("works in edit mode", async () => {
+    const { getByTestId, getByText, queryByText, queryByRole } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+        roleToEdit={roles[0]}
+      />,
+    );
+
+    // Make sure we don't show skills selection in edit mode
+    expect(queryByText(/Select Role/g)).not.toBeInTheDocument();
+    expect(queryByRole("radio")).not.toBeInTheDocument();
+
+    // make sure inputs are prefilled with role to edit data
+
+    const startDateInput = getByTestId("startDateInput");
+    expect(getValue(startDateInput)).toEqual(
+      formatISO(roles[0].startDate).substring(0, 10),
+    );
+
+    const startConfidenceInput = getByTestId("startConfidenceInput");
+    expect(Number(getValue(startConfidenceInput))).toEqual(
+      roles[0].startConfidence,
+    );
+
+    const endDateInput = getByTestId("endDateInput");
+    if (roles[0].endDate) {
+      expect(getValue(endDateInput)).toEqual(
+        formatISO(roles[0].endDate).substring(0, 10),
+      );
+    }
+
+    const endConfidenceInput = getByTestId("endConfidenceInput");
+    expect(Number(getValue(endConfidenceInput))).toEqual(
+      roles[0].endConfidence,
+    );
+
+    // Make sure Add button is initially disabled
+    const addButton = getByText(/Save & Close/g);
+    expect(addButton).toHaveAttribute("aria-disabled", "true");
+
+    // After the suer changes an input, the button becomes enabled
+    userEvent.type(startDateInput, "2035-05-12");
+    expect(addButton).not.toHaveAttribute("aria-disabled", "true");
+
+    // If user changes back to initial value, the button becomes disabled again
+    userEvent.type(
+      startDateInput,
+      formatISO(roles[0].startDate).substring(0, 10),
+    );
+    expect(addButton).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("handles end date edges cases", async () => {
+    const { getByTestId } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    const endDateInput = getByTestId("endDateInput");
+    const endConfidenceInput = getByTestId("endConfidenceInput");
+
+    userEvent.type(endDateInput, "2035-05-12");
+
+    expect(Number(getValue(endConfidenceInput))).toEqual(1);
+
+    userEvent.clear(endDateInput);
+
+    expect(getValue(endConfidenceInput)).toEqual("");
+  });
+
+  it("handles end confidence edges cases", async () => {
+    const { getByTestId } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        createAssignment={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+      />,
+    );
+
+    const endConfidenceSelect = getByTestId("endConfidenceInput");
+    const endDateInput = getByTestId("endDateInput");
+
+    userEvent.selectOptions(endConfidenceSelect, ["0.5"]);
+
+    expect(getValue(endDateInput)).toEqual(
+      formatISO(new Date()).substring(0, 10),
+    );
+
+    userEvent.selectOptions(endConfidenceSelect, [""]);
+
+    expect(getValue(endDateInput)).toEqual("");
   });
 
   function getValue(input: HTMLElement) {
