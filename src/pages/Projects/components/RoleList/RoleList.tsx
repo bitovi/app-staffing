@@ -11,26 +11,19 @@ import {
   Role,
   useAssignmentMutations,
   useEmployees,
+  useRoleMutations,
   useSkills,
 } from "../../../../services/api";
 
-type NewRole = Partial<Omit<Role, "id">>;
-
 interface RoleListProps {
   project: Project;
-  createRole: (data: NewRole) => Promise<string | undefined>;
-  updateRole: (id: string, data: Partial<Role>) => Promise<void>;
-  destroyRole: (roleId: string) => Promise<void>;
 }
 
-export default function RoleList({
-  project,
-  createRole,
-  updateRole,
-  destroyRole,
-}: RoleListProps): JSX.Element {
+export default function RoleList({ project }: RoleListProps): JSX.Element {
   const skills = useSkills();
   const employees: Employee[] = useEmployees({ include: "skills" });
+
+  const { createRole, updateRole, destroyRole } = useRoleMutations();
   const { createAssignment } = useAssignmentMutations();
 
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
