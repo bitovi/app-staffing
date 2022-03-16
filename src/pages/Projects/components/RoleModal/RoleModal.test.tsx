@@ -11,8 +11,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText, getByTestId, getByRole, getAllByRole } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -50,8 +52,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -73,8 +77,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText, getAllByRole, getByTestId, queryByText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -106,8 +112,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText, getByRole, getAllByRole, getByTestId } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -166,8 +174,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -184,8 +194,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByTestId, getAllByTestId, queryByText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -209,8 +221,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByTestId, getAllByTestId } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -232,8 +246,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByTestId, getAllByTestId } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -266,11 +282,13 @@ describe("Pages/Projects/components/RoleModal", () => {
   });
 
   it("selects employees", async () => {
-    const { getByTestId, getByText, queryByText, getAllByLabelText } = render(
+    const { getByTestId, findByText, queryByText, getAllByLabelText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -284,7 +302,7 @@ describe("Pages/Projects/components/RoleModal", () => {
 
     const selectElement = getAllByLabelText("Employee Name")[0];
 
-    const selectItem = getSelectItem(selectElement, getByText);
+    const selectItem = getSelectItem(selectElement, findByText);
 
     await selectItem(employees[0].name);
 
@@ -294,15 +312,17 @@ describe("Pages/Projects/components/RoleModal", () => {
   it("selects employees and removes the right inputs when clickng on the remove button", async () => {
     const {
       getByTestId,
-      getByText,
+      findByText,
       queryByText,
       getAllByLabelText,
       getAllByTestId,
     } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -320,9 +340,9 @@ describe("Pages/Projects/components/RoleModal", () => {
     const selectElement2 = getAllByLabelText("Employee Name")[1];
     const selectElement3 = getAllByLabelText("Employee Name")[2];
 
-    const selectItem1 = getSelectItem(selectElement1, getByText);
-    const selectItem2 = getSelectItem(selectElement2, getByText);
-    const selectItem3 = getSelectItem(selectElement3, getByText);
+    const selectItem1 = getSelectItem(selectElement1, findByText);
+    const selectItem2 = getSelectItem(selectElement2, findByText);
+    const selectItem3 = getSelectItem(selectElement3, findByText);
 
     await selectItem1(employees[0].name);
     await selectItem2(employees[1].name);
@@ -347,8 +367,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByTestId, getByText, queryByText, queryByRole } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -405,8 +427,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByTestId } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -430,8 +454,10 @@ describe("Pages/Projects/components/RoleModal", () => {
     const { getByTestId } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
-        createAssignment={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
         onClose={() => true}
         isOpen={true}
         skills={skills}
@@ -460,12 +486,12 @@ describe("Pages/Projects/components/RoleModal", () => {
   const getSelectItem =
     (
       selectElement: HTMLElement,
-      getByText: (arg0: string) => Document | Node | Element | Window,
+      findByText: (arg0: string) => Promise<Document | Node | Element | Window>,
     ) =>
     async (itemText: string) => {
       const DOWN_ARROW = { keyCode: 40 };
       fireEvent.keyDown(selectElement, DOWN_ARROW);
-      await waitFor(() => getByText(itemText));
-      fireEvent.click(getByText(itemText));
+      const option = await findByText(itemText);
+      fireEvent.click(option);
     };
 });

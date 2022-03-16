@@ -89,7 +89,8 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role.endConfidence && `${role.endConfidence * 100}%`}
+            {(role.endConfidence || role.endConfidence === 0) &&
+              `${role.endConfidence * 100}%`}
           </Text>
         </Td>
         <Td>

@@ -21,8 +21,10 @@ export const Works: ComponentStory<typeof RoleModal> = () => {
       employees={employees}
       project={project}
       createRole={() => Promise.resolve("")}
-      createAssignment={() => Promise.resolve("")}
       updateRole={() => Promise.resolve()}
+      createAssignment={() => Promise.resolve("")}
+      updateAssignment={() => Promise.resolve()}
+      destroyAssignment={() => Promise.resolve("")}
     />
   );
 };

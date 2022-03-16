@@ -46,7 +46,6 @@ import parseISO from "date-fns/parseISO";
 import formatISO from "date-fns/formatISO";
 import range from "lodash/range";
 import omit from "lodash/omit";
-import isNil from "lodash/isNil";
 import { TrashIcon, SearchIcon, UserIcon } from "../../../assets";
 import styles from "./RoleModal.module.css";
 import { mutate } from "swr";
@@ -68,6 +67,16 @@ interface RoleModalProps {
     data: Partial<Role>,
     identifier: string,
   ) => Promise<void>;
+  updateAssignment: (
+    id: string,
+    data: Partial<Assignment>,
+    identifier?: string,
+  ) => Promise<void>;
+  destroyAssignment: (
+    id: string,
+    parentId?: string,
+    identifier?: string,
+  ) => void;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
@@ -82,7 +91,7 @@ interface RoleFormData {
   startDate: string;
   startConfidence?: number;
   endDate: string;
-  endConfidence?: number | null;
+  endConfidence?: number | string | null;
   assignments?: AssignmentFormData[];
 }
 
@@ -105,6 +114,8 @@ export default function RoleModal({
   roleToEdit,
   setRoleToEdit,
   updateRole,
+  updateAssignment,
+  destroyAssignment,
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
@@ -113,7 +124,7 @@ export default function RoleModal({
     startDate: "",
     startConfidence: 1,
     endDate: "",
-    endConfidence: null,
+    endConfidence: "",
     skillId: "",
     assignments: [],
   };
@@ -129,7 +140,7 @@ export default function RoleModal({
     reset,
     control,
     setValue,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<RoleFormData>({
     shouldUnregister: true,
     defaultValues: initialValues,
@@ -157,21 +168,17 @@ export default function RoleModal({
   });
   const roleEndConfidence = watch("endConfidence");
 
+  const roleAssignments = watch("assignments");
+
   const canSubmitForm = (): boolean => {
-    if (roleToEdit) {
-      if (
-        formatDate(roleToEdit.startDate) !== roleStartDate ||
-        roleToEdit.startConfidence !== roleStartConfidence ||
-        (roleToEdit.endDate &&
-          formatDate(roleToEdit.endDate) !== roleEndDate) ||
-        roleToEdit.endConfidence !== roleEndConfidence
-      ) {
-        return true;
+    if (roleAssignments) {
+      for (const assignment of roleAssignments) {
+        if (!assignment.employeeId || !assignment.startDate) {
+          return false;
+        }
       }
-      return false;
-    } else {
-      return roleStartDate && roleStartConfidence ? true : false;
     }
+    return !!(roleStartDate && roleStartConfidence && isDirty);
   };
 
   useEffect(() => {
@@ -201,7 +208,7 @@ export default function RoleModal({
 
   const handleEndDateEdgeCases = (endDate: string) => {
     if (endDate === "") {
-      setValue("endConfidence", null);
+      setValue("endConfidence", "");
     } else if (endDate && !roleEndConfidence) {
       setValue("endConfidence", 1);
     }
@@ -230,6 +237,19 @@ export default function RoleModal({
     remove(index);
   };
 
+  const resetForm = () => {
+    setTimeout(() => {
+      reset(initialValues);
+      if (roleToEdit && setRoleToEdit) setRoleToEdit(undefined);
+      setServerError(false);
+    });
+  };
+
+  const handleClose = async () => {
+    await resetForm();
+    onClose();
+  };
+
   const sanitizeAssignments = (
     assignments?: AssignmentFormData[],
   ): NewAssignment[] | undefined => {
@@ -247,35 +267,94 @@ export default function RoleModal({
     return;
   };
 
-  const resetForm = () => {
-    setTimeout(() => {
-      reset(initialValues);
-      if (roleToEdit && setRoleToEdit) setRoleToEdit(undefined);
-      setServerError(false);
-    });
-  };
+  const compareAssignmentsForEdit = async (
+    originalAssignments: Assignment[],
+    newData: AssignmentFormData[] | undefined,
+    role: Role,
+  ) => {
+    try {
+      const assignmentsFromForm = sanitizeAssignments(newData);
+      const assignmentsToAdd = [];
 
-  const handleClose = async () => {
-    await resetForm();
-    onClose();
+      if (assignmentsFromForm) {
+        for (const assignment of assignmentsFromForm) {
+          // If this role already has assignments, we search for each one to update if needed
+          const existingAssignmentIndex = originalAssignments.findIndex(
+            (original) => original.employee.id === assignment.employee?.id,
+          );
+          const existingAssignment =
+            originalAssignments[existingAssignmentIndex];
+
+          if (existingAssignment) {
+            // Assignment exists, we check if it needs to be updated
+            if (
+              existingAssignment &&
+              (assignment.startDate?.getTime() !==
+                existingAssignment.startDate?.getTime() ||
+                assignment.endDate?.getTime() !==
+                  existingAssignment.endDate?.getTime())
+            ) {
+              // If one of the fields of this assignment has changed, we send an update request
+              // If not, we do nothing
+              await updateAssignment(
+                existingAssignment.id,
+                {
+                  ...assignment,
+                  role: existingAssignment.role,
+                },
+                assignment.employee?.name,
+              );
+            }
+
+            // We then remove this assignment from the original array as we're done with it
+            originalAssignments.splice(existingAssignmentIndex, 1);
+          } else {
+            // If the assignment is not existing, we create a new one
+            assignmentsToAdd.push(assignment);
+          }
+        }
+      }
+
+      // If there is any assignment left in the original array, it means it's not in the form data and so
+      // we need to delete it
+      if (originalAssignments && originalAssignments.length > 0) {
+        for (const assignment of originalAssignments) {
+          await destroyAssignment(
+            assignment.id,
+            undefined,
+            assignment.employee.name,
+          );
+        }
+      }
+
+      // Finally, we create any assignment that has beed added
+      if (assignmentsToAdd && assignmentsToAdd.length > 0) {
+        await addAssignmentsToRole(assignmentsToAdd, role);
+      }
+
+      mutate(`/projects/${project?.id}`);
+    } catch (e) {
+      throw e;
+    }
   };
 
   const addAssignmentsToRole = async (
     assignments: NewAssignment[],
-    roleId: Role,
+    role: Role,
   ) => {
-    for (const assignment of assignments) {
-      if (assignment.employee && assignment.startDate) {
+    try {
+      for (const assignment of assignments) {
         await createAssignment(
           {
             ...assignment,
-            role: roleId,
+            role,
           },
           assignment.employee?.name,
         );
       }
+    } catch (e) {
+      throw e;
     }
-    mutate(`/projects/${project?.id}`);
   };
 
   const submitForm = async (data: RoleFormData) => {
@@ -290,8 +369,8 @@ export default function RoleModal({
           startDate: parseISO(data.startDate),
           startConfidence: data.startConfidence || 1,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          ...(isNil(data.endConfidence)
-            ? null
+          ...(!data.endConfidence && data.endConfidence !== 0
+            ? { endConfidence: null }
             : { endConfidence: Number(data.endConfidence) }),
         };
         const newRoleId = await createRole(
@@ -305,6 +384,7 @@ export default function RoleModal({
             ...newRole,
             id: newRoleId,
           });
+          mutate(`/projects/${project?.id}`);
         }
       }
 
@@ -326,11 +406,17 @@ export default function RoleModal({
           startDate: parseISO(data.startDate),
           startConfidence: data.startConfidence || 1,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          ...(isNil(data.endConfidence)
-            ? null
+          ...(!data.endConfidence && data.endConfidence !== 0
+            ? { endConfidence: null }
             : { endConfidence: Number(data.endConfidence) }),
         },
         roleToEdit.skills[0].name,
+      );
+
+      await compareAssignmentsForEdit(
+        roleToEdit.assignments || [],
+        data.assignments,
+        roleToEdit,
       );
     } catch (e) {
       throw e;
@@ -515,10 +601,9 @@ export default function RoleModal({
                                   ...theme,
                                   colors: {
                                     ...theme.colors,
-                                    primary: "#319795",
-                                    primary75: "#4BB1AF",
+                                    primary25: "#319795",
                                     primary50: "#64CAC8",
-                                    primary25: "#7EE4E2",
+                                    primary75: "#7EE4E2",
                                   },
                                 })}
                               />
@@ -584,18 +669,20 @@ export default function RoleModal({
             </FormControl>
           </VStack>
           <FormControl>
-            <Flex
+            <Button
               alignItems="center"
               flexDirection="row"
               cursor="pointer"
               _hover={{ color: "#2C7A7B" }}
+              _active={{ background: "transparent" }}
               width="fit-content"
+              background="transparent"
               onClick={addTeamMember}
               data-testid="add-team-member"
             >
               <AddIcon />
               <Text ml={2}>Add Team Member to this Role</Text>
-            </Flex>
+            </Button>
           </FormControl>
 
           {serverError && (

@@ -20,6 +20,31 @@
   background: rgba(196, 196, 196, 0.8);
 }
 
+.assignmentSelect div[class$="menu"] {
+  margin-top: 4px;
+}
+
 .assignmentSelect div[class$="menu"] div[class$="option"] {
   padding: 4px 34px;
+}
+
+.assignmentSelect div[class$="MenuList"] {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.assignmentSelect div[class$="MenuList"] div[class*="is-focused"] {
+  color: #ffffff;
+  background-color: #319795;
+}
+
+.assignmentSelect div[class$="MenuList"] div[class*="is-selected"] {
+  color: #319795;
+  background-color: transparent;
+  font-weight: bold;
+}
+
+.assignmentSelect div[class$="MenuList"] div[class*="is-selected"]:hover {
+  color: #ffffff;
+  background-color: #319795;
 }

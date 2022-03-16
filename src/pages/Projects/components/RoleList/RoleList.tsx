@@ -24,7 +24,8 @@ export default function RoleList({ project }: RoleListProps): JSX.Element {
   const employees: Employee[] = useEmployees({ include: "skills" });
 
   const { createRole, updateRole, destroyRole } = useRoleMutations();
-  const { createAssignment } = useAssignmentMutations();
+  const { createAssignment, updateAssignment, destroyAssignment } =
+    useAssignmentMutations();
 
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
 
@@ -72,6 +73,8 @@ export default function RoleList({ project }: RoleListProps): JSX.Element {
         roleToEdit={roleToEdit}
         setRoleToEdit={setRoleToEdit}
         updateRole={updateRole}
+        updateAssignment={updateAssignment}
+        destroyAssignment={destroyAssignment}
       />
 
       <DeleteRoleModal
