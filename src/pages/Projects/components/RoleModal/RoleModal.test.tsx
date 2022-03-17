@@ -530,7 +530,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     const startDateInput = getByTestId("startDateInput");
     userEvent.type(startDateInput, "2022-05-12");
 
-    let teamMemberRows = getAllByTestId("team-member-row");
+    const teamMemberRows = getAllByTestId("team-member-row");
     const assignmentStartDateInput = within(teamMemberRows[0]).getByLabelText(
       "Start Date",
     );
@@ -558,7 +558,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     const updateAssignment = jest.fn().mockResolvedValue(undefined);
     const destroyAssignment = jest.fn().mockResolvedValue("");
 
-    const { getByTestId, getByText, getAllByTestId, queryByRole } = render(
+    const { getByTestId, getByText, getAllByTestId } = render(
       <>
         <RoleModal
           createRole={() => Promise.resolve("")}
@@ -582,7 +582,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     const startDateInput = getByTestId("startDateInput");
     userEvent.type(startDateInput, "2022-05-12");
 
-    let teamMemberRows = getAllByTestId("team-member-row");
+    const teamMemberRows = getAllByTestId("team-member-row");
     const removeTeamMemberButton = within(teamMemberRows[0]).getByTestId(
       "remove-team-member",
     );
