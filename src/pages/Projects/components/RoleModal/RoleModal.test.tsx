@@ -1,6 +1,6 @@
 import { render, waitFor, within, fireEvent } from "@testing-library/react";
 import RoleModal from "./RoleModal";
-import { employees, skills, roles } from "../../../../mocks/fixtures";
+import { employees, skills, roles, projects } from "../../../../mocks/fixtures";
 import userEvent from "@testing-library/user-event";
 import formatISO from "date-fns/formatISO";
 
@@ -282,7 +282,7 @@ describe("Pages/Projects/components/RoleModal", () => {
   });
 
   it("selects employees", async () => {
-    const { getByTestId, findByText, queryByText, getAllByLabelText } = render(
+    const { getByTestId, getByText, queryByText, getAllByLabelText } = render(
       <RoleModal
         createRole={() => Promise.resolve("")}
         updateRole={() => Promise.resolve()}
@@ -301,18 +301,15 @@ describe("Pages/Projects/components/RoleModal", () => {
     userEvent.click(addButton);
 
     const selectElement = getAllByLabelText("Employee Name")[0];
-
-    const selectItem = getSelectItem(selectElement, findByText);
-
-    await selectItem(employees[0].name);
+    selectOption(selectElement, employees[0].name, getByText);
 
     expect(queryByText(employees[0].name)).toBeInTheDocument();
   });
 
-  it("selects employees and removes the right inputs when clickng on the remove button", async () => {
+  it("selects employees and removes the right inputs when clicking on the remove button", async () => {
     const {
       getByTestId,
-      findByText,
+      getByText,
       queryByText,
       getAllByLabelText,
       getAllByTestId,
@@ -337,16 +334,13 @@ describe("Pages/Projects/components/RoleModal", () => {
     userEvent.click(addButton);
 
     const selectElement1 = getAllByLabelText("Employee Name")[0];
+    selectOption(selectElement1, employees[0].name, getByText);
+
     const selectElement2 = getAllByLabelText("Employee Name")[1];
+    selectOption(selectElement2, employees[1].name, getByText);
+
     const selectElement3 = getAllByLabelText("Employee Name")[2];
-
-    const selectItem1 = getSelectItem(selectElement1, findByText);
-    const selectItem2 = getSelectItem(selectElement2, findByText);
-    const selectItem3 = getSelectItem(selectElement3, findByText);
-
-    await selectItem1(employees[0].name);
-    await selectItem2(employees[1].name);
-    await selectItem3(employees[2].name);
+    selectOption(selectElement3, employees[2].name, getByText);
 
     expect(queryByText(employees[0].name)).toBeInTheDocument();
     expect(queryByText(employees[1].name)).toBeInTheDocument();
@@ -411,7 +405,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     const addButton = getByText(/Save & Close/g);
     expect(addButton).toHaveAttribute("aria-disabled", "true");
 
-    // After the suer changes an input, the button becomes enabled
+    // After the user changes an input, the button becomes enabled
     userEvent.type(startDateInput, "2035-05-12");
     expect(addButton).not.toHaveAttribute("aria-disabled", "true");
 
@@ -479,19 +473,154 @@ describe("Pages/Projects/components/RoleModal", () => {
     expect(getValue(endDateInput)).toEqual("");
   });
 
+  it("handles server errors for create role", async () => {
+    const createRole = jest.fn().mockRejectedValue(new Error("Async error"));
+
+    const { getByTestId, getByText } = render(
+      <RoleModal
+        createRole={createRole}
+        updateRole={() => Promise.resolve()}
+        createAssignment={() => Promise.resolve("")}
+        updateAssignment={() => Promise.resolve()}
+        destroyAssignment={() => Promise.resolve("")}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+        project={projects[0]}
+      />,
+    );
+
+    const submitButton = getByText("Save & Close");
+
+    const startDateInput = getByTestId("startDateInput");
+    userEvent.type(startDateInput, "2022-05-12");
+
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(getByTestId("serviceError")).toBeInTheDocument();
+    });
+  });
+
+  it("sends the right requests when editing team members", async () => {
+    const createAssignment = jest.fn().mockResolvedValue("");
+    const updateAssignment = jest.fn().mockResolvedValue(undefined);
+    const destroyAssignment = jest.fn().mockResolvedValue("");
+
+    const { getByTestId, getByText, getAllByText, getAllByTestId } = render(
+      <RoleModal
+        createRole={() => Promise.resolve("")}
+        updateRole={() => Promise.resolve()}
+        createAssignment={createAssignment}
+        updateAssignment={updateAssignment}
+        destroyAssignment={destroyAssignment}
+        onClose={() => true}
+        isOpen={true}
+        skills={skills}
+        employees={employees}
+        project={projects[0]}
+        roleToEdit={roles[0]}
+      />,
+    );
+
+    const submitButton = getByText("Save & Close");
+    const addTeamMemberButton = getByTestId("add-team-member");
+
+    const startDateInput = getByTestId("startDateInput");
+    userEvent.type(startDateInput, "2022-05-12");
+
+    let teamMemberRows = getAllByTestId("team-member-row");
+    const assignmentStartDateInput = within(teamMemberRows[0]).getByLabelText(
+      "Start Date",
+    );
+    userEvent.type(assignmentStartDateInput, "2022-05-12");
+
+    const selectElement1 = within(teamMemberRows[0]).getByLabelText(
+      "Employee Name",
+    );
+    selectOptionMultiple(selectElement1, employees[0].name, getAllByText);
+
+    userEvent.click(addTeamMemberButton);
+    userEvent.click(addTeamMemberButton);
+
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(updateAssignment).toBeCalledTimes(1);
+      expect(createAssignment).toBeCalledTimes(2);
+      expect(destroyAssignment).toBeCalledTimes(0);
+    });
+  });
+
+  it("successfully destroys assignment and send other update requests", async () => {
+    const createAssignment = jest.fn().mockResolvedValue("");
+    const updateAssignment = jest.fn().mockResolvedValue(undefined);
+    const destroyAssignment = jest.fn().mockResolvedValue("");
+
+    const { getByTestId, getByText, getAllByTestId, queryByRole } = render(
+      <>
+        <RoleModal
+          createRole={() => Promise.resolve("")}
+          updateRole={() => Promise.resolve()}
+          createAssignment={createAssignment}
+          updateAssignment={updateAssignment}
+          destroyAssignment={destroyAssignment}
+          onClose={() => true}
+          isOpen={true}
+          skills={skills}
+          employees={employees}
+          project={projects[0]}
+          roleToEdit={roles[1]}
+        />
+      </>,
+    );
+
+    const submitButton = getByText("Save & Close");
+    const addTeamMemberButton = getByTestId("add-team-member");
+
+    const startDateInput = getByTestId("startDateInput");
+    userEvent.type(startDateInput, "2022-05-12");
+
+    let teamMemberRows = getAllByTestId("team-member-row");
+    const removeTeamMemberButton = within(teamMemberRows[0]).getByTestId(
+      "remove-team-member",
+    );
+    userEvent.click(removeTeamMemberButton);
+
+    userEvent.click(addTeamMemberButton);
+    userEvent.click(addTeamMemberButton);
+
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(updateAssignment).toBeCalledTimes(0);
+      expect(destroyAssignment).toBeCalledTimes(1);
+      expect(createAssignment).toBeCalledTimes(2);
+    });
+  });
+
   function getValue(input: HTMLElement) {
     return (input as HTMLInputElement).value;
   }
 
-  const getSelectItem =
-    (
-      selectElement: HTMLElement,
-      findByText: (arg0: string) => Promise<Document | Node | Element | Window>,
-    ) =>
-    async (itemText: string) => {
-      const DOWN_ARROW = { keyCode: 40 };
-      fireEvent.keyDown(selectElement, DOWN_ARROW);
-      const option = await findByText(itemText);
-      fireEvent.click(option);
-    };
+  const selectOption = (
+    selectElement: HTMLElement,
+    option: string,
+    getByText: (arg0: string) => Document | Node | Element | Window,
+  ) => {
+    fireEvent.focus(selectElement);
+    fireEvent.keyDown(selectElement, { key: "ArrowDown", code: 40 });
+    fireEvent.click(getByText(option));
+  };
+
+  const selectOptionMultiple = (
+    selectElement: HTMLElement,
+    option: string,
+    getAllByText: (arg0: string) => Document[] | Node[] | Element[] | Window[],
+  ) => {
+    fireEvent.focus(selectElement);
+    fireEvent.keyDown(selectElement, { key: "ArrowDown", code: 40 });
+    fireEvent.click(getAllByText(option)[0]);
+  };
 });
