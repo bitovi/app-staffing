@@ -6,7 +6,7 @@ import { Role } from "../Roles";
 
 export interface Assignment extends BaseData {
   id: string;
-  startDate?: Date;
+  startDate: Date;
   endDate?: Date;
 
   employee: Employee;

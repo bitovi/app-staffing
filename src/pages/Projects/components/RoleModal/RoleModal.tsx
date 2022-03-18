@@ -46,7 +46,6 @@ import parseISO from "date-fns/parseISO";
 import formatISO from "date-fns/formatISO";
 import range from "lodash/range";
 import omit from "lodash/omit";
-import isNil from "lodash/isNil";
 import { TrashIcon, SearchIcon, UserIcon } from "../../../assets";
 import styles from "./RoleModal.module.css";
 import { mutate } from "swr";
@@ -68,6 +67,16 @@ interface RoleModalProps {
     data: Partial<Role>,
     identifier: string,
   ) => Promise<void>;
+  updateAssignment: (
+    id: string,
+    data: Partial<Assignment>,
+    identifier?: string,
+  ) => Promise<void>;
+  destroyAssignment: (
+    id: string,
+    parentId?: string,
+    identifier?: string,
+  ) => void;
   onClose: () => void;
   isOpen: boolean;
   skills: Skill[];
@@ -82,13 +91,14 @@ interface RoleFormData {
   startDate: string;
   startConfidence?: number;
   endDate: string;
-  endConfidence?: number | null;
+  endConfidence?: number | string | null;
   assignments?: AssignmentFormData[];
 }
 
 type SaveButtonStatus = "idle" | "pending";
 
 interface AssignmentFormData {
+  assignmentId?: string;
   employeeId?: string;
   startDate: string;
   endDate?: string;
@@ -105,6 +115,8 @@ export default function RoleModal({
   roleToEdit,
   setRoleToEdit,
   updateRole,
+  updateAssignment,
+  destroyAssignment,
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
@@ -113,7 +125,7 @@ export default function RoleModal({
     startDate: "",
     startConfidence: 1,
     endDate: "",
-    endConfidence: null,
+    endConfidence: "",
     skillId: "",
     assignments: [],
   };
@@ -129,7 +141,7 @@ export default function RoleModal({
     reset,
     control,
     setValue,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<RoleFormData>({
     shouldUnregister: true,
     defaultValues: initialValues,
@@ -157,27 +169,24 @@ export default function RoleModal({
   });
   const roleEndConfidence = watch("endConfidence");
 
+  const roleAssignments = watch("assignments");
+
   const canSubmitForm = (): boolean => {
-    if (roleToEdit) {
-      if (
-        formatDate(roleToEdit.startDate) !== roleStartDate ||
-        roleToEdit.startConfidence !== roleStartConfidence ||
-        (roleToEdit.endDate &&
-          formatDate(roleToEdit.endDate) !== roleEndDate) ||
-        roleToEdit.endConfidence !== roleEndConfidence
-      ) {
-        return true;
+    if (roleAssignments) {
+      for (const assignment of roleAssignments) {
+        if (!assignment.employeeId || !assignment.startDate) {
+          return false;
+        }
       }
-      return false;
-    } else {
-      return roleStartDate && roleStartConfidence ? true : false;
     }
+    return !!(roleStartDate && roleStartConfidence && isDirty);
   };
 
   useEffect(() => {
     function parseAssignmentsInitialValues(assignments: Assignment[]) {
       return assignments.map((assignment) => ({
-        employeeId: assignment.employee.id,
+        assignmentId: assignment.id,
+        employeeId: assignment.employee?.id,
         startDate: assignment.startDate ? formatDate(assignment.startDate) : "",
         endDate: assignment.endDate ? formatDate(assignment.endDate) : "",
       }));
@@ -201,7 +210,7 @@ export default function RoleModal({
 
   const handleEndDateEdgeCases = (endDate: string) => {
     if (endDate === "") {
-      setValue("endConfidence", null);
+      setValue("endConfidence", "");
     } else if (endDate && !roleEndConfidence) {
       setValue("endConfidence", 1);
     }
@@ -217,7 +226,8 @@ export default function RoleModal({
 
   const addTeamMember = () => {
     const newAssignment: AssignmentFormData = {
-      employeeId: undefined,
+      assignmentId: "",
+      employeeId: "",
       startDate: "",
       endDate: "",
     };
@@ -228,23 +238,6 @@ export default function RoleModal({
 
   const removeTeamMember = (index: number) => {
     remove(index);
-  };
-
-  const sanitizeAssignments = (
-    assignments?: AssignmentFormData[],
-  ): NewAssignment[] | undefined => {
-    if (assignments) {
-      return assignments.map((assignment) => ({
-        startDate: assignment.startDate
-          ? parseISO(assignment.startDate)
-          : undefined,
-        endDate: assignment.endDate ? parseISO(assignment.endDate) : undefined,
-        employee: employees.find(
-          (employee) => employee.id === assignment.employeeId,
-        ),
-      }));
-    }
-    return;
   };
 
   const resetForm = () => {
@@ -260,22 +253,119 @@ export default function RoleModal({
     onClose();
   };
 
+  const sanitizeAssignments = (
+    assignments?: AssignmentFormData[],
+  ): NewAssignment[] | undefined => {
+    if (assignments) {
+      return assignments.map((assignment) => sanitizeAssignment(assignment));
+    }
+    return;
+  };
+
+  const sanitizeAssignment = (
+    assignment: AssignmentFormData,
+  ): NewAssignment => {
+    return {
+      startDate: assignment.startDate
+        ? parseISO(assignment.startDate)
+        : undefined,
+      endDate: assignment.endDate ? parseISO(assignment.endDate) : undefined,
+      employee: employees.find(
+        (employee) => employee.id === assignment.employeeId,
+      ),
+    };
+  };
+
+  const compareAssignmentsForEdit = async (
+    originalAssignments: Assignment[],
+    newData: AssignmentFormData[] | undefined,
+    role: Role,
+  ) => {
+    try {
+      const assignmentsToAdd = [];
+
+      if (newData) {
+        for (const assignment of newData) {
+          // If this role already has assignments, we search for each one to update if needed
+          const existingAssignmentIndex = originalAssignments.findIndex(
+            (original) => original.id === assignment.assignmentId,
+          );
+          const existingAssignment =
+            originalAssignments[existingAssignmentIndex];
+
+          const newAssignment = sanitizeAssignment(assignment);
+
+          if (existingAssignment) {
+            // Assignment exists, we check if it needs to be updated
+            if (
+              existingAssignment &&
+              (newAssignment.startDate?.getTime() !==
+                existingAssignment.startDate?.getTime() ||
+                newAssignment.endDate?.getTime() !==
+                  existingAssignment.endDate?.getTime() ||
+                newAssignment.employee?.id !== existingAssignment.employee.id)
+            ) {
+              // If one of the fields of this assignment has changed, we send an update request
+              // If not, we do nothing
+              await updateAssignment(
+                existingAssignment.id,
+                {
+                  ...newAssignment,
+                  role: existingAssignment.role,
+                },
+                newAssignment.employee?.name,
+              );
+            }
+
+            // We then remove this assignment from the original array as we're done with it
+            originalAssignments.splice(existingAssignmentIndex, 1);
+          } else {
+            // If the assignment is not existing, we create a new one
+            assignmentsToAdd.push(newAssignment);
+          }
+        }
+      }
+
+      // If there is any assignment left in the original array, it means it's not in the form data and so
+      // we need to delete it
+      if (originalAssignments && originalAssignments.length > 0) {
+        for (const assignment of originalAssignments) {
+          await destroyAssignment(
+            assignment.id,
+            undefined,
+            assignment.employee.name,
+          );
+        }
+      }
+
+      // Finally, we create any assignment that has beed added
+      if (assignmentsToAdd && assignmentsToAdd.length > 0) {
+        await addAssignmentsToRole(assignmentsToAdd, role);
+      }
+
+      mutate(`/projects/${project?.id}`);
+    } catch (e) {
+      throw e;
+    }
+  };
+
   const addAssignmentsToRole = async (
     assignments: NewAssignment[],
-    roleId: Role,
+    role: Role,
   ) => {
-    for (const assignment of assignments) {
-      if (assignment.employee && assignment.startDate) {
+    try {
+      for (const assignment of assignments) {
         await createAssignment(
           {
             ...assignment,
-            role: roleId,
+            role,
           },
           assignment.employee?.name,
         );
       }
+    } catch (e) {
+      throw e;
     }
-    mutate(`/projects/${project?.id}`);
   };
 
   const submitForm = async (data: RoleFormData) => {
@@ -290,8 +380,8 @@ export default function RoleModal({
           startDate: parseISO(data.startDate),
           startConfidence: data.startConfidence || 1,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          ...(isNil(data.endConfidence)
-            ? null
+          ...(!data.endConfidence && data.endConfidence !== 0
+            ? { endConfidence: null }
             : { endConfidence: Number(data.endConfidence) }),
         };
         const newRoleId = await createRole(
@@ -305,6 +395,7 @@ export default function RoleModal({
             ...newRole,
             id: newRoleId,
           });
+          mutate(`/projects/${project?.id}`);
         }
       }
 
@@ -326,11 +417,17 @@ export default function RoleModal({
           startDate: parseISO(data.startDate),
           startConfidence: data.startConfidence || 1,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          ...(isNil(data.endConfidence)
-            ? null
+          ...(!data.endConfidence && data.endConfidence !== 0
+            ? { endConfidence: null }
             : { endConfidence: Number(data.endConfidence) }),
         },
         roleToEdit.skills[0].name,
+      );
+
+      await compareAssignmentsForEdit(
+        roleToEdit.assignments || [],
+        data.assignments,
+        roleToEdit,
       );
     } catch (e) {
       throw e;
@@ -482,6 +579,13 @@ export default function RoleModal({
                         width="100%"
                         data-testid="team-member-row"
                       >
+                        {/* Hidden input to store existing assignment ids, used for updating assignments */}
+                        <input
+                          type="hidden"
+                          {...register(
+                            `assignments.${index}.assignmentId` as const,
+                          )}
+                        />
                         <FormControl width="40%">
                           {index < 1 ? (
                             <FormLabel id="employee-name">
@@ -515,10 +619,9 @@ export default function RoleModal({
                                   ...theme,
                                   colors: {
                                     ...theme.colors,
-                                    primary: "#319795",
-                                    primary75: "#4BB1AF",
+                                    primary25: "#319795",
                                     primary50: "#64CAC8",
-                                    primary25: "#7EE4E2",
+                                    primary75: "#7EE4E2",
                                   },
                                 })}
                               />
@@ -526,17 +629,21 @@ export default function RoleModal({
                           />
                         </FormControl>
                         <FormControl width="28%">
-                          {index < 1 ? <FormLabel>Start Date</FormLabel> : null}
+                          {index < 1 ? (
+                            <FormLabel id="assignment-start-date">
+                              Start Date
+                            </FormLabel>
+                          ) : null}
                           <Input
                             {...register(
                               `assignments.${index}.startDate` as const,
                             )}
                             id={`assignment${index}_start_date`}
                             type="date"
-                            data-testid={`assignment${index}_startDateInput`}
+                            aria-labelledby="assignment-start-date"
                           />
                         </FormControl>
-                        <FormControl width="28%">
+                        <FormControl width="28%" id="assignment-end-date">
                           {index < 1 ? <FormLabel>End Date</FormLabel> : null}
                           <Input
                             {...register(
@@ -544,7 +651,7 @@ export default function RoleModal({
                             )}
                             id={`assignment${index}_end_date`}
                             type="date"
-                            data-testid={`assignment${index}_endDateInput`}
+                            aria-labelledby="assignment-end-date"
                           />
                         </FormControl>
                         <IconButton
@@ -584,22 +691,29 @@ export default function RoleModal({
             </FormControl>
           </VStack>
           <FormControl>
-            <Flex
+            <Button
               alignItems="center"
               flexDirection="row"
               cursor="pointer"
               _hover={{ color: "#2C7A7B" }}
+              _active={{ background: "transparent" }}
               width="fit-content"
+              background="transparent"
               onClick={addTeamMember}
               data-testid="add-team-member"
             >
               <AddIcon />
               <Text ml={2}>Add Team Member to this Role</Text>
-            </Flex>
+            </Button>
           </FormControl>
 
           {serverError && (
-            <Flex justifyContent="center" width="100%" marginTop="20px">
+            <Flex
+              justifyContent="center"
+              width="100%"
+              marginTop="20px"
+              data-testid="serviceError"
+            >
               <ServiceError
                 bg="red.100"
                 color="gray.700"
