@@ -66,6 +66,7 @@ interface RoleModalProps {
     id: string,
     data: Partial<Role>,
     identifier: string,
+    undefinedValues: string[],
   ) => Promise<void>;
   updateAssignment: (
     id: string,
@@ -91,7 +92,7 @@ interface RoleFormData {
   startDate: string;
   startConfidence?: number;
   endDate: string;
-  endConfidence?: number | string | null;
+  endConfidence?: number | string;
   assignments?: AssignmentFormData[];
 }
 
@@ -141,7 +142,7 @@ export default function RoleModal({
     reset,
     control,
     setValue,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, dirtyFields },
   } = useForm<RoleFormData>({
     shouldUnregister: true,
     defaultValues: initialValues,
@@ -311,7 +312,7 @@ export default function RoleModal({
                 existingAssignment.id,
                 {
                   ...newAssignment,
-                  role: existingAssignment.role,
+                  role: omit(roleToEdit, ["assignments"]),
                 },
                 newAssignment.employee?.name,
               );
@@ -358,7 +359,7 @@ export default function RoleModal({
         await createAssignment(
           {
             ...assignment,
-            role,
+            role: omit(role, ["assignments"]),
           },
           assignment.employee?.name,
         );
@@ -381,7 +382,7 @@ export default function RoleModal({
           startConfidence: data.startConfidence || 1,
           endDate: data.endDate ? parseISO(data.endDate) : undefined,
           ...(!data.endConfidence && data.endConfidence !== 0
-            ? { endConfidence: null }
+            ? { endConfidence: undefined }
             : { endConfidence: Number(data.endConfidence) }),
         };
         const newRoleId = await createRole(
@@ -407,29 +408,63 @@ export default function RoleModal({
     }
   };
 
+  const hasRoleChanged = () => {
+    const roleFields = [
+      "startDate",
+      "startConfidence",
+      "endDate",
+      "endConfidence",
+    ];
+    if (dirtyFields) {
+      const dirtyFieldsTyped: Record<
+        string,
+        boolean | Record<string, boolean>[]
+      > = dirtyFields;
+      const changedFields = Object.keys(dirtyFields).filter(
+        (key) => dirtyFieldsTyped[key],
+      );
+      return (
+        dirtyFields &&
+        changedFields &&
+        changedFields.some((field) => roleFields.includes(field))
+      );
+    }
+    return false;
+  };
+
+  const hasAssignmentsChanged = () => {
+    return dirtyFields && dirtyFields.assignments;
+  };
+
   async function submitEditRole(roleToEdit: Role, data: RoleFormData) {
     try {
-      await updateRole(
-        roleToEdit.id,
-        {
-          project: project,
-          skills: roleToEdit.skills,
-          startDate: parseISO(data.startDate),
-          startConfidence: data.startConfidence || 1,
-          endDate: data.endDate ? parseISO(data.endDate) : undefined,
-          ...(!data.endConfidence && data.endConfidence !== 0
-            ? { endConfidence: null }
-            : { endConfidence: Number(data.endConfidence) }),
-        },
-        roleToEdit.skills[0].name,
-      );
+      if (hasRoleChanged()) {
+        await updateRole(
+          roleToEdit.id,
+          {
+            project: omit(project, ["roles"]),
+            skills: roleToEdit.skills,
+            startDate: parseISO(data.startDate),
+            startConfidence: data.startConfidence || 1,
+            endDate: data.endDate ? parseISO(data.endDate) : undefined,
+            ...(!data.endConfidence && data.endConfidence !== 0
+              ? { endConfidence: undefined }
+              : { endConfidence: Number(data.endConfidence) }),
+          },
+          roleToEdit.skills[0].name,
+          ["end_date", "end_confidence"],
+        );
+      }
 
-      await compareAssignmentsForEdit(
-        roleToEdit.assignments || [],
-        data.assignments,
-        roleToEdit,
-      );
+      if (hasAssignmentsChanged()) {
+        await compareAssignmentsForEdit(
+          roleToEdit.assignments || [],
+          data.assignments,
+          roleToEdit,
+        );
+      }
     } catch (e) {
+      await mutate(`/projects/${project?.id}`);
       throw e;
     }
   }

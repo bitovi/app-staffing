@@ -15,6 +15,7 @@ export default async function fetcher<T>(
   url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: Record<string, any>,
+  undefinedValues?: string[],
 ): Promise<T | undefined> {
   const headers: Record<string, string> = {
     "Content-Type": "application/vnd.api+json",
@@ -25,10 +26,16 @@ export default async function fetcher<T>(
     headers.Authorization = `BASIC ${API_AUTH_TOKEN}`;
   }
 
+  const replacer = (key: string, value: string) => {
+    return undefinedValues?.includes(key) && typeof value === "undefined"
+      ? null
+      : value;
+  };
+
   const response = await fetch(`${API_BASE_URL}${url}`, {
     method,
     headers,
-    body: body && JSON.stringify(body),
+    body: body && JSON.stringify(body, replacer),
   });
 
   if (!response.ok) {

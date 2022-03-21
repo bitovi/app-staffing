@@ -1,4 +1,4 @@
-import type { Role } from "../../../../services/api";
+import type { Assignment, Role } from "../../../../services/api";
 import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
 import Badge from "../../../../components/Badge";
@@ -25,6 +25,14 @@ export default function RoleCard({
     "UI Designer": "#435BAE",
     "UX Designer": "#AE436A",
     "Project Management": "#B55F10",
+  };
+
+  const filterAssignments = (assignments: Assignment[]) => {
+    return assignments.filter(
+      (assignment) =>
+        !assignment.endDate ||
+        assignment.endDate.getTime() > new Date().getTime(),
+    );
   };
 
   return (
@@ -101,8 +109,9 @@ export default function RoleCard({
               fontSize="16px"
               lineHeight="20px"
               letterSpacing="0.25px"
+              data-testid="assignments-column"
             >
-              {role.assignments.map(
+              {filterAssignments(role.assignments).map(
                 (assignment, index) =>
                   `${index ? ", " : ""}${assignment?.employee?.name || ""}`,
               )}

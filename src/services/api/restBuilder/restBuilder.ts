@@ -177,12 +177,18 @@ export default function restBuilder<Data extends BaseData>(
     );
 
     const update = useCallback(
-      async (id: string, data: Partial<Data>, identifier?: string) => {
+      async (
+        id: string,
+        data: Partial<Data>,
+        identifier?: string,
+        undefinedValues?: string[],
+      ) => {
         const payload = serializer.serialize(type, { ...data, id });
         const response = await fetcher<JSONAPIDocument>(
           "PATCH",
           `${path}/${id}`,
           payload,
+          undefinedValues,
         );
 
         if (response) {
