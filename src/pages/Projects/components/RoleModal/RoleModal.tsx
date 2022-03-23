@@ -47,7 +47,7 @@ import formatISO from "date-fns/formatISO";
 import range from "lodash/range";
 import omit from "lodash/omit";
 import { TrashIcon, SearchIcon, UserIcon } from "../../../assets";
-import styles from "./RoleModal.module.css";
+import styles from "./RoleModal.module.scss";
 import { mutate } from "swr";
 import { ServiceError } from "../../../../components/ServiceError";
 
