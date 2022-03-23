@@ -53,8 +53,6 @@ describe("Pages/Projects/components/RoleCard", () => {
 
     const assignmentColumn = getByTestId("assignments-column");
 
-    console.log(assignmentColumn.innerHTML);
-
     expect(assignmentColumn.innerHTML).toBe(
       role?.assignments?.[0].employee.name,
     );

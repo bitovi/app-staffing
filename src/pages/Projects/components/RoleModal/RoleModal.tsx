@@ -47,7 +47,7 @@ import formatISO from "date-fns/formatISO";
 import range from "lodash/range";
 import omit from "lodash/omit";
 import { TrashIcon, SearchIcon, UserIcon } from "../../../assets";
-import styles from "./RoleModal.module.css";
+import "./RoleModal.module.css";
 import { mutate } from "swr";
 import { ServiceError } from "../../../../components/ServiceError";
 
@@ -639,8 +639,7 @@ export default function RoleModal({
                                   (c) => c.value === field.value,
                                 )}
                                 onChange={(val) => field.onChange(val?.value)}
-                                className={styles.assignmentSelect}
-                                classNamePrefix={styles.assignmentSelect}
+                                classNamePrefix="assignmentSelect"
                                 placeholder="Assign Employee"
                                 blurInputOnSelect
                                 components={{
