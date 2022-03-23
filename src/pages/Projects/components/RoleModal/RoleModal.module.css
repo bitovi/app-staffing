@@ -1,46 +1,51 @@
-:global(.assignmentSelect__control) svg {
+.assignmentSelect :global(.assignmentSelect__control) svg {
   margin-left: 10px;
   opacity: 0.5;
 }
 
-:global(.assignmentSelect__value-container) {
+.assignmentSelect :global(.assignmentSelect__value-container) {
   padding: 2px 5px;
 }
 
-:global(.assignmentSelect__menu) {
+.assignmentSelect :global(.assignmentSelect__menu) {
   margin-top: 4px;
 }
 
-:global(.assignmentSelect__menu-list) {
+.assignmentSelect :global(.assignmentSelect__menu-list) {
   padding-top: 0;
   padding-bottom: 0;
 }
 
-:global(.assignmentSelect__menu-list)::-webkit-scrollbar {
+.assignmentSelect :global(.assignmentSelect__menu-list)::-webkit-scrollbar {
   width: 6px;
 }
 
-:global(.assignmentSelect__menu-list)::-webkit-scrollbar-thumb {
+.assignmentSelect
+  :global(.assignmentSelect__menu-list)::-webkit-scrollbar-thumb {
   border-radius: 8px;
   background: rgba(196, 196, 196, 0.8);
 }
 
-:global(.assignmentSelect__menu-list .assignmentSelect__option) {
+.assignmentSelect
+  :global(.assignmentSelect__menu-list .assignmentSelect__option) {
   padding: 4px 34px;
 }
 
-:global(.assignmentSelect__menu-list .assignmentSelect__option--is-focused) {
+.assignmentSelect
+  :global(.assignmentSelect__menu-list .assignmentSelect__option--is-focused) {
   color: #ffffff;
   background-color: #319795;
 }
 
-:global(.assignmentSelect__menu-list .assignmentSelect__option--is-selected) {
+.assignmentSelect
+  :global(.assignmentSelect__menu-list .assignmentSelect__option--is-selected) {
   color: #319795;
   background-color: transparent;
   font-weight: bold;
 }
 
-:global(.assignmentSelect__menu-list
+.assignmentSelect
+  :global(.assignmentSelect__menu-list
     .assignmentSelect__option--is-selected):hover {
   color: #ffffff;
   background-color: #319795;
