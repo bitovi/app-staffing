@@ -38,6 +38,13 @@ export default function RoleList({ project }: RoleListProps): JSX.Element {
     }
   }, [roleToEdit, project]);
 
+  // To update the role data in the edit modal (in case one of the requests results in a server error)
+  useEffect(() => {
+    if (roleToEdit) {
+      setRoleToEdit(project.roles?.find((role) => role.id === roleToEdit.id));
+    }
+  }, [project, roleToEdit]);
+
   const lastRoleIndex = Array.isArray(project?.roles)
     ? project?.roles.length - 1
     : -1;
