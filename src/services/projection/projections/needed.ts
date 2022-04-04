@@ -48,22 +48,27 @@ export const calculateNeededForSkillForPeriod = (
     ),
   );
 
+  // If some roles have ended in the last period, we need to add their end confidences to this period
   let hasPrevEncConfidence = false;
   if (prevRoleEndConfidence) {
     arrayOfDays.push(Array(numOfDays).fill(prevRoleEndConfidence));
     hasPrevEncConfidence = true;
   }
 
+  // Final values
   let projectionNeeded = 0;
   let nextPeriodEndConfidence = 0;
 
   for (let i = 0; i < roles.length; i++) {
     const role = roles[i];
 
+    // We add an empty array for each role
     arrayOfDays.push([]);
     const arrayOfDaysIndex = hasPrevEncConfidence ? i + 1 : i;
     const daysInPeriod = arrayOfDays[arrayOfDaysIndex];
 
+    // We first check if the role happends during this time period
+    // If not we fill the array with 0s as no one would be needed
     if (
       doDatesOverlap(
         role.startDate,
@@ -74,19 +79,24 @@ export const calculateNeededForSkillForPeriod = (
     ) {
       let orderedAssignments: Assignment[] = [];
       if (role.assignments && role.assignments.length > 0) {
+        // If the role has assignments, we first sort them by date to be able to compare them
         orderedAssignments = sortBy(role.assignments, ["startDate"]);
 
+        // We iterate through each day of the week/month/quarter
         daysLoop: for (
           let j = new Date(periodStart);
           j <= periodEnd;
           j.setDate(j.getDate() + 1)
         ) {
           if (role.endDate) {
+            // If the role ends we add its end confidence so we can carry it to next period
             if (datesAreOnSameDay(j, role.endDate)) {
               nextPeriodEndConfidence += role.endConfidence || 0;
             }
           }
 
+          // For each assignment, we check if its start date is before or equal to the current date
+          // If it is true, it means someone is assigned for this role and so the needed value should be 0
           for (const assignment of orderedAssignments) {
             if (
               assignment.startDate <= j &&
@@ -96,9 +106,13 @@ export const calculateNeededForSkillForPeriod = (
               continue daysLoop;
             }
           }
+
+          // If there is no assignment for this day, the needed value is the role's start confidence
           daysInPeriod.push(role.startConfidence);
         }
       } else {
+        // Similarly, if the role has no assignments, all days of this period will have a needed value
+        // equal to the role's start confidence
         arrayOfDays[arrayOfDaysIndex] = Array(numOfDays).fill(
           role.startConfidence,
         );
@@ -108,10 +122,14 @@ export const calculateNeededForSkillForPeriod = (
     }
   }
 
+  // At the end we add up all arrays together so we can have an array of worst days for this period
   const resultArray = arrayOfDays.reduce((a, b) =>
     a.map((c, i) => +(c + b[i]).toFixed(2)),
   );
 
+  // And then we take the max of that array which will be the single worst day of the period
+  // That is what we will display in the dashboard
+  // We also return any endConfidence to be used in the next period
   projectionNeeded = Math.max(...resultArray);
   return { projectionNeeded, nextPeriodEndConfidence };
 };
