@@ -108,8 +108,19 @@ export default function requestCreator<Resource extends BaseResource>(
         count = 25,
       } = deparam(req.url.searchParams.toString());
 
+      const formatedFilter = { ...filter };
+      if (filter) {
+        formatedFilter.attributes = {};
+        for (const key in filter) {
+          if (key !== "id" && key !== "relationships") {
+            formatedFilter.attributes[key] = filter[key];
+            delete formatedFilter[key];
+          }
+        }
+      }
+
       const listData = await store.getListData({
-        filter,
+        filter: formatedFilter,
         sort,
         page: {
           start: (page - 1) * count,

@@ -11,6 +11,8 @@ import fetcher from "./fetcher";
 
 import serializer, { SerializerTypes } from "./serializer";
 import parseDate from "./parseDate";
+import formatISO from "date-fns/formatISO";
+import snakeCase from "lodash/snakeCase";
 
 interface ListQuery<T> {
   filter?: Filter<T>;
@@ -322,14 +324,32 @@ export default function restBuilder<Data extends BaseData>(
   return { useRestOne, useRestList, useRestMutations };
 }
 
-function makeUrl<T extends { include?: string | string[] }>(
-  path: string,
-  query?: T,
-): string {
+function makeUrl<T>(path: string, query?: ListQuery<T>): string {
   query = { ...query } as T;
 
   if (Array.isArray(query.include)) {
     query.include = query.include.join(",");
+  }
+
+  if (query.filter) {
+    const filter: Filter<T> = {};
+    for (const key in query.filter) {
+      const comparators = query.filter[key];
+      const newComparators: Record<string, string> = {};
+
+      for (const comparator in comparators) {
+        const comparatorValue = comparators[comparator];
+        if (comparatorValue instanceof Date) {
+          newComparators[comparator] = formatISO(comparatorValue);
+        } else if (typeof comparatorValue === "number") {
+          newComparators[comparator] = comparatorValue.toString();
+        } else if (typeof comparatorValue === "string") {
+          newComparators[comparator] = comparatorValue;
+        }
+      }
+      filter[snakeCase(key) as keyof T] = newComparators;
+    }
+    query.filter = filter;
   }
 
   return `${path}?${param(query)}`;

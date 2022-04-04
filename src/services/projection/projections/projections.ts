@@ -1,5 +1,6 @@
-import type { Skill } from "../../api";
+import type { Role, Skill } from "../../api";
 import type { TimelineRange } from "../timeline";
+import { calculateNeededForSkill } from "./needed";
 
 export interface Projection {
   action: string;
@@ -12,9 +13,13 @@ export interface ProjectionGroup {
   projections: Projection[];
 }
 
+export interface SkillRole extends Skill {
+  roles?: Role[];
+}
+
 export default function getProjections(
   timeline: TimelineRange[],
-  availableSkills: Skill[],
+  skills: SkillRole[],
 ): ProjectionGroup[] {
   const getRandomInt = (): number => {
     return Math.floor(Math.random() * 4);
@@ -25,14 +30,24 @@ export default function getProjections(
     return actions[getRandomInt()];
   };
 
-  return availableSkills.map((skill) => {
+  return skills.map((skill) => {
+    const needed: number[] = calculateNeededForSkill(skill, timeline);
+
+    const neededProjection: Omit<Projection, "action" | "bench">[] = needed.map(
+      (neededForPeriod) => ({
+        needed: neededForPeriod,
+      }),
+    );
+
+    const projections: Projection[] = neededProjection.map((projection) => ({
+      ...projection,
+      bench: getRandomInt(),
+      action: getRandomAction(),
+    }));
+
     return {
       skill,
-      projections: new Array<Projection>(timeline.length).fill({
-        needed: getRandomInt(),
-        bench: getRandomInt(),
-        action: getRandomAction(),
-      }),
+      projections,
     };
   });
 }
