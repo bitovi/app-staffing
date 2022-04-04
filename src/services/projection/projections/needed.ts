@@ -7,7 +7,6 @@ export function calculateNeededForSkill(
   skill: SkillRole,
   timeline: TimelineRange[],
 ): number[] {
-  console.log("times");
   const neededBySkill: number[] = [];
   let prevRoleEndConfidence;
   for (let i = 0; i < timeline.length; i++) {
