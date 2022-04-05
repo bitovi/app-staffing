@@ -125,8 +125,8 @@ describe("projections", () => {
 
         const startConfidenceRole1 = roles[0].startConfidence;
         const startConfidenceRole2 = roles[1].startConfidence;
-        const endConfidenceRole1 = roles[0].endConfidence;
-        const endConfidenceRole2 = roles[1].endConfidence;
+        const endConfidenceRole1 = roles[0].endConfidence || 0;
+        const endConfidenceRole2 = roles[1].endConfidence || 0;
 
         roles[0].startDate = new Date(2021, 1, 2);
         roles[0].endDate = timeline[4].endDate;
@@ -150,20 +150,19 @@ describe("projections", () => {
 
         // In each of the periods from the start, we have two roles ongoing,
         // so we add their startConfidence to get our needed number.
-        // Role 1 ends at period 5 so we add its endConfidence to period 6
-        // Role 2 ends at period 8 so we add its endConfidence to period 9
-        // After that needed falls to 0
+        // Role 1 ends at period 5 so we add its endConfidence to the next periods
+        // Role 2 ends at period 8 so we add its endConfidence to the next periods
         const neededExpectedProjections = [
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
-          +(startConfidenceRole2 + (endConfidenceRole1 || 0)).toFixed(2),
-          startConfidenceRole2,
-          startConfidenceRole2,
-          endConfidenceRole2,
-          0,
+          +(startConfidenceRole2 + endConfidenceRole1).toFixed(2),
+          +(startConfidenceRole2 + endConfidenceRole1).toFixed(2),
+          +(startConfidenceRole2 + endConfidenceRole1).toFixed(2),
+          +(endConfidenceRole1 + endConfidenceRole2).toFixed(2),
+          +(endConfidenceRole1 + endConfidenceRole2).toFixed(2),
         ];
 
         expect(neededProjections).toEqual(neededExpectedProjections);

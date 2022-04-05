@@ -57,7 +57,7 @@ export const calculateNeededForSkillForPeriod = (
 
   // Final values
   let projectionNeeded = 0;
-  let nextPeriodEndConfidence = 0;
+  let nextPeriodEndConfidence = prevRoleEndConfidence || 0;
 
   for (let i = 0; i < roles.length; i++) {
     const role = roles[i];
@@ -89,8 +89,12 @@ export const calculateNeededForSkillForPeriod = (
           j.setDate(j.getDate() + 1)
         ) {
           if (role.endDate) {
-            // If the role ends we add its end confidence so we can carry it to next period
-            if (datesAreOnSameDay(j, role.endDate)) {
+            // If the role ends with an end confidence of less than 1,
+            // we add its end confidence so we can carry it to next periods
+            if (
+              datesAreOnSameDay(j, role.endDate) &&
+              role.endConfidence !== 1
+            ) {
               nextPeriodEndConfidence += role.endConfidence || 0;
             }
           }
@@ -129,7 +133,7 @@ export const calculateNeededForSkillForPeriod = (
 
   // And then we take the max of that array which will be the single worst day of the period
   // That is what we will display in the dashboard
-  // We also return any endConfidence to be used in the next period
+  // We also return any endConfidence to be used in the next periods
   projectionNeeded = Math.max(...resultArray);
   return { projectionNeeded, nextPeriodEndConfidence };
 };
