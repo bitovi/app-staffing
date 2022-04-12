@@ -49,10 +49,10 @@ export const calculateNeededForSkillForPeriod = (
   );
 
   // If some roles have ended in the last period, we need to add their end confidences to this period
-  let hasPrevEncConfidence = false;
+  let hasPrevEndConfidence = false;
   if (prevRoleEndConfidence) {
     arrayOfDays.push(Array(numOfDays).fill(prevRoleEndConfidence));
-    hasPrevEncConfidence = true;
+    hasPrevEndConfidence = true;
   }
 
   // Final values
@@ -64,7 +64,7 @@ export const calculateNeededForSkillForPeriod = (
 
     // We add an empty array for each role
     arrayOfDays.push([]);
-    const arrayOfDaysIndex = hasPrevEncConfidence ? i + 1 : i;
+    const arrayOfDaysIndex = hasPrevEndConfidence ? i + 1 : i;
     const daysInPeriod = arrayOfDays[arrayOfDaysIndex];
 
     // We first check if the role happends during this time period

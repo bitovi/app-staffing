@@ -18,7 +18,13 @@ interface ReportTableProps {
 export function ReportTable({
   date = new Date(),
 }: ReportTableProps): JSX.Element {
-  const availableSkills = useSkills({ include: ["employees"] });
+  const availableSkills = useSkills({
+    include: [
+      "employees.skills",
+      "employees.assignments.role.skills",
+      "employees.assignments.role.project",
+    ],
+  });
 
   const { timeline } = useTimeline();
 

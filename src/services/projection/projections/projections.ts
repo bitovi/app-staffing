@@ -1,6 +1,7 @@
 import type { Role, Skill } from "../../api";
 import type { TimelineRange } from "../timeline";
 import { calculateNeededForSkill } from "./needed";
+import { calculateBenchForSkill } from "./bench";
 
 export interface Projection {
   action: string;
@@ -32,16 +33,11 @@ export default function getProjections(
 
   return skills.map((skill) => {
     const needed: number[] = calculateNeededForSkill(skill, timeline);
+    const bench: number[] = calculateBenchForSkill(skill, timeline);
 
-    const neededProjection: Omit<Projection, "action" | "bench">[] = needed.map(
-      (neededForPeriod) => ({
-        needed: neededForPeriod,
-      }),
-    );
-
-    const projections: Projection[] = neededProjection.map((projection) => ({
-      ...projection,
-      bench: getRandomInt(),
+    const projections: Projection[] = timeline.map((_period, index) => ({
+      needed: needed[index],
+      bench: bench[index],
       action: getRandomAction(),
     }));
 
