@@ -1,5 +1,7 @@
 import { cloneDeep } from "lodash";
 import {
+  assignments as baseAssignments,
+  employees as baseEmployees,
   roles as baseRoles,
   skills as baseSkills,
 } from "../../../mocks/fixtures";
@@ -9,6 +11,10 @@ import {
 } from "./needed";
 import { SkillRole } from "./projections";
 import getTimeline from "../timeline";
+import {
+  calculateBenchForSkill,
+  calculateBenchForSkillForPeriod,
+} from "./bench";
 
 describe("projections", () => {
   describe("needed", () => {
@@ -166,6 +172,107 @@ describe("projections", () => {
         ];
 
         expect(neededProjections).toEqual(neededExpectedProjections);
+      });
+    });
+  });
+
+  describe("bench", () => {
+    describe("calculateBenchForSkillForPeriod", () => {
+      const period = {
+        startDate: new Date(2022, 3, 11),
+        endDate: new Date(2022, 3, 17),
+        title: "Apr 4th",
+        type: "week",
+      };
+      it("returns 0 if employee no longer employed", () => {
+        const employees = cloneDeep(baseEmployees.slice(0, 1));
+        const employee = employees[0];
+
+        employee.endDate = new Date(2009, 4, 4);
+        employee.endDate = new Date(2021, 3, 14);
+
+        employee.assignments = [];
+
+        const projectionNeeded = calculateBenchForSkillForPeriod(
+          employees,
+          period,
+        );
+
+        expect(projectionNeeded).toEqual(0);
+      });
+
+      it("returns 1 if employee has no assignments", () => {
+        const employees = cloneDeep(baseEmployees.slice(0, 1));
+        const employee = employees[0];
+
+        employee.endDate = new Date(2009, 4, 4);
+        employee.endDate = new Date(2026, 3, 14);
+
+        employee.assignments = [];
+        employee.skills = [baseSkills[0]];
+
+        const projectionNeeded = calculateBenchForSkillForPeriod(
+          employees,
+          period,
+        );
+
+        expect(projectionNeeded).toEqual(1);
+      });
+
+      it("returns 0.5 if employee has no assignments and 2 skills", () => {
+        const employees = cloneDeep(baseEmployees.slice(0, 1));
+        const employee = employees[0];
+
+        employee.endDate = new Date(2009, 4, 4);
+        employee.endDate = new Date(2026, 3, 14);
+
+        employee.assignments = [];
+        employee.skills = [baseSkills[0], baseSkills[1]];
+
+        const projectionNeeded = calculateBenchForSkillForPeriod(
+          employees,
+          period,
+        );
+
+        expect(projectionNeeded).toEqual(0.5);
+      });
+
+      it("returns 0 if employee is assigned the full week", () => {
+        const employees = cloneDeep(baseEmployees.slice(0, 1));
+        const employee = employees[0];
+
+        employee.endDate = new Date(2009, 4, 4);
+        employee.endDate = new Date(2026, 3, 14);
+
+        const assignment = baseAssignments[0];
+        assignment.role.startDate = new Date(2022, 3, 11);
+        assignment.role.startConfidence = 1;
+        assignment.role.endDate = new Date(2022, 3, 17);
+
+        assignment.startDate = new Date(2022, 3, 11);
+        assignment.endDate = new Date(2022, 3, 17);
+
+        employee.assignments = [assignment];
+        employee.skills = [baseSkills[0]];
+
+        const projectionNeeded = calculateBenchForSkillForPeriod(
+          employees,
+          period,
+        );
+
+        expect(projectionNeeded).toEqual(0);
+      });
+    });
+
+    describe("calculateBenchForSkill", () => {
+      it("has a bench projection for each period", () => {
+        const timeline = getTimeline(new Date());
+
+        const skill = baseSkills[0];
+
+        const benchProjections = calculateBenchForSkill(skill, timeline);
+
+        expect(timeline.length).toEqual(benchProjections.length);
       });
     });
   });

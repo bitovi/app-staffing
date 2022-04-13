@@ -6,7 +6,7 @@ import { SkillRole } from "./projections";
 export function calculateBenchForSkill(
   skill: SkillRole,
   timeline: TimelineRange[],
-) {
+): number[] {
   const benchBySkill: number[] = [];
   for (let i = 0; i < timeline.length; i++) {
     if (Array.isArray(skill.employees)) {
@@ -25,7 +25,7 @@ export function calculateBenchForSkill(
 export function calculateBenchForSkillForPeriod(
   employees: Employee[],
   period: TimelineRange,
-) {
+): number {
   const { startDate: periodStart, endDate: periodEnd } = period;
 
   // We start by instantiating a 2D array that will hold for each role an array of bench numbers
@@ -130,6 +130,8 @@ export function calculateBenchForSkillForPeriod(
       } else {
         daysInPeriod.days = Array(numOfDays).fill(1 / employeeNoOfSkills);
       }
+    } else {
+      daysInPeriod.days = Array(numOfDays).fill(0);
     }
   }
 
