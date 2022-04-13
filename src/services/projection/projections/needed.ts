@@ -104,7 +104,7 @@ export const calculateNeededForSkillForPeriod = (
           for (const assignment of orderedAssignments) {
             if (
               assignment.startDate <= j &&
-              (assignment.endDate ? assignment.endDate > j : true)
+              (assignment.endDate ? assignment.endDate >= j : true)
             ) {
               daysInPeriod.push(0);
               continue daysLoop;
@@ -120,6 +120,17 @@ export const calculateNeededForSkillForPeriod = (
         arrayOfDays[arrayOfDaysIndex] = Array(numOfDays).fill(
           role.startConfidence,
         );
+
+        if (
+          role.endDate &&
+          role.endDate <= periodEnd &&
+          role.endConfidence !== 1
+        ) {
+          // If the role ends with an end confidence of less than 1,
+          // we add its end confidence so we can carry it to next periods
+
+          nextPeriodEndConfidence = role.endConfidence || 0;
+        }
       }
     } else {
       arrayOfDays[arrayOfDaysIndex] = Array(numOfDays).fill(0);
