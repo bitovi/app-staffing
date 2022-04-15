@@ -1,9 +1,19 @@
-import { Flex, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Heading,
+  ListItem,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import differenceInDays from "date-fns/differenceInDays";
+import { max, min } from "date-fns/esm";
 import { projects } from "../../../mocks/fixtures";
 import TableHeader from "../../../pages/Dashboard/components/ReportTable/TableHeader";
 import TableRow from "../../../pages/Dashboard/components/ReportTable/TableRow";
-import { Employee, Role, Skill } from "../../api";
+import { Assignment, Employee, Role, Skill } from "../../api";
+import { TimelineRange } from "../timeline";
 import useProjection from "../useProjection";
 import useTimeline from "../useTimeline";
 import { Projection } from "./projections";
@@ -26,7 +36,6 @@ const ProjectionsContainer = ({
   employees,
 }: ProjectionProps): JSX.Element => {
   const { timeline } = useTimeline(dashboardStart);
-  console.log(roles);
 
   return (
     <>
@@ -34,14 +43,14 @@ const ProjectionsContainer = ({
         {title}
       </Heading>
 
-      <UnorderedList mb="1em">
+      <UnorderedList mb="1em" color="blue">
         {roles.map((role) => (
           <ListItem key={role.id}>
             Role: {role.startConfidence * 100}% {role.startDate.toDateString()},{" "}
             {role.endConfidence && role.endDate
               ? `${role.endConfidence * 100}% ${role.endDate.toDateString()}`
               : "null"}
-            <UnorderedList>
+            <UnorderedList color="red">
               {role.assignments && role.assignments.length > 0 ? (
                 role.assignments.map((assignment) => (
                   <ListItem key={assignment.id}>
@@ -84,6 +93,18 @@ const ProjectionsContainer = ({
             </ListItem>
           ))}
       </UnorderedList>
+
+      <Box>
+        {roles.map((role) => (
+          <Box>
+            <Line data={role} timeline={timeline} isRole />
+            {role.assignments &&
+              role.assignments.map((assignment) => (
+                <Line data={assignment} timeline={timeline} />
+              ))}
+          </Box>
+        ))}
+      </Box>
 
       <Flex flexDirection="column">
         <TableHeader
@@ -740,7 +761,6 @@ export const BenchUseCase4: ComponentStory<typeof ProjectionsContainer> =
         ],
       },
     ];
-    console.log({ roles });
     const employees = [employeeWithAssignments];
 
     const skillsWithRoles = [
@@ -768,3 +788,208 @@ export const BenchUseCase4: ComponentStory<typeof ProjectionsContainer> =
       />
     );
   };
+
+export const BenchUseCase5: ComponentStory<typeof ProjectionsContainer> =
+  () => {
+    const dashboardStart = new Date(2022, 3, 11);
+    const skill = { id: "1001", name: "React" };
+    const role = {
+      id: "1",
+      startDate: new Date(2022, 3, 11),
+      startConfidence: 1,
+      endDate: new Date(2022, 3, 24),
+      endConfidence: 0.7,
+      project: projects[0],
+      skills: [skill],
+    };
+
+    const assignment = {
+      id: "2",
+      role,
+      startDate: new Date(2022, 3, 11),
+      endDate: new Date(2022, 3, 17),
+    };
+
+    const assignment2 = {
+      id: "3",
+      role,
+      startDate: new Date(2022, 3, 18),
+      endDate: new Date(2022, 3, 24),
+    };
+
+    const employee = {
+      id: "20",
+      name: "John Doe",
+      skills: [skill],
+    };
+
+    const employee2 = {
+      id: "21",
+      name: "Jane Doe",
+      skills: [skill],
+    };
+
+    const employeeWithAssignments = {
+      ...employee,
+      assignments: [{ ...assignment, employee }],
+    };
+
+    const employee2WithAssignments = {
+      ...employee2,
+      assignments: [{ ...assignment2, employee: employee2 }],
+    };
+
+    const roles = [
+      {
+        ...role,
+        assignments: [
+          {
+            ...assignment,
+            employee: employeeWithAssignments,
+          },
+          {
+            ...assignment2,
+            employee: employee2WithAssignments,
+          },
+        ],
+      },
+    ];
+    const employees = [employeeWithAssignments, employee2WithAssignments];
+
+    const skillsWithRoles = [
+      {
+        ...skill,
+        roles,
+        employees,
+      },
+    ];
+
+    const { skillsWithProjection } = useProjection(
+      dashboardStart,
+      skillsWithRoles,
+    );
+
+    const projections = skillsWithProjection[0].projections;
+    return (
+      <ProjectionsContainer
+        title="2 Employees Assigned for a week and then unassigned"
+        dashboardStart={dashboardStart}
+        roles={roles}
+        skill={skill}
+        projections={projections}
+        employees={employees}
+      />
+    );
+  };
+
+const Line = ({
+  data,
+  timeline,
+  isRole,
+}: {
+  data: Role | Assignment;
+  timeline: TimelineRange[];
+  isRole?: boolean;
+}) => {
+  let isUnbound = false;
+  let startTime = 0;
+  let duration = 0;
+  let totalNumOfDays = 0;
+
+  const roleStart = data.startDate;
+  let roleEnd = data.endDate;
+
+  if (!roleEnd) {
+    roleEnd = timeline[timeline.length - 1].endDate;
+    isUnbound = true;
+  }
+
+  for (const [index, period] of timeline.entries()) {
+    const { startDate: periodStart, endDate: periodEnd } = period;
+    const numOfDays = Math.round(
+      Math.abs(
+        (periodStart.valueOf() - periodEnd.valueOf()) / (24 * 60 * 60 * 1000),
+      ),
+    );
+    totalNumOfDays += numOfDays;
+    if (periodEnd < roleStart) {
+      continue;
+    }
+    if (periodStart > roleEnd) {
+      break;
+    }
+
+    if (!startTime) {
+      startTime =
+        (differenceInDays(roleStart, timeline[0].startDate) * (index + 1)) /
+        totalNumOfDays;
+    }
+
+    const start = max([periodStart, roleStart]);
+    const end = min([periodEnd, roleEnd]);
+
+    duration += (differenceInDays(end, start) + 1) / numOfDays;
+    console.log({ duration });
+  }
+
+  return (
+    <Flex flex={1} height={8} mb={2} alignItems={"start"}>
+      <Center width="3xs" justifyContent={"start"}></Center>
+
+      <Box style={{ position: "relative" }}>
+        {isRole && (
+          <span
+            style={{
+              position: "absolute",
+              fontSize: "12px",
+              fontWeight: "bold",
+              marginTop: "5px",
+              marginLeft: `calc(${startTime} * 11vw)`,
+            }}
+          >
+            {"startConfidence" in data && `${data.startConfidence * 100}%`}
+          </span>
+        )}
+        <Box
+          background={isRole ? "blue" : "red"}
+          ml={`calc(${startTime} * 11vw)`}
+          h={1}
+          w={
+            isUnbound ? `calc(${duration} * 5rem)` : `calc(${duration} * 11vw)`
+          }
+        />
+        {isUnbound && (
+          <Box
+            style={{
+              width: 0,
+              height: 0,
+              borderTop: "10px solid transparent",
+              borderBottom: "10px solid transparent",
+              borderLeft: "10px solid red",
+              position: "absolute",
+              right: -2,
+              top: "-8px",
+            }}
+          />
+        )}
+        {isRole && (
+          <span
+            style={{
+              position: "absolute",
+              fontSize: "12px",
+              fontWeight: "bold",
+              marginTop: "1px",
+              right: 0,
+            }}
+          >
+            {"endConfidence" in data &&
+              data.endConfidence &&
+              `${data.endConfidence * 100}%`}
+          </span>
+        )}
+      </Box>
+
+      <Box w={28} />
+    </Flex>
+  );
+};

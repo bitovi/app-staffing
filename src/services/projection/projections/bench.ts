@@ -137,7 +137,10 @@ export function calculateBenchForSkillForPeriod(
 
   const result = arrayOfDays.reduce((a, b) => {
     return a.map((c, i) => {
-      return +(c + b.days[i]).toFixed(2) as number;
+      if (b.days[i]) {
+        return +(c + b.days[i]).toFixed(2) as number;
+      }
+      return c;
     });
   }, Array(numOfDays).fill(0) as number[]);
 

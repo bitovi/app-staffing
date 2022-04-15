@@ -26,7 +26,7 @@ export default function TableHeader({
           <Center
             flex={1}
             key={index}
-            alignItems={"end"}
+            alignItems={"start"}
             flexDirection="column"
           >
             <Center height={4} flex={1}>
