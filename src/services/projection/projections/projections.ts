@@ -3,10 +3,20 @@ import type { TimelineRange } from "../timeline";
 import { calculateNeededForSkill } from "./needed";
 import { calculateBenchForSkill } from "./bench";
 
+export interface Needed {
+  total: number;
+  roles?: { projectName?: string; value: number }[];
+}
+
+export interface Bench {
+  total: number;
+  employees?: { name: string; value: number }[];
+}
+
 export interface Projection {
   action: string;
-  needed: number;
-  bench: number;
+  needed: Needed;
+  bench: Bench;
 }
 
 export interface ProjectionGroup {
@@ -32,8 +42,8 @@ export default function getProjections(
   };
 
   return skills.map((skill) => {
-    const needed: number[] = calculateNeededForSkill(skill, timeline);
-    const bench: number[] = calculateBenchForSkill(skill, timeline);
+    const needed: Needed[] = calculateNeededForSkill(skill, timeline);
+    const bench: Bench[] = calculateBenchForSkill(skill, timeline);
 
     const projections: Projection[] = timeline.map((_period, index) => ({
       needed: needed[index],

@@ -1,13 +1,18 @@
 import { sortBy } from "lodash";
 import { Assignment, Role } from "../../api";
 import { TimelineRange } from "../timeline";
-import { SkillRole } from "./projections";
+import { Needed, SkillRole } from "./projections";
+
+interface PreviousRole {
+  projectName: string;
+  endConfidence: number;
+}
 
 export function calculateNeededForSkill(
   skill: SkillRole,
   timeline: TimelineRange[],
-): number[] {
-  const neededBySkill: number[] = [];
+): Needed[] {
+  const neededBySkill: Needed[] = [];
   let prevRoleEndConfidence;
   for (let i = 0; i < timeline.length; i++) {
     if (Array.isArray(skill.roles)) {
@@ -23,7 +28,7 @@ export function calculateNeededForSkill(
       prevRoleEndConfidence = nextPeriodEndConfidence;
     } else {
       // If a skill doesn't have roles, the needed number is simply 0 for all periods
-      neededBySkill.push(0);
+      neededBySkill.push({ total: 0 });
     }
   }
 
@@ -33,13 +38,13 @@ export function calculateNeededForSkill(
 export const calculateNeededForSkillForPeriod = (
   roles: Role[],
   period: TimelineRange,
-  prevRoleEndConfidence?: number,
-): { projectionNeeded: number; nextPeriodEndConfidence: number } => {
+  prevRolesEndConfidence?: PreviousRole[],
+): { projectionNeeded: Needed; nextPeriodEndConfidence: PreviousRole[] } => {
   const { startDate: periodStart, endDate: periodEnd } = period;
 
   // We start by instantiating a 2D array that will hold for each role an array of needed numbers
   // for every day of the period
-  const arrayOfDays: number[][] = [];
+  const arrayOfDays: { projectName?: string; days: number[] }[] = [];
 
   // We get the number of days in this period as a period can be either a week, a month or a quarter
   const numOfDays = Math.round(
@@ -49,23 +54,27 @@ export const calculateNeededForSkillForPeriod = (
   );
 
   // If some roles have ended in the last period, we need to add their end confidences to this period
-  let hasPrevEndConfidence = false;
-  if (prevRoleEndConfidence) {
-    arrayOfDays.push(Array(numOfDays).fill(prevRoleEndConfidence));
-    hasPrevEndConfidence = true;
+  let prevRoleIndex = 0;
+  if (prevRolesEndConfidence && prevRolesEndConfidence.length) {
+    for (const prevRole of prevRolesEndConfidence) {
+      arrayOfDays.push({
+        projectName: prevRole.projectName,
+        days: Array(numOfDays).fill(prevRole.endConfidence),
+      });
+      prevRoleIndex += 1;
+    }
   }
 
   // Final values
   let projectionNeeded = 0;
-  let nextPeriodEndConfidence = prevRoleEndConfidence || 0;
+  let nextPeriodEndConfidence = prevRolesEndConfidence || [];
 
   for (let i = 0; i < roles.length; i++) {
     const role = roles[i];
 
     // We add an empty array for each role
-    arrayOfDays.push([]);
-    const arrayOfDaysIndex = hasPrevEndConfidence ? i + 1 : i;
-    const daysInPeriod = arrayOfDays[arrayOfDaysIndex];
+    arrayOfDays.push({ days: [] });
+    const arrayOfDaysIndex = i + prevRoleIndex;
 
     // We first check if the role happends during this time period
     // If not we fill the array with 0s as no one would be needed
@@ -77,6 +86,10 @@ export const calculateNeededForSkillForPeriod = (
         periodEnd,
       )
     ) {
+      arrayOfDays[arrayOfDaysIndex] = {
+        projectName: role.project.name,
+        days: [],
+      };
       let orderedAssignments: Assignment[] = [];
       if (role.assignments && role.assignments.length > 0) {
         // If the role has assignments, we first sort them by date to be able to compare them
@@ -95,7 +108,10 @@ export const calculateNeededForSkillForPeriod = (
               datesAreOnSameDay(j, role.endDate) &&
               role.endConfidence !== 1
             ) {
-              nextPeriodEndConfidence += role.endConfidence || 0;
+              nextPeriodEndConfidence.push({
+                projectName: role.project.name,
+                endConfidence: role.endConfidence || 0,
+              });
             }
           }
 
@@ -106,18 +122,18 @@ export const calculateNeededForSkillForPeriod = (
               assignment.startDate <= j &&
               (assignment.endDate ? assignment.endDate >= j : true)
             ) {
-              daysInPeriod.push(0);
+              arrayOfDays[arrayOfDaysIndex].days.push(0);
               continue daysLoop;
             }
           }
 
           // If there is no assignment for this day, the needed value is the role's start confidence
-          daysInPeriod.push(role.startConfidence);
+          arrayOfDays[arrayOfDaysIndex].days.push(role.startConfidence);
         }
       } else {
         // Similarly, if the role has no assignments, all days of this period will have a needed value
         // equal to the role's start confidence
-        arrayOfDays[arrayOfDaysIndex] = Array(numOfDays).fill(
+        arrayOfDays[arrayOfDaysIndex].days = Array(numOfDays).fill(
           role.startConfidence,
         );
 
@@ -129,24 +145,41 @@ export const calculateNeededForSkillForPeriod = (
           // If the role ends with an end confidence of less than 1,
           // we add its end confidence so we can carry it to next periods
 
-          nextPeriodEndConfidence = role.endConfidence || 0;
+          nextPeriodEndConfidence.push({
+            projectName: role.project.name,
+            endConfidence: role.endConfidence || 0,
+          });
         }
       }
     } else {
-      arrayOfDays[arrayOfDaysIndex] = Array(numOfDays).fill(0);
+      arrayOfDays[arrayOfDaysIndex].days = Array(numOfDays).fill(0);
     }
   }
 
   // At the end we add up all arrays together so we can have an array of worst days for this period
-  const resultArray = arrayOfDays.reduce((a, b) =>
-    a.map((c, i) => +(c + b[i]).toFixed(2)),
-  );
+  const result = arrayOfDays.reduce((a, b) => {
+    return a.map((c, i) => {
+      if (b.days[i]) {
+        return +(c + b.days[i]).toFixed(2) as number;
+      }
+      return c;
+    });
+  }, Array(numOfDays).fill(0) as number[]);
 
   // And then we take the max of that array which will be the single worst day of the period
   // That is what we will display in the dashboard
   // We also return any endConfidence to be used in the next periods
-  projectionNeeded = Math.max(...resultArray);
-  return { projectionNeeded, nextPeriodEndConfidence };
+  projectionNeeded = Math.max(...result);
+
+  const rolesNeededValue = arrayOfDays.map((role) => ({
+    projectName: role.projectName,
+    value: Math.max(...role.days),
+  }));
+
+  return {
+    projectionNeeded: { total: projectionNeeded, roles: rolesNeededValue },
+    nextPeriodEndConfidence,
+  };
 };
 
 const doDatesOverlap = (

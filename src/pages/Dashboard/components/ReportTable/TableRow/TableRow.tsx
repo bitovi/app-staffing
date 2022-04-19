@@ -2,7 +2,7 @@ import type { Skill } from "../../../../../services/api";
 import type { Projection } from "../../../../../services/projection";
 
 import { useState } from "react";
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Flex, Text, VStack } from "@chakra-ui/layout";
 import { Center, Divider } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
@@ -65,7 +65,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
   return (
     <Box boxShadow="base" bg="white" minHeight="" w="100%" borderRadius="lg">
-      <Flex flex={1} flexDirection="row" onClick={handleRowClick}>
+      <Flex flex={1} flexDirection="row">
         {/* Department Column*/}
         <Center width="3xs" px={3} minH={24}>
           <Flex flex={1} ml={1}>
@@ -99,17 +99,62 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
               background={highlight}
             >
               <Flex w="100%" h="100%" flexDirection="column">
-                <Flex flex={1} px={3} justifyContent="end">
-                  <Text color={getLabelColor(needed)} textStyle="normal">
-                    {needed}
-                  </Text>
-                </Flex>
+                <VStack alignItems="end">
+                  <Flex flex={1} px={3} justifyContent="end">
+                    <Text
+                      color={getLabelColor(needed.total)}
+                      textStyle="normal"
+                    >
+                      {needed.total}
+                    </Text>
+                  </Flex>
+                  {isExpanded && (
+                    <Box
+                      padding="0 8px 10px 0"
+                      fontSize="10px"
+                      fontWeight="600"
+                      color="#3171D0"
+                    >
+                      {needed.roles &&
+                        needed.roles.map((role) =>
+                          role.value ? (
+                            <Text key={role.projectName}>{`${
+                              role.projectName
+                            } ${role.value * 100}%`}</Text>
+                          ) : null,
+                        )}
+                    </Box>
+                  )}
+                </VStack>
                 <Divider border={1} orientation="horizontal" />
-                <Flex flex={1} px={3} justifyContent="end">
-                  <Text color={getLabelColor(bench)} textStyle="normal">
-                    {bench}
-                  </Text>
-                </Flex>
+                <VStack alignItems="end">
+                  <Flex flex={1} px={3} justifyContent="end">
+                    <Text color={getLabelColor(bench.total)} textStyle="normal">
+                      {bench.total}
+                    </Text>
+                  </Flex>
+
+                  {isExpanded && (
+                    <Box
+                      padding="0 2px 10px 0"
+                      fontSize="10px"
+                      fontWeight="600"
+                      color="#3171D0"
+                    >
+                      {bench.employees &&
+                        bench.employees.map((employee) =>
+                          employee.value ? (
+                            <Text
+                              key={employee.name}
+                            >{`${employee.name.substring(
+                              0,
+                              employee.name.indexOf(" "),
+                            )} ${employee.value * 100}%`}</Text>
+                          ) : null,
+                        )}
+                    </Box>
+                  )}
+                </VStack>
                 <Divider border={1} orientation="horizontal" />
                 <Center flex={1} px={3} background={background}>
                   <Text textStyle="bold" fontWeight={800} color={text}>

@@ -1,13 +1,13 @@
 import { sortBy } from "lodash";
 import { Employee } from "../../api";
 import { TimelineRange } from "../timeline";
-import { SkillRole } from "./projections";
+import { Bench, SkillRole } from "./projections";
 
 export function calculateBenchForSkill(
   skill: SkillRole,
   timeline: TimelineRange[],
-): number[] {
-  const benchBySkill: number[] = [];
+): Bench[] {
+  const benchBySkill: Bench[] = [];
   for (let i = 0; i < timeline.length; i++) {
     if (Array.isArray(skill.employees)) {
       const projectionbench = calculateBenchForSkillForPeriod(
@@ -16,7 +16,7 @@ export function calculateBenchForSkill(
       );
       benchBySkill.push(projectionbench);
     } else {
-      benchBySkill.push(0);
+      benchBySkill.push({ total: 0 });
     }
   }
   return benchBySkill;
@@ -25,7 +25,7 @@ export function calculateBenchForSkill(
 export function calculateBenchForSkillForPeriod(
   employees: Employee[],
   period: TimelineRange,
-): number {
+): Bench {
   const { startDate: periodStart, endDate: periodEnd } = period;
 
   // We start by instantiating a 2D array that will hold for each role an array of bench numbers
@@ -124,6 +124,9 @@ export function calculateBenchForSkillForPeriod(
               } else {
                 daysInPeriod.days.push(benchValue);
               }
+            } else {
+              // The case where an employee is not assigned yet
+              daysInPeriod.days = Array(numOfDays).fill(1 / employeeNoOfSkills);
             }
           }
         }
@@ -146,5 +149,10 @@ export function calculateBenchForSkillForPeriod(
 
   projectionBench = Math.max(...result);
 
-  return projectionBench;
+  const employeesBenchValue = arrayOfDays.map((employee) => ({
+    name: employee.employeeName,
+    value: Math.max(...employee.days),
+  }));
+
+  return { total: projectionBench, employees: employeesBenchValue };
 }
