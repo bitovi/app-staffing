@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  ListItem,
+  Table,
+  TableContainer,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { projects } from "../../../../mocks/fixtures";
 import TableHeader from "../../../../pages/Dashboard/components/ReportTable/TableHeader";
@@ -102,11 +110,15 @@ const ProjectionsContainer = ({
       </Box>
 
       <Flex flexDirection="column">
-        <TableHeader
-          timeline={timeline}
-          columnLabel={"DEPARTMENT"}
-        ></TableHeader>
-        <TableRow skill={skill} projections={projections} />
+        <TableContainer>
+          <Table size="sm" sx={{ tableLayout: "fixed" }}>
+            <TableHeader
+              timeline={timeline}
+              columnLabel={"DEPARTMENT"}
+            ></TableHeader>
+            <TableRow skill={skill} projections={projections} />
+          </Table>
+        </TableContainer>
       </Flex>
     </>
   );

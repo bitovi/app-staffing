@@ -5,13 +5,19 @@ import { Text } from "@chakra-ui/react";
 type BadgeProps = {
   size: "sm" | "md" | "lg";
   background?: string;
+  maxWidth?: string;
   children: React.ReactNode;
 };
 
-function Badge({ background, size, children }: BadgeProps): JSX.Element {
+function Badge({
+  background,
+  size,
+  maxWidth,
+  children,
+}: BadgeProps): JSX.Element {
   return (
     <ChakraTag bg={background} variant="solid" color="white" size={size}>
-      <Text isTruncated maxWidth="95px">
+      <Text isTruncated maxWidth={maxWidth || "95px"}>
         {children}
       </Text>
     </ChakraTag>

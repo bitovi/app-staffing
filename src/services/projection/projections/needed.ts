@@ -77,7 +77,6 @@ export const calculateNeededForSkillForPeriod = (
     const arrayOfDaysIndex = i + prevRoleIndex;
 
     // We first check if the role happends during this time period
-    // If not we fill the array with 0s as no one would be needed
     if (
       doDatesOverlap(
         role.startDate,
@@ -152,7 +151,10 @@ export const calculateNeededForSkillForPeriod = (
         }
       }
     } else {
-      arrayOfDays[arrayOfDaysIndex].days = Array(numOfDays).fill(0);
+      // If dates don't overlap, we remove the added empty array
+      // and decrease the index
+      arrayOfDays.pop();
+      prevRoleIndex -= 1;
     }
   }
 

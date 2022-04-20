@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/layout";
-import { VStack } from "@chakra-ui/react";
+import { Table, TableContainer } from "@chakra-ui/react";
 
 import {
   useProjection,
@@ -26,7 +26,7 @@ export function ReportTable({
     ],
   });
 
-  const { timeline } = useTimeline();
+  const { timeline } = useTimeline(date);
 
   const dashboardStart = timeline[0]?.startDate;
   const dashboardEnd = timeline[timeline.length - 1]?.endDate;
@@ -46,13 +46,18 @@ export function ReportTable({
 
   return (
     <Flex flexDirection="column">
-      <TableHeader timeline={timeline} columnLabel={"DEPARTMENT"}></TableHeader>
+      <TableContainer>
+        <Table size="sm" sx={{ tableLayout: "fixed" }}>
+          <TableHeader
+            timeline={timeline}
+            columnLabel={"DEPARTMENT"}
+          ></TableHeader>
 
-      <VStack spacing={4} align="stretch" maxHeight="73vh" overflowY="auto">
-        {skillsWithProjection.map(({ skill, projections }) => (
-          <TableRow key={skill.id} skill={skill} projections={projections} />
-        ))}
-      </VStack>
+          {skillsWithProjection.map(({ skill, projections }) => (
+            <TableRow key={skill.id} skill={skill} projections={projections} />
+          ))}
+        </Table>
+      </TableContainer>
     </Flex>
   );
 }

@@ -2,8 +2,8 @@ import type { Skill } from "../../../../../services/api";
 import type { Projection } from "../../../../../services/projection";
 
 import { useState } from "react";
-import { Box, Flex, Text, VStack } from "@chakra-ui/layout";
-import { Center, Divider } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Center, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
@@ -63,117 +63,170 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
     setExpanded(!isExpanded);
   };
 
-  return (
-    <Box boxShadow="base" bg="white" minHeight="" w="100%" borderRadius="lg">
-      <Flex flex={1} flexDirection="row">
-        {/* Department Column*/}
-        <Center width="3xs" px={3} minH={24}>
-          <Flex flex={1} ml={1}>
-            <Badge size="sm" background={skillBackgrounds[skill.name]}>
-              {skill.name}
-            </Badge>
-          </Flex>
+  let maxNeededRoles = 0;
+  projections.forEach(({ needed }) => {
+    maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
+  });
 
-          <Flex h="100%" flexDirection="column">
-            <Flex flex={1} alignItems="center">
-              <Text textStyle="bold">NEEDED</Text>
+  let maxBenchEmployees = 0;
+  projections.forEach(({ bench }) => {
+    maxBenchEmployees = Math.max(
+      maxBenchEmployees,
+      bench.employees?.length || 0,
+    );
+  });
+
+  return (
+    <Tbody bg="white" w="100%" borderRadius="lg">
+      <Tr>
+        <Th
+          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          textTransform="none"
+          _before={{ content: "''", height: "15px", display: "block" }}
+          borderRadius="8px"
+        >
+          <Center px={3}>
+            <Flex flex={1} ml={1}>
+              <Badge
+                size="sm"
+                background={skillBackgrounds[skill.name]}
+                maxWidth="70px"
+              >
+                {skill.name}
+              </Badge>
             </Flex>
-            <Flex flex={1} alignItems="center">
-              <Text textStyle="bold">BENCH</Text>
-            </Flex>
-            <Flex flex={1} alignItems="center">
-              <Text textStyle="bold">ACTION</Text>
-            </Flex>
-          </Flex>
-        </Center>
+          </Center>
+        </Th>
+
+        <Th borderBottom="none">Needed</Th>
 
         {projections.map(({ action, needed, bench }, index) => {
           const { highlight, background, text } = getRowColors(action);
-
           return (
-            <Flex
-              key={index}
-              flex={1}
-              alignItems="end"
-              flexDirection="column"
-              background={highlight}
-            >
-              <Flex w="100%" h="100%" flexDirection="column">
-                <VStack alignItems="end">
-                  <Flex flex={1} px={3} justifyContent="end">
-                    <Text
-                      color={getLabelColor(needed.total)}
-                      textStyle="normal"
-                    >
-                      {needed.total}
-                    </Text>
-                  </Flex>
-                  {isExpanded && (
-                    <Box
-                      padding="0 8px 10px 0"
-                      fontSize="10px"
-                      fontWeight="600"
-                      color="#3171D0"
-                    >
-                      {needed.roles &&
-                        needed.roles.map((role) =>
-                          role.value ? (
-                            <Text key={role.projectName}>{`${
-                              role.projectName
-                            } ${role.value * 100}%`}</Text>
-                          ) : null,
-                        )}
-                    </Box>
-                  )}
-                </VStack>
-                <Divider border={1} orientation="horizontal" />
-                <VStack alignItems="end">
-                  <Flex flex={1} px={3} justifyContent="end">
-                    <Text color={getLabelColor(bench.total)} textStyle="normal">
-                      {bench.total}
-                    </Text>
-                  </Flex>
-
-                  {isExpanded && (
-                    <Box
-                      padding="0 2px 10px 0"
-                      fontSize="10px"
-                      fontWeight="600"
-                      color="#3171D0"
-                    >
-                      {bench.employees &&
-                        bench.employees.map((employee) =>
-                          employee.value ? (
-                            <Text
-                              key={employee.name}
-                            >{`${employee.name.substring(
-                              0,
-                              employee.name.indexOf(" "),
-                            )} ${employee.value * 100}%`}</Text>
-                          ) : null,
-                        )}
-                    </Box>
-                  )}
-                </VStack>
-                <Divider border={1} orientation="horizontal" />
-                <Center flex={1} px={3} background={background}>
-                  <Text textStyle="bold" fontWeight={800} color={text}>
-                    {action}
-                  </Text>
-                </Center>
+            <Td>
+              <Flex flex={1} px={3} justifyContent="end">
+                <Text color={getLabelColor(needed.total)} textStyle="normal">
+                  {needed.total}
+                </Text>
               </Flex>
-            </Flex>
+            </Td>
           );
         })}
 
-        <Center w={28} cursor="pointer" onClick={handleRowClick}>
-          <Text userSelect="none" color="#3171D0">
-            Details
-          </Text>
-          <ChevronDownIcon ml={2} color="#3171D0" />
-        </Center>
-      </Flex>
-    </Box>
+        <Td
+          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          borderRadius="8px"
+        >
+          <Center cursor="pointer" onClick={handleRowClick}>
+            <Text userSelect="none" color="#3171D0">
+              Details
+            </Text>
+            <ChevronDownIcon ml={2} color="#3171D0" />
+          </Center>
+        </Td>
+      </Tr>
+
+      {isExpanded &&
+        maxNeededRoles &&
+        Array.from({ length: maxNeededRoles }).map((item, index) => (
+          <Tr>
+            <Th color="transparent" borderBottom="none">
+              Needed
+            </Th>
+
+            {projections.map(({ action, needed, bench }) => {
+              const { highlight, background, text } = getRowColors(action);
+              return (
+                <Td whiteSpace="pre-wrap" borderBottom="none">
+                  <Box
+                    padding="0 8px 10px 0"
+                    fontSize="10px"
+                    fontWeight="600"
+                    color="#3171D0"
+                  >
+                    {needed.roles && needed.roles[index] ? (
+                      <Text key={needed.roles[index].projectName}>{`${
+                        needed.roles[index].projectName
+                      } ${needed.roles[index].value * 100}%`}</Text>
+                    ) : null}
+                  </Box>
+                </Td>
+              );
+            })}
+          </Tr>
+        ))}
+
+      <Tr>
+        <Th borderBottom="none">Bench</Th>
+
+        {projections.map(({ action, bench }, index) => {
+          const { highlight, background, text } = getRowColors(action);
+          return (
+            <Td borderTop="1px solid var(--chakra-colors-gray-100)">
+              <Flex flex={1} px={3} justifyContent="end">
+                <Text color={getLabelColor(bench.total)} textStyle="normal">
+                  {bench.total}
+                </Text>
+              </Flex>
+            </Td>
+          );
+        })}
+      </Tr>
+
+      {isExpanded &&
+        maxBenchEmployees &&
+        Array.from({ length: maxBenchEmployees }).map((_item, index) => (
+          <Tr>
+            <Th color="transparent" borderBottom="none">
+              Bench
+            </Th>
+
+            {projections.map(({ action, needed, bench }) => {
+              const { highlight, background, text } = getRowColors(action);
+              return (
+                <Td whiteSpace="pre-wrap" borderBottom="none">
+                  <Box
+                    padding="0 8px 10px 0"
+                    fontSize="10px"
+                    fontWeight="600"
+                    color="#3171D0"
+                  >
+                    {bench.employees &&
+                    bench.employees[index] &&
+                    bench.employees[index].value ? (
+                      <Text
+                        key={bench.employees[index].name}
+                      >{`${bench.employees[index].name.substring(
+                        0,
+                        bench.employees[index].name.indexOf(" "),
+                      )} ${bench.employees[index].value * 100}%`}</Text>
+                    ) : null}
+                  </Box>
+                </Td>
+              );
+            })}
+          </Tr>
+        ))}
+
+      <Tr boxShadow="base">
+        <Th borderBottom="none">Action</Th>
+
+        {projections.map(({ action, bench }, index) => {
+          const { highlight, background, text } = getRowColors(action);
+          return (
+            <Td borderTop="1px solid var(--chakra-colors-gray-100)">
+              <Center flex={1} px={3} background={background}>
+                <Text textStyle="bold" fontWeight={800} color={text}>
+                  {action}
+                </Text>
+              </Center>
+            </Td>
+          );
+        })}
+      </Tr>
+
+      <Tr h="5" />
+    </Tbody>
   );
 }
 
