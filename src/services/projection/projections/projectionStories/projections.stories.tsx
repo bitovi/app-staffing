@@ -8,6 +8,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { BrowserRouter } from "react-router-dom";
 import { projects } from "../../../../mocks/fixtures";
 import TableHeader from "../../../../pages/Dashboard/components/ReportTable/TableHeader";
 import TableRow from "../../../../pages/Dashboard/components/ReportTable/TableRow";
@@ -37,7 +38,7 @@ const ProjectionsContainer = ({
   const { timeline } = useTimeline(dashboardStart);
 
   return (
-    <>
+    <BrowserRouter>
       <Heading size="md" mb="40px">
         {title}
       </Heading>
@@ -120,7 +121,7 @@ const ProjectionsContainer = ({
           </Table>
         </TableContainer>
       </Flex>
-    </>
+    </BrowserRouter>
   );
 };
 
