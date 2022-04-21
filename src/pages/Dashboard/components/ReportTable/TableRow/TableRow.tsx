@@ -1,13 +1,14 @@
-import type { Skill } from "../../../../../services/api";
-import type { Projection } from "../../../../../services/projection";
-
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Center, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
-import { Link } from "react-router-dom";
+
+import type { Skill } from "../../../../../services/api";
+import type { Projection } from "../../../../../services/projection";
+import { Action } from "../../../../../services/projection/projections";
 
 export interface TableRowProps {
   skill: Skill;
@@ -30,7 +31,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   };
 
   const getRowColors = (
-    action: string,
+    action: Action,
   ): { highlight: string; background: string; text: string } => {
     switch (action) {
       case "Assign":
@@ -47,7 +48,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
           background: "rgba(252, 208, 142, 0.32)",
           text: "#DD6B20",
         };
-      case "Ok":
+      case "OK":
       default:
         return {
           highlight: "",

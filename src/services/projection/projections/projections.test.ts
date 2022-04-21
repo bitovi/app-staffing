@@ -9,7 +9,7 @@ import {
   calculateNeededForSkill,
   calculateNeededForSkillForPeriod,
 } from "./needed";
-import { SkillRole } from "./projections";
+import { getAction, SkillRole } from "./projections";
 import getTimeline from "../timeline";
 import {
   calculateBenchForSkill,
@@ -36,7 +36,7 @@ describe("projections", () => {
           period,
         );
 
-        expect(projectionNeeded).toEqual(0);
+        expect(projectionNeeded.total).toEqual(0);
       });
 
       it("returns startConfidence if role dates overlap and assignment dates don't", () => {
@@ -56,7 +56,7 @@ describe("projections", () => {
           period,
         );
 
-        expect(projectionNeeded).toEqual(startConfidence);
+        expect(projectionNeeded.total).toEqual(startConfidence);
       });
 
       it("returns 0 if role dates assignment dates overlap", () => {
@@ -75,7 +75,7 @@ describe("projections", () => {
           period,
         );
 
-        expect(projectionNeeded).toEqual(0);
+        expect(projectionNeeded.total).toEqual(0);
       });
 
       it("returns sum of worst days for multiple overlapping roles", () => {
@@ -105,7 +105,7 @@ describe("projections", () => {
           period,
         );
 
-        expect(projectionNeeded).toEqual(
+        expect(projectionNeeded.total).toEqual(
           startConfidenceRole1 + startConfidenceRole2,
         );
       });
@@ -171,7 +171,11 @@ describe("projections", () => {
           +(endConfidenceRole1 + endConfidenceRole2).toFixed(2),
         ];
 
-        expect(neededProjections).toEqual(neededExpectedProjections);
+        const neededProjectionsTotals = neededProjections.map(
+          (needed) => needed.total,
+        );
+
+        expect(neededProjectionsTotals).toEqual(neededExpectedProjections);
       });
     });
   });
@@ -193,12 +197,12 @@ describe("projections", () => {
 
         employee.assignments = [];
 
-        const projectionNeeded = calculateBenchForSkillForPeriod(
+        const projectionBench = calculateBenchForSkillForPeriod(
           employees,
           period,
         );
 
-        expect(projectionNeeded).toEqual(0);
+        expect(projectionBench.total).toEqual(0);
       });
 
       it("returns 1 if employee has no assignments", () => {
@@ -211,12 +215,12 @@ describe("projections", () => {
         employee.assignments = [];
         employee.skills = [baseSkills[0]];
 
-        const projectionNeeded = calculateBenchForSkillForPeriod(
+        const projectionBench = calculateBenchForSkillForPeriod(
           employees,
           period,
         );
 
-        expect(projectionNeeded).toEqual(1);
+        expect(projectionBench.total).toEqual(1);
       });
 
       it("returns 0.5 if employee has no assignments and 2 skills", () => {
@@ -229,12 +233,12 @@ describe("projections", () => {
         employee.assignments = [];
         employee.skills = [baseSkills[0], baseSkills[1]];
 
-        const projectionNeeded = calculateBenchForSkillForPeriod(
+        const projectionBench = calculateBenchForSkillForPeriod(
           employees,
           period,
         );
 
-        expect(projectionNeeded).toEqual(0.5);
+        expect(projectionBench.total).toEqual(0.5);
       });
 
       it("returns 0 if employee is assigned the full week", () => {
@@ -255,12 +259,12 @@ describe("projections", () => {
         employee.assignments = [assignment];
         employee.skills = [baseSkills[0]];
 
-        const projectionNeeded = calculateBenchForSkillForPeriod(
+        const projectionBench = calculateBenchForSkillForPeriod(
           employees,
           period,
         );
 
-        expect(projectionNeeded).toEqual(0);
+        expect(projectionBench.total).toEqual(0);
       });
     });
 
@@ -274,6 +278,44 @@ describe("projections", () => {
 
         expect(timeline.length).toEqual(benchProjections.length);
       });
+    });
+  });
+
+  describe("action badges", () => {
+    it("Shows Sell if bench more than needed and difference more than threshold (2)", () => {
+      const bench = 3;
+      const needed = 0;
+
+      const action = getAction(needed, bench);
+
+      expect(action).toBe("Sell");
+    });
+
+    it("Shows Assign if bench more than needed", () => {
+      const bench = 3;
+      const needed = 2;
+
+      const action = getAction(needed, bench);
+
+      expect(action).toBe("Assign");
+    });
+
+    it("Shows Hire if bench less than needed", () => {
+      const bench = 1;
+      const needed = 2;
+
+      const action = getAction(needed, bench);
+
+      expect(action).toBe("Hire");
+    });
+
+    it("Shows OK if equal", () => {
+      const bench = 0;
+      const needed = 0;
+
+      const action = getAction(needed, bench);
+
+      expect(action).toBe("OK");
     });
   });
 });

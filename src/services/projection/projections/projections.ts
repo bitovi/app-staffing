@@ -14,7 +14,7 @@ export interface Bench {
 }
 
 export interface Projection {
-  action: string;
+  action: Action;
   needed: Needed;
   bench: Bench;
 }
@@ -28,19 +28,33 @@ export interface SkillRole extends Skill {
   roles?: Role[];
 }
 
+export enum Actions {
+  Sell = "Sell",
+  Hire = "Hire",
+  Assign = "Assign",
+  Ok = "OK",
+}
+
+const actions = ["OK", "Hire", "Assign", "Sell"] as const;
+export type Action = typeof actions[number];
+
+export const getAction = (needed: number, bench: number): Action => {
+  const threshold = 2;
+
+  if (bench - needed > threshold) {
+    return "Sell";
+  } else if (needed > bench) {
+    return "Hire";
+  } else if (needed < bench) {
+    return "Assign";
+  }
+  return "OK";
+};
+
 export default function getProjections(
   timeline: TimelineRange[],
   skills: SkillRole[],
 ): ProjectionGroup[] {
-  const getRandomInt = (): number => {
-    return Math.floor(Math.random() * 4);
-  };
-
-  const getRandomAction = (): string => {
-    const actions = ["OK", "Hire", "Assign", "Sell"];
-    return actions[getRandomInt()];
-  };
-
   return skills.map((skill) => {
     const needed: Needed[] = calculateNeededForSkill(skill, timeline);
     const bench: Bench[] = calculateBenchForSkill(skill, timeline);
@@ -48,7 +62,7 @@ export default function getProjections(
     const projections: Projection[] = timeline.map((_period, index) => ({
       needed: needed[index],
       bench: bench[index],
-      action: getRandomAction(),
+      action: getAction(needed[index].total, bench[index].total),
     }));
 
     return {
