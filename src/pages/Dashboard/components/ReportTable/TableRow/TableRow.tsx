@@ -7,6 +7,7 @@ import { Center, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
+import { Link } from "react-router-dom";
 
 export interface TableRowProps {
   skill: Skill;
@@ -100,10 +101,10 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
         <Th borderBottom="none">Needed</Th>
 
-        {projections.map(({ action, needed, bench }, index) => {
-          const { highlight, background, text } = getRowColors(action);
+        {projections.map(({ action, needed }, index) => {
+          const { highlight, text } = getRowColors(action);
           return (
-            <Td>
+            <Td key={index} background={highlight} color={text}>
               <Flex flex={1} px={3} justifyContent="end">
                 <Text color={getLabelColor(needed.total)} textStyle="normal">
                   {needed.total}
@@ -126,43 +127,61 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
         </Td>
       </Tr>
 
-      {isExpanded &&
-        maxNeededRoles &&
-        Array.from({ length: maxNeededRoles }).map((item, index) => (
-          <Tr>
-            <Th color="transparent" borderBottom="none">
-              Needed
-            </Th>
+      {isExpanded && maxNeededRoles
+        ? Array.from({ length: maxNeededRoles }).map((_item, index) => (
+            <Tr key={index}>
+              <Th color="transparent" borderBottom="none">
+                Needed
+              </Th>
 
-            {projections.map(({ action, needed, bench }) => {
-              const { highlight, background, text } = getRowColors(action);
-              return (
-                <Td whiteSpace="pre-wrap" borderBottom="none">
-                  <Box
-                    padding="0 8px 10px 0"
-                    fontSize="10px"
-                    fontWeight="600"
-                    color="#3171D0"
-                  >
-                    {needed.roles && needed.roles[index] ? (
-                      <Text key={needed.roles[index].projectName}>{`${
-                        needed.roles[index].projectName
-                      } ${needed.roles[index].value * 100}%`}</Text>
-                    ) : null}
-                  </Box>
-                </Td>
-              );
-            })}
-          </Tr>
-        ))}
+              {projections.map(({ action, needed }, i) => {
+                const { highlight, text } = getRowColors(action);
+                if (needed.roles && needed.roles[index]) {
+                  const neededRole = needed.roles[index];
+                  const neededProject = neededRole.project;
+
+                  return (
+                    <Td
+                      whiteSpace="pre-wrap"
+                      borderBottom="none"
+                      key={i}
+                      background={highlight}
+                      color={text}
+                      p="5px"
+                      paddingRight="5px"
+                      textAlign="right"
+                    >
+                      <Box fontSize="10px" fontWeight="600" color="#3171D0">
+                        {neededProject ? (
+                          <Link to={`projects/${neededProject.id}`}>
+                            <Text key={neededProject.name}>{`${
+                              neededProject.name
+                            } ${neededRole.value * 100}%`}</Text>
+                          </Link>
+                        ) : null}
+                      </Box>
+                    </Td>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </Tr>
+          ))
+        : null}
 
       <Tr>
         <Th borderBottom="none">Bench</Th>
 
         {projections.map(({ action, bench }, index) => {
-          const { highlight, background, text } = getRowColors(action);
+          const { highlight, text } = getRowColors(action);
           return (
-            <Td borderTop="1px solid var(--chakra-colors-gray-100)">
+            <Td
+              borderTop="1px solid var(--chakra-colors-gray-100)"
+              key={index}
+              background={highlight}
+              color={text}
+            >
               <Flex flex={1} px={3} justifyContent="end">
                 <Text color={getLabelColor(bench.total)} textStyle="normal">
                   {bench.total}
@@ -173,49 +192,58 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
         })}
       </Tr>
 
-      {isExpanded &&
-        maxBenchEmployees &&
-        Array.from({ length: maxBenchEmployees }).map((_item, index) => (
-          <Tr>
-            <Th color="transparent" borderBottom="none">
-              Bench
-            </Th>
+      {isExpanded && maxBenchEmployees
+        ? Array.from({ length: maxBenchEmployees }).map((_item, index) => (
+            <Tr key={index}>
+              <Th color="transparent" borderBottom="none">
+                Bench
+              </Th>
 
-            {projections.map(({ action, needed, bench }) => {
-              const { highlight, background, text } = getRowColors(action);
-              return (
-                <Td whiteSpace="pre-wrap" borderBottom="none">
-                  <Box
-                    padding="0 8px 10px 0"
-                    fontSize="10px"
-                    fontWeight="600"
-                    color="#3171D0"
+              {projections.map(({ action, bench }, i) => {
+                const { highlight, text } = getRowColors(action);
+                return (
+                  <Td
+                    whiteSpace="pre-wrap"
+                    borderBottom="none"
+                    key={i}
+                    background={highlight}
+                    color={text}
+                    p="1px"
+                    paddingRight="5px"
+                    textAlign="right"
                   >
-                    {bench.employees &&
-                    bench.employees[index] &&
-                    bench.employees[index].value ? (
-                      <Text
-                        key={bench.employees[index].name}
-                      >{`${bench.employees[index].name.substring(
-                        0,
-                        bench.employees[index].name.indexOf(" "),
-                      )} ${bench.employees[index].value * 100}%`}</Text>
-                    ) : null}
-                  </Box>
-                </Td>
-              );
-            })}
-          </Tr>
-        ))}
+                    <Box fontSize="10px" fontWeight="600" color="#333333">
+                      {bench.employees &&
+                      bench.employees[index] &&
+                      bench.employees[index].value ? (
+                        <Text
+                          key={bench.employees[index].name}
+                        >{`${bench.employees[index].name.substring(
+                          0,
+                          bench.employees[index].name.indexOf(" "),
+                        )} ${bench.employees[index].value * 100}%`}</Text>
+                      ) : null}
+                    </Box>
+                  </Td>
+                );
+              })}
+            </Tr>
+          ))
+        : null}
 
       <Tr boxShadow="base">
         <Th borderBottom="none">Action</Th>
 
-        {projections.map(({ action, bench }, index) => {
-          const { highlight, background, text } = getRowColors(action);
+        {projections.map(({ action }, index) => {
+          const { background, text } = getRowColors(action);
           return (
-            <Td borderTop="1px solid var(--chakra-colors-gray-100)">
-              <Center flex={1} px={3} background={background}>
+            <Td
+              borderTop="1px solid var(--chakra-colors-gray-100)"
+              key={index}
+              background={background}
+              color={text}
+            >
+              <Center flex={1} px={3}>
                 <Text textStyle="bold" fontWeight={800} color={text}>
                   {action}
                 </Text>

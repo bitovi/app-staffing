@@ -5,7 +5,7 @@ import { calculateBenchForSkill } from "./bench";
 
 export interface Needed {
   total: number;
-  roles?: { projectName?: string; value: number }[];
+  roles?: { project?: { name: string; id: string }; value: number }[];
 }
 
 export interface Bench {

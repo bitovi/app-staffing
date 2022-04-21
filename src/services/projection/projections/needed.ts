@@ -4,7 +4,7 @@ import { TimelineRange } from "../timeline";
 import { Needed, SkillRole } from "./projections";
 
 interface PreviousRole {
-  projectName: string;
+  project: { name: string; id: string };
   endConfidence: number;
 }
 
@@ -44,7 +44,10 @@ export const calculateNeededForSkillForPeriod = (
 
   // We start by instantiating a 2D array that will hold for each role an array of needed numbers
   // for every day of the period
-  const arrayOfDays: { projectName?: string; days: number[] }[] = [];
+  const arrayOfDays: {
+    project?: { name: string; id: string };
+    days: number[];
+  }[] = [];
 
   // We get the number of days in this period as a period can be either a week, a month or a quarter
   const numOfDays = Math.round(
@@ -58,7 +61,7 @@ export const calculateNeededForSkillForPeriod = (
   if (prevRolesEndConfidence && prevRolesEndConfidence.length) {
     for (const prevRole of prevRolesEndConfidence) {
       arrayOfDays.push({
-        projectName: prevRole.projectName,
+        project: prevRole.project,
         days: Array(numOfDays).fill(prevRole.endConfidence),
       });
       prevRoleIndex += 1;
@@ -67,7 +70,7 @@ export const calculateNeededForSkillForPeriod = (
 
   // Final values
   let projectionNeeded = 0;
-  let nextPeriodEndConfidence = prevRolesEndConfidence || [];
+  const nextPeriodEndConfidence = prevRolesEndConfidence || [];
 
   for (let i = 0; i < roles.length; i++) {
     const role = roles[i];
@@ -86,7 +89,7 @@ export const calculateNeededForSkillForPeriod = (
       )
     ) {
       arrayOfDays[arrayOfDaysIndex] = {
-        projectName: role.project.name,
+        project: { name: role.project.name, id: role.project.id },
         days: [],
       };
       let orderedAssignments: Assignment[] = [];
@@ -108,7 +111,7 @@ export const calculateNeededForSkillForPeriod = (
               role.endConfidence !== 1
             ) {
               nextPeriodEndConfidence.push({
-                projectName: role.project.name,
+                project: { name: role.project.name, id: role.project.id },
                 endConfidence: role.endConfidence || 0,
               });
             }
@@ -145,7 +148,7 @@ export const calculateNeededForSkillForPeriod = (
           // we add its end confidence so we can carry it to next periods
 
           nextPeriodEndConfidence.push({
-            projectName: role.project.name,
+            project: { name: role.project.name, id: role.project.id },
             endConfidence: role.endConfidence || 0,
           });
         }
@@ -173,10 +176,14 @@ export const calculateNeededForSkillForPeriod = (
   // We also return any endConfidence to be used in the next periods
   projectionNeeded = Math.max(...result);
 
-  const rolesNeededValue = arrayOfDays.map((role) => ({
-    projectName: role.projectName,
-    value: Math.max(...role.days),
-  }));
+  const rolesNeededValue = arrayOfDays.map((role) =>
+    role.project
+      ? {
+          project: { name: role.project.name, id: role.project.id },
+          value: Math.max(...role.days),
+        }
+      : { value: Math.max(...role.days) },
+  );
 
   return {
     projectionNeeded: { total: projectionNeeded, roles: rolesNeededValue },

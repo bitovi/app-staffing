@@ -40,6 +40,7 @@ export default function TableHeader({
               color="#333333"
               fontWeight="700"
               letterSpacing="0.05em"
+              key={title}
             >
               <Center
                 flex={1}
