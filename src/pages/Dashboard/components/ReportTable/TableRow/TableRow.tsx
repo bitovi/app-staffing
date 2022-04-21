@@ -1,12 +1,14 @@
-import type { Skill } from "../../../../../services/api";
-import type { Projection } from "../../../../../services/projection";
-
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { Center, Divider } from "@chakra-ui/react";
+import { Center, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import Badge from "../../../../../components/Badge";
+
+import type { Skill } from "../../../../../services/api";
+import type { Projection } from "../../../../../services/projection";
+import { Action } from "../../../../../services/projection/projections";
 
 export interface TableRowProps {
   skill: Skill;
@@ -29,7 +31,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   };
 
   const getRowColors = (
-    action: string,
+    action: Action,
   ): { highlight: string; background: string; text: string } => {
     switch (action) {
       case "Assign":
@@ -46,7 +48,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
           background: "rgba(252, 208, 142, 0.32)",
           text: "#DD6B20",
         };
-      case "Ok":
+      case "OK":
       default:
         return {
           highlight: "",
@@ -63,72 +65,199 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
     setExpanded(!isExpanded);
   };
 
+  let maxNeededRoles = 0;
+  projections.forEach(({ needed }) => {
+    maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
+  });
+
+  let maxBenchEmployees = 0;
+  projections.forEach(({ bench }) => {
+    // We only want to show employees with a confidence greater or equal to 50%
+    const employees = bench.employees?.filter(
+      (employee) => employee.value >= 0.5,
+    );
+    maxBenchEmployees = Math.max(maxBenchEmployees, employees?.length || 0);
+  });
+
   return (
-    <Box boxShadow="base" bg="white" minHeight="" w="100%" borderRadius="lg">
-      <Flex flex={1} flexDirection="row" onClick={handleRowClick}>
-        {/* Department Column*/}
-        <Center width="3xs" px={3} minH={24}>
-          <Flex flex={1} ml={1}>
-            <Badge size="sm" background={skillBackgrounds[skill.name]}>
-              {skill.name}
-            </Badge>
-          </Flex>
-
-          <Flex h="100%" flexDirection="column">
-            <Flex flex={1} alignItems="center">
-              <Text textStyle="bold">NEEDED</Text>
+    <Tbody bg="white" w="100%" borderRadius="lg">
+      <Tr>
+        <Th
+          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          textTransform="none"
+          _before={{ content: "''", height: "15px", display: "block" }}
+          borderRadius="8px"
+        >
+          <Center px={3}>
+            <Flex flex={1} ml={1}>
+              <Badge
+                size="sm"
+                background={skillBackgrounds[skill.name]}
+                maxWidth="70px"
+              >
+                {skill.name}
+              </Badge>
             </Flex>
-            <Flex flex={1} alignItems="center">
-              <Text textStyle="bold">BENCH</Text>
-            </Flex>
-            <Flex flex={1} alignItems="center">
-              <Text textStyle="bold">ACTION</Text>
-            </Flex>
-          </Flex>
-        </Center>
+          </Center>
+        </Th>
 
-        {projections.map(({ action, needed, bench }, index) => {
-          const { highlight, background, text } = getRowColors(action);
+        <Th borderBottom="none">Needed</Th>
 
+        {projections.map(({ action, needed }, index) => {
+          const { highlight, text } = getRowColors(action);
           return (
-            <Flex
-              key={index}
-              flex={1}
-              alignItems="end"
-              flexDirection="column"
-              background={highlight}
-            >
-              <Flex w="100%" h="100%" flexDirection="column">
-                <Flex flex={1} px={3} justifyContent="end">
-                  <Text color={getLabelColor(needed)} textStyle="normal">
-                    {needed}
-                  </Text>
-                </Flex>
-                <Divider border={1} orientation="horizontal" />
-                <Flex flex={1} px={3} justifyContent="end">
-                  <Text color={getLabelColor(bench)} textStyle="normal">
-                    {bench}
-                  </Text>
-                </Flex>
-                <Divider border={1} orientation="horizontal" />
-                <Center flex={1} px={3} background={background}>
-                  <Text textStyle="bold" fontWeight={800} color={text}>
-                    {action}
-                  </Text>
-                </Center>
+            <Td key={index} background={highlight} color={text}>
+              <Flex flex={1} px={3} justifyContent="end">
+                <Text color={getLabelColor(needed.total)} textStyle="normal">
+                  {needed.total}
+                </Text>
               </Flex>
-            </Flex>
+            </Td>
           );
         })}
 
-        <Center w={28} cursor="pointer" onClick={handleRowClick}>
-          <Text userSelect="none" color="#3171D0">
-            Details
-          </Text>
-          <ChevronDownIcon ml={2} color="#3171D0" />
-        </Center>
-      </Flex>
-    </Box>
+        <Td
+          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          borderRadius="8px"
+        >
+          <Center cursor="pointer" onClick={handleRowClick}>
+            <Text userSelect="none" color="#3171D0">
+              Details
+            </Text>
+            <ChevronDownIcon ml={2} color="#3171D0" />
+          </Center>
+        </Td>
+      </Tr>
+
+      {isExpanded && maxNeededRoles
+        ? Array.from({ length: maxNeededRoles }).map((_item, index) => (
+            <Tr key={index}>
+              <Th color="transparent" borderBottom="none">
+                Needed
+              </Th>
+
+              {projections.map(({ action, needed }, i) => {
+                const { highlight, text } = getRowColors(action);
+                if (needed.roles && needed.roles[index]) {
+                  const neededRole = needed.roles[index];
+                  const neededProject = neededRole.project;
+
+                  return (
+                    <Td
+                      whiteSpace="pre-wrap"
+                      borderBottom="none"
+                      key={i}
+                      background={highlight}
+                      color={text}
+                      p="5px"
+                      paddingRight="5px"
+                      textAlign="right"
+                    >
+                      <Box fontSize="10px" fontWeight="600" color="#3171D0">
+                        {neededProject ? (
+                          <Link to={`projects/${neededProject.id}`}>
+                            <Text key={neededProject.name}>{`${
+                              neededProject.name
+                            } ${neededRole.value * 100}%`}</Text>
+                          </Link>
+                        ) : null}
+                      </Box>
+                    </Td>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </Tr>
+          ))
+        : null}
+
+      <Tr>
+        <Th borderBottom="none">Bench</Th>
+
+        {projections.map(({ action, bench }, index) => {
+          const { highlight, text } = getRowColors(action);
+          return (
+            <Td
+              borderTop="1px solid var(--chakra-colors-gray-100)"
+              key={index}
+              background={highlight}
+              color={text}
+            >
+              <Flex flex={1} px={3} justifyContent="end">
+                <Text color={getLabelColor(bench.total)} textStyle="normal">
+                  {bench.total}
+                </Text>
+              </Flex>
+            </Td>
+          );
+        })}
+      </Tr>
+
+      {isExpanded && maxBenchEmployees
+        ? Array.from({ length: maxBenchEmployees }).map((_item, index) => (
+            <Tr key={index}>
+              <Th color="transparent" borderBottom="none">
+                Bench
+              </Th>
+
+              {projections.map(({ action, bench }, i) => {
+                const { highlight, text } = getRowColors(action);
+                return (
+                  <Td
+                    whiteSpace="pre-wrap"
+                    borderBottom="none"
+                    key={i}
+                    background={highlight}
+                    color={text}
+                    p="1px"
+                    paddingRight="5px"
+                    textAlign="right"
+                  >
+                    <Box fontSize="10px" fontWeight="600" color="#333333">
+                      {bench.employees &&
+                      bench.employees[index] &&
+                      bench.employees[index].value &&
+                      bench.employees[index].value >= 0.5 ? (
+                        <Text
+                          key={bench.employees[index].name}
+                        >{`${bench.employees[index].name.substring(
+                          0,
+                          bench.employees[index].name.indexOf(" "),
+                        )} ${bench.employees[index].value * 100}%`}</Text>
+                      ) : null}
+                    </Box>
+                  </Td>
+                );
+              })}
+            </Tr>
+          ))
+        : null}
+
+      <Tr boxShadow="base">
+        <Th borderBottom="none">Action</Th>
+
+        {projections.map(({ action }, index) => {
+          const { background, text } = getRowColors(action);
+          return (
+            <Td
+              borderTop="1px solid var(--chakra-colors-gray-100)"
+              key={index}
+              background={background}
+              color={text}
+            >
+              <Center flex={1} px={3}>
+                <Text textStyle="bold" fontWeight={800} color={text}>
+                  {action}
+                </Text>
+              </Center>
+            </Td>
+          );
+        })}
+      </Tr>
+
+      <Tr h="5" />
+    </Tbody>
   );
 }
 

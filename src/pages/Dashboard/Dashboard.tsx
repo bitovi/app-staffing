@@ -5,9 +5,9 @@ import { Suspense } from "react";
 
 export function DashboardLoadingLayout(): JSX.Element {
   return (
-    <Flex flexDirection="column" py={20} px={14}>
-      <Flex alignItems="center" marginBottom={10}>
-        <Heading variant="h1">Bitovi Staff Management</Heading>
+    <Flex flexDirection="column" py={16} px={4}>
+      <Flex alignItems="center" marginBottom={12}>
+        <Heading variant="h2">Bitovi Staff Management</Heading>
       </Flex>
     </Flex>
   );
@@ -15,9 +15,9 @@ export function DashboardLoadingLayout(): JSX.Element {
 
 export function Dashboard(): JSX.Element {
   return (
-    <Flex flexDirection="column" py={20} px={14}>
-      <Flex alignItems="center" marginBottom={10}>
-        <Heading variant="h1" data-testid="dashboardTitle">
+    <Flex flexDirection="column" py={16} px={4}>
+      <Flex alignItems="center" marginBottom={12}>
+        <Heading variant="h2" data-testid="dashboardTitle">
           Bitovi Staff Management
         </Heading>
       </Flex>
