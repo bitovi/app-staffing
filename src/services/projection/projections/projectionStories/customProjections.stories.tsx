@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  ListItem,
+  Table,
+  TableContainer,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { projects } from "../../../../mocks/fixtures";
 import TableHeader from "../../../../pages/Dashboard/components/ReportTable/TableHeader";
@@ -28,7 +36,9 @@ const ProjectionsContainer = ({
   assignmentStart,
   assignmentEnd,
 }: ProjectionProps): JSX.Element => {
-  const { timeline } = useTimeline(dashboardStart);
+  // We always call the date constructors on date because storybook converts dates to unix timestamp
+  const dashboardStartDate = new Date(dashboardStart);
+  const { timeline } = useTimeline(dashboardStartDate);
 
   const skill = { id: "1001", name: "React" };
 
@@ -83,7 +93,7 @@ const ProjectionsContainer = ({
   ];
 
   const { skillsWithProjection } = useProjection(
-    dashboardStart,
+    dashboardStartDate,
     skillsWithRoles,
   );
 
@@ -164,11 +174,15 @@ const ProjectionsContainer = ({
       </Box>
 
       <Flex flexDirection="column">
-        <TableHeader
-          timeline={timeline}
-          columnLabel={"DEPARTMENT"}
-        ></TableHeader>
-        <TableRow skill={skill} projections={projections} />
+        <TableContainer>
+          <Table size="sm" sx={{ tableLayout: "fixed" }}>
+            <TableHeader
+              timeline={timeline}
+              columnLabel={"DEPARTMENT"}
+            ></TableHeader>
+            <TableRow skill={skill} projections={projections} />
+          </Table>
+        </TableContainer>
       </Flex>
     </>
   );
@@ -178,6 +192,9 @@ export default {
   title: "API/CustomProjections",
   component: ProjectionsContainer,
   argTypes: {
+    dashboardStart: {
+      control: { type: "date" },
+    },
     roleStart: {
       control: { type: "date" },
     },
@@ -205,7 +222,7 @@ export const Standard: ComponentStory<typeof ProjectionsContainer> = (
 
 Standard.args = {
   title: "Custom args",
-  dashboardStart: new Date(2022, 3, 11),
-  roleStart: new Date(2022, 3, 11),
-  assignmentStart: new Date(2022, 3, 11),
+  dashboardStart: new Date(2018, 0, 1),
+  roleStart: new Date(2018, 0, 1),
+  assignmentStart: new Date(2018, 0, 1),
 };

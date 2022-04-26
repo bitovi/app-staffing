@@ -1,4 +1,4 @@
-import { Box, Center, Flex } from "@chakra-ui/react";
+import { Box, Center, Flex, useMediaQuery } from "@chakra-ui/react";
 import differenceInDays from "date-fns/differenceInDays";
 import max from "date-fns/esm/max";
 import min from "date-fns/esm/min";
@@ -54,9 +54,27 @@ const LineChart = ({
     duration += (differenceInDays(end, start) + 1) / numOfDays;
   }
 
+  const [isSmallScreen, isMediumScreen, isLargeScreen, isXLargeScreen] =
+    useMediaQuery([
+      "(max-width: 70em)",
+      "(max-width: 80em)",
+      "(max-width: 90em)",
+      "(max-width: 100em)",
+    ]);
+
+  const cellSize = isSmallScreen
+    ? "5rem"
+    : isMediumScreen
+    ? "6rem"
+    : isLargeScreen
+    ? "7em"
+    : isXLargeScreen
+    ? "8rem"
+    : "9em";
+
   return (
     <Flex flex={1} height={8} mb={2} alignItems={"start"}>
-      <Center width="3xs" justifyContent={"start"}></Center>
+      <Center width="11rem" justifyContent={"start"}></Center>
 
       <Box style={{ position: "relative" }}>
         {isRole && (
@@ -66,7 +84,7 @@ const LineChart = ({
               fontSize: "12px",
               fontWeight: "bold",
               marginTop: "5px",
-              marginLeft: `calc(${startTime} * 11vw)`,
+              marginLeft: `calc(${startTime} * ${cellSize})`,
             }}
           >
             {"startConfidence" in data && `${data.startConfidence * 100}%`}
@@ -74,10 +92,12 @@ const LineChart = ({
         )}
         <Box
           background={isRole ? "blue" : "red"}
-          ml={`calc(${startTime} * 11vw)`}
+          ml={`calc(${startTime} * ${cellSize})`}
           h={1}
           w={
-            isUnbound ? `calc(${duration} * 5rem)` : `calc(${duration} * 11vw)`
+            isUnbound
+              ? `calc(${duration} * 5rem)`
+              : `calc(${duration} * ${cellSize})`
           }
         />
         {isUnbound && (

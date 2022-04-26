@@ -1,4 +1,4 @@
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 import { Assignment, Role } from "../../api";
 import { TimelineRange } from "../timeline";
 import { Needed, SkillRole } from "./projections";

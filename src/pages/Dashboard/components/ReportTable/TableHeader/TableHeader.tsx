@@ -21,6 +21,7 @@ export default function TableHeader({
           color="#333333"
           fontWeight="700"
           letterSpacing="0.05em"
+          width="6rem"
         >
           {columnLabel && (
             <Text textStyle="tableHead" fontSize="12px">
@@ -28,7 +29,7 @@ export default function TableHeader({
             </Text>
           )}
         </Th>
-        <Th textTransform="none" color="transparent">
+        <Th textTransform="none" color="transparent" width="5rem">
           <Text>Needed</Text>
         </Th>
 
