@@ -17,7 +17,11 @@ export function LoadingProjectList(): JSX.Element {
   return (
     <>
       <ProjectsHeader loading />
-      <Stack data-testid="loading-projects-skeleton">
+      <Stack
+        data-testid="loading-projects-skeleton"
+        paddingInline="40px"
+        marginBottom="40px"
+      >
         <Skeleton height="55px" />
         <Skeleton height="55px" />
         <Skeleton height="55px" />

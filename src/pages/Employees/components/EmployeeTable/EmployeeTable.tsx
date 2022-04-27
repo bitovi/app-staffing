@@ -2,6 +2,7 @@ import { useState, Dispatch, SetStateAction } from "react";
 import {
   Box,
   BoxProps,
+  chakra,
   Flex,
   Table,
   Tbody,
@@ -16,6 +17,15 @@ import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
+
+const StickyHeader = chakra(Th, {
+  baseStyle: {
+    position: "sticky",
+    top: "11em",
+    background: "gray.10",
+    zIndex: "10",
+  },
+});
 
 interface EmployeeTableProps extends BoxProps {
   employees: Employee[] | undefined;
@@ -89,23 +99,23 @@ export default function EmployeeTable({
 
         {employees && employees.length > 0 && (
           <>
-            <Box maxHeight="80vh" overflowY="auto">
+            <Box paddingInline="40px" marginBottom="40px">
               <Table>
                 <Thead py={4}>
                   <Tr>
-                    <Th color="gray.800" textStyle="table.title">
+                    <StickyHeader color="gray.800" textStyle="table.title">
                       EMPLOYEE NAME
-                    </Th>
-                    <Th color="gray.800" textStyle="table.title">
+                    </StickyHeader>
+                    <StickyHeader color="gray.800" textStyle="table.title">
                       START DATE
-                    </Th>
-                    <Th color="gray.800" textStyle="table.title">
+                    </StickyHeader>
+                    <StickyHeader color="gray.800" textStyle="table.title">
                       END DATE
-                    </Th>
-                    <Th color="gray.800" textStyle="table.title">
+                    </StickyHeader>
+                    <StickyHeader color="gray.800" textStyle="table.title">
                       ROLES
-                    </Th>
-                    <Th
+                    </StickyHeader>
+                    <StickyHeader
                       py={4}
                       pr={12}
                       color="gray.800"
@@ -113,7 +123,7 @@ export default function EmployeeTable({
                       isNumeric
                     >
                       ACTIONS
-                    </Th>
+                    </StickyHeader>
                   </Tr>
                 </Thead>
                 <Tbody>

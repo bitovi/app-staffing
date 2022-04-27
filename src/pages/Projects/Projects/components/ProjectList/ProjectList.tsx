@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import {
   Box,
   BoxProps,
+  chakra,
   Flex,
   Table,
   Tbody,
@@ -19,6 +20,15 @@ import { Project } from "../../../../../services/api";
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
 }
+
+const StickyHeader = chakra(Th, {
+  baseStyle: {
+    position: "sticky",
+    top: "11em",
+    background: "gray.10",
+    zIndex: "10",
+  },
+});
 
 export default function ProjectList({
   projects,
@@ -58,21 +68,19 @@ export default function ProjectList({
 
         {projects && projects.length > 0 && (
           <>
-            <Box maxHeight="80vh" overflowX="hidden">
+            <Box paddingInline="40px" marginBottom="40px">
               <Table variant="unstyled">
-                <Thead position="sticky" top="0" zIndex="sticky" bg="gray.10">
+                <Thead>
                   <Tr>
-                    <Th
-                      pt="0px"
+                    <StickyHeader
                       px="25px"
                       pb="26px"
                       color="gray.800"
                       textStyle="table.title"
                     >
                       NAME
-                    </Th>
-                    <Th
-                      pt="0px"
+                    </StickyHeader>
+                    <StickyHeader
                       px="25px"
                       pb="26px"
                       color="gray.800"
@@ -80,9 +88,8 @@ export default function ProjectList({
                     >
                       {/* Using <VisuallyHidden> here because although the Figma file doesn't contain this header, I assume it's an accessibility liability to use a blank table header. */}
                       <VisuallyHidden>DESCRIPTION</VisuallyHidden>
-                    </Th>
-                    <Th
-                      pt="0px"
+                    </StickyHeader>
+                    <StickyHeader
                       px="25px"
                       pb="26px"
                       pr={12}
@@ -91,7 +98,7 @@ export default function ProjectList({
                       isNumeric
                     >
                       ACTIONS
-                    </Th>
+                    </StickyHeader>
                   </Tr>
                 </Thead>
                 <Tbody>{generateRows()}</Tbody>
