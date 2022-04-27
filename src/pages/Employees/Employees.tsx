@@ -68,7 +68,7 @@ export function Employees({
 }: EmployeesProps): JSX.Element {
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
-  const employees = useEmployees({ include: "skills" });
+  const employees = useEmployees({ include: "skills", sort: "name" });
   const skills = useSkills();
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);

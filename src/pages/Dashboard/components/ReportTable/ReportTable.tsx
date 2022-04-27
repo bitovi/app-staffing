@@ -9,7 +9,7 @@ import {
 import TableRow from "./TableRow";
 import TableHeader from "./TableHeader";
 import { Role, Skill, useRoles, useSkills } from "../../../../services/api";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 
 interface ReportTableProps {
   date?: Date;

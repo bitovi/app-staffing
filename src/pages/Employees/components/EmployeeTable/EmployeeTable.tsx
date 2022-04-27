@@ -16,6 +16,7 @@ import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
+import orderBy from "lodash/orderBy";
 
 interface EmployeeTableProps extends BoxProps {
   employees: Employee[] | undefined;
@@ -117,7 +118,7 @@ export default function EmployeeTable({
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {employees.map((employee, index) => (
+                  {orderBy(employees, ["name"]).map((employee, index) => (
                     <EmployeeTableRow
                       key={employee.id}
                       handleEditEmployee={setEmployeeToEdit}

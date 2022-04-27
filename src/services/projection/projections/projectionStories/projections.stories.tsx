@@ -130,16 +130,16 @@ export default {
   component: ProjectionsContainer,
 } as ComponentMeta<typeof ProjectionsContainer>;
 
-export const NeededUseCase1: ComponentStory<typeof ProjectionsContainer> =
+export const NeededUseCase0: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const roles = [
       {
         id: "1",
-        startDate: new Date(2022, 3, 11),
+        startDate: new Date(2018, 0, 1),
         startConfidence: 1,
-        endDate: new Date(2022, 3, 17),
+        endDate: new Date(2018, 0, 7),
         endConfidence: 1,
         project: projects[0],
         skills: [skill],
@@ -171,19 +171,83 @@ export const NeededUseCase1: ComponentStory<typeof ProjectionsContainer> =
     );
   };
 
+NeededUseCase0.parameters = {
+  controls: { hideNoControlsWarning: true },
+};
+
+export const NeededUseCase1: ComponentStory<typeof ProjectionsContainer> =
+  () => {
+    const dashboardStart = new Date(2018, 0, 1);
+    const skill = { id: "1001", name: "React" };
+    const role = {
+      id: "1",
+      startDate: new Date(2018, 0, 1),
+      startConfidence: 1,
+      endDate: new Date(2018, 0, 7),
+      endConfidence: 1,
+      project: projects[0],
+      skills: [skill],
+      assignments: [],
+    };
+
+    const employee = {
+      id: "20",
+      name: "John Doe",
+      skills: [skill],
+    };
+
+    const roles = [
+      {
+        ...role,
+        assignments: [
+          {
+            id: "2",
+            employee,
+            role,
+            startDate: new Date(2018, 0, 1),
+            endDate: new Date(2018, 0, 7),
+          },
+        ],
+      },
+    ];
+
+    const skillsWithRoles = [
+      {
+        ...skill,
+        roles,
+      },
+    ];
+
+    const { skillsWithProjection } = useProjection(
+      dashboardStart,
+      skillsWithRoles,
+    );
+
+    const projections = skillsWithProjection[0].projections;
+    return (
+      <ProjectionsContainer
+        title="Role and assignment fitting neatly in a week, no assignment"
+        dashboardStart={dashboardStart}
+        roles={roles}
+        skill={skill}
+        projections={projections}
+      />
+    );
+  };
+
 NeededUseCase1.parameters = {
   controls: { hideNoControlsWarning: true },
 };
 
 export const NeededUseCase2: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 1,
-      endDate: new Date(2022, 3, 17),
+      endDate: new Date(2018, 0, 7),
       endConfidence: 1,
       project: projects[0],
       skills: [skill],
@@ -201,7 +265,7 @@ export const NeededUseCase2: ComponentStory<typeof ProjectionsContainer> =
             id: "2",
             employee,
             role,
-            startDate: new Date(2022, 3, 12),
+            startDate: new Date(2018, 0, 2),
           },
         ],
       },
@@ -237,13 +301,13 @@ NeededUseCase2.parameters = {
 
 export const NeededUseCase3: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 1,
-      endDate: new Date(2022, 5, 11),
+      endDate: new Date(2018, 2, 1),
       endConfidence: 1,
       project: projects[0],
       skills: [skill],
@@ -261,8 +325,8 @@ export const NeededUseCase3: ComponentStory<typeof ProjectionsContainer> =
             id: "2",
             employee,
             role,
-            startDate: new Date(2022, 3, 12),
-            endDate: new Date(2022, 3, 26),
+            startDate: new Date(2018, 0, 1),
+            endDate: new Date(2018, 0, 16),
           },
         ],
       },
@@ -298,13 +362,13 @@ NeededUseCase3.parameters = {
 
 export const NeededUseCase4: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 0.8,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 14),
       endConfidence: 0.2,
       project: projects[0],
       skills: [skill],
@@ -347,13 +411,13 @@ NeededUseCase4.parameters = {
 
 export const NeededUseCase5: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 0.8,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 21),
       endConfidence: 0.2,
       project: projects[0],
       skills: [skill],
@@ -373,8 +437,8 @@ export const NeededUseCase5: ComponentStory<typeof ProjectionsContainer> =
             id: "2",
             employee,
             role,
-            startDate: new Date(2022, 3, 19),
-            endDate: new Date(2022, 3, 20),
+            startDate: new Date(2018, 0, 15),
+            endDate: new Date(2018, 0, 16),
           },
         ],
       },
@@ -410,13 +474,13 @@ NeededUseCase5.parameters = {
 
 export const NeededUseCase6: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 0.8,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 14),
       endConfidence: 0.2,
       project: projects[0],
       skills: [skill],
@@ -436,8 +500,8 @@ export const NeededUseCase6: ComponentStory<typeof ProjectionsContainer> =
             id: "2",
             employee,
             role,
-            startDate: new Date(2022, 3, 18),
-            endDate: new Date(2022, 3, 24),
+            startDate: new Date(2018, 0, 8),
+            endDate: new Date(2018, 0, 14),
           },
         ],
       },
@@ -473,13 +537,13 @@ NeededUseCase6.parameters = {
 
 export const NeededUseCase7: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 14),
+      startDate: new Date(2018, 0, 4),
       startConfidence: 0.8,
-      endDate: new Date(2022, 3, 22),
+      endDate: new Date(2018, 0, 10),
       endConfidence: 0.2,
       project: projects[0],
       skills: [skill],
@@ -522,13 +586,13 @@ NeededUseCase7.parameters = {
 
 export const BenchUseCase1: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 1,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 14),
       endConfidence: 0.7,
       project: projects[0],
       skills: [skill],
@@ -537,8 +601,8 @@ export const BenchUseCase1: ComponentStory<typeof ProjectionsContainer> =
     const assignment = {
       id: "2",
       role,
-      startDate: new Date(2022, 3, 11),
-      endDate: new Date(2022, 3, 17),
+      startDate: new Date(2018, 0, 1),
+      endDate: new Date(2018, 0, 7),
     };
 
     const employee = {
@@ -597,13 +661,13 @@ BenchUseCase1.parameters = {
 
 export const BenchUseCase2: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 1,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 14),
       endConfidence: 1,
       project: projects[0],
       skills: [skill],
@@ -612,8 +676,8 @@ export const BenchUseCase2: ComponentStory<typeof ProjectionsContainer> =
     const assignment = {
       id: "2",
       role,
-      startDate: new Date(2022, 3, 11),
-      endDate: new Date(2022, 3, 24),
+      startDate: new Date(2018, 0, 1),
+      endDate: new Date(2018, 0, 14),
     };
 
     const employee = {
@@ -672,13 +736,13 @@ BenchUseCase2.parameters = {
 
 export const BenchUseCase3: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 1,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 14),
       endConfidence: 0.7,
       project: projects[0],
       skills: [skill],
@@ -687,7 +751,7 @@ export const BenchUseCase3: ComponentStory<typeof ProjectionsContainer> =
     const assignment = {
       id: "2",
       role,
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
     };
 
     const employee = {
@@ -746,13 +810,13 @@ BenchUseCase3.parameters = {
 
 export const BenchUseCase4: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role1 = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 1,
-      endDate: new Date(2022, 3, 17),
+      endDate: new Date(2018, 0, 7),
       endConfidence: 0.8,
       project: projects[0],
       skills: [skill],
@@ -760,9 +824,9 @@ export const BenchUseCase4: ComponentStory<typeof ProjectionsContainer> =
 
     const role2 = {
       id: "2",
-      startDate: new Date(2022, 3, 18),
+      startDate: new Date(2018, 0, 8),
       startConfidence: 1,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 14),
       endConfidence: 0.6,
       project: projects[0],
       skills: [skill],
@@ -771,13 +835,13 @@ export const BenchUseCase4: ComponentStory<typeof ProjectionsContainer> =
     const assignment1 = {
       id: "101",
       role: role1,
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
     };
 
     const assignment2 = {
       id: "102",
       role: role2,
-      startDate: new Date(2022, 3, 18),
+      startDate: new Date(2018, 0, 8),
     };
 
     const employee = {
@@ -843,13 +907,13 @@ BenchUseCase4.parameters = {
 
 export const BenchUseCase5: ComponentStory<typeof ProjectionsContainer> =
   () => {
-    const dashboardStart = new Date(2022, 3, 11);
+    const dashboardStart = new Date(2018, 0, 1);
     const skill = { id: "1001", name: "React" };
     const role = {
       id: "1",
-      startDate: new Date(2022, 3, 11),
+      startDate: new Date(2018, 0, 1),
       startConfidence: 1,
-      endDate: new Date(2022, 3, 24),
+      endDate: new Date(2018, 0, 14),
       endConfidence: 0.7,
       project: projects[0],
       skills: [skill],
@@ -858,15 +922,15 @@ export const BenchUseCase5: ComponentStory<typeof ProjectionsContainer> =
     const assignment = {
       id: "2",
       role,
-      startDate: new Date(2022, 3, 11),
-      endDate: new Date(2022, 3, 17),
+      startDate: new Date(2018, 0, 1),
+      endDate: new Date(2018, 0, 7),
     };
 
     const assignment2 = {
       id: "3",
       role,
-      startDate: new Date(2022, 3, 18),
-      endDate: new Date(2022, 3, 24),
+      startDate: new Date(2018, 0, 8),
+      endDate: new Date(2018, 0, 14),
     };
 
     const employee = {
