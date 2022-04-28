@@ -128,7 +128,9 @@ export default function EmployeeTable({
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {orderBy(employees, ["name"]).map((employee, index) => (
+                  {orderBy(employees, [
+                    (employee) => employee.name.toLowerCase(),
+                  ]).map((employee, index) => (
                     <EmployeeTableRow
                       key={employee.id}
                       handleEditEmployee={setEmployeeToEdit}

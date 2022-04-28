@@ -20,6 +20,7 @@ import {
   Box,
   SimpleGrid,
   Divider,
+  Text,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
@@ -68,28 +69,45 @@ export default function EmployeeModal({
     defaultValues: employeeData,
   });
 
+  const startDateInput: HTMLInputElement = document.getElementById(
+    "start_date",
+  ) as HTMLInputElement;
+  const isStartDateInvalid = !!startDateInput?.validity.badInput;
+  const startDateValidationMessage = startDateInput?.validationMessage;
+
+  const endDateInput: HTMLInputElement = document.getElementById(
+    "end_date",
+  ) as HTMLInputElement;
+  const isEndDateInvalid = !!endDateInput?.validity.badInput;
+  const endDateValidationMessage = endDateInput?.validationMessage;
+
   const isNewEmployee = isEmpty(employeeData);
   const employeeName = watch("name");
+
   const canSubmitForm =
-    (isNewEmployee && nameProvided(employeeName)) ||
-    (!isNewEmployee && formIsDirty && nameProvided(employeeName));
+    !isStartDateInvalid &&
+    !isEndDateInvalid &&
+    ((isNewEmployee && nameProvided(employeeName)) ||
+      (!isNewEmployee && formIsDirty && nameProvided(employeeName)));
 
   const submitForm = async (data: EmployeeFormData) => {
-    const employeeSkills = getSelectedSkills(data.skills, skills || []);
+    if (canSubmitForm) {
+      const employeeSkills = getSelectedSkills(data.skills, skills || []);
 
-    try {
-      setStatus("pending");
-      await onSave({
-        name: data.name,
-        startDate: data.startDate ? parseISO(data.startDate) : null,
-        endDate: data.endDate ? parseISO(data.endDate) : null,
-        skills: employeeSkills,
-      });
-      reset({ name: "", startDate: "", endDate: "" });
-      onClose();
-      setStatus("idle");
-    } catch (e) {
-      setServerError(!serverError);
+      try {
+        setStatus("pending");
+        await onSave({
+          name: data.name,
+          startDate: data.startDate ? parseISO(data.startDate) : null,
+          endDate: data.endDate ? parseISO(data.endDate) : null,
+          skills: employeeSkills,
+        });
+        reset({ name: "", startDate: "", endDate: "" });
+        onClose();
+        setStatus("idle");
+      } catch (e) {
+        setServerError(!serverError);
+      }
     }
   };
 
@@ -134,20 +152,56 @@ export default function EmployeeModal({
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
 
-            <HStack spacing="8px" width="100%">
-              <FormControl isInvalid={errors.startDate ? true : false}>
+            <HStack spacing="8px" width="100%" alignItems="baseline">
+              <FormControl
+                isInvalid={
+                  errors.startDate || isStartDateInvalid ? true : false
+                }
+              >
                 <FormLabel>Start Date</FormLabel>
                 <Input
                   {...register("startDate")}
                   id="start_date"
                   type="date"
                   data-testid="start_date"
+                  min="2000-01-01"
+                  max="2200-01-01"
                 />
+                {startDateValidationMessage && (
+                  <Text
+                    display="flex"
+                    alignItems="center"
+                    marginTop="0.5rem"
+                    fontSize="0.875rem"
+                    color="#E53E3E"
+                  >
+                    {startDateValidationMessage}
+                  </Text>
+                )}
               </FormControl>
 
-              <FormControl>
+              <FormControl
+                isInvalid={errors.endDate || isEndDateInvalid ? true : false}
+              >
                 <FormLabel>End Date</FormLabel>
-                <Input {...register("endDate")} id="end_date" type="date" />
+                <Input
+                  {...register("endDate")}
+                  id="end_date"
+                  type="date"
+                  min="2000-01-01"
+                  max="2200-01-01"
+                />
+                {endDateValidationMessage && (
+                  <Text
+                    display="flex"
+                    alignItems="center"
+                    marginTop="0.5rem"
+                    fontSize="0.875rem"
+                    color="#E53E3E"
+                  >
+                    {endDateValidationMessage}
+                  </Text>
+                )}
               </FormControl>
             </HStack>
 
