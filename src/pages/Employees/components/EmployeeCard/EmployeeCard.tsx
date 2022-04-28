@@ -12,12 +12,12 @@ import {
   Th,
   Thead,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
 import { Tag } from "../../../../components/Tag";
 import { TrashIcon, EditIcon } from "../../../assets";
-import React from "react";
 
 interface EmployeeCardProps {
   employee: Employee;
@@ -157,31 +157,39 @@ const SkeletonRow = () => (
 
 export function EmployeeCardSkeleton(): JSX.Element {
   return (
-    <Table>
-      <Thead>
-        <Tr>
-          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-            EMPLOYEE NAME
-          </Th>
-          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-            START DATE
-          </Th>
-          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-            END DATE
-          </Th>
-          <Th pt="0px" pr={80} pb={4} color="gray.800" textStyle="table.title">
-            ROLES
-          </Th>
-          <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
-            ACTIONS
-          </Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {[1, 2, 3, 4].map((row) => {
-          return <SkeletonRow key={row} />;
-        })}
-      </Tbody>
-    </Table>
+    <Box paddingInline="40px" marginBottom="40px">
+      <Table>
+        <Thead>
+          <Tr>
+            <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+              EMPLOYEE NAME
+            </Th>
+            <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+              START DATE
+            </Th>
+            <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+              END DATE
+            </Th>
+            <Th
+              pt="0px"
+              pr={80}
+              pb={4}
+              color="gray.800"
+              textStyle="table.title"
+            >
+              ROLES
+            </Th>
+            <Th pt="0px" pb={4} color="gray.800" textStyle="table.title">
+              ACTIONS
+            </Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {[1, 2, 3, 4].map((row) => {
+            return <SkeletonRow key={row} />;
+          })}
+        </Tbody>
+      </Table>
+    </Box>
   );
 }

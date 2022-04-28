@@ -10,7 +10,7 @@ export default function Layout({
     <Flex height="100%" width="100%" overflow="hidden">
       <SideNav />
 
-      <Box backgroundColor="gray.10" flex="1 1" padding="40px" overflowY="auto">
+      <Box backgroundColor="gray.10" flex="1 1" overflowY="auto">
         {children}
       </Box>
     </Flex>

@@ -24,7 +24,15 @@ export default function ProjectsHeader({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box mb={project ? "" : "48px"}>
+    <Box
+      mb={project ? "" : "32px"}
+      position="sticky"
+      top="0"
+      background="gray.10"
+      padding="40px"
+      paddingBottom="1em"
+      zIndex="10"
+    >
       <Breadcrumb
         spacing="8px"
         marginBottom="16px"

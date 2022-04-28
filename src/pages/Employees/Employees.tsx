@@ -21,27 +21,36 @@ interface EmployeesProps {
 export function EmployeePageLoadingLayout(): JSX.Element {
   return (
     <Box>
-      <EmployeesBreadcrumbs />
-      <Flex
-        width="full"
-        fontFamily="Arial, Helvetica, sans-serif"
-        display="flex"
-        justifyContent="space-between"
+      <Box
+        position="sticky"
+        top="0"
+        background="gray.10"
+        padding="40px"
+        paddingBottom="1em"
+        zIndex="10"
       >
-        <Heading as="h1" textStyle="title" color="gray.700">
-          Team Members
-        </Heading>
-
-        <Button
-          size="lg"
-          variant="primary"
-          onClick={() => {
-            null;
-          }}
+        <EmployeesBreadcrumbs />
+        <Flex
+          width="full"
+          fontFamily="Arial, Helvetica, sans-serif"
+          display="flex"
+          justifyContent="space-between"
         >
-          Add Team Member
-        </Button>
-      </Flex>
+          <Heading as="h1" textStyle="title" color="gray.700">
+            Team Members
+          </Heading>
+
+          <Button
+            size="lg"
+            variant="primary"
+            onClick={() => {
+              null;
+            }}
+          >
+            Add Team Member
+          </Button>
+        </Flex>
+      </Box>
       <Box mt="48px">
         <EmployeeCardSkeleton />
       </Box>
@@ -87,37 +96,44 @@ export function Employees({
         />
       )}
 
-      <EmployeesBreadcrumbs />
-
-      <Flex
-        width="full"
-        fontFamily="Arial, Helvetica, sans-serif"
-        display="flex"
-        justifyContent="space-between"
+      <Box
         position="sticky"
         top="0"
+        background="gray.10"
+        padding="40px"
+        paddingBottom="1em"
+        zIndex="10"
       >
-        <Heading
-          as="h1"
-          textStyle="title"
-          color="gray.700"
-          data-testid="employeesTitle"
-        >
-          Team Members
-        </Heading>
+        <EmployeesBreadcrumbs />
 
-        <Button
-          size="lg"
-          variant="primary"
-          onClick={() => setEmployeeModal(true)}
-          arialabel="Add Employee"
+        <Flex
+          width="full"
+          fontFamily="Arial, Helvetica, sans-serif"
+          display="flex"
+          justifyContent="space-between"
         >
-          Add Team Member
-        </Button>
-      </Flex>
+          <Heading
+            as="h1"
+            textStyle="title"
+            color="gray.700"
+            data-testid="employeesTitle"
+          >
+            Team Members
+          </Heading>
+
+          <Button
+            size="lg"
+            variant="primary"
+            onClick={() => setEmployeeModal(true)}
+            arialabel="Add Employee"
+          >
+            Add Team Member
+          </Button>
+        </Flex>
+      </Box>
 
       <EmployeeTable
-        mt="48px"
+        mt="32px"
         updateEmployee={updateEmployee}
         destroyEmployee={destroyEmployee}
         employees={employees}

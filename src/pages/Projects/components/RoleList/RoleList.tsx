@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import isEmpty from "lodash/isEmpty";
-import { Box, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, chakra, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import DeleteRoleModal from "../DeleteRoleModal";
 import RoleCard from "../RoleCard";
 import Button from "../../../../components/Button";
@@ -51,7 +51,11 @@ export default function RoleList({ project }: RoleListProps): JSX.Element {
 
   return (
     <>
-      <Button mb={4} onClick={() => setProjectToEdit(project)}>
+      <Button
+        mb={4}
+        onClick={() => setProjectToEdit(project)}
+        marginInline="40px"
+      >
         Add Role
       </Button>
 
@@ -95,30 +99,38 @@ export default function RoleList({ project }: RoleListProps): JSX.Element {
 }
 
 function RolesTable({ children }: { children: React.ReactNode }) {
+  const StickyHeader = chakra(Th, {
+    baseStyle: {
+      position: "sticky",
+      top: "11em",
+      background: "gray.10",
+      zIndex: "10",
+    },
+  });
   return (
-    <Box maxHeight="75vh" overflowY="auto">
+    <Box paddingInline="40px" marginBottom="40px">
       <Table>
         <Thead py={4}>
           <Tr>
-            <Th color="gray.800" textStyle="table.title">
+            <StickyHeader color="gray.800" textStyle="table.title">
               Roles
-            </Th>
-            <Th color="gray.800" textStyle="table.title">
+            </StickyHeader>
+            <StickyHeader color="gray.800" textStyle="table.title">
               Start Date
-            </Th>
-            <Th color="gray.800" textStyle="table.title">
+            </StickyHeader>
+            <StickyHeader color="gray.800" textStyle="table.title">
               Confidence
-            </Th>
-            <Th color="gray.800" textStyle="table.title">
+            </StickyHeader>
+            <StickyHeader color="gray.800" textStyle="table.title">
               End Date
-            </Th>
-            <Th color="gray.800" textStyle="table.title">
+            </StickyHeader>
+            <StickyHeader color="gray.800" textStyle="table.title">
               Confidence
-            </Th>
-            <Th color="gray.800" textStyle="table.title">
+            </StickyHeader>
+            <StickyHeader color="gray.800" textStyle="table.title">
               Current Employees
-            </Th>
-            <Th
+            </StickyHeader>
+            <StickyHeader
               py={4}
               pr={12}
               color="gray.800"
@@ -126,7 +138,7 @@ function RolesTable({ children }: { children: React.ReactNode }) {
               isNumeric
             >
               Actions
-            </Th>
+            </StickyHeader>
           </Tr>
         </Thead>
         <Tbody>{children}</Tbody>

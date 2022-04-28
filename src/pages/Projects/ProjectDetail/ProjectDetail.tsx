@@ -30,7 +30,11 @@ interface ProjectDetailProps {
 export function LoadingProjectDetails(): JSX.Element {
   return (
     <>
-      <Stack data-testid="loading-project-details-skeleton">
+      <Stack
+        data-testid="loading-project-details-skeleton"
+        paddingInline="40px"
+        marginBlock="40px"
+      >
         <Skeleton height="10px" width="14rem" />
         <Skeleton height="55px" width="10rem" />
         <Flex
@@ -74,6 +78,7 @@ export function ProjectDetail({
         flexDirection="row"
         minHeight="30px"
         alignItems="center"
+        paddingInline="40px"
       >
         <ProjectDescription onEdit={onSave} project={project} />
         <Spacer />
