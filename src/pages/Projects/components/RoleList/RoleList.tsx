@@ -20,7 +20,13 @@ interface RoleListProps {
 }
 
 export default function RoleList({ project }: RoleListProps): JSX.Element {
-  const skills = useSkills();
+  const skills = useSkills({
+    include: [
+      "employees.skills",
+      "employees.assignments.role.skills",
+      "employees.assignments.role.project",
+    ],
+  });
   const employees: Employee[] = useEmployees({ include: "skills" });
 
   const { createRole, updateRole, destroyRole } = useRoleMutations();

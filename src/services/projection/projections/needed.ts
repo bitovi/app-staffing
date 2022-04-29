@@ -112,7 +112,7 @@ export const calculateNeededForSkillForPeriod = (
             ) {
               nextPeriodEndConfidence.push({
                 project: { name: role.project.name, id: role.project.id },
-                endConfidence: role.endConfidence || 0,
+                endConfidence: role.endConfidence ? 1 - role.endConfidence : 0,
               });
             }
           }
@@ -149,7 +149,7 @@ export const calculateNeededForSkillForPeriod = (
 
           nextPeriodEndConfidence.push({
             project: { name: role.project.name, id: role.project.id },
-            endConfidence: role.endConfidence || 0,
+            endConfidence: role.endConfidence ? 1 - role.endConfidence : 0,
           });
         }
       }

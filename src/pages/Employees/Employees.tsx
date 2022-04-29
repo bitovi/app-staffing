@@ -78,7 +78,13 @@ export function Employees({
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
   const employees = useEmployees({ include: "skills", sort: "name" });
-  const skills = useSkills();
+  const skills = useSkills({
+    include: [
+      "employees.skills",
+      "employees.assignments.role.skills",
+      "employees.assignments.role.project",
+    ],
+  });
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
