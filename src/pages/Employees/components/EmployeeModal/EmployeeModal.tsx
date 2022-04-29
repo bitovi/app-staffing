@@ -64,22 +64,55 @@ export default function EmployeeModal({
     reset,
     watch,
     control,
+    setError,
+    clearErrors,
     formState: { errors, isDirty: formIsDirty },
   } = useForm<EmployeeFormData>({
     defaultValues: employeeData,
   });
 
+  // When we type in the date's input text field, react does not detect changes
+  // and if the date is invalid the value is just a string.
+  // That's why we check the input element manually to verify it's valid
   const startDateInput: HTMLInputElement = document.getElementById(
     "start_date",
   ) as HTMLInputElement;
   const isStartDateInvalid = !!startDateInput?.validity.badInput;
   const startDateValidationMessage = startDateInput?.validationMessage;
 
+  // Sometimes the input's validity does not update
+  // so we have this extra check in the onblur event
+  if (startDateInput) {
+    startDateInput.onblur = () => {
+      if (startDateInput.validity.badInput) {
+        setError("startDate", {
+          type: "custom",
+          message: startDateValidationMessage,
+        });
+      } else {
+        clearErrors("startDate");
+      }
+    };
+  }
+
   const endDateInput: HTMLInputElement = document.getElementById(
     "end_date",
   ) as HTMLInputElement;
   const isEndDateInvalid = !!endDateInput?.validity.badInput;
   const endDateValidationMessage = endDateInput?.validationMessage;
+
+  if (endDateInput) {
+    endDateInput.onblur = () => {
+      if (endDateInput.validity.badInput) {
+        setError("endDate", {
+          type: "custom",
+          message: endDateValidationMessage,
+        });
+      } else {
+        clearErrors("endDate");
+      }
+    };
+  }
 
   const isNewEmployee = isEmpty(employeeData);
   const employeeName = watch("name");
@@ -167,7 +200,7 @@ export default function EmployeeModal({
                   min="2000-01-01"
                   max="2200-01-01"
                 />
-                {startDateValidationMessage && (
+                {isStartDateInvalid && startDateValidationMessage && (
                   <Text
                     display="flex"
                     alignItems="center"
@@ -191,7 +224,7 @@ export default function EmployeeModal({
                   min="2000-01-01"
                   max="2200-01-01"
                 />
-                {endDateValidationMessage && (
+                {isEndDateInvalid && endDateValidationMessage && (
                   <Text
                     display="flex"
                     alignItems="center"
