@@ -156,19 +156,19 @@ describe("projections", () => {
 
         // In each of the periods from the start, we have two roles ongoing,
         // so we add their startConfidence to get our needed number.
-        // Role 1 ends at period 5 so we add its endConfidence to the next periods
-        // Role 2 ends at period 8 so we add its endConfidence to the next periods
+        // Role 1 ends at period 5 so we add 1 - endConfidence to the next periods
+        // Role 2 ends at period 8 so we add 1 - endConfidence to the next periods
         const neededExpectedProjections = [
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
           +(startConfidenceRole1 + startConfidenceRole2).toFixed(2),
-          +(startConfidenceRole2 + endConfidenceRole1).toFixed(2),
-          +(startConfidenceRole2 + endConfidenceRole1).toFixed(2),
-          +(startConfidenceRole2 + endConfidenceRole1).toFixed(2),
-          +(endConfidenceRole1 + endConfidenceRole2).toFixed(2),
-          +(endConfidenceRole1 + endConfidenceRole2).toFixed(2),
+          +(startConfidenceRole2 + (1 - endConfidenceRole1)).toFixed(2),
+          +(startConfidenceRole2 + (1 - endConfidenceRole1)).toFixed(2),
+          +(startConfidenceRole2 + (1 - endConfidenceRole1)).toFixed(2),
+          +(1 - endConfidenceRole1 + (1 - endConfidenceRole2)).toFixed(2),
+          +(1 - endConfidenceRole1 + (1 - endConfidenceRole2)).toFixed(2),
         ];
 
         const neededProjectionsTotals = neededProjections.map(
