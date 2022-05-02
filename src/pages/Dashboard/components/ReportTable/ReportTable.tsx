@@ -68,7 +68,7 @@ function addRolesToSkills(skills: Skill[], roles: Role[]) {
   const skillRoles: SkillRole[] = cloneDeep(skills);
   for (const skill of skillRoles) {
     for (const role of roles) {
-      if (role.skills?.[0].id === skill.id) {
+      if (role.skills?.length > 0 && role.skills[0].id === skill.id) {
         if (!skill.roles) {
           skill.roles = [];
         }
