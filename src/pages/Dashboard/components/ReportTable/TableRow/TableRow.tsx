@@ -158,7 +158,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                           <Link to={`projects/${neededProject.id}`}>
                             <Text key={neededProject.name}>{`${
                               neededProject.name
-                            } ${neededRole.value * 100}%`}</Text>
+                            } ${(neededRole.value * 100).toFixed(0)}%`}</Text>
                           </Link>
                         ) : null}
                       </Box>

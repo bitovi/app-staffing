@@ -1,5 +1,6 @@
 import { Suspense, useState } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
+import omit from "lodash/omit";
 import {
   Employee,
   useEmployees as useEmployeesDefault,
@@ -78,13 +79,14 @@ export function Employees({
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
   const employees = useEmployees({ include: "skills", sort: "name" });
-  const skills = useSkills({
+  const skillsWithEmployees = useSkills({
     include: [
       "employees.skills",
       "employees.assignments.role.skills",
       "employees.assignments.role.project",
     ],
   });
+  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 

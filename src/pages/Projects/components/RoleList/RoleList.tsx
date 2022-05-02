@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import isEmpty from "lodash/isEmpty";
+import omit from "lodash/omit";
 import { Box, chakra, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import DeleteRoleModal from "../DeleteRoleModal";
 import RoleCard from "../RoleCard";
@@ -20,13 +21,14 @@ interface RoleListProps {
 }
 
 export default function RoleList({ project }: RoleListProps): JSX.Element {
-  const skills = useSkills({
+  const skillsWithEmployees = useSkills({
     include: [
       "employees.skills",
       "employees.assignments.role.skills",
       "employees.assignments.role.project",
     ],
   });
+  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
   const employees: Employee[] = useEmployees({ include: "skills" });
 
   const { createRole, updateRole, destroyRole } = useRoleMutations();
