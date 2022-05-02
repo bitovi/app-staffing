@@ -14,13 +14,21 @@ import {
   useRoleMutations,
   useSkills,
 } from "../../../../services/api";
+import omit from "lodash/omit";
 
 interface RoleListProps {
   project: Project;
 }
 
 export default function RoleList({ project }: RoleListProps): JSX.Element {
-  const skills = useSkills();
+  const skillsWithEmployees = useSkills({
+    include: [
+      "employees.skills",
+      "employees.assignments.role.skills",
+      "employees.assignments.role.project",
+    ],
+  });
+  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
   const employees: Employee[] = useEmployees({ include: "skills" });
 
   const { createRole, updateRole, destroyRole } = useRoleMutations();
