@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import isEmpty from "lodash/isEmpty";
+import omit from "lodash/omit";
 import { Box, chakra, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import DeleteRoleModal from "../DeleteRoleModal";
 import RoleCard from "../RoleCard";
@@ -14,7 +15,6 @@ import {
   useRoleMutations,
   useSkills,
 } from "../../../../services/api";
-import omit from "lodash/omit";
 
 interface RoleListProps {
   project: Project;
