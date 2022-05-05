@@ -165,7 +165,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                     </Td>
                   );
                 } else {
-                  return null;
+                  return <td key={i}></td>;
                 }
               })}
             </Tr>

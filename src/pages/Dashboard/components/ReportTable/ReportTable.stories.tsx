@@ -1,4 +1,4 @@
-import type { ComponentStory, ComponentMeta } from "@storybook/react";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { useState } from "react";
 import { Flex } from "@chakra-ui/layout";
@@ -6,6 +6,7 @@ import { Flex } from "@chakra-ui/layout";
 import { DatePicker } from "../../../../components/DatePicker";
 import Text from "../../../../components/Typography/Heading";
 import { ReportTable } from "./ReportTable";
+import { MemoryRouter } from "react-router-dom";
 
 export default {
   title: "Components/ReportTable",
@@ -16,7 +17,7 @@ export const Basic: ComponentStory<typeof ReportTable> = (args) => {
   const [date, setDate] = useState(new Date());
 
   return (
-    <>
+    <MemoryRouter>
       <Text variant="h2" my="6">
         Select a Date to Change the Timeline.
       </Text>
@@ -25,6 +26,6 @@ export const Basic: ComponentStory<typeof ReportTable> = (args) => {
       <hr />
       <Flex my="6" />
       <ReportTable date={date} />
-    </>
+    </MemoryRouter>
   );
 };
