@@ -92,10 +92,10 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
               <Badge
                 isTruncated={false}
                 size="sm"
-                whiteSpace='break-spaces'
+                whiteSpace="break-spaces"
                 background={skillBackgrounds[skill.name]}
                 maxWidth="80px"
-                textAlign='center'
+                textAlign="center"
               >
                 {skill.name}
               </Badge>
