@@ -15,22 +15,13 @@ Small.args = {
 };
 
 export const SmallLongText: ComponentStory<typeof Badge> = ({ ...props }) => (
-  <Badge {...props}>Small With a lot of Text. Project Management</Badge>
+  <Badge {...props}>Project Management. Lorem Ipsum is simply dummy text of the printing and 
+  typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s</Badge>
 );
 
 SmallLongText.args = {
   size: "sm",
   isTruncated: false
-};
-
-export const SmallLongText80px: ComponentStory<typeof Badge> = ({ ...props }) => (
-  <Badge {...props}>Small With a lot of Text. Project Management</Badge>
-);
-
-SmallLongText80px.args = {
-  size: "sm",
-  isTruncated: false,
-  maxWidth:'80px'
 };
 
 export const Medium: ComponentStory<typeof Badge> = ({ ...props }) => (
