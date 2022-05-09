@@ -21,7 +21,8 @@ export const SmallLongText: ComponentStory<typeof Badge> = ({ ...props }) => (
 
 SmallLongText.args = {
   size: "sm",
-  isTruncated: false
+  isTruncated: false,
+  textAlign:'center'
 };
 
 export const Medium: ComponentStory<typeof Badge> = ({ ...props }) => (

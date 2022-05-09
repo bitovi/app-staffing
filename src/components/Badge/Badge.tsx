@@ -9,6 +9,7 @@ type BadgeProps = {
   isTruncated?:boolean;
   children: React.ReactNode;
   whiteSpace?: TextProps['whiteSpace'];
+  textAlign?: TextProps['textAlign'];
 } ;
 
 function Badge({
@@ -17,11 +18,12 @@ function Badge({
   maxWidth,
   children,
   isTruncated=true,
-  whiteSpace=undefined
+  whiteSpace=undefined,
+  textAlign=undefined
 }: BadgeProps): JSX.Element {
   return (
     <ChakraTag bg={background} variant="solid" color="white" size={size}>
-      <Text textAlign='center' width='80px' isTruncated={isTruncated} whiteSpace={whiteSpace} maxWidth={maxWidth || "200px"}>
+      <Text textAlign={textAlign} isTruncated={isTruncated} whiteSpace={whiteSpace} maxWidth={maxWidth || "200px"}>
         {children}
       </Text>
     </ChakraTag>
