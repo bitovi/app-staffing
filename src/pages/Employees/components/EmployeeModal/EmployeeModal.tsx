@@ -239,7 +239,7 @@ export default function EmployeeModal({
             </HStack>
 
             <FormControl>
-              <FormLabel>Roles</FormLabel>
+              <FormLabel>Skills</FormLabel>
               <Flex mt={4} flexGrow={1}>
                 <SimpleGrid columns={2} spacingX={24} spacingY={4}>
                   {skills?.map((skill) => (
