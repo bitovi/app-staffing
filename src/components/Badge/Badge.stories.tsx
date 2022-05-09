@@ -14,6 +14,25 @@ Small.args = {
   size: "sm",
 };
 
+export const SmallLongText: ComponentStory<typeof Badge> = ({ ...props }) => (
+  <Badge {...props}>Small With a lot of Text. Project Management</Badge>
+);
+
+SmallLongText.args = {
+  size: "sm",
+  isTruncated: false
+};
+
+export const SmallLongText80px: ComponentStory<typeof Badge> = ({ ...props }) => (
+  <Badge {...props}>Small With a lot of Text. Project Management</Badge>
+);
+
+SmallLongText80px.args = {
+  size: "sm",
+  isTruncated: false,
+  maxWidth:'80px'
+};
+
 export const Medium: ComponentStory<typeof Badge> = ({ ...props }) => (
   <Badge {...props}>Medium</Badge>
 );
