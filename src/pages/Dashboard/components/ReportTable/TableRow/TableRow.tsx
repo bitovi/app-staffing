@@ -85,15 +85,17 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
         <Th
           rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
           textTransform="none"
-          _before={{ content: "''", height: "15px", display: "block" }}
           borderRadius="8px"
         >
           <Center px={3}>
             <Flex flex={1} ml={1}>
               <Badge
+                isTruncated={false}
                 size="sm"
+                whiteSpace="break-spaces"
                 background={skillBackgrounds[skill.name]}
-                maxWidth="70px"
+                maxWidth="80px"
+                textAlign="center"
               >
                 {skill.name}
               </Badge>

@@ -14,6 +14,20 @@ Small.args = {
   size: "sm",
 };
 
+export const SmallLongText: ComponentStory<typeof Badge> = ({ ...props }) => (
+  <Badge {...props}>
+    Project Management. Lorem Ipsum is simply dummy text of the printing and
+    typesetting industry. Lorem Ipsum has been the industrys standard dummy text
+    ever since the 1500s
+  </Badge>
+);
+
+SmallLongText.args = {
+  size: "sm",
+  isTruncated: false,
+  textAlign: "center",
+};
+
 export const Medium: ComponentStory<typeof Badge> = ({ ...props }) => (
   <Badge {...props}>Medium</Badge>
 );
