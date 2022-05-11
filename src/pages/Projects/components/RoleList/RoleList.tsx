@@ -59,13 +59,15 @@ export default function RoleList({ project }: RoleListProps): JSX.Element {
 
   return (
     <>
-      <Button
-        mb={4}
-        onClick={() => setProjectToEdit(project)}
-        marginInline="40px"
-      >
-        Add Role
-      </Button>
+      <Box position="sticky" top="13.5em" zIndex="10" backgroundColor="gray.10">
+        <Button
+          mb={4}
+          onClick={() => setProjectToEdit(project)}
+          marginInline="40px"
+        >
+          Add Role
+        </Button>
+      </Box>
 
       {isEmpty(project?.roles) ? null : (
         <RolesTable>
@@ -110,7 +112,7 @@ function RolesTable({ children }: { children: React.ReactNode }) {
   const StickyHeader = chakra(Th, {
     baseStyle: {
       position: "sticky",
-      top: "11em",
+      top: "21.5em",
       background: "gray.10",
       zIndex: "10",
     },
