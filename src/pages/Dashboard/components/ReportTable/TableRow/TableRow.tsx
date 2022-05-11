@@ -94,8 +94,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                 size="sm"
                 whiteSpace="break-spaces"
                 background={skillBackgrounds[skill.name]}
-                maxWidth="80px"
+                maxWidth="100px"
                 textAlign="center"
+                display="flex"
               >
                 {skill.name}
               </Badge>

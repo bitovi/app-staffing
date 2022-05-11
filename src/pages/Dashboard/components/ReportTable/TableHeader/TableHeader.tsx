@@ -21,7 +21,7 @@ export default function TableHeader({
           color="#333333"
           fontWeight="700"
           letterSpacing="0.05em"
-          width="6rem"
+          width="7rem"
         >
           {columnLabel && (
             <Text textStyle="tableHead" fontSize="12px">
