@@ -10,7 +10,7 @@ type BadgeProps = {
   children: React.ReactNode;
   whiteSpace?: TextProps["whiteSpace"];
   textAlign?: TextProps["textAlign"];
-  display?: TextProps['display'];
+  display?: TextProps["display"];
 };
 
 function Badge({
@@ -21,7 +21,7 @@ function Badge({
   isTruncated = true,
   whiteSpace = undefined,
   textAlign = undefined,
-  display = undefined
+  display = undefined,
 }: BadgeProps): JSX.Element {
   return (
     <ChakraTag bg={background} variant="solid" color="white" size={size}>
