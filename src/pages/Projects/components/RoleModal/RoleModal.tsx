@@ -490,7 +490,7 @@ export default function RoleModal({
               </Heading>
             ) : (
               <FormControl>
-                <FormLabel>Select Role</FormLabel>
+                <FormLabel>Select Skill</FormLabel>
                 <Controller
                   control={control}
                   name="skillId"

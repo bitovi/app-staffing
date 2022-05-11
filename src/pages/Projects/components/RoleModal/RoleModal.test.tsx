@@ -374,7 +374,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     );
 
     // Make sure we don't show skills selection in edit mode
-    expect(queryByText(/Select Role/g)).not.toBeInTheDocument();
+    expect(queryByText(/Select Skill/g)).not.toBeInTheDocument();
     expect(queryByRole("radio")).not.toBeInTheDocument();
 
     // make sure inputs are prefilled with role to edit data
