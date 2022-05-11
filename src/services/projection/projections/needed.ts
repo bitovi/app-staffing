@@ -130,7 +130,7 @@ export const calculateNeededForSkillForPeriod = (
           }
 
           // If there is no assignment for this day, the needed value is the role's start confidence
-          // if the role is over though then the needed value is the end confidence
+          // if the role is over though then the needed value is the end confidence 
           if (role.endDate && j >= role.endDate) {
             arrayOfDays[arrayOfDaysIndex].days.push(
               role.endConfidence ? 1 - role.endConfidence : 0,
