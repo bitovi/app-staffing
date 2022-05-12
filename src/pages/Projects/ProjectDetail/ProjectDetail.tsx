@@ -79,6 +79,10 @@ export function ProjectDetail({
         minHeight="30px"
         alignItems="center"
         paddingInline="40px"
+        position="sticky"
+        top="8.5em"
+        zIndex="10"
+        backgroundColor="gray.10"
       >
         <ProjectDescription onEdit={onSave} project={project} />
         <Spacer />

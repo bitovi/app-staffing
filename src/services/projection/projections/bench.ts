@@ -78,12 +78,15 @@ export function calculateBenchForSkillForPeriod(
           for (const assignment of orderedAssignments) {
             // The days when the employee is assigned
             // The assignment has started and either it didn't end yet,
-            // or it doesnt have an end date and we check if the role has ended
+            // or it doesnt have an end date and we check if the role has not ended yet
+            // which means either the role end date is later than date j or that there is no end date
             if (
               assignment.startDate <= j &&
               (assignment.endDate
                 ? assignment.endDate >= j
-                : assignment.role.endDate && assignment.role.endDate >= j)
+                : assignment.role.endDate
+                ? assignment.role.endDate >= j
+                : true)
             ) {
               const benchValue = +(
                 (1 - assignment.role.startConfidence) /
