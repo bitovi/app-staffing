@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { isEmpty } from "lodash";
 import { ServiceError } from "../../../../../components/ServiceError";
 
@@ -62,17 +62,20 @@ export default function AddProjectModal({
     watch,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isDirty: formIsDirty },
   } = useForm<ProjectFormData>({
     defaultValues: project ? project : undefined,
   });
-
+  console.log(project);
   const isNewProject = isEmpty(project);
-  const projectName = watch("name");
+  const projectName = useWatch("name");
+  console.log(projectName)
   const canSubmitForm =
     (isNewProject && fullNameProvided(projectName)) ||
     (!isNewProject && formIsDirty && fullNameProvided(projectName));
-
+  console.log(status);
+  console.log(canSubmitForm);
   const addNewProject = async () => {
     try {
       setStatus("pending");
@@ -84,6 +87,23 @@ export default function AddProjectModal({
     } catch (e) {
       setServerError(!serverError);
     }
+  };
+
+  const updateProject = async () => {
+    setStatus("pending");
+    console.log(newProject);
+    setStatus("idle");
+    // try {
+
+    //   setStatus("pending");
+    //   const newProjectId = await addProject(newProject);
+    //   history.push(`/projects/${newProjectId}`);
+    //   resetForm();
+    //   onClose();
+    //   setStatus("idle");
+    // } catch (e) {
+    //   setServerError(!serverError);
+    // }
   };
 
   const handleChange = (
@@ -101,6 +121,12 @@ export default function AddProjectModal({
     setNewProject(initialFormState);
   };
 
+  useEffect(()=>{
+    if(project){
+      setValue('name',project?.name);
+      setNewProject({ ...project});
+    }
+  },[isOpen,project, setValue])
   useEffect(resetForm, [reset, project]);
 
   return (
@@ -188,7 +214,7 @@ export default function AddProjectModal({
               status,
               canSubmitForm,
               isNewProject,
-              onClick: handleSubmit(() => addNewProject()),
+              onClick: handleSubmit(() => project?updateProject():addNewProject()),
             })}
             aria-disabled={!canSubmitForm}
           >
