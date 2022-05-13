@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 import { ServiceError } from "../../../../../components/ServiceError";
 
@@ -69,7 +69,7 @@ export default function AddProjectModal({
   });
   console.log(project);
   const isNewProject = isEmpty(project);
-  const projectName = useWatch("name");
+  const projectName = watch("name");
   console.log(projectName)
   const canSubmitForm =
     (isNewProject && fullNameProvided(projectName)) ||
