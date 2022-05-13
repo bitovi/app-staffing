@@ -57,6 +57,7 @@ interface RoleModalProps {
   createRole: (
     data: NewRole,
     identifier: string,
+    updateParentCache?: boolean,
   ) => Promise<string | undefined>;
   createAssignment: (
     data: NewAssignment,
@@ -67,6 +68,7 @@ interface RoleModalProps {
     data: Partial<Role>,
     identifier: string,
     undefinedValues: string[],
+    updateParentCache?: boolean,
   ) => Promise<void>;
   updateAssignment: (
     id: string,
@@ -388,6 +390,7 @@ export default function RoleModal({
         const newRoleId = await createRole(
           newRole,
           skills.filter((skill) => skill.id === data.skillId)?.[0]?.name,
+          true,
         );
 
         const assignments = sanitizeAssignments(data.assignments);
@@ -453,6 +456,7 @@ export default function RoleModal({
           },
           roleToEdit.skills[0].name,
           ["end_date", "end_confidence"],
+          true,
         );
       }
 
