@@ -225,8 +225,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                     <Box fontSize="10px" fontWeight="600" color="#333333">
                       {employees &&
                       employees[index] &&
-                      employees[index].value &&
-                      employees[index].value >= 0.5 ? (
+                      employees[index].value ? (
                         <Text key={employees[index].name}>{`${
                           employees[index].name.split(" ")[0]
                         } ${employees[index].value * 100}%`}</Text>
