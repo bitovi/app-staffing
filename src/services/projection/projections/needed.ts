@@ -129,8 +129,15 @@ export const calculateNeededForSkillForPeriod = (
             }
           }
 
-          // If there is no assignment for this day, the needed value is the role's start confidence
-          arrayOfDays[arrayOfDaysIndex].days.push(role.startConfidence);
+          // If the role is over then the needed value is the end confidence
+          if (role.endDate && j >= role.endDate) {
+            arrayOfDays[arrayOfDaysIndex].days.push(
+              role.endConfidence ? 1 - role.endConfidence : 0,
+            );
+          } else {
+            // If there is no assignment for this day, the needed value is the role's start confidence
+            arrayOfDays[arrayOfDaysIndex].days.push(role.startConfidence);
+          }
         }
       } else {
         // Similarly, if the role has no assignments, all days of this period will have a needed value
