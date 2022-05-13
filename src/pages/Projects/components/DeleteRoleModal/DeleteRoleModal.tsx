@@ -10,7 +10,12 @@ const DeleteRoleModal = ({
 }: {
   roleToDelete: Role | null;
   setRole: (role: Role | null) => void;
-  destroyRole: (roleId: string, projectId: string, identifier: string) => void;
+  destroyRole: (
+    roleId: string,
+    projectId: string,
+    identifier: string,
+    updateParentCache?: boolean,
+  ) => void;
   projectId: string;
 }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +36,7 @@ const DeleteRoleModal = ({
         roleToDelete.id,
         projectId,
         roleToDelete.skills?.[0]?.name,
+        true,
       );
       setIsLoading(false);
       setRole(null);

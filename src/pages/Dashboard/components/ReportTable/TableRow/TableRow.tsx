@@ -206,6 +206,11 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
               {projections.map(({ action, bench }, i) => {
                 const { highlight, text } = getRowColors(action);
+
+                const employees = bench.employees?.filter(
+                  (employee) => employee.value >= 0.5,
+                );
+
                 return (
                   <Td
                     whiteSpace="pre-wrap"
@@ -218,16 +223,13 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                     textAlign="right"
                   >
                     <Box fontSize="10px" fontWeight="600" color="#333333">
-                      {bench.employees &&
-                      bench.employees[index] &&
-                      bench.employees[index].value &&
-                      bench.employees[index].value >= 0.5 ? (
-                        <Text
-                          key={bench.employees[index].name}
-                        >{`${bench.employees[index].name.substring(
-                          0,
-                          bench.employees[index].name.indexOf(" "),
-                        )} ${bench.employees[index].value * 100}%`}</Text>
+                      {employees &&
+                      employees[index] &&
+                      employees[index].value &&
+                      employees[index].value >= 0.5 ? (
+                        <Text key={employees[index].name}>{`${
+                          employees[index].name.split(" ")[0]
+                        } ${employees[index].value * 100}%`}</Text>
                       ) : null}
                     </Box>
                   </Td>
