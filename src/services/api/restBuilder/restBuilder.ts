@@ -119,7 +119,11 @@ export default function restBuilder<Data extends BaseData>(
     const { mutate } = useSWRConfig();
 
     const create = useCallback(
-      async (data: Partial<Omit<Data, "id">>, identifier?: string) => {
+      async (
+        data: Partial<Omit<Data, "id">>,
+        identifier?: string,
+        updateParentCache?: boolean,
+      ) => {
         const payload = serializer.serialize(type, data);
         const response = await fetcher<JSONAPIDocument>("POST", path, payload);
 
@@ -134,7 +138,7 @@ export default function restBuilder<Data extends BaseData>(
           await mutate(
             path,
             async (cache: Data[] | undefined) => {
-              if (!cache) {
+              if (!cache || updateParentCache) {
                 if (parentStore) {
                   const source = deserialized[
                     parentStore.sourceRelationship as keyof BaseData
@@ -184,6 +188,7 @@ export default function restBuilder<Data extends BaseData>(
         data: Partial<Data>,
         identifier?: string,
         undefinedValues?: string[],
+        updateParentCache?: boolean,
       ) => {
         const payload = serializer.serialize(type, { ...data, id });
         const response = await fetcher<JSONAPIDocument>(
@@ -204,7 +209,7 @@ export default function restBuilder<Data extends BaseData>(
           await mutate(
             path,
             async (cache: Data[] | undefined) => {
-              if (!cache) {
+              if (!cache || updateParentCache) {
                 if (parentStore) {
                   const source = deserialized[
                     parentStore.sourceRelationship as keyof BaseData
@@ -261,14 +266,19 @@ export default function restBuilder<Data extends BaseData>(
     );
 
     const destroy = useCallback(
-      async (id: string, parentId?: string, identifier?: string) => {
+      async (
+        id: string,
+        parentId?: string,
+        identifier?: string,
+        updateParentCache?: boolean,
+      ) => {
         await fetcher<undefined>("DELETE", `${path}/${id}`);
 
         // mutate list cache
         await mutate(
           path,
           async (cache: Data[] | undefined) => {
-            if (!cache) {
+            if (!cache || updateParentCache) {
               if (parentStore && parentId) {
                 mutateParentCache(
                   mutate,
