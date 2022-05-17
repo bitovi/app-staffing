@@ -242,7 +242,9 @@ export default function restBuilder<Data extends BaseData>(
           await mutate(
             `${path}/${id}`,
             async (cache: Data) => {
-              return deserialized;
+              console.log(cache);
+              console.log(deserialized);
+              return {...cache, ...deserialized};
             },
             false,
           );
@@ -378,6 +380,8 @@ async function mutateParentCache(
           if (deserialized) cache.push(deserialized);
           break;
         case "Update":
+          console.log(cache);
+          break;
         // To do
         case "Delete":
           cache = cache.filter((item) => item.id !== id);

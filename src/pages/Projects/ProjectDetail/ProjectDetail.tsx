@@ -14,7 +14,7 @@ import {
 import { Image } from "@chakra-ui/image";
 import {
   useProject as useProjectDefault,
-  useProjectMutations as useProjectMutationsDefault,
+  useProjectMutations as useProjectMutationsDefault
 } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
@@ -64,13 +64,21 @@ export function ProjectDetail({
   const project = useProject(id, {
     include: ["roles.skills", "roles.assignments.employee"],
   });
-
+  // const {roles} = {...useProject(id, {
+  //   include: ["roles.skills", "roles.assignments.employee"],
+  // })};
+  // useEffect(()=>{
+    
+  // })
   const { updateProject, destroyProject } = useProjectMutations();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onSave = (id: string, updated: Partial<Project>) => {
-    updateProject(id, { ...project, ...updated });
+    updateProject(id, updated );
+    console.log(project);
+
+
   };
 
   return (
@@ -95,7 +103,6 @@ export function ProjectDetail({
           aria-label="Edit Project"
           fontSize="20px"
           icon={<EditIcon fill="currentColor" />}
-          isNewProject={true}
           onClick={onOpen}
         />
           <>
@@ -112,6 +119,7 @@ export function ProjectDetail({
             <AddProjectModal
               isOpen={isOpen}
               addProject={()=>alert('added')}
+              updateProject={onSave}
               onClose={onClose}
               project={project}
             />
