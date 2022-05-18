@@ -244,11 +244,10 @@ export default function restBuilder<Data extends BaseData>(
           );
 
           // mutate individual cache
-
           await mutate(
             `${path}/${id}`,
             async (cache: Data) => {
-              return {...cache, ...deserialized};
+              return { ...cache, ...deserialized };
             },
             false,
           );
