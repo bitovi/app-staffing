@@ -272,7 +272,7 @@ export default function RoleModal({
       startDate: assignment.startDate
         ? parseISO(assignment.startDate)
         : undefined,
-      endDate: assignment.endDate ? parseISO(assignment.endDate) : undefined,
+      endDate: assignment.endDate ? parseISO(assignment.endDate) : null,
       employee: employees.find(
         (employee) => employee.id === assignment.employeeId,
       ),
@@ -382,7 +382,7 @@ export default function RoleModal({
           skills: skills.filter((skill) => skill.id === data.skillId),
           startDate: parseISO(data.startDate),
           startConfidence: data.startConfidence || 1,
-          endDate: data.endDate ? parseISO(data.endDate) : undefined,
+          endDate: data.endDate ? parseISO(data.endDate) : null,
           ...(!data.endConfidence && data.endConfidence !== 0
             ? { endConfidence: undefined }
             : { endConfidence: Number(data.endConfidence) }),
@@ -449,7 +449,7 @@ export default function RoleModal({
             skills: roleToEdit.skills,
             startDate: parseISO(data.startDate),
             startConfidence: data.startConfidence || 1,
-            endDate: data.endDate ? parseISO(data.endDate) : undefined,
+            endDate: data.endDate ? parseISO(data.endDate) : null,
             ...(!data.endConfidence && data.endConfidence !== 0
               ? { endConfidence: undefined }
               : { endConfidence: Number(data.endConfidence) }),
