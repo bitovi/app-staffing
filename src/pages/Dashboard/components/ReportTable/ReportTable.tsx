@@ -46,7 +46,7 @@ export function ReportTable({
 
   return (
     <Flex flexDirection="column">
-      <TableContainer>
+      <TableContainer overflowY="initial" overflowX="initial">
         <Table size="sm" sx={{ tableLayout: "fixed" }}>
           <TableHeader
             timeline={timeline}
