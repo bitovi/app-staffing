@@ -150,7 +150,9 @@ export default function ProjectModal({
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={errors.description ? true : false || !isDirty}>
+            <FormControl
+              isInvalid={errors.description ? true : false || !isDirty}
+            >
               <FormLabel>Description</FormLabel>
               <Textarea
                 {...register("description")}
