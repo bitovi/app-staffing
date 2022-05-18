@@ -58,9 +58,7 @@ export const Empty: ComponentStory<typeof ProjectDetail> = () => {
           minHeight="30px"
           alignItems="center"
         >
-          <ProjectDescription
-            project={project}
-          />
+          <ProjectDescription project={project} />
 
           <IconButton
             variant="editAction"
@@ -138,9 +136,7 @@ export const NonEmpty: ComponentStory<typeof ProjectDetail> = () => {
           minHeight="30px"
           alignItems="center"
         >
-          <ProjectDescription
-            project={project}
-          />
+          <ProjectDescription project={project} />
 
           <IconButton
             variant="editAction"
