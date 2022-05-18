@@ -204,7 +204,7 @@ export default function restBuilder<Data extends BaseData>(
           if (!identifier) identifier = deserialized.name || deserialized.id;
 
           parseDate(deserialized);
-
+          
           // mutate list cache
           await mutate(
             path,
@@ -244,11 +244,10 @@ export default function restBuilder<Data extends BaseData>(
           );
 
           // mutate individual cache
+
           await mutate(
             `${path}/${id}`,
             async (cache: Data) => {
-              console.log(cache);
-              console.log(deserialized);
               return {...cache, ...deserialized};
             },
             false,
@@ -390,7 +389,6 @@ async function mutateParentCache(
           if (deserialized) cache.push(deserialized);
           break;
         case "Update":
-          console.log(cache);
           break;
         // To do
         case "Delete":

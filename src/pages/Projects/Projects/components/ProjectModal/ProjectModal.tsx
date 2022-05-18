@@ -28,123 +28,92 @@ import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 import { ServiceError } from "../../../../../components/ServiceError";
 
-type FormData = Omit<Project, "id">;
-
 interface ProjectFormData {
   name: string;
   description?: string;
 }
 
-const initialFormState: FormData = { name: "", description: "" };
-
-interface AddProjectModalProps {
+interface ProjectModalProps {
   onClose: () => void;
   isOpen: boolean;
-  addProject: (project: NewProject) => void;
+  addProject?: (project: NewProject) => void;
   updateProject?: (id: string, updated: Partial<Project>) => void;
   project?: Project;
 }
 
 type SaveButtonStatus = "idle" | "pending";
 
-export default function AddProjectModal({
+export default function ProjectModal({
   isOpen,
   onClose,
   addProject,
   project,
   updateProject,
-}: AddProjectModalProps): JSX.Element {
+}: ProjectModalProps): JSX.Element {
   const history = useHistory();
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
-  const [newProject, setNewProject] = useState<FormData>(initialFormState);
-  const [canSubmit, setCanSubmit] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    watch,
     getValues,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<ProjectFormData>({
     defaultValues: project ? project : undefined,
   });
+  const projectName = watch("name");
   const isNewProject = isEmpty(project);
   const addNewProject = async () => {
-    try {
-      setStatus("pending");
-      const newProjectId = await addProject(newProject);
-      history.push(`/projects/${newProjectId}`);
-      resetForm();
-      onClose();
-      setStatus("idle");
-    } catch (e) {
-      setServerError(!serverError);
+    if (addProject) {
+      try {
+        setStatus("pending");
+        const desc = getValues("description");
+        const newProjectId = await addProject({
+          name: projectName,
+          description: desc,
+        });
+        history.push(`/projects/${newProjectId}`);
+        resetForm();
+        onClose();
+        setStatus("idle");
+        setServerError(false);
+      } catch (e) {
+        setServerError(true);
+      }
     }
   };
 
   const update = async () => {
-    console.log(newProject);
-    if(project && updateProject){
-      try{
-        console.log(project);
+    if (project && updateProject && isDirty) {
+      try {
         setStatus("pending");
-        await updateProject(project.id, {name: newProject.name, description: newProject.description});
+        const desc = getValues("description");
+        updateProject(project.id, { name: projectName, description: desc });
         resetForm();
         onClose();
         setStatus("idle");
-      } catch(e){
-        setServerError(!serverError);
+        setServerError(false);
+      } catch (e) {
+        setServerError(true);
       }
     }
-
-    // try {
-
-    //   setStatus("pending");
-    //   const newProjectId = await addProject(newProject);
-    //   history.push(`/projects/${newProjectId}`);
-    //   resetForm();
-    //   onClose();
-    //   setStatus("idle");
-    // } catch (e) {
-    //   setServerError(!serverError);
-    // }
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { value, name } = e.target;
-    if (name === "name") {
-      setCanSubmit(
-        ((isNewProject && fullNameProvided(value)) ||
-          (!isNewProject && fullNameProvided(value))) &&
-          !!newProject?.description,
-      );
-    } else {
-      const form_name = getValues("name");
-      setCanSubmit(
-        (isNewProject && fullNameProvided(value)) ||
-          (!isNewProject && fullNameProvided(value) && !!form_name),
-      );
-    }
-    setNewProject((newProject) => ({
-      ...newProject,
-      [name]: value,
-    }));
   };
 
   const resetForm = () => {
-    reset({ name: "", description: "" });
-    setNewProject(initialFormState);
-    setCanSubmit(false);
+    reset({
+      name: project ? project.name : "",
+      description: project ? project.description : "",
+    });
   };
 
   useEffect(() => {
     if (project) {
       setValue("name", project?.name);
-      setNewProject({ ...project });
+      setValue("description", project?.description);
     }
   }, [isOpen, project, setValue]);
   useEffect(resetForm, [reset, project]);
@@ -165,7 +134,10 @@ export default function AddProjectModal({
         />
         <ModalBody pt={4}>
           <VStack spacing="16px" pb={6}>
-            <FormControl isRequired isInvalid={errors.name ? true : false}>
+            <FormControl
+              isRequired
+              isInvalid={errors.name ? true : false || !isDirty}
+            >
               <FormLabel>Project Name</FormLabel>
               <Input
                 {...register("name", {
@@ -174,19 +146,23 @@ export default function AddProjectModal({
                     fullNameProvided(name) || "Full name required",
                 })}
                 label="Project Name"
-                onChange={handleChange}
                 data-testid="projectInput"
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={errors.description ? true : false || !isDirty}>
               <FormLabel>Description</FormLabel>
               <Textarea
+                {...register("description")}
                 label="Description"
-                onChange={handleChange}
                 name="description"
-                value={newProject.description}
               />
+              <FormErrorMessage>
+                {errors?.description?.message}
+              </FormErrorMessage>
+              <FormErrorMessage>
+                {!isDirty ? "No Changes Made" : null}
+              </FormErrorMessage>
             </FormControl>
           </VStack>
         </ModalBody>
@@ -232,13 +208,13 @@ export default function AddProjectModal({
           <Button
             {...getSubmitButtonProps({
               status,
-              canSubmit,
+              canSubmit: isDirty && fullNameProvided(projectName),
               isNewProject,
               onClick: handleSubmit(() =>
                 project ? update() : addNewProject(),
               ),
             })}
-            aria-disabled={!canSubmit}
+            aria-disabled={!isDirty || !fullNameProvided(projectName)}
           >
             {isNewProject ? "Add & Close" : "Save & Close"}
           </Button>

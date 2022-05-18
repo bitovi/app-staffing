@@ -14,7 +14,7 @@ import {
 import { Image } from "@chakra-ui/image";
 import {
   useProject as useProjectDefault,
-  useProjectMutations as useProjectMutationsDefault
+  useProjectMutations as useProjectMutationsDefault,
 } from "../../../services/api";
 import ProjectDeleteButton from "../components/ProjectDeleteButton";
 import ProjectDescription from "../components/ProjectDescription";
@@ -22,7 +22,7 @@ import RoleList from "../components/RoleList";
 import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import { EditIcon } from "./../../assets";
 import type { Project } from "../../../services/api";
-import AddProjectModal from "../Projects/components/AddProjectModal";
+import ProjectModal from "../Projects/components/ProjectModal";
 
 interface ProjectDetailProps {
   useProject: typeof useProjectDefault;
@@ -64,21 +64,12 @@ export function ProjectDetail({
   const project = useProject(id, {
     include: ["roles.skills", "roles.assignments.employee"],
   });
-  // const {roles} = {...useProject(id, {
-  //   include: ["roles.skills", "roles.assignments.employee"],
-  // })};
-  // useEffect(()=>{
-    
-  // })
   const { updateProject, destroyProject } = useProjectMutations();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onSave = (id: string, updated: Partial<Project>) => {
-    updateProject(id, updated );
-    console.log(project);
-
-
+    updateProject(id, updated);
   };
 
   return (
@@ -96,7 +87,7 @@ export function ProjectDetail({
         zIndex="10"
         backgroundColor="gray.10"
       >
-        <ProjectDescription onEdit={onSave} project={project} />
+        <ProjectDescription project={project} />
         <Spacer />
         <IconButton
           variant="editAction"
@@ -105,25 +96,12 @@ export function ProjectDetail({
           icon={<EditIcon fill="currentColor" />}
           onClick={onOpen}
         />
-          <>
-            {/* <Button
-              size="lg"
-              variant="primary"
-              arialabel="Add Project"
-              onClick={onOpen}
-              data-testid="addProjectButton"
-            >
-              Add Project
-            </Button> */}
-
-            <AddProjectModal
-              isOpen={isOpen}
-              addProject={()=>alert('added')}
-              updateProject={onSave}
-              onClose={onClose}
-              project={project}
-            />
-          </>
+        <ProjectModal
+          isOpen={isOpen}
+          updateProject={onSave}
+          onClose={onClose}
+          project={project}
+        />
         <Box mt={10} />
         <ProjectDeleteButton
           projectName={project.name}

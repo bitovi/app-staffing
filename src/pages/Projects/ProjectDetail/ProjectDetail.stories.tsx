@@ -59,7 +59,6 @@ export const Empty: ComponentStory<typeof ProjectDetail> = () => {
           alignItems="center"
         >
           <ProjectDescription
-            onEdit={() => Promise.resolve()}
             project={project}
           />
 
@@ -140,7 +139,6 @@ export const NonEmpty: ComponentStory<typeof ProjectDetail> = () => {
           alignItems="center"
         >
           <ProjectDescription
-            onEdit={() => Promise.resolve()}
             project={project}
           />
 
