@@ -112,8 +112,8 @@ export default function ProjectModal({
 
   useEffect(() => {
     if (project) {
-      setValue("name", project?.name);
-      setValue("description", project?.description);
+      setValue("name", project.name);
+      setValue("description", project.description);
     }
   }, [isOpen, project, setValue]);
   useEffect(resetForm, [reset, project]);
@@ -134,10 +134,7 @@ export default function ProjectModal({
         />
         <ModalBody pt={4}>
           <VStack spacing="16px" pb={6}>
-            <FormControl
-              isRequired
-              isInvalid={errors.name ? true : false || !isDirty}
-            >
+            <FormControl isRequired isInvalid={!!errors.name || !isDirty}>
               <FormLabel>Project Name</FormLabel>
               <Input
                 {...register("name", {
@@ -150,9 +147,7 @@ export default function ProjectModal({
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl
-              isInvalid={errors.description ? true : false || !isDirty}
-            >
+            <FormControl isInvalid={!!errors.description || !isDirty}>
               <FormLabel>Description</FormLabel>
               <Textarea
                 {...register("description")}
