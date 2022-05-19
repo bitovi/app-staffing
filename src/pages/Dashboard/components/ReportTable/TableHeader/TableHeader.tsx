@@ -12,7 +12,7 @@ const StickyHeader = chakra(Th, {
   baseStyle: {
     position: "sticky",
     top: "10em",
-    background: "gray.10",
+    background: "inherit",
     zIndex: "10",
   },
 });
@@ -22,8 +22,8 @@ export default function TableHeader({
   columnLabel,
 }: TableHeaderProps): JSX.Element {
   return (
-    <Thead>
-      <Tr>
+    <Thead background="inherit">
+      <Tr background="inherit">
         <StickyHeader
           px="5px"
           fontFamily="Inter"

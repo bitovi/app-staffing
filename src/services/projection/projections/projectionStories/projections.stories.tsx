@@ -111,8 +111,8 @@ const ProjectionsContainer = ({
       </Box>
 
       <Flex flexDirection="column">
-        <TableContainer>
-          <Table size="sm" sx={{ tableLayout: "fixed" }}>
+        <TableContainer overflowY="initial" overflowX="initial">
+          <Table size="sm" sx={{ tableLayout: "fixed", background: "#ffffff" }}>
             <TableHeader
               timeline={timeline}
               columnLabel={"DEPARTMENT"}
