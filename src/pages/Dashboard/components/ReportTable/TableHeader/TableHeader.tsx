@@ -1,21 +1,30 @@
 import type { TimelineRange } from "../../../../../services/projection";
 
 import { format } from "date-fns";
-import { Center, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Center, chakra, Text, Th, Thead, Tr } from "@chakra-ui/react";
 
 type TableHeaderProps = {
   timeline: TimelineRange[];
   columnLabel?: string;
 };
 
+const StickyHeader = chakra(Th, {
+  baseStyle: {
+    position: "sticky",
+    top: "10em",
+    background: "inherit",
+    zIndex: "10",
+  },
+});
+
 export default function TableHeader({
   timeline,
   columnLabel,
 }: TableHeaderProps): JSX.Element {
   return (
-    <Thead>
-      <Tr>
-        <Th
+    <Thead background="inherit">
+      <Tr background="inherit">
+        <StickyHeader
           px="5px"
           fontFamily="Inter"
           color="#333333"
@@ -28,14 +37,14 @@ export default function TableHeader({
               {columnLabel}
             </Text>
           )}
-        </Th>
-        <Th textTransform="none" color="transparent" width="5rem">
+        </StickyHeader>
+        <StickyHeader textTransform="none" color="transparent" width="5rem">
           <Text>Needed</Text>
-        </Th>
+        </StickyHeader>
 
         {timeline.map(({ title, type, startDate }, index) => {
           return (
-            <Th
+            <StickyHeader
               px="5px"
               fontFamily="Inter"
               color="#333333"
@@ -62,9 +71,17 @@ export default function TableHeader({
                   )}
                 </Center>
               </Center>
-            </Th>
+            </StickyHeader>
           );
         })}
+
+        <StickyHeader borderRadius="8px">
+          <Center>
+            <Text userSelect="none" color="transparent">
+              Details
+            </Text>
+          </Center>
+        </StickyHeader>
       </Tr>
     </Thead>
   );

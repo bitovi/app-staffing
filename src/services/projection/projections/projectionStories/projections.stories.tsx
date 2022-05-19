@@ -111,8 +111,8 @@ const ProjectionsContainer = ({
       </Box>
 
       <Flex flexDirection="column">
-        <TableContainer>
-          <Table size="sm" sx={{ tableLayout: "fixed" }}>
+        <TableContainer overflowY="initial" overflowX="initial">
+          <Table size="sm" sx={{ tableLayout: "fixed", background: "#ffffff" }}>
             <TableHeader
               timeline={timeline}
               columnLabel={"DEPARTMENT"}
@@ -643,6 +643,66 @@ export const NeededUseCase8: ComponentStory<typeof ProjectionsContainer> =
   };
 
 NeededUseCase8.parameters = {
+  controls: { hideNoControlsWarning: true },
+};
+
+export const NeededUseCase9: ComponentStory<typeof ProjectionsContainer> =
+  () => {
+    const dashboardStart = new Date(2018, 0, 1);
+    const skill = { id: "1001", name: "React" };
+    const role = {
+      id: "1",
+      startDate: new Date(2018, 0, 1),
+      startConfidence: 1,
+      endDate: new Date(2018, 0, 7),
+      endConfidence: 0.7,
+      project: projects[0],
+      skills: [skill],
+    };
+    const employee = {
+      id: "20",
+      name: "John Doe",
+      skills: [skill],
+    };
+    const roles = [
+      {
+        ...role,
+        assignments: [
+          {
+            id: "2",
+            employee,
+            role,
+            startDate: new Date(2018, 0, 1),
+          },
+        ],
+      },
+    ];
+
+    const skillsWithRoles = [
+      {
+        ...skill,
+        roles,
+      },
+    ];
+
+    const { skillsWithProjection } = useProjection(
+      dashboardStart,
+      skillsWithRoles,
+    );
+
+    const projections = skillsWithProjection[0].projections;
+    return (
+      <ProjectionsContainer
+        title="Role starts and ends, assignment with no end date"
+        dashboardStart={dashboardStart}
+        roles={roles}
+        skill={skill}
+        projections={projections}
+      />
+    );
+  };
+
+NeededUseCase9.parameters = {
   controls: { hideNoControlsWarning: true },
 };
 
