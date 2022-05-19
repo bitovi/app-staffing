@@ -6,6 +6,7 @@ import bitoviLogo from "./assets/bitovi-logo-text.png";
 import dashboardIcon from "./assets/dashboard.svg";
 import teamMembersIcon from "./assets/team-members.svg";
 import projectsIcon from "./assets/projects.svg";
+import skillsIcon from "./assets/skills.svg";
 
 export default function SideNav(): JSX.Element {
   const links = [
@@ -24,6 +25,11 @@ export default function SideNav(): JSX.Element {
       link: "/projects",
       label: "Projects",
       icon: projectsIcon,
+    },
+    {
+      link: "/skills",
+      label: "Skills",
+      icon: skillsIcon,
     },
   ];
 

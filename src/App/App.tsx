@@ -10,6 +10,7 @@ import "./App.scss";
 const Employees = lazy(() => import("../pages/Employees"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const ProjectRoutes = lazy(() => import("../pages/Projects/Routes"));
+const Skills = lazy(() => import("../pages/Skills"));
 
 export default function App(): JSX.Element {
   return (
@@ -24,6 +25,9 @@ export default function App(): JSX.Element {
           </Route>
           <Route path="/projects">
             <ProjectRoutes />
+          </Route>
+          <Route path="/skills">
+            <Skills />
           </Route>
           <Route>
             <Error />
