@@ -110,10 +110,19 @@ export const calculateNeededForSkillForPeriod = (
               datesAreOnSameDay(j, role.endDate) &&
               role.endConfidence !== 1
             ) {
-              nextPeriodEndConfidence.push({
-                project: { name: role.project.name, id: role.project.id },
-                endConfidence: role.endConfidence ? 1 - role.endConfidence : 0,
-              });
+              // Unless the role has an associated assignment with no end date
+              // In that case no one is needed
+              const hasOngoingAssignment = orderedAssignments.some(
+                (assignment) => !assignment.endDate,
+              );
+              if (!hasOngoingAssignment) {
+                nextPeriodEndConfidence.push({
+                  project: { name: role.project.name, id: role.project.id },
+                  endConfidence: role.endConfidence
+                    ? 1 - role.endConfidence
+                    : 0,
+                });
+              }
             }
           }
 
