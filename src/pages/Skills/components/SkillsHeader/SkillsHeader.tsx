@@ -13,13 +13,14 @@ import { NewSkill } from "../../../../services/api";
 
 interface SkillsHeaderProps {
   isLoading?: boolean;
-  addSkill?: (skill: NewSkill) => void;
+  createSkill?: (skill: NewSkill) => void;
 }
 
 export default function SkillsHeader({
   isLoading,
+  createSkill,
 }: SkillsHeaderProps): JSX.Element {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onOpen } = useDisclosure();
 
   return (
     <Box
@@ -67,7 +68,7 @@ export default function SkillsHeader({
         <Button
           size="lg"
           variant="primary"
-          onClick={isLoading ? () => {} : onOpen}
+          onClick={isLoading ? () => undefined : onOpen}
         >
           Add Skill
         </Button>

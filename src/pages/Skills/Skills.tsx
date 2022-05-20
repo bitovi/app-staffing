@@ -25,14 +25,17 @@ export function Skills({
   useSkills,
   useSkillMutations,
 }: SkillsProps): JSX.Element {
-  const skills = useSkills();
+  const skills = useSkills({ sort: "name" });
   const { createSkill, updateSkill, destroySkill } = useSkillMutations();
 
-  console.log(skills);
   return (
     <>
-      <SkillsHeader />
-      <SkillsTable updateSkill={updateSkill} destroySkill={destroySkill} />
+      <SkillsHeader createSkill={createSkill} />
+      <SkillsTable
+        skills={skills}
+        updateSkill={updateSkill}
+        destroySkill={destroySkill}
+      />
     </>
   );
 }
