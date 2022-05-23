@@ -5,6 +5,7 @@ import { skills } from "../skills/fixtures";
 
 import { addAssignment } from "../assignments/fixtures";
 import { addRole } from "../roles/fixtures";
+import { DatetimeToDate } from "../../services/dates/dateParser";
 
 export interface JSONEmployee {
   type: "employees";
@@ -35,8 +36,8 @@ export function makeEmployee(): JSONEmployee {
     id: `${++employeeId}`,
     attributes: {
       name: faker.name.findName(),
-      start_date: faker.date.past(),
-      end_date: faker.date.future(),
+      start_date: DatetimeToDate(faker.date.past()),
+      end_date: DatetimeToDate(faker.date.future()),
     },
     relationships: {
       assignments: {
