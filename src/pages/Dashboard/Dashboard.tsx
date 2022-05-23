@@ -15,8 +15,15 @@ export function DashboardLoadingLayout(): JSX.Element {
 
 export function Dashboard(): JSX.Element {
   return (
-    <Flex flexDirection="column" py={16} px={4}>
-      <Flex alignItems="center" marginBottom={12}>
+    <Flex flexDirection="column" paddingBottom={16} px={4}>
+      <Flex
+        alignItems="center"
+        position="sticky"
+        top="0"
+        paddingTop={16}
+        paddingBottom={12}
+        background="gray.10"
+      >
         <Heading variant="h2" data-testid="dashboardTitle">
           Bitovi Staff Management
         </Heading>

@@ -6,9 +6,9 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/hooks";
 
-import AddProjectModal from "../AddProjectModal";
 import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
 import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBreadCrumb";
+import ProjectModal from "../ProjectModal";
 
 interface ProjectHeaderProps {
   loading?: boolean;
@@ -81,7 +81,7 @@ export default function ProjectsHeader({
               Add Project
             </Button>
 
-            <AddProjectModal
+            <ProjectModal
               isOpen={isOpen}
               onClose={onClose}
               addProject={(project) => addProject?.(project)}

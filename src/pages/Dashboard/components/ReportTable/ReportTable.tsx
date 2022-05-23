@@ -46,8 +46,8 @@ export function ReportTable({
 
   return (
     <Flex flexDirection="column">
-      <TableContainer>
-        <Table size="sm" sx={{ tableLayout: "fixed" }}>
+      <TableContainer overflowY="initial" overflowX="initial">
+        <Table size="sm" sx={{ tableLayout: "fixed", background: "gray.10" }}>
           <TableHeader
             timeline={timeline}
             columnLabel={"DEPARTMENT"}

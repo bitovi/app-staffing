@@ -9,6 +9,7 @@ import {
   Spacer,
   Skeleton,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import {
@@ -21,6 +22,7 @@ import RoleList from "../components/RoleList";
 import ProjectsHeader from "../Projects/components/ProjectsHeader";
 import { EditIcon } from "./../../assets";
 import type { Project } from "../../../services/api";
+import ProjectModal from "../Projects/components/ProjectModal";
 
 interface ProjectDetailProps {
   useProject: typeof useProjectDefault;
@@ -62,11 +64,12 @@ export function ProjectDetail({
   const project = useProject(id, {
     include: ["roles.skills", "roles.assignments.employee"],
   });
-
   const { updateProject, destroyProject } = useProjectMutations();
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const onSave = (id: string, updated: Partial<Project>) => {
-    updateProject(id, { ...project, ...updated });
+    updateProject(id, updated);
   };
 
   return (
@@ -84,14 +87,20 @@ export function ProjectDetail({
         zIndex="10"
         backgroundColor="gray.10"
       >
-        <ProjectDescription onEdit={onSave} project={project} />
+        <ProjectDescription project={project} />
         <Spacer />
         <IconButton
           variant="editAction"
           aria-label="Edit Project"
           fontSize="20px"
           icon={<EditIcon fill="currentColor" />}
-          onClick={() => alert("TODO")}
+          onClick={onOpen}
+        />
+        <ProjectModal
+          isOpen={isOpen}
+          updateProject={onSave}
+          onClose={onClose}
+          project={project}
         />
         <Box mt={10} />
         <ProjectDeleteButton
