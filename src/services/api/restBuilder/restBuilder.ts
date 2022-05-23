@@ -247,7 +247,7 @@ export default function restBuilder<Data extends BaseData>(
           await mutate(
             `${path}/${id}`,
             async (cache: Data) => {
-              return deserialized;
+              return { ...cache, ...deserialized };
             },
             false,
           );

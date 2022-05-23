@@ -1,5 +1,5 @@
 import { render, screen, waitFor, cleanup } from "@testing-library/react";
-import AddProjectModal from "./AddProjectModal";
+import ProjectModal from "./ProjectModal";
 import userEvent from "@testing-library/user-event";
 const mockHistoryPush = jest.fn();
 
@@ -11,12 +11,12 @@ jest.mock("react-router-dom", () => ({
 
 const mockAddProject = jest.fn();
 
-describe("Pages/Projects/Components/AddProjectModal", () => {
+describe("Pages/Projects/Components/ProjectModal", () => {
   afterEach(cleanup);
 
   it("renders", async () => {
     render(
-      <AddProjectModal
+      <ProjectModal
         addProject={async () => ""}
         isOpen={true}
         onClose={() => undefined}
@@ -33,7 +33,7 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
     );
 
     const { getByTestId, getByLabelText, getByRole, getByText } = render(
-      <AddProjectModal
+      <ProjectModal
         addProject={mockAddProject}
         isOpen={true}
         onClose={() => undefined}
@@ -67,7 +67,7 @@ describe("Pages/Projects/Components/AddProjectModal", () => {
   });
   it("displays the required message if Project Name is not filled out", async () => {
     const { getByRole, getByLabelText, getByText } = render(
-      <AddProjectModal
+      <ProjectModal
         addProject={mockAddProject}
         isOpen={true}
         onClose={() => undefined}
