@@ -132,7 +132,9 @@ export default function EmployeeModal({
         setStatus("pending");
         await onSave({
           name: data.name,
-          startDate: data.startDate ? DatetimeToDate(parseISO(data.startDate)) : null,
+          startDate: data.startDate
+            ? DatetimeToDate(parseISO(data.startDate))
+            : null,
           endDate: data.endDate ? DatetimeToDate(parseISO(data.endDate)) : null,
           skills: employeeSkills,
         });
