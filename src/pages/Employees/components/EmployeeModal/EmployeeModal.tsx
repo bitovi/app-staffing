@@ -31,6 +31,7 @@ import parseISO from "date-fns/parseISO";
 
 import { Employee, Skill } from "../../../../services/api";
 import { ServiceError } from "../../../../components/ServiceError";
+import { DatetimeToDate } from "../../../../services/dates/dateParser";
 
 interface EmployeeFormData {
   name: string;
@@ -131,8 +132,10 @@ export default function EmployeeModal({
         setStatus("pending");
         await onSave({
           name: data.name,
-          startDate: data.startDate ? parseISO(data.startDate) : null,
-          endDate: data.endDate ? parseISO(data.endDate) : null,
+          startDate: data.startDate
+            ? DatetimeToDate(parseISO(data.startDate))
+            : null,
+          endDate: data.endDate ? DatetimeToDate(parseISO(data.endDate)) : null,
           skills: employeeSkills,
         });
         reset({ name: "", startDate: "", endDate: "" });

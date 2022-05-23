@@ -50,6 +50,7 @@ import { TrashIcon, SearchIcon, UserIcon } from "../../../assets";
 import styles from "./RoleModal.module.scss";
 import { mutate } from "swr";
 import { ServiceError } from "../../../../components/ServiceError";
+import { DatetimeToDate } from "../../../../services/dates/dateParser";
 
 type NewRole = Partial<Omit<Role, "id">>;
 
@@ -270,9 +271,11 @@ export default function RoleModal({
   ): NewAssignment => {
     return {
       startDate: assignment.startDate
-        ? parseISO(assignment.startDate)
+        ? DatetimeToDate(parseISO(assignment.startDate))
         : undefined,
-      endDate: assignment.endDate ? parseISO(assignment.endDate) : null,
+      endDate: assignment.endDate
+        ? DatetimeToDate(parseISO(assignment.endDate))
+        : null,
       employee: employees.find(
         (employee) => employee.id === assignment.employeeId,
       ),
@@ -380,9 +383,9 @@ export default function RoleModal({
         const newRole = {
           project: omit(project, ["roles"]),
           skills: skills.filter((skill) => skill.id === data.skillId),
-          startDate: parseISO(data.startDate),
+          startDate: DatetimeToDate(parseISO(data.startDate)),
           startConfidence: data.startConfidence || 1,
-          endDate: data.endDate ? parseISO(data.endDate) : null,
+          endDate: data.endDate ? DatetimeToDate(parseISO(data.endDate)) : null,
           ...(!data.endConfidence && data.endConfidence !== 0
             ? { endConfidence: undefined }
             : { endConfidence: Number(data.endConfidence) }),
@@ -447,9 +450,11 @@ export default function RoleModal({
           {
             project: omit(project, ["roles"]),
             skills: roleToEdit.skills,
-            startDate: parseISO(data.startDate),
+            startDate: DatetimeToDate(parseISO(data.startDate)),
             startConfidence: data.startConfidence || 1,
-            endDate: data.endDate ? parseISO(data.endDate) : null,
+            endDate: data.endDate
+              ? DatetimeToDate(parseISO(data.endDate))
+              : null,
             ...(!data.endConfidence && data.endConfidence !== 0
               ? { endConfidence: undefined }
               : { endConfidence: Number(data.endConfidence) }),
