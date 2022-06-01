@@ -2,12 +2,11 @@ import faker from "faker";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import DeleteRoleModal from ".";
-import { DatetimeToDate } from "../../../../services/dates/dateParser";
 
 describe("Pages/Projects/Components/DeleteRoleModal", () => {
   const role = {
     id: "test",
-    startDate: DatetimeToDate(faker.date.recent()),
+    startDate: faker.date.recent(),
     startConfidence: 1,
     project: { id: "project1", name: "project1" },
     skills: [{ id: "1001", name: "React" }],
