@@ -3,7 +3,6 @@ import type { JSONProject } from "../fixtures";
 import faker from "faker";
 
 import { skills } from "../skills/fixtures";
-import { DatetimeToDate } from "../../services/dates/dateParser";
 
 export interface JSONRole {
   type: "roles";
@@ -37,13 +36,13 @@ export function makeRole(project: JSONProject): JSONRole {
     type: "roles",
     id: `${++roleId}`,
     attributes: {
-      start_date: DatetimeToDate(faker.date.past()),
+      start_date: faker.date.past(),
       start_confidence: faker.datatype.number({
         min: 0.1,
         max: 0.9,
         precision: 0.1,
       }),
-      end_date: DatetimeToDate(faker.date.past()),
+      end_date: faker.date.past(),
       end_confidence: faker.datatype.number({
         min: 0.1,
         max: 0.9,

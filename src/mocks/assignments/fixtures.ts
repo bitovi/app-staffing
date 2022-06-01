@@ -1,7 +1,6 @@
 import type { JSONEmployee, JSONRole } from "../fixtures";
 
 import faker from "faker";
-import { DatetimeToDate } from "../../services/dates/dateParser";
 
 export interface JSONAssignment {
   type: "assignments";
@@ -33,8 +32,8 @@ export function makeAssignment(
     type: "assignments",
     id: `${++assignmentId}`,
     attributes: {
-      start_date: DatetimeToDate(faker.date.past()),
-      end_date: DatetimeToDate(faker.date.future()),
+      start_date: faker.date.past(),
+      end_date: faker.date.future(),
     },
     relationships: {
       employee: {
