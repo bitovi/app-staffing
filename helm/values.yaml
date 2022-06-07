@@ -26,7 +26,6 @@ cacheBusting:
 #         cachebusting-helmfiles/service: {{ include (print $.Template.BasePath "/service.yaml") . | sha256sum }}
 #         {{- end }}
 
-
 # For the front-end config
 # Note: Please see /public/config.js for information about these values.
 apiBaseURL: http://app-staffing-api.localhost
@@ -50,7 +49,8 @@ service:
   type: ClusterIP
   annotations: {}
 
-ingress: []
+ingress:
+  []
   # - class: nginx
   #   name: app
   #   host: app.localhost
@@ -63,7 +63,8 @@ ingress: []
   #       service: app-staffing
   #       port: 80
 
-extraEnv: {}
+extraEnv:
+  {}
   # APP_PORT: 3000
 
 prometheus:
@@ -71,7 +72,7 @@ prometheus:
 
 # extraVolumes:
 #   - name: local-files-app-staffing
-#     hostPath: 
+#     hostPath:
 #       path: /local-files/app-staffing
 # extraVolumeMounts:
 #   - mountPath: /usr/src/app
@@ -83,9 +84,8 @@ serviceAccount:
   # set to true to include a role and role binding to allow sa to modify pods
   enableModifyPods: false
 
-
 # used with local development
-#   enabled automatically when 
+#   enabled automatically when
 #   MOUNT_APP_STAFFING="1" is set on `_scripts/local/deploy.sh` from the ops repo
 chokidarPollerContainer:
   enabled: false
@@ -93,7 +93,7 @@ chokidarPollerContainer:
     KUBE_PATH: "/usr/src/kube"
   # extraVolumes:
   #   - name: local-files-app-staffing
-  #     hostPath: 
+  #     hostPath:
   #       path: /local-files/app-staffing
   # extraVolumeMounts:
   #   - mountPath: /usr/src/app

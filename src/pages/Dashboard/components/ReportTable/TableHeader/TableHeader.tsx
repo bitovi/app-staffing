@@ -1,6 +1,7 @@
 import type { TimelineRange } from "../../../../../services/projection";
 
 import { format } from "date-fns";
+import { formatDateToUTC } from "../../../../../services/helpers/utcdate";
 import { Center, chakra, Text, Th, Thead, Tr } from "@chakra-ui/react";
 
 type TableHeaderProps = {
@@ -67,7 +68,9 @@ export default function TableHeader({
                 {/* Sub Heading */}
                 <Center height={4} flex={1} justifyContent="start">
                   {(type === "month" || type === "quarter") && (
-                    <Text color={"#718096"}>{format(startDate, "MMM do")}</Text>
+                    <Text color={"#718096"}>
+                      {format(formatDateToUTC(startDate), "MMM do")}
+                    </Text>
                   )}
                 </Center>
               </Center>

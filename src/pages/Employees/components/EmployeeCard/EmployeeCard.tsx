@@ -15,6 +15,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 
 import { Tag } from "../../../../components/Tag";
 import { TrashIcon, EditIcon } from "../../../assets";
@@ -59,7 +60,8 @@ export default function EmployeeCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {employee.startDate && format(employee.startDate, "MM/dd/yyyy")}
+            {employee.startDate &&
+              format(formatDateToUTC(employee.startDate), "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -70,7 +72,8 @@ export default function EmployeeCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {employee.endDate && format(employee.endDate, "MM/dd/yyyy")}
+            {employee.endDate &&
+              format(formatDateToUTC(employee.endDate), "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>

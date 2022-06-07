@@ -29,6 +29,7 @@ import { isEmpty, pickBy } from "lodash";
 import formatISO from "date-fns/formatISO";
 import parseISO from "date-fns/parseISO";
 
+import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import { Employee, Skill } from "../../../../services/api";
 import { ServiceError } from "../../../../components/ServiceError";
 
@@ -380,10 +381,10 @@ function toEmployeeFormData(data: Employee): EmployeeFormData {
   return {
     name: data.name,
     startDate: data.startDate
-      ? formatISO(data.startDate, { representation: "date" })
+      ? formatISO(formatDateToUTC(data.startDate), { representation: "date" })
       : "",
     endDate: data.endDate
-      ? formatISO(data.endDate, { representation: "date" })
+      ? formatISO(formatDateToUTC(data.endDate), { representation: "date" })
       : "",
     skills,
   };
