@@ -8,7 +8,6 @@ Kindly run these steps below:
 
 `bash provision-prod-dockerfile.sh`
 
-
 ## For Development Environments...
 
 `git clone https://github.com/bitovi/app-staffing.git && cd ~/app-staffing && git checkout dockerize-test`

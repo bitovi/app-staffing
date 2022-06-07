@@ -1,17 +1,17 @@
 {
-    "name": "docker-chokidar",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-      "monitor": "node monitor.js",
-      "start": "node ."
-    },
-    "prettier": {
-      "trailingComma": "all",
-      "semi": false
-    },
-    "dependencies": {
-      "chokidar": "^3.5.2"
-    }
+  "name": "docker-chokidar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "monitor": "node monitor.js",
+    "start": "node ."
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "semi": false
+  },
+  "dependencies": {
+    "chokidar": "^3.5.2"
   }
+}
