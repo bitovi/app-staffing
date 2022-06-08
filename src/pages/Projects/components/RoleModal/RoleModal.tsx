@@ -43,6 +43,7 @@ import {
 } from "../../../../services/api";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import parseISO from "date-fns/parseISO";
+import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import formatISO from "date-fns/formatISO";
 import range from "lodash/range";
 import omit from "lodash/omit";
@@ -134,7 +135,7 @@ export default function RoleModal({
   };
 
   const formatDate = (date: Date) => {
-    return formatISO(date).substring(0, 10);
+    return formatISO(formatDateToUTC(date)).substring(0, 10);
   };
 
   const {

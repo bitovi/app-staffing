@@ -3,6 +3,7 @@ import RoleModal from "./RoleModal";
 import { employees, skills, roles, projects } from "../../../../mocks/fixtures";
 import userEvent from "@testing-library/user-event";
 import formatISO from "date-fns/formatISO";
+import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 
 describe("Pages/Projects/components/RoleModal", () => {
   jest.setTimeout(30000);
@@ -381,7 +382,7 @@ describe("Pages/Projects/components/RoleModal", () => {
 
     const startDateInput = getByTestId("startDateInput");
     expect(getValue(startDateInput)).toEqual(
-      formatISO(roles[0].startDate).substring(0, 10),
+      formatISO(formatDateToUTC(roles[0].startDate)).substring(0, 10),
     );
 
     const startConfidenceInput = getByTestId("startConfidenceInput");
@@ -392,7 +393,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     const endDateInput = getByTestId("endDateInput");
     if (roles[0].endDate) {
       expect(getValue(endDateInput)).toEqual(
-        formatISO(roles[0].endDate).substring(0, 10),
+        formatISO(formatDateToUTC(roles[0].endDate)).substring(0, 10),
       );
     }
 
@@ -412,7 +413,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     // If user changes back to initial value, the button becomes disabled again
     userEvent.type(
       startDateInput,
-      formatISO(roles[0].startDate).substring(0, 10),
+      formatISO(formatDateToUTC(roles[0].startDate)).substring(0, 10),
     );
     expect(addButton).toHaveAttribute("aria-disabled", "true");
   });
@@ -465,7 +466,7 @@ describe("Pages/Projects/components/RoleModal", () => {
     userEvent.selectOptions(endConfidenceSelect, ["0.5"]);
 
     expect(getValue(endDateInput)).toEqual(
-      formatISO(new Date()).substring(0, 10),
+      formatISO(formatDateToUTC(new Date())).substring(0, 10),
     );
 
     userEvent.selectOptions(endConfidenceSelect, [""]);
