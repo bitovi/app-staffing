@@ -2,3 +2,5 @@
 export const formatDateToUTC = (date: Date): Date => {
   return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 };
+
+export default formatDateToUTC;
