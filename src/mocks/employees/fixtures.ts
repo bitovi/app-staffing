@@ -36,7 +36,11 @@ export function makeEmployee(): JSONEmployee {
     attributes: {
       name: faker.name.findName(),
       start_date: faker.date.past(),
-      end_date: faker.random.arrayElement([faker.date.past(), null, faker.date.future()]),
+      end_date: faker.random.arrayElement([
+        faker.date.past(),
+        null,
+        faker.date.future(),
+      ]),
     },
     relationships: {
       assignments: {

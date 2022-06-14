@@ -52,7 +52,10 @@ describe("Services/API/Employees", () => {
           .to.have.property("startDate")
           .that.is.a("date");
         expect(result.current[i]).to.have.property("endDate");
-        expect(typeof result.current[i].endDate).to.be.oneOf(["date", "object"]);
+        expect(typeof result.current[i].endDate).to.be.oneOf([
+          "date",
+          "object",
+        ]);
       }
     });
   });

@@ -14,10 +14,10 @@ export default function useProjection(
   skillsWithProjection: ProjectionGroup[];
 } {
   const timeline = useMemo(() => getTimeline(date), [date]);
-  const skillsWithProjection = useMemo(
-    () => getProjections(timeline, skills),
-    [timeline, skills],
-  );
+  const skillsWithProjection = useMemo(() => getProjections(timeline, skills), [
+    timeline,
+    skills,
+  ]);
 
   return {
     timeline,

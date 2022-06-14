@@ -77,8 +77,11 @@ export function Employees({
   useEmployeeMutations,
   useSkills,
 }: EmployeesProps): JSX.Element {
-  const { createEmployee, updateEmployee, destroyEmployee } =
-    useEmployeeMutations();
+  const {
+    createEmployee,
+    updateEmployee,
+    destroyEmployee,
+  } = useEmployeeMutations();
   const employees = useEmployees({ include: "skills", sort: "name" });
   const skillsWithEmployees = useSkills({
     include: [
@@ -91,12 +94,13 @@ export function Employees({
 
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
   const activeEmployees = useMemo(
-    () => employees.filter(
-      emp => showInactiveEmployees ?
-        (emp.endDate != null && emp.endDate <= new Date()) :
-        (emp.endDate == null || emp.endDate > new Date())
-    ),
-    [employees, showInactiveEmployees]
+    () =>
+      employees.filter((emp) =>
+        showInactiveEmployees
+          ? emp.endDate != null && emp.endDate <= new Date()
+          : emp.endDate == null || emp.endDate > new Date(),
+      ),
+    [employees, showInactiveEmployees],
   );
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
@@ -162,7 +166,7 @@ export function Employees({
           <Switch
             id="showInactiveEmployees"
             isChecked={showInactiveEmployees}
-            onChange={({target}) => setShowInactiveEmployees(target.checked)}
+            onChange={({ target }) => setShowInactiveEmployees(target.checked)}
           />
         </FormControl>
       </Box>
