@@ -94,7 +94,7 @@ export function Employees({
     () =>
       employees.filter((emp) =>
         showInactiveEmployees
-          ? emp.endDate != null && emp.endDate <= new Date()
+          ? true
           : emp.endDate == null || emp.endDate > new Date(),
       ),
     [employees, showInactiveEmployees],

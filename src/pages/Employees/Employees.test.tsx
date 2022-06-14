@@ -7,7 +7,9 @@ import {
 } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import userEvent from "@testing-library/user-event";
+import { format } from "date-fns";
 import { clearFixtures, loadFixtures } from "../../mocks";
+import { employees } from "../../mocks/employees/fixtures";
 
 import EmployeesWrapper from "./Employees";
 
@@ -46,16 +48,21 @@ describe("Pages/Employees", () => {
       expect(validDates).not.toContain(false);
     });
 
-    it("shows only inactive employees after clicking toggle", async () => {
+    it("shows all employees after clicking inactive employees toggle", async () => {
       const inactiveToggle = await screen.findByLabelText(
         "Show inactive team members",
       );
-      userEvent.click(inactiveToggle);
+      await userEvent.click(inactiveToggle);
       const endDates = await screen.findAllByTestId("employeeEndDate");
-      const validDates = endDates.map(
-        (d) => d.innerHTML !== "" && Date.parse(d.innerHTML) <= Date.now(),
+      expect(endDates.map((e) => e.innerHTML).sort()).toEqual(
+        employees
+          .map((e) =>
+            e.attributes.end_date
+              ? format(e.attributes.end_date, "MM/dd/yyyy")
+              : "",
+          )
+          .sort(),
       );
-      expect(validDates).not.toContain(false);
     });
   });
 
