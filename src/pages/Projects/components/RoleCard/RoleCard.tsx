@@ -1,6 +1,7 @@
 import type { Assignment, Role } from "../../../../services/api";
 import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
 
@@ -64,7 +65,7 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {format(role.startDate, "MM/dd/yyyy")}
+            {format(formatDateToUTC(role.startDate), "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>
@@ -86,7 +87,8 @@ export default function RoleCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {role.endDate && format(role.endDate, "MM/dd/yyyy")}
+            {role.endDate &&
+              format(formatDateToUTC(role.endDate), "MM/dd/yyyy")}
           </Text>
         </Td>
         <Td>

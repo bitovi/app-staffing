@@ -27,7 +27,6 @@ import { Button } from "@chakra-ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { isEmpty, pickBy } from "lodash";
 import formatISO from "date-fns/formatISO";
-import parseISO from "date-fns/parseISO";
 
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import { Employee, Skill } from "../../../../services/api";
@@ -127,13 +126,12 @@ export default function EmployeeModal({
   const submitForm = async (data: EmployeeFormData) => {
     if (canSubmitForm) {
       const employeeSkills = getSelectedSkills(data.skills, skills || []);
-
       try {
         setStatus("pending");
         await onSave({
           name: data.name,
-          startDate: data.startDate ? parseISO(data.startDate) : null,
-          endDate: data.endDate ? parseISO(data.endDate) : null,
+          startDate: data.startDate ? data.startDate : null,
+          endDate: data.endDate ? data.endDate : null,
           skills: employeeSkills,
         });
         reset({ name: "", startDate: "", endDate: "" });

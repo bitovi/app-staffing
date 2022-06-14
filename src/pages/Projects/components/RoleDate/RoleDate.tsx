@@ -10,7 +10,7 @@ export default function RoleDate({
   onDateChange,
 }: {
   title: "Start Date" | "End Date";
-  date: Date | undefined;
+  date: Date | string | undefined;
   confidence: number | undefined;
   onConfidenceChange: (confidence?: number) => void;
   onDateChange: (date?: Date) => void;

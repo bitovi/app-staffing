@@ -80,13 +80,18 @@ export const calculateNeededForSkillForPeriod = (
     const arrayOfDaysIndex = i + prevRoleIndex;
 
     // We first check if the role happends during this time period
+    const startDateAsDate =
+      role.startDate instanceof Date
+        ? role.startDate
+        : new Date(role.startDate);
+    const endDateAsDate =
+      role.endDate instanceof Date
+        ? role.endDate
+        : role.endDate
+        ? new Date(role.startDate)
+        : undefined;
     if (
-      doDatesOverlap(
-        role.startDate,
-        role.endDate || undefined,
-        periodStart,
-        periodEnd,
-      )
+      doDatesOverlap(startDateAsDate, endDateAsDate, periodStart, periodEnd)
     ) {
       arrayOfDays[arrayOfDaysIndex] = {
         project: { name: role.project.name, id: role.project.id },
@@ -107,7 +112,12 @@ export const calculateNeededForSkillForPeriod = (
             // If the role ends with an end confidence of less than 1,
             // we add its end confidence so we can carry it to next periods
             if (
-              datesAreOnSameDay(j, role.endDate) &&
+              datesAreOnSameDay(
+                j,
+                role.endDate instanceof Date
+                  ? role.endDate
+                  : new Date(role.endDate),
+              ) &&
               role.endConfidence !== 1
             ) {
               // Unless the role has an associated assignment with no end date
