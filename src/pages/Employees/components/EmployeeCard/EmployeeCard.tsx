@@ -71,6 +71,7 @@ export default function EmployeeCard({
             fontSize="14px"
             lineHeight="20px"
             letterSpacing="0.25px"
+            data-testid="employeeEndDate"
           >
             {employee.endDate &&
               format(formatDateToUTC(employee.endDate), "MM/dd/yyyy")}

@@ -27,7 +27,8 @@ describe("Services/API/Employees", () => {
       expect(result.current).to.have.property("id", expected.id);
       expect(result.current).to.have.property("name", expected.name);
       expect(result.current).to.have.property("startDate").that.is.a("date");
-      expect(result.current).to.have.property("endDate").that.is.a("date");
+      expect(result.current).to.have.property("endDate");
+      expect(typeof result.current.endDate).to.be.oneOf(["date", "object"]);
     });
   });
 
@@ -50,7 +51,8 @@ describe("Services/API/Employees", () => {
         expect(result.current[i])
           .to.have.property("startDate")
           .that.is.a("date");
-        expect(result.current[i]).to.have.property("endDate").that.is.a("date");
+        expect(result.current[i]).to.have.property("endDate");
+        expect(typeof result.current[i].endDate).to.be.oneOf(["date", "object"]);
       }
     });
   });

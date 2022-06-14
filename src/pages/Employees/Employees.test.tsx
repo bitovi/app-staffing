@@ -25,13 +25,32 @@ describe("Pages/Employees", () => {
     cleanup();
   });
 
-  it("renders data in list", async () => {
-    render(<EmployeesWrapper />);
-    const memberRows = await screen.findAllByRole("button", {
-      name: "Edit Member",
-      exact: false,
+  describe("Employees list", () => {
+    beforeEach(() => {
+      render(<EmployeesWrapper />);
     });
-    expect(memberRows[0]).toBeInTheDocument();
+
+    it("renders data in list", async () => {
+      const memberRows = await screen.findAllByRole("button", {
+        name: "Edit Member",
+        exact: false,
+      });
+      expect(memberRows[0]).toBeInTheDocument();
+    });
+
+    it("shows only active employees by default", async () => {
+      const endDates = await screen.findAllByTestId("employeeEndDate");
+      const validDates = endDates.map(d => d.innerHTML === "" || Date.parse(d.innerHTML) > Date.now());
+      expect(validDates).not.toContain(false);
+    });
+
+    it("shows only inactive employees after clicking toggle", async () => {
+      const inactiveToggle = await screen.findByLabelText("Show inactive team members");
+      userEvent.click(inactiveToggle);
+      const endDates = await screen.findAllByTestId("employeeEndDate");
+      const validDates = endDates.map(d => d.innerHTML !== "" && Date.parse(d.innerHTML) <= Date.now());
+      expect(validDates).not.toContain(false);
+    });
   });
 
   it("Displays loading state skeleton", () => {
