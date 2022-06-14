@@ -18,14 +18,12 @@ export function calculateNeededForSkill(
     if (Array.isArray(skill.roles)) {
       // For each time period we calculate the needed number and we carry the end confidence
       // of any finished role to the next period
-      const {
-        projectionNeeded,
-        nextPeriodEndConfidence,
-      } = calculateNeededForSkillForPeriod(
-        skill.roles,
-        timeline[i],
-        prevRoleEndConfidence,
-      );
+      const { projectionNeeded, nextPeriodEndConfidence } =
+        calculateNeededForSkillForPeriod(
+          skill.roles,
+          timeline[i],
+          prevRoleEndConfidence,
+        );
       neededBySkill.push(projectionNeeded);
       prevRoleEndConfidence = nextPeriodEndConfidence;
     } else {

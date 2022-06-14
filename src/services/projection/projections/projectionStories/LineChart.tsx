@@ -54,17 +54,13 @@ const LineChart = ({
     duration += (differenceInDays(end, start) + 1) / numOfDays;
   }
 
-  const [
-    isSmallScreen,
-    isMediumScreen,
-    isLargeScreen,
-    isXLargeScreen,
-  ] = useMediaQuery([
-    "(max-width: 70em)",
-    "(max-width: 80em)",
-    "(max-width: 90em)",
-    "(max-width: 100em)",
-  ]);
+  const [isSmallScreen, isMediumScreen, isLargeScreen, isXLargeScreen] =
+    useMediaQuery([
+      "(max-width: 70em)",
+      "(max-width: 80em)",
+      "(max-width: 90em)",
+      "(max-width: 100em)",
+    ]);
 
   const cellSize = isSmallScreen
     ? "5rem"

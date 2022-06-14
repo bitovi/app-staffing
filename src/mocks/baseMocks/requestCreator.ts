@@ -24,7 +24,7 @@ export interface BaseResource {
 
 interface MockResponse<
   Data extends BaseResource | BaseResource[] = never,
-  Meta = never
+  Meta = never,
 > {
   data?: Data;
   included?: BaseResource[];
@@ -101,9 +101,12 @@ export default function requestCreator<Resource extends BaseResource>(
         include?: string;
       }
     >(`${API_BASE_URL}${resourcePath}`, async (req, res, ctx) => {
-      const { filter, sort, page = 1, count = 25 } = deparam(
-        req.url.searchParams.toString(),
-      );
+      const {
+        filter,
+        sort,
+        page = 1,
+        count = 25,
+      } = deparam(req.url.searchParams.toString());
 
       const formatedFilter = { ...filter };
       if (filter) {

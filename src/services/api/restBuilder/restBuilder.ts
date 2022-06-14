@@ -140,9 +140,9 @@ export default function restBuilder<Data extends BaseData>(
             async (cache: Data[] | undefined) => {
               if (!cache || updateParentCache) {
                 if (parentStore) {
-                  const source = (deserialized[
+                  const source = deserialized[
                     parentStore.sourceRelationship as keyof BaseData
-                  ] as unknown) as BaseData;
+                  ] as unknown as BaseData;
                   mutateParentCache(
                     mutate,
                     type,
@@ -211,9 +211,9 @@ export default function restBuilder<Data extends BaseData>(
             async (cache: Data[] | undefined) => {
               if (!cache || updateParentCache) {
                 if (parentStore) {
-                  const source = (deserialized[
+                  const source = deserialized[
                     parentStore.sourceRelationship as keyof BaseData
-                  ] as unknown) as BaseData;
+                  ] as unknown as BaseData;
                   mutateParentCache(
                     mutate,
                     type,
@@ -381,9 +381,7 @@ async function mutateParentCache(
         return parentCache;
       }
 
-      let cache = (parentCache[
-        type as keyof BaseData
-      ] as unknown) as BaseData[];
+      let cache = parentCache[type as keyof BaseData] as unknown as BaseData[];
 
       switch (operation) {
         case "Create":

@@ -77,11 +77,8 @@ export function Employees({
   useEmployeeMutations,
   useSkills,
 }: EmployeesProps): JSX.Element {
-  const {
-    createEmployee,
-    updateEmployee,
-    destroyEmployee,
-  } = useEmployeeMutations();
+  const { createEmployee, updateEmployee, destroyEmployee } =
+    useEmployeeMutations();
   const employees = useEmployees({ include: "skills", sort: "name" });
   const skillsWithEmployees = useSkills({
     include: [

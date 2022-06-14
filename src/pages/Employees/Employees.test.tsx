@@ -228,8 +228,8 @@ describe("Pages/Employees", () => {
 
     const employeeRows = await screen.findAllByRole("row");
     const employeeToDelete = employeeRows[1];
-    const employeeName = within(employeeToDelete).getAllByRole("gridcell")[0]
-      .textContent;
+    const employeeName =
+      within(employeeToDelete).getAllByRole("gridcell")[0].textContent;
 
     const deleteMember = await within(employeeToDelete).findByLabelText(
       "Delete Member",
