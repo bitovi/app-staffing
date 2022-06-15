@@ -16,6 +16,7 @@ import { Employee, Role, Skill } from "../../../api";
 import useProjection from "../../useProjection";
 import useTimeline from "../../useTimeline";
 import { Projection } from "../projections";
+import { formatDateToUTC } from "../../../helpers/utcdate";
 import LineChart from "./LineChart";
 
 interface ProjectionProps {
@@ -46,9 +47,10 @@ const ProjectionsContainer = ({
       <UnorderedList mb="1em" color="blue">
         {roles.map((role) => (
           <ListItem key={role.id}>
-            Role: {role.startConfidence * 100}% {role.startDate.toDateString()},{" "}
+            Role: {role.startConfidence * 100}%{" "}
+            {formatDateToUTC(role.startDate)},{" "}
             {role.endConfidence && role.endDate
-              ? `${role.endConfidence * 100}% ${role.endDate.toDateString()}`
+              ? `${role.endConfidence * 100}% ${formatDateToUTC(role.endDate)}`
               : "null"}
             <UnorderedList color="red">
               {role.assignments && role.assignments.length > 0 ? (

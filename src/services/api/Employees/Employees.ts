@@ -7,14 +7,12 @@ import { Skill } from "../Skills";
 export interface Employee extends BaseData {
   id: string;
   name: string;
-  startDate?: Date | null;
-  endDate?: Date | null;
+  startDate?: Date | string | null;
+  endDate?: Date | string | null;
 
   assignments?: Assignment[];
   skills: Skill[];
 }
-
-export type NewEmployee = Partial<Omit<Employee, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Employee>(
   "/employees",

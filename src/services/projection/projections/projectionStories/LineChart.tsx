@@ -19,8 +19,14 @@ const LineChart = ({
   let duration = 0;
   let totalNumOfDays = 0;
 
-  const roleStart = data.startDate;
-  let roleEnd = data.endDate;
+  const roleStart =
+    data.startDate instanceof Date ? data.startDate : new Date(data.startDate);
+  let roleEnd =
+    data.endDate instanceof Date
+      ? data.endDate
+      : data.endDate
+      ? new Date(data.endDate)
+      : undefined;
 
   if (!roleEnd) {
     roleEnd = timeline[timeline.length - 1].endDate;

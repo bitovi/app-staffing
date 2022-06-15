@@ -134,7 +134,7 @@ export default function RoleModal({
     assignments: [],
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
     return formatISO(formatDateToUTC(date)).substring(0, 10);
   };
 
@@ -381,9 +381,9 @@ export default function RoleModal({
         const newRole = {
           project: omit(project, ["roles"]),
           skills: skills.filter((skill) => skill.id === data.skillId),
-          startDate: parseISO(data.startDate),
+          startDate: data.startDate,
           startConfidence: data.startConfidence || 1,
-          endDate: data.endDate ? parseISO(data.endDate) : null,
+          endDate: data.endDate ? data.endDate : null,
           ...(!data.endConfidence && data.endConfidence !== 0
             ? { endConfidence: undefined }
             : { endConfidence: Number(data.endConfidence) }),
@@ -448,9 +448,9 @@ export default function RoleModal({
           {
             project: omit(project, ["roles"]),
             skills: roleToEdit.skills,
-            startDate: parseISO(data.startDate),
+            startDate: data.startDate,
             startConfidence: data.startConfidence || 1,
-            endDate: data.endDate ? parseISO(data.endDate) : null,
+            endDate: data.endDate ? data.endDate : null,
             ...(!data.endConfidence && data.endConfidence !== 0
               ? { endConfidence: undefined }
               : { endConfidence: Number(data.endConfidence) }),

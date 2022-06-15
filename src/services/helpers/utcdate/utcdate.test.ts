@@ -17,6 +17,12 @@ describe("utcdate helper", () => {
       });
     });
   });
+  describe("when given a string as date", () => {
+    it("returns a the day of the same day", () => {
+      const result = formatDateToUTC("2022-06-14");
+      expect(result.getDate()).toBe(14);
+    });
+  });
 });
 
 export {};

@@ -7,9 +7,9 @@ import { Skill } from "../Skills";
 
 export interface Role extends BaseData {
   id: string;
-  startDate: Date;
+  startDate: Date | string;
   startConfidence: number;
-  endDate?: Date | null;
+  endDate?: Date | string | null;
   endConfidence?: number;
   assignments?: Assignment[];
   project: Project;
