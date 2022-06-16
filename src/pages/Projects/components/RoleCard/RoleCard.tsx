@@ -32,7 +32,9 @@ export default function RoleCard({
     return assignments.filter(
       (assignment) =>
         !assignment.endDate ||
-        assignment.endDate.getTime() > new Date().getTime(),
+        (assignment.endDate instanceof Date
+          ? assignment.endDate.getTime() > new Date().getTime()
+          : new Date(assignment.endDate).getTime() > new Date().getTime()),
     );
   };
 

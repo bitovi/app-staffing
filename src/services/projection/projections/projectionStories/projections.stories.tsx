@@ -56,9 +56,17 @@ const ProjectionsContainer = ({
               {role.assignments && role.assignments.length > 0 ? (
                 role.assignments.map((assignment) => (
                   <ListItem key={assignment.id}>
-                    Assignment: {assignment.startDate.toDateString()},{" "}
+                    Assignment:{" "}
+                    {assignment.startDate instanceof Date
+                      ? assignment.startDate.toDateString()
+                      : assignment.startDate}
+                    ,{" "}
                     {assignment.endDate
-                      ? `${assignment.endDate.toDateString()}`
+                      ? `${
+                          assignment.endDate instanceof Date
+                            ? assignment.endDate.toDateString()
+                            : assignment.endDate
+                        }`
                       : "null"}
                   </ListItem>
                 ))
@@ -85,9 +93,15 @@ const ProjectionsContainer = ({
                 {Array.isArray(employee.assignments) &&
                   employee.assignments.map((assignment) => (
                     <ListItem key={assignment.id}>
-                      Assignment {assignment.startDate?.toDateString()},{" "}
-                      {assignment.endDate
+                      Assignment{" "}
+                      {assignment.startDate instanceof Date
+                        ? assignment.startDate?.toDateString()
+                        : assignment.startDate}
+                      ,{" "}
+                      {assignment.endDate instanceof Date
                         ? assignment.endDate.toDateString()
+                        : assignment.endDate
+                        ? assignment.endDate
                         : "null"}
                     </ListItem>
                   ))}

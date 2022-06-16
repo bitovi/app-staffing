@@ -42,7 +42,6 @@ import {
   Assignment,
 } from "../../../../services/api";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
-import parseISO from "date-fns/parseISO";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import formatISO from "date-fns/formatISO";
 import range from "lodash/range";
@@ -270,10 +269,8 @@ export default function RoleModal({
     assignment: AssignmentFormData,
   ): NewAssignment => {
     return {
-      startDate: assignment.startDate
-        ? parseISO(assignment.startDate)
-        : undefined,
-      endDate: assignment.endDate ? parseISO(assignment.endDate) : null,
+      startDate: assignment.startDate ? assignment.startDate : undefined,
+      endDate: assignment.endDate ? assignment.endDate : null,
       employee: employees.find(
         (employee) => employee.id === assignment.employeeId,
       ),
@@ -301,12 +298,21 @@ export default function RoleModal({
 
           if (existingAssignment) {
             // Assignment exists, we check if it needs to be updated
+            const newStartDate = newAssignment.startDate
+              ? new Date(newAssignment.startDate)
+              : undefined;
+            const existingStartDate = new Date(existingAssignment.startDate);
+            const newEndDate = newAssignment.endDate
+              ? new Date(newAssignment.endDate)
+              : undefined;
+            const existingEndDate = existingAssignment.endDate
+              ? new Date(existingAssignment.endDate)
+              : undefined;
+
             if (
               existingAssignment &&
-              (newAssignment.startDate?.getTime() !==
-                existingAssignment.startDate?.getTime() ||
-                newAssignment.endDate?.getTime() !==
-                  existingAssignment.endDate?.getTime() ||
+              (newStartDate?.getTime() !== existingStartDate.getTime() ||
+                newEndDate?.getTime() !== existingEndDate?.getTime() ||
                 newAssignment.employee?.id !== existingAssignment.employee.id)
             ) {
               // If one of the fields of this assignment has changed, we send an update request
