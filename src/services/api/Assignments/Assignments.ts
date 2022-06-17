@@ -6,8 +6,9 @@ import { Role } from "../Roles";
 
 export interface Assignment extends BaseData {
   id: string;
-  startDate: Date;
-  endDate?: Date | null;
+  startDate: Date | string;
+  endDate?: Date | string | null;
+
   employee: Employee;
   role: Role;
 }
