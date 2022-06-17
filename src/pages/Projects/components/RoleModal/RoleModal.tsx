@@ -355,6 +355,7 @@ export default function RoleModal({
 
       mutate(`/projects/${project?.id}`);
     } catch (e) {
+      console.error(e);
       throw e;
     }
   };
@@ -374,6 +375,7 @@ export default function RoleModal({
         );
       }
     } catch (e) {
+      console.error(e);
       throw e;
     }
   };
