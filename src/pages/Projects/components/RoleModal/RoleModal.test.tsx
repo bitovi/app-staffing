@@ -71,6 +71,8 @@ describe("Pages/Projects/components/RoleModal", () => {
     await waitFor(() => {
       expect(addButton).toHaveAttribute("aria-disabled", "true");
       expect(getByText(/Date is required/g)).toBeVisible();
+    }, {
+      timeout: 5000
     });
   });
 
