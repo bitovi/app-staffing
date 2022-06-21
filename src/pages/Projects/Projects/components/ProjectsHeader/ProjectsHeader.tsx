@@ -74,7 +74,7 @@ export default function ProjectsHeader({
             <Button
               size="lg"
               variant="primary"
-              arialabel="Add Project"
+              aria-label="Add Project"
               onClick={onOpen}
               data-testid="addProjectButton"
             >
