@@ -68,12 +68,15 @@ describe("Pages/Projects/components/RoleModal", () => {
     expect(addButton).toHaveAttribute("aria-disabled", "true");
     userEvent.click(addButton);
 
-    await waitFor(() => {
-      expect(addButton).toHaveAttribute("aria-disabled", "true");
-      expect(getByText(/Date is required/g)).toBeVisible();
-    }, {
-      timeout: 5000
-    });
+    await waitFor(
+      () => {
+        expect(addButton).toHaveAttribute("aria-disabled", "true");
+        expect(getByText(/Date is required/g)).toBeVisible();
+      },
+      {
+        timeout: 5000,
+      },
+    );
   });
 
   it("should enable save button if startDate is filled out", async () => {
