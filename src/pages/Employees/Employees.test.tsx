@@ -27,12 +27,16 @@ describe("Pages/Employees", () => {
 
   it("renders data in list", async () => {
     render(<EmployeesWrapper />);
-    const memberRows = await screen.findAllByRole("button", {
-      name: "Edit Member",
-      exact: false,
-    }, {
-      timeout: 3000
-    });
+    const memberRows = await screen.findAllByRole(
+      "button",
+      {
+        name: "Edit Member",
+        exact: false,
+      },
+      {
+        timeout: 3000,
+      },
+    );
     expect(memberRows[0]).toBeInTheDocument();
   });
 
@@ -198,12 +202,16 @@ describe("Pages/Employees", () => {
         <EmployeesWrapper />
       </SWRConfig>,
     );
-    await screen.findAllByRole("button", {
-      name: "Delete Member",
-      exact: false,
-    }, {
-      timeout: 5000
-    });
+    await screen.findAllByRole(
+      "button",
+      {
+        name: "Delete Member",
+        exact: false,
+      },
+      {
+        timeout: 5000,
+      },
+    );
 
     const employeeRows = await screen.findAllByRole("row");
     const employeeToDelete = employeeRows[1];
