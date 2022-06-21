@@ -28,7 +28,8 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "plugins": [
-      "no-only-tests"
+      "no-only-tests",
+      "import"
     ],
     "rules": {
       "no-use-before-define": "off",
