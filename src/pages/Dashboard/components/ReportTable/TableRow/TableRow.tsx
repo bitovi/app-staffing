@@ -71,10 +71,8 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
   let maxBenchEmployees = 0;
   projections.forEach(({ bench }) => {
-    // We only want to show employees with a confidence greater or equal to 50%
-    const employees = bench.employees?.filter(
-      (employee) => employee.value >= 0.5,
-    );
+    // We only want to show employees with a confidence greater than 0%
+    const employees = bench.employees?.filter((employee) => employee.value > 0);
     maxBenchEmployees = Math.max(maxBenchEmployees, employees?.length || 0);
   });
 
@@ -207,7 +205,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                 const { highlight, text } = getRowColors(action);
 
                 const employees = bench.employees?.filter(
-                  (employee) => employee.value >= 0.5,
+                  (employee) => employee.value > 0,
                 );
 
                 return (
