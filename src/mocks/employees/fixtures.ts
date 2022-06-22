@@ -12,7 +12,7 @@ export interface JSONEmployee {
   attributes: {
     name: string;
     start_date?: Date;
-    end_date?: Date;
+    end_date: Date | null;
   };
   relationships: {
     assignments?: {
@@ -36,7 +36,11 @@ export function makeEmployee(): JSONEmployee {
     attributes: {
       name: faker.name.findName(),
       start_date: faker.date.past(),
-      end_date: faker.date.future(),
+      end_date: faker.random.arrayElement([
+        faker.date.past(),
+        null,
+        faker.date.future(),
+      ]),
     },
     relationships: {
       assignments: {

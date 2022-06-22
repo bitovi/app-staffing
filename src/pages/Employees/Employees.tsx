@@ -1,5 +1,6 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState, useMemo } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
+import { Switch, FormLabel, FormControl } from "@chakra-ui/react";
 import omit from "lodash/omit";
 import {
   Employee,
@@ -88,6 +89,17 @@ export function Employees({
   });
   const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
 
+  const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
+  const activeEmployees = useMemo(
+    () =>
+      employees.filter((emp) =>
+        showInactiveEmployees
+          ? true
+          : emp.endDate == null || emp.endDate > new Date(),
+      ),
+    [employees, showInactiveEmployees],
+  );
+
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   const addNewEmployee = async (data: Omit<Employee, "id">) => {
@@ -109,7 +121,7 @@ export function Employees({
         top="0"
         background="gray.10"
         padding="40px"
-        paddingBottom="1em"
+        paddingBottom="0"
         zIndex="10"
       >
         <EmployeesBreadcrumbs />
@@ -138,13 +150,29 @@ export function Employees({
             Add Team Member
           </Button>
         </Flex>
+
+        <FormControl
+          display="flex"
+          alignItems="center"
+          justifyContent="end"
+          marginTop="2em"
+        >
+          <FormLabel htmlFor="showInactiveEmployees" mb="0">
+            Show inactive team members
+          </FormLabel>
+          <Switch
+            id="showInactiveEmployees"
+            isChecked={showInactiveEmployees}
+            onChange={({ target }) => setShowInactiveEmployees(target.checked)}
+          />
+        </FormControl>
       </Box>
 
       <EmployeeTable
         mt="32px"
         updateEmployee={updateEmployee}
         destroyEmployee={destroyEmployee}
-        employees={employees}
+        employees={activeEmployees}
         skills={skills}
       />
     </Box>
