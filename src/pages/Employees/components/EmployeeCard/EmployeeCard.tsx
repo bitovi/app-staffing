@@ -1,4 +1,5 @@
 import type { Employee } from "../../../../services/api";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 import {
   Flex,
@@ -13,6 +14,7 @@ import {
   Thead,
   Text,
   Box,
+  Link
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
@@ -50,6 +52,21 @@ export default function EmployeeCard({
             letterSpacing="0.25px"
           >
             {employee.name}
+          </Text>
+        </Td>
+        <Td>
+          <Text
+            color="primary"
+            fontWeight="600"
+            fontSize="16px"
+            lineHeight="20px"
+            letterSpacing="0.25px"
+            textDecoration="underline"
+          >
+            {/* We could make a custom hook like "useEmployeeProjects" */}
+            <Link as={ReactRouterLink} to={employee.assignments && employee.assignments[0]?.role?.project?.id ? `/projects/${employee.assignments[0].role.project.id}` : "/projects"}>
+              {employee.assignments && employee.assignments[0]?.role?.project?.name || "Bench"}
+            </Link>
           </Text>
         </Td>
         <Td>

@@ -108,13 +108,16 @@ export default function EmployeeTable({
                       EMPLOYEE NAME
                     </StickyHeader>
                     <StickyHeader color="gray.800" textStyle="table.title">
+                      CURRENT PROJECT
+                    </StickyHeader>
+                    <StickyHeader color="gray.800" textStyle="table.title">
                       START DATE
                     </StickyHeader>
                     <StickyHeader color="gray.800" textStyle="table.title">
                       END DATE
                     </StickyHeader>
                     <StickyHeader color="gray.800" textStyle="table.title">
-                      ROLES
+                      SKILLS
                     </StickyHeader>
                     <StickyHeader
                       py={4}
