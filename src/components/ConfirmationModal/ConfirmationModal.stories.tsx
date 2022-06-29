@@ -25,7 +25,36 @@ export const Basic: ComponentStory<typeof ConfirmationModal> = ({
   );
 };
 
+export const WithChildren: ComponentStory<typeof ConfirmationModal> = ({
+  ...props
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <>
+      <Button onClick={onOpen}>Open modal</Button>
+      <ConfirmationModal
+        {...props}
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={() => alert("onConfirm")}
+      >
+        <p>This is a children!</p>
+      </ConfirmationModal>
+    </>
+  );
+};
+
 Basic.args = {
+  title: "Delete Project?",
+  message: `Are you sure you want to delete the Nike store project? This can’t be undone.`,
+  confirmText: "Yes, Remove & Delete",
+  closeText: "No, Return to Page",
+  error: "",
+  isLoading: false,
+  confirmButtonVariant: "primary",
+};
+
+WithChildren.args = {
   title: "Delete Project?",
   message: `Are you sure you want to delete the Nike store project? This can’t be undone.`,
   confirmText: "Yes, Remove & Delete",
