@@ -28,7 +28,6 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
             destroyEmployee: (id) => Promise.resolve(),
           };
         }}
-        useSkills={() => []}
       />
     </Box>
   </Flex>
@@ -66,7 +65,6 @@ function NonEmptyEmployeesPage({ ...props }) {
               destroyEmployee: (id) => Promise.resolve(),
             };
           }}
-          useSkills={() => []}
         />
       </Box>
     </Flex>

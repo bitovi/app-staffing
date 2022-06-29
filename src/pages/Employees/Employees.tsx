@@ -1,12 +1,10 @@
 import { Suspense, useState, useMemo } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Switch, FormLabel, FormControl } from "@chakra-ui/react";
-import omit from "lodash/omit";
 import {
   Employee,
   useEmployees as useEmployeesDefault,
   useEmployeeMutations as useEmployeeMutationsDefault,
-  useSkills as useSkillsDefault,
 } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
@@ -17,7 +15,6 @@ import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
 interface EmployeesProps {
   useEmployees: typeof useEmployeesDefault;
   useEmployeeMutations: typeof useEmployeeMutationsDefault;
-  useSkills: typeof useSkillsDefault;
 }
 
 export function EmployeePageLoadingLayout(): JSX.Element {
@@ -66,7 +63,6 @@ export default function EmployeesWrapper(): JSX.Element {
       <Employees
         useEmployees={useEmployeesDefault}
         useEmployeeMutations={useEmployeeMutationsDefault}
-        useSkills={useSkillsDefault}
       />
     </Suspense>
   );
@@ -75,19 +71,10 @@ export default function EmployeesWrapper(): JSX.Element {
 export function Employees({
   useEmployees,
   useEmployeeMutations,
-  useSkills,
 }: EmployeesProps): JSX.Element {
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
   const employees = useEmployees({ include: "skills", sort: "name" });
-  const skillsWithEmployees = useSkills({
-    include: [
-      "employees.skills",
-      "employees.assignments.role.skills",
-      "employees.assignments.role.project",
-    ],
-  });
-  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
 
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
   const activeEmployees = useMemo(
@@ -112,7 +99,6 @@ export function Employees({
           isOpen={employeeModal}
           onClose={() => setEmployeeModal(false)}
           onSave={addNewEmployee}
-          skills={skills}
         />
       )}
 
@@ -173,7 +159,6 @@ export function Employees({
         updateEmployee={updateEmployee}
         destroyEmployee={destroyEmployee}
         employees={activeEmployees}
-        skills={skills}
       />
     </Box>
   );

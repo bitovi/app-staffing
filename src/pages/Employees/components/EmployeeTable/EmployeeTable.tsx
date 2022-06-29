@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import isEmpty from "lodash/isEmpty";
-import type { Employee, Skill } from "../../../../services/api";
+import type { Employee } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
@@ -30,7 +30,6 @@ const StickyHeader = chakra(Th, {
 
 interface EmployeeTableProps extends BoxProps {
   employees: Employee[] | undefined;
-  skills?: Skill[];
   updateEmployee: (id: string, data: Employee) => Promise<void>;
   destroyEmployee: (employeeId: string) => Promise<void>;
 }
@@ -39,7 +38,6 @@ export default function EmployeeTable({
   employees,
   updateEmployee,
   destroyEmployee,
-  skills,
   ...props
 }: EmployeeTableProps): JSX.Element {
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
@@ -70,7 +68,6 @@ export default function EmployeeTable({
         isOpen={!isEmpty(employeeToEdit)}
         onClose={() => setEmployeeToEdit(null)}
         onSave={(employee) => submitUpdateEmployee(employee as Employee)}
-        skills={skills}
         employee={employeeToEdit ? employeeToEdit : undefined}
       />
       <Box {...props}>
