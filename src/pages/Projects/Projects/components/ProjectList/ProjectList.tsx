@@ -1,9 +1,11 @@
 import { useCallback } from "react";
 import {
+  Badge,
   Box,
   BoxProps,
   chakra,
   Flex,
+  Link,
   Table,
   Tbody,
   Text,
@@ -13,6 +15,7 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 import { FolderWithFilesIcon } from "../../../../assets/Icons";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 import ProjectCard from "../ProjectCard";
 import { Project } from "../../../../../services/api";
@@ -64,6 +67,45 @@ export default function ProjectList({
               There are currently no projects available.
             </Text>
           </Flex>
+        )}
+
+        {projects && projects.length > 0 && (
+          <Box>
+            <Flex className="timelineHeader"> {/* sticky */}</Flex>
+            <Flex flexDirection="column">
+              {projects?.length &&
+                projects.map((project) => (
+                  <Box
+                    padding="51px 15px"
+                    key={project.id}
+                    className="projectWrapper"
+                  >
+                    <Flex className="projectHeader" justify="space-between">
+                      <Text>{project.name}</Text>
+                      <Link
+                        as={ReactRouterLink}
+                        color="teal.500"
+                        fontWeight="bold"
+                        to={`projects/${project.id}`}
+                      >
+                        View Project Detail
+                      </Link>
+                    </Flex>
+                    <Flex direction="column">
+                      {project?.roles?.map((role) => (
+                        <Box key={role.id}>
+                          {" "}
+                          {/* row */}
+                          {role?.skills?.map((skill) => (
+                            <Badge key={skill.id}>{skill.name}</Badge>
+                          ))}
+                        </Box>
+                      ))}
+                    </Flex>
+                  </Box>
+                ))}
+            </Flex>
+          </Box>
         )}
 
         {projects && projects.length > 0 && (
