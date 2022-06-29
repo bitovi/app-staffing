@@ -1,8 +1,8 @@
-import { Box } from "@chakra-ui/react";
+import { Table, Td, Tbody } from "@chakra-ui/react";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
+import { BrowserRouter } from "react-router-dom";
 import { colors } from "../../../../theme/colors";
 
-// import { BrowserRouter } from "react-router-dom";
 import EmployeeCard from "./EmployeeCard";
 
 const skillOptions = Object.keys(colors.skills);
@@ -44,15 +44,15 @@ const Template: ComponentStory<any> = (args) => {
       skills: []
     },
     role: {
-      id: '',
-      startDate: '',
-      startConfidence: 0,
+      id: 'role',
       project: {
         id: '',
         name: '',
       },
+      startDate: '',
+      startConfidence: 0,
       skills: []
-    }
+    } 
   }];
 
   const employee = {
@@ -60,21 +60,25 @@ const Template: ComponentStory<any> = (args) => {
     name: args.name,
     skills: [{ id: '', name: args.skills }],
     assignments: {
-      ...sampleAssignments[],
-      role: {
-        ...sampleAssignments.role
-      }
+      ...sampleAssignments
     }
-    // assignments: sampleAssignments
-    // assignments: args.project ? [{ id: '', startDate: '', employee role: { project: { id: args.project, name: args.project } } }] : [],
   }
 
-  return <Box width="1000px">
-      <EmployeeCard
-        employee={employee}
-        handleDeleteEmployee={() => console.log('')}
-        handleEditEmployee={() => console.log('')} />
-    </Box>;
+  employee.assignments[0].role.project.id = args.project;
+  employee.assignments[0].role.project.name = args.project;
+
+  return <BrowserRouter>
+    <Table>
+      <Tbody>
+        <Td>
+          <EmployeeCard
+            employee={employee}
+            handleDeleteEmployee={() => console.log('')}
+            handleEditEmployee={() => console.log('')} />
+        </Td>
+      </Tbody>
+    </Table>
+  </BrowserRouter>;
 }
 
 export const Default = Template.bind({});
@@ -82,6 +86,6 @@ export const Default = Template.bind({});
 Default.args = {
   name: "Michael",
   skills: "React",
-  project: "Project"
+  project: ""
 }
 
