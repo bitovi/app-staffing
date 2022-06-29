@@ -9,18 +9,16 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useRef } from "react";
 import AlertBar from "../AlertBar";
 import Button, { ButtonVariant } from "../Button";
 
 interface ConfirmationModalProps {
   children?: React.ReactNode;
   closeText: string;
-  confirmButtonVariant?: ButtonVariant;
-  confirmLoadingText?: string;
+  variant?: ButtonVariant;
+  loadingText?: string;
   confirmText: string;
   error?: string;
-  focusConfirmationButton?: boolean;
   isCentered?: boolean;
   isLoading?: boolean;
   isOpen: boolean;
@@ -36,11 +34,10 @@ interface ConfirmationModalProps {
 export default function ConfirmationModal({
   children,
   closeText,
-  confirmButtonVariant = "primary",
-  confirmLoadingText,
+  variant = "primary",
+  loadingText,
   confirmText,
   error,
-  focusConfirmationButton = false,
   isCentered = false,
   isLoading,
   isOpen,
@@ -52,15 +49,12 @@ export default function ConfirmationModal({
   showDivider = false,
   title,
 }: ConfirmationModalProps): JSX.Element {
-  const initialRef = useRef<HTMLButtonElement>(null);
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       size={modalSize}
       isCentered={isCentered}
-      initialFocusRef={initialRef}
     >
       <ModalOverlay />
       <ModalContent mt="14vh">
@@ -87,10 +81,9 @@ export default function ConfirmationModal({
               isLoading={isLoading}
               isDisabled={isLoading}
               onClick={onConfirm}
-              variant={confirmButtonVariant}
+              variant={variant}
               aria-label="confirm button"
-              loadingText={confirmLoadingText}
-              innerref={focusConfirmationButton ? initialRef : null}
+              loadingText={loadingText}
             >
               {confirmText}
             </Button>

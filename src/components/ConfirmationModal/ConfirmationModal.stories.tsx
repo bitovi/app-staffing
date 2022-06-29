@@ -51,7 +51,6 @@ Basic.args = {
   closeText: "No, Return to Page",
   error: "",
   isLoading: false,
-  confirmButtonVariant: "primary",
 };
 
 WithChildren.args = {
@@ -61,5 +60,4 @@ WithChildren.args = {
   closeText: "No, Return to Page",
   error: "",
   isLoading: false,
-  confirmButtonVariant: "primary",
 };
