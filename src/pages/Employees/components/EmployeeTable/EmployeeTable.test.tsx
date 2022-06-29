@@ -11,7 +11,6 @@ describe("EmployeeTable", () => {
         updateEmployee={() => Promise.resolve()}
         destroyEmployee={(id) => new Promise((resolve) => resolve())}
         employees={[]}
-        skills={[]}
       />,
     );
 
@@ -24,7 +23,6 @@ describe("EmployeeTable", () => {
         updateEmployee={() => Promise.resolve()}
         destroyEmployee={(id) => new Promise((resolve) => resolve())}
         employees={employees}
-        skills={[]}
       />,
     );
 
@@ -41,7 +39,6 @@ describe("EmployeeTable", () => {
         updateEmployee={() => Promise.resolve()}
         destroyEmployee={(id) => deferred.promise}
         employees={employees}
-        skills={[]}
       />,
     );
 
