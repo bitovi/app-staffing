@@ -1,8 +1,4 @@
-import {
-  chakra,
-  Th,
-  Tr,
-} from "@chakra-ui/react";
+import { chakra, Th, Tr } from "@chakra-ui/react";
 
 const StickyHeader = chakra(Th, {
   baseStyle: {

@@ -16,7 +16,6 @@ export default function RoleCard({
   handleDeleteRole,
   handleEditRole,
 }: RoleCardProps): JSX.Element {
-
   const filterAssignments = (assignments: Assignment[]) => {
     return assignments.filter(
       (assignment) =>

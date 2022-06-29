@@ -16,5 +16,5 @@ export const colors = {
     "UI Designer": "#435BAE",
     "UX Designer": "#AE436A",
     "Project Management": "#B55F10",
-  }
+  },
 };

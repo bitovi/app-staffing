@@ -14,8 +14,9 @@ describe("EmployeeTable", () => {
           destroyEmployee={(id) => new Promise((resolve) => resolve())}
           employees={[]}
           skills={[]}
-        />,
-      </MemoryRouter>
+        />
+        ,
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/There are currently no team members./i));
@@ -30,7 +31,7 @@ describe("EmployeeTable", () => {
           employees={employees}
           skills={[]}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     employees.forEach((employee) => {
@@ -48,8 +49,9 @@ describe("EmployeeTable", () => {
           destroyEmployee={(id) => deferred.promise}
           employees={employees}
           skills={[]}
-        />,
-      </MemoryRouter>
+        />
+        ,
+      </MemoryRouter>,
     );
 
     // click delete icon on the employee table row

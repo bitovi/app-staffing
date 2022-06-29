@@ -14,7 +14,7 @@ import {
   Thead,
   Text,
   Box,
-  Link
+  Link,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
@@ -35,11 +35,10 @@ export default function EmployeeCard({
   handleEditEmployee,
   handleDeleteEmployee,
 }: EmployeeCardProps): JSX.Element {
-
   const employeeProject = {
     id: employee.assignments?.[0]?.role?.project.id,
     name: employee.assignments?.[0]?.role?.project.name,
-  }
+  };
 
   return (
     <>
@@ -69,16 +68,18 @@ export default function EmployeeCard({
             letterSpacing="0.25px"
           >
             {/* We could make a custom hook like "useEmployeeProjects" */}
-            { employeeProject.id ?
-              <Link as={ReactRouterLink} to={`/projects/${employeeProject.id}`}
+            {employeeProject.id ? (
+              <Link
+                as={ReactRouterLink}
+                to={`/projects/${employeeProject.id}`}
                 color="primary"
                 textDecoration="underline"
               >
                 {employeeProject.name}
               </Link>
-              : "Bench"
-            }
-
+            ) : (
+              "Bench"
+            )}
           </Text>
         </Td>
         <Td>

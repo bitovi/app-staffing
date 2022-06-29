@@ -73,6 +73,5 @@ function NonEmptyEmployeesPage({ ...props }) {
         </Box>
       </Flex>
     </BrowserRouter>
-
   );
 }

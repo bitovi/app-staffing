@@ -1,1 +1,1 @@
-export { default } from './EmployeeTableHeader';
+export { default } from "./EmployeeTableHeader";

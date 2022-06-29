@@ -83,13 +83,10 @@ export function Employees({
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
   const employees = useEmployees({
-    include: [
-      "skills",
-      "assignments.role.project",
-    ],
-    sort: "name"
+    include: ["skills", "assignments.role.project"],
+    sort: "name",
   });
-  
+
   const skillsWithEmployees = useSkills({
     include: [
       "employees.skills",
