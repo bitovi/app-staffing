@@ -2,12 +2,10 @@ import { useState, Dispatch, SetStateAction } from "react";
 import {
   Box,
   BoxProps,
-  chakra,
   Flex,
   Table,
   Tbody,
   Text,
-  Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
@@ -18,15 +16,7 @@ import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
 import orderBy from "lodash/orderBy";
-
-const StickyHeader = chakra(Th, {
-  baseStyle: {
-    position: "sticky",
-    top: "11em",
-    background: "gray.10",
-    zIndex: "10",
-  },
-});
+import EmployeeTableHeader from "./components/EmployeeTableHeader/EmployeeTableHeader";
 
 interface EmployeeTableProps extends BoxProps {
   employees: Employee[] | undefined;
@@ -103,29 +93,7 @@ export default function EmployeeTable({
             <Box paddingInline="40px" marginBottom="40px">
               <Table>
                 <Thead py={4}>
-                  <Tr>
-                    <StickyHeader color="gray.800" textStyle="table.title">
-                      EMPLOYEE NAME
-                    </StickyHeader>
-                    <StickyHeader color="gray.800" textStyle="table.title">
-                      START DATE
-                    </StickyHeader>
-                    <StickyHeader color="gray.800" textStyle="table.title">
-                      END DATE
-                    </StickyHeader>
-                    <StickyHeader color="gray.800" textStyle="table.title">
-                      ROLES
-                    </StickyHeader>
-                    <StickyHeader
-                      py={4}
-                      pr={12}
-                      color="gray.800"
-                      textStyle="table.title"
-                      isNumeric
-                    >
-                      ACTIONS
-                    </StickyHeader>
-                  </Tr>
+                  <EmployeeTableHeader />
                 </Thead>
                 <Tbody>
                   {orderBy(employees, [

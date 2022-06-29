@@ -13,6 +13,7 @@ import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
 import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
+import { MemoryRouter } from "react-router-dom";
 
 interface EmployeesProps {
   useEmployees: typeof useEmployeesDefault;
@@ -63,11 +64,13 @@ export function EmployeePageLoadingLayout(): JSX.Element {
 export default function EmployeesWrapper(): JSX.Element {
   return (
     <Suspense fallback={<EmployeePageLoadingLayout />}>
-      <Employees
-        useEmployees={useEmployeesDefault}
-        useEmployeeMutations={useEmployeeMutationsDefault}
-        useSkills={useSkillsDefault}
-      />
+      <MemoryRouter>
+        <Employees
+          useEmployees={useEmployeesDefault}
+          useEmployeeMutations={useEmployeeMutationsDefault}
+          useSkills={useSkillsDefault}
+        />
+      </MemoryRouter>
     </Suspense>
   );
 }
@@ -79,7 +82,11 @@ export function Employees({
 }: EmployeesProps): JSX.Element {
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
-  const employees = useEmployees({ include: "skills", sort: "name" });
+  const employees = useEmployees({
+    include: ["skills", "assignments.role.project"],
+    sort: "name",
+  });
+
   const skillsWithEmployees = useSkills({
     include: [
       "employees.skills",
