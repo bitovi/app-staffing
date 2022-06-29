@@ -1,9 +1,10 @@
-import { Table, Td, Tbody } from "@chakra-ui/react";
+import { Table, Tbody, Thead, Box, } from "@chakra-ui/react";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { BrowserRouter } from "react-router-dom";
 import { colors } from "../../../../theme/colors";
 
 import EmployeeCard from "./EmployeeCard";
+import EmployeeTableHeader from "../EmployeeTable/components/EmployeeTableHeader";
 
 const skillOptions = Object.keys(colors.skills);
   
@@ -68,16 +69,21 @@ const Template: ComponentStory<any> = (args) => {
   employee.assignments[0].role.project.name = args.project;
 
   return <BrowserRouter>
+  <Box paddingInline="40px" marginBottom="40px">
+    <Box height="11em"></Box>
     <Table>
-      <Tbody>
-        <Td>
-          <EmployeeCard
-            employee={employee}
-            handleDeleteEmployee={() => console.log('')}
-            handleEditEmployee={() => console.log('')} />
-        </Td>
+      <Thead>
+        <EmployeeTableHeader />
+      </Thead>
+      <Tbody> 
+        <EmployeeCard
+          employee={employee}
+          handleDeleteEmployee={() => console.log('')}
+          handleEditEmployee={() => console.log('')} />
+
       </Tbody>
     </Table>
+  </Box>
   </BrowserRouter>;
 }
 
