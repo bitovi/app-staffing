@@ -19,7 +19,7 @@ import {
 import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 
-import { Tag } from "../../../../components/Tag";
+import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
 
 interface EmployeeCardProps {
@@ -35,6 +35,12 @@ export default function EmployeeCard({
   handleEditEmployee,
   handleDeleteEmployee,
 }: EmployeeCardProps): JSX.Element {
+
+  const employeeProject = {
+    id: employee.assignments?.[0]?.role?.project.id,
+    name: employee.assignments?.[0]?.role?.project.name,
+  }
+
   return (
     <>
       <Tr
@@ -56,17 +62,23 @@ export default function EmployeeCard({
         </Td>
         <Td>
           <Text
-            color="primary"
-            fontWeight="600"
+            color="gray.600"
+            fontWeight="400"
             fontSize="16px"
             lineHeight="20px"
             letterSpacing="0.25px"
-            textDecoration="underline"
           >
             {/* We could make a custom hook like "useEmployeeProjects" */}
-            <Link as={ReactRouterLink} to={employee.assignments && employee.assignments[0]?.role?.project?.id ? `/projects/${employee.assignments[0].role.project.id}` : "/projects"}>
-              {employee.assignments && employee.assignments[0]?.role?.project?.name || "Bench"}
-            </Link>
+            { employeeProject.id ?
+              <Link as={ReactRouterLink} to={`/projects/${employeeProject.id}`}
+                color="primary"
+                textDecoration="underline"
+              >
+                {employeeProject.name}
+              </Link>
+              : "Bench"
+            }
+
           </Text>
         </Td>
         <Td>
@@ -83,7 +95,7 @@ export default function EmployeeCard({
         </Td>
         <Td>
           <Text
-            color="gray.600"
+            color="gray.10"
             fontWeight="400"
             fontSize="14px"
             lineHeight="20px"
@@ -97,17 +109,18 @@ export default function EmployeeCard({
         <Td>
           <Wrap spacing="8px">
             {employee?.skills?.map((skill) => (
-              <Tag variant="primary" key={skill.id}>
-                <Text
-                  fontFamily="Inter"
-                  fontStyle="normal"
-                  fontWeight="500"
-                  fontSize="12px"
-                  lineHeight="16px"
-                >
-                  {skill.name}
-                </Text>
-              </Tag>
+              <Badge
+                key={skill.id}
+                isTruncated={false}
+                size="sm"
+                whiteSpace="break-spaces"
+                maxWidth="100px"
+                textAlign="center"
+                display="flex"
+                background={`skills.${skill.name}`}
+              >
+                {skill.name}
+              </Badge>
             ))}
           </Wrap>
         </Td>

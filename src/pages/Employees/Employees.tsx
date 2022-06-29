@@ -83,7 +83,6 @@ export function Employees({
     include: [
       "skills",
       "assignments.role.project",
-      "assignments.role.skills"
     ],
     sort: "name"
   });
@@ -96,8 +95,6 @@ export function Employees({
     ],
   });
   const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
-
-  console.log({ skills, skillsWithEmployees });
 
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
   const activeEmployees = useMemo(
