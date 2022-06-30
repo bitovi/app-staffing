@@ -2,7 +2,7 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import { PageNotFound } from "../assets/PageNotFound";
 import { useHistory } from "react-router-dom";
 
-export default function Error(): JSX.Element {
+export default function NotFound(): JSX.Element {
   const history = useHistory();
 
   function onClick() {
