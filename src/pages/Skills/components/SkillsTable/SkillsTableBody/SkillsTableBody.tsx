@@ -2,7 +2,7 @@ import { Tbody, Tr } from "@chakra-ui/react";
 import { Skill } from "../../../../../services/api";
 import SkillCard from "./SkillCard/SkillCard";
 
-const SkillsTableBody = ({ skills }: { skills: Skill[] }) => {
+const SkillsTableBody = ({ skills }: { skills: Skill[] }): JSX.Element => {
   return (
     <Tbody>
       {skills.map((skill, index) => (
@@ -22,7 +22,7 @@ function SkillTableRow({
 }: {
   skill: Skill;
   lastChild: boolean;
-}) {
+}): JSX.Element {
   return (
     <>
       <SkillCard skill={skill} />
