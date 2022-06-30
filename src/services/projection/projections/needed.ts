@@ -1,7 +1,8 @@
 import sortBy from "lodash/sortBy";
-import { Assignment, Role } from "../../api";
+import { Assignment, Employee, Project, Role } from "../../api";
 import { TimelineRange } from "../timeline";
 import { Needed, SkillRole } from "./projections";
+import { isAfter, isBefore } from "date-fns";
 
 interface PreviousRole {
   project: { name: string; id: string };
@@ -34,6 +35,108 @@ export function calculateNeededForSkill(
 
   return neededBySkill;
 }
+
+type RoleProjections = {
+  project: Project;
+  confidence: {
+    value: number;
+    startDate: Date;
+    endDate: Date;
+  }[];
+};
+
+interface EmployeesWithConfidence extends Employee {
+  confidence: {
+    value: number;
+    startDate: Date;
+    endDate: Date;
+  }[];
+}
+
+type SkillProjection = {
+  skill: string;
+  id: string;
+  employee: Employee[];
+  roles: Role[];
+  needed: {
+    total: number;
+    roles: RoleProjections[];
+  };
+  bench: {
+    total: number;
+    employees: EmployeesWithConfidence[];
+  };
+  action: string;
+};
+
+export const calculateRangeNeededForRole = (
+  timelines: TimelineRange[],
+  skillRoles: SkillRole[],
+): SkillProjection[] => {
+  const skillProjections: SkillProjection[] = [];
+
+  for (let i = 0; i < skillRoles.length; i++) {
+    let skillProjection = {
+      ...skillRoles[i],
+      needed: {
+        total: 0,
+      },
+      bench: {},
+    };
+
+    const roles = skillProjection.roles;
+
+    const roleProjection = roles?.map((role) => {
+      const roleProject = role.project;
+      const startDate = new Date(role.startDate);
+      const endDate = role.endDate;
+      // const assignments = role.assignments;
+
+      const confidenceArray: {
+        value: number;
+        startDate: string | Date;
+        endDate: string | Date | null | undefined;
+      }[] = [];
+
+      for (let _period = 0; _period < timelines.length; _period++) {
+        // check to see if start is before period's end && end is after the periods start
+
+        timelines[_period].endDate;
+
+        const isBeforePeriodsEnd = isBefore(
+          startDate,
+          timelines[_period].endDate,
+        );
+
+        const isAfterPeriodsStart = endDate
+          ? isAfter(new Date(endDate), timelines[_period].startDate)
+          : true;
+
+        const isNoAssignment = true;
+
+        if (isAfterPeriodsStart && isBeforePeriodsEnd && isNoAssignment) {
+          const confidenceValue = {
+            value: role.startConfidence,
+            startDate,
+            endDate,
+          };
+
+          confidenceArray.push(confidenceValue);
+        } else {
+        }
+      }
+
+      const roleProjection = {
+        role: roleProject,
+        confidence: confidenceArray,
+      };
+
+      return roleProjection;
+    });
+
+    skillProjection.needed.roles = roleProjection;
+  }
+};
 
 export const calculateNeededForSkillForPeriod = (
   roles: Role[],
