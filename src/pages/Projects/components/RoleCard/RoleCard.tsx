@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
-import { skillBackgrounds } from "../../../Dashboard/components/ReportTable/TableRow/TableRow";
 
 interface RoleCardProps {
   role: Role;
@@ -17,6 +16,18 @@ export default function RoleCard({
   handleDeleteRole,
   handleEditRole,
 }: RoleCardProps): JSX.Element {
+  const skillBackgrounds: { [key: string]: string } = {
+    Design: "#435BAE",
+    UX: "#AE436A",
+    Angular: "#876363",
+    React: "#61D0D7",
+    Node: "#805AD5",
+    DevOps: "#5FAE43",
+    "UI Designer": "#435BAE",
+    "UX Designer": "#AE436A",
+    "Project Management": "#B55F10",
+  };
+
   const filterAssignments = (assignments: Assignment[]) => {
     return assignments.filter(
       (assignment) =>
