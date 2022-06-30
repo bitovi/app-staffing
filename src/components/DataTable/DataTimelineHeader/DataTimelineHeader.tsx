@@ -27,11 +27,7 @@ function DataTimelineHeader({
             letterSpacing="0.05em"
             key={title}
           >
-            <Center
-              flex={1}
-              alignItems={"start"}
-              flexDirection="column"
-            >
+            <Center flex={1} alignItems={"start"} flexDirection="column">
               <Center height={4} flex={1}>
                 <Text textStyle="tableHead" fontSize="12px">
                   {title}
