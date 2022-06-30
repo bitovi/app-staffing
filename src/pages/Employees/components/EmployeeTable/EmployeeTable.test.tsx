@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import { employees } from "../../../../mocks/fixtures";
 import EmployeeTable from "./EmployeeTable";
 import { MemoryRouter } from "react-router-dom";
-import { getByTestId } from "@testing-library/dom";
 
 describe("EmployeeTable", () => {
   it("has an 'empty' state", async () => {
