@@ -12,7 +12,9 @@ describe("EmployeeTable", () => {
         <EmployeeTable
           updateEmployee={() => Promise.resolve()}
           destroyEmployee={(id) => new Promise((resolve) => resolve())}
-          employees={[]}
+          useEmployees={() => {
+            return [];
+          }}
         />
         ,
       </MemoryRouter>,
@@ -27,14 +29,13 @@ describe("EmployeeTable", () => {
         <EmployeeTable
           updateEmployee={() => Promise.resolve()}
           destroyEmployee={(id) => new Promise((resolve) => resolve())}
-          employees={employees}
+          useEmployees={() => {
+            return employees;
+          }}
         />
       </MemoryRouter>,
     );
-
-    employees.forEach((employee) => {
-      expect(screen.getByText(employee.name)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(employees[0].name)).toBeInTheDocument();
   });
 
   it("should not retain error message in delete confirmation modal", async () => {
@@ -45,7 +46,9 @@ describe("EmployeeTable", () => {
         <EmployeeTable
           updateEmployee={() => Promise.resolve()}
           destroyEmployee={(id) => deferred.promise}
-          employees={employees}
+          useEmployees={() => {
+            return employees;
+          }}
         />
       </MemoryRouter>,
     );

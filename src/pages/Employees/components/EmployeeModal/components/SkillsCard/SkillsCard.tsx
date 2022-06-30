@@ -20,7 +20,7 @@ export default function SkillsCard({
   useSkills = useSkillsDefault,
   setSkills,
   skills,
-}: SkillsCardProps) {
+}: SkillsCardProps): JSX.Element {
   const skillsFetched = useSkills();
 
   useEffect(() => {
