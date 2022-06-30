@@ -2,6 +2,7 @@ import ReportTable from "./components/ReportTable";
 import { Flex } from "@chakra-ui/layout";
 import Heading from "../../components/Typography/Heading";
 import { Suspense } from "react";
+
 export function DashboardLoadingLayout(): JSX.Element {
   return (
     <Flex flexDirection="column" py={16} px={4}>
