@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Skeleton, Stack } from "@chakra-ui/react";
+import { Project } from "../../../../src/services/api/Projects/Projects";
 
 import ProjectsHeader from "./components/ProjectsHeader";
 import ProjectList from "./components/ProjectList";
@@ -61,9 +62,19 @@ export default function ProjectsWrapper(): JSX.Element {
   );
 }
 
-function sortProjectRoles(projects):  {
+function sortProjectRoles(projects: Project[]): Project[] {
   projects.forEach((project) => {
-    project.roles.sort((a, b) => a.name < b.name);
+    if (project.roles) {
+      project.roles.sort((a, b) => {
+        if (a.name && b.name) {
+          if (a.name < b.name) return -1;
+
+          if (a.name > b.name) return 1;
+        }
+
+        return 0;
+      });
+    }
   });
   return projects;
 }
