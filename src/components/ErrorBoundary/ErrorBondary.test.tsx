@@ -31,9 +31,7 @@ describe("Components/ErrorBoundary", () => {
       </ErrorBoundary>,
     );
 
-    const errorMessage = screen.getByText(
-      "Sorry... there was an error.",
-    );
+    const errorMessage = screen.getByText("Sorry... there was an error.");
     expect(errorMessage).toBeInTheDocument();
   });
 });

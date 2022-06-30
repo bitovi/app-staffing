@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof ErrorBoundary>;
 
 const BuggyComponent = () => {
-  throw new Error('This component is throwing an error.');
+  throw new Error("This component is throwing an error.");
 };
 
 export const Basic: ComponentStory<typeof ErrorBoundary> = () => (
