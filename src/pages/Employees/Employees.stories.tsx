@@ -5,6 +5,7 @@ import { Flex, Box } from "@chakra-ui/layout";
 
 import { Employees, EmployeePageLoadingLayout } from "./Employees";
 import { useEmployees } from "../../services/api";
+import { BrowserRouter } from "react-router-dom";
 
 export default {
   title: "Pages/Employees",
@@ -53,20 +54,22 @@ function NonEmptyEmployeesPage({ ...props }) {
   }, []);
 
   return (
-    <Flex height="100%" width="100%" overflow="hidden">
-      <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
-        <Employees
-          {...props}
-          useEmployees={useEmployees}
-          useEmployeeMutations={() => {
-            return {
-              createEmployee: (employee) => Promise.resolve(""),
-              updateEmployee: (id) => Promise.resolve(),
-              destroyEmployee: (id) => Promise.resolve(),
-            };
-          }}
-        />
-      </Box>
-    </Flex>
+    <BrowserRouter>
+      <Flex height="100%" width="100%">
+        <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
+          <Employees
+            {...props}
+            useEmployees={useEmployees}
+            useEmployeeMutations={() => {
+              return {
+                createEmployee: (employee) => Promise.resolve(""),
+                updateEmployee: (id) => Promise.resolve(),
+                destroyEmployee: (id) => Promise.resolve(),
+              };
+            }}
+          />
+        </Box>
+      </Flex>
+    </BrowserRouter>
   );
 }

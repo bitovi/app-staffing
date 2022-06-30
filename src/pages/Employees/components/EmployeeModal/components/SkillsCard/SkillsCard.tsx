@@ -27,7 +27,7 @@ export default function SkillsCard({
     if (!skills.length && skillsFetched.length) {
       setSkills(skillsFetched);
     }
-  }, [skillsFetched?.length]);
+  }, [skillsFetched?.length, skills?.length, setSkills, skillsFetched]);
 
   return (
     <Flex mt={4} flexGrow={1}>

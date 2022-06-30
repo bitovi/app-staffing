@@ -3,15 +3,19 @@ import { render, screen, within, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { employees } from "../../../../mocks/fixtures";
 import EmployeeTable from "./EmployeeTable";
+import { MemoryRouter } from "react-router-dom";
 
 describe("EmployeeTable", () => {
   it("has an 'empty' state", async () => {
     render(
-      <EmployeeTable
-        updateEmployee={() => Promise.resolve()}
-        destroyEmployee={(id) => new Promise((resolve) => resolve())}
-        employees={[]}
-      />,
+      <MemoryRouter>
+        <EmployeeTable
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={(id) => new Promise((resolve) => resolve())}
+          employees={[]}
+        />
+        ,
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/There are currently no team members./i));
@@ -19,11 +23,13 @@ describe("EmployeeTable", () => {
 
   it("shows employees", async () => {
     render(
-      <EmployeeTable
-        updateEmployee={() => Promise.resolve()}
-        destroyEmployee={(id) => new Promise((resolve) => resolve())}
-        employees={employees}
-      />,
+      <MemoryRouter>
+        <EmployeeTable
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={(id) => new Promise((resolve) => resolve())}
+          employees={employees}
+        />
+      </MemoryRouter>,
     );
 
     employees.forEach((employee) => {
@@ -35,11 +41,13 @@ describe("EmployeeTable", () => {
     const deferred = makeDeferred();
 
     const { findByRole, findAllByRole } = render(
-      <EmployeeTable
-        updateEmployee={() => Promise.resolve()}
-        destroyEmployee={(id) => deferred.promise}
-        employees={employees}
-      />,
+      <MemoryRouter>
+        <EmployeeTable
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={(id) => deferred.promise}
+          employees={employees}
+        />
+      </MemoryRouter>,
     );
 
     // click delete icon on the employee table row

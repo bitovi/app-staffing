@@ -18,18 +18,6 @@ export interface TableRowProps {
 function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   const [isExpanded, setExpanded] = useState(false);
 
-  const skillBackgrounds: { [key: string]: string } = {
-    Design: "#435BAE",
-    UX: "#AE436A",
-    Angular: "#876363",
-    React: "#61D0D7",
-    Node: "#805AD5",
-    DevOps: "#5FAE43",
-    "UI Designer": "#435BAE",
-    "UX Designer": "#AE436A",
-    "Project Management": "#B55F10",
-  };
-
   const getRowColors = (
     action: Action,
   ): { highlight: string; background: string; text: string } => {
@@ -93,7 +81,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                 isTruncated={false}
                 size="sm"
                 whiteSpace="break-spaces"
-                background={skillBackgrounds[skill.name]}
+                background={`skills.${skill.name}`}
                 maxWidth="100px"
                 textAlign="center"
                 display="flex"
