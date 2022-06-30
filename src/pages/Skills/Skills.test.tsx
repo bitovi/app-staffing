@@ -22,13 +22,13 @@ describe("Pages/Skills", () => {
     });
 
     it("renders Add Skill button", async () => {
-      const { findByText } = render(<Skills />);
+      const { findByText } = render(<Skills useSkills={useSkillsMocked} />);
       const addSkillButton = await findByText("Add Skill");
       expect(addSkillButton).toBeInTheDocument();
     });
 
     it("renders skeleton rows", async () => {
-      const { getAllByTestId } = render(<Skills />);
+      const { getAllByTestId } = render(<Skills useSkills={useSkillsMocked} />);
       const skeletonRows = await getAllByTestId("skeleton-row");
       expect(skeletonRows[0]).toBeInTheDocument();
     });
