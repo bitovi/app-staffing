@@ -31,7 +31,7 @@ import formatISO from "date-fns/formatISO";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import { Employee, Skill } from "../../../../services/api";
 import { ServiceError } from "../../../../components/ServiceError";
-import SkillsCard from "./components/SkillsCard";
+import EmployeeModalSkillsCard from "./components/EmployeeModalSkillsCard";
 
 export interface EmployeeFormData {
   name: string;
@@ -248,7 +248,7 @@ export default function EmployeeModal({
                   </Center>
                 }
               >
-                <SkillsCard
+                <EmployeeModalSkillsCard
                   control={control}
                   setSkills={setSkills}
                   skills={skills}

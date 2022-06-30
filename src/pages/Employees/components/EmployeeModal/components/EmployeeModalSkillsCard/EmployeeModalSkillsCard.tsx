@@ -8,19 +8,19 @@ import {
 } from "../../../../../../services/api";
 import { EmployeeFormData } from "../../EmployeeModal";
 
-interface SkillsCardProps {
+interface EmployeeModalSkillsCardProps {
   control: Control<EmployeeFormData>;
   useSkills?: typeof useSkillsDefault;
   setSkills: (skills: Skill[]) => void;
   skills: Skill[];
 }
 
-export default function SkillsCard({
+export default function EmployeeModalSkillsCard({
   control,
   useSkills = useSkillsDefault,
   setSkills,
   skills,
-}: SkillsCardProps) {
+}: EmployeeModalSkillsCardProps) {
   const skillsFetched = useSkills();
 
   useEffect(() => {

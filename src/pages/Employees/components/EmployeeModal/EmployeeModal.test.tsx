@@ -1,29 +1,37 @@
-import { render, cleanup, waitFor } from "@testing-library/react";
+import { cleanup, render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import EmployeeModal from "./EmployeeModal";
+import { clearFixtures, loadFixtures } from "../../../../mocks";
 import { skills, employees } from "../../../../mocks/fixtures";
 
 describe("EmployeeModal", () => {
-  afterEach(cleanup);
+  beforeEach(async () => {
+    await loadFixtures();
+  });
+
+  afterEach(async () => {
+    await clearFixtures();
+    cleanup();
+  });
 
   it("renders 'new employee' UI when 'employee' prop is not set", async () => {
-    const { getByText, getByRole, getAllByRole, getByPlaceholderText } = render(
-      <EmployeeModal
-        onSave={() => Promise.resolve()}
-        onClose={() => true}
-        isOpen
-        skills={skills}
-      />,
-    );
+    const { getByText, getByRole, findAllByRole, getByPlaceholderText } =
+      render(
+        <EmployeeModal
+          onSave={() => Promise.resolve()}
+          onClose={() => true}
+          isOpen
+        />,
+      );
 
     getByText("Add a New Team Member");
 
     const addButton = getByRole("button", { name: "Add & Close" });
     expect(addButton).toHaveAttribute("aria-disabled", "true");
 
-    const checkboxes = getAllByRole("checkbox", { checked: false });
+    const checkboxes = await findAllByRole("checkbox", { checked: false });
     const onScreenIds = Array.from(checkboxes).map(
       (checkbox) => (checkbox as HTMLInputElement).value,
     );
@@ -45,13 +53,12 @@ describe("EmployeeModal", () => {
   it.skip("renders 'edit employee' UI when 'employee' prop is set", async () => {
     const employee = employees[1];
 
-    const { getByText, getByDisplayValue, getByRole, getAllByRole } = render(
+    const { getByText, getByDisplayValue, getByRole, findAllByRole } = render(
       <ChakraProvider>
         <EmployeeModal
           onSave={() => Promise.resolve()}
           onClose={() => true}
           isOpen={true}
-          skills={skills}
           employee={employee}
         />
       </ChakraProvider>,
@@ -65,7 +72,7 @@ describe("EmployeeModal", () => {
     const nameInput = getNameInput();
     const saveButton = getSaveButton();
 
-    const selectedRoles = getAllByRole("checkbox", { checked: true });
+    const selectedRoles = await findAllByRole("checkbox", { checked: true });
     const ids = selectedRoles.map(
       (checkbox) => (checkbox as HTMLInputElement).value,
     );
@@ -90,15 +97,16 @@ describe("EmployeeModal", () => {
     });
   });
 
+  //TODO - Fix for SKILLSCARD
   it("should reset form fields when cancel button is clicked", async () => {
-    const { getByText, getByRole, getAllByRole, getByPlaceholderText } = render(
-      <EmployeeModal
-        onSave={() => Promise.resolve()}
-        onClose={() => true}
-        isOpen={true}
-        skills={skills}
-      />,
-    );
+    const { getByText, getByRole, findAllByRole, getByPlaceholderText } =
+      render(
+        <EmployeeModal
+          onSave={() => Promise.resolve()}
+          onClose={() => true}
+          isOpen={true}
+        />,
+      );
 
     // make sure the form is empty on open
     getByText("Add a New Team Member");
@@ -106,7 +114,7 @@ describe("EmployeeModal", () => {
     const nameInput = getByPlaceholderText("name");
     expect(nameInput).toHaveValue("");
 
-    const checkboxes = getAllByRole("checkbox");
+    const checkboxes = await findAllByRole("checkbox");
     const isChecked = (el: unknown) => (el as HTMLInputElement).checked;
     expect(checkboxes.filter(isChecked)).toHaveLength(0);
 
@@ -129,6 +137,7 @@ describe("EmployeeModal", () => {
     expect(checkboxes.filter(isChecked)).toHaveLength(0);
   });
 
+  //TODO _ fix for SKILLSCARD
   // This allows the front end to "remove" an existing date value from a team member
   it("should call onSave with date fields set to null when fields are empty", async () => {
     const onSave = jest.fn();
@@ -136,24 +145,17 @@ describe("EmployeeModal", () => {
     const {
       getByText,
       getByRole,
-      getAllByRole,
+      findAllByRole,
       getByPlaceholderText,
       findByText,
-    } = render(
-      <EmployeeModal
-        isOpen
-        skills={skills}
-        onSave={onSave}
-        onClose={() => true}
-      />,
-    );
+    } = render(<EmployeeModal isOpen onSave={onSave} onClose={() => true} />);
 
     getByText("Add a New Team Member");
 
     const addButton = getByRole("button", { name: "Add & Close" });
     expect(addButton).toHaveAttribute("aria-disabled", "true");
 
-    const checkboxes = getAllByRole("checkbox", { checked: false });
+    const checkboxes = await findAllByRole("checkbox", { checked: false });
     userEvent.type(getByPlaceholderText("name"), "Johnny Appleseed");
     userEvent.click(checkboxes[0]);
     expect(addButton).not.toHaveAttribute("aria-disabled", "true");
