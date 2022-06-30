@@ -1,8 +1,11 @@
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction, Suspense, useMemo } from "react";
 import {
   Box,
   BoxProps,
   Flex,
+  FormControl,
+  FormLabel,
+  Switch,
   Table,
   Tbody,
   Text,
@@ -11,23 +14,26 @@ import {
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import isEmpty from "lodash/isEmpty";
-import type { Employee } from "../../../../services/api";
-import EmployeeCard from "../EmployeeCard";
+import {
+  Employee,
+  useEmployees as useEmployeesDefault,
+} from "../../../../services/api";
+import EmployeeCard, { EmployeeCardSkeleton } from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
 import orderBy from "lodash/orderBy";
 import EmployeeTableHeader from "./components/EmployeeTableHeader/EmployeeTableHeader";
 
 interface EmployeeTableProps extends BoxProps {
-  employees: Employee[] | undefined;
   updateEmployee: (id: string, data: Employee) => Promise<void>;
   destroyEmployee: (employeeId: string) => Promise<void>;
+  useEmployees?: typeof useEmployeesDefault;
 }
 
 export default function EmployeeTable({
-  employees,
   updateEmployee,
   destroyEmployee,
+  useEmployees = useEmployeesDefault,
   ...props
 }: EmployeeTableProps): JSX.Element {
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
@@ -42,75 +48,146 @@ export default function EmployeeTable({
     }
   };
 
+  const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
+
+  return (
+    <>
+      <TeamMemberSwitch
+        onChange={(e) => setShowInactiveEmployees(e.target.checked)}
+        isChecked={showInactiveEmployees}
+      />
+      <Suspense fallback={<EmployeeCardSkeleton />}>
+        <DeleteConfirmationModal
+          key={employeeToDelete ? employeeToDelete.id : undefined}
+          employee={employeeToDelete}
+          setEmployee={setEmployeeToDelete}
+          destroyEmployee={destroyEmployee}
+        />
+        <EmployeeModal
+          isOpen={!isEmpty(employeeToEdit)}
+          onClose={() => setEmployeeToEdit(null)}
+          onSave={(employee) => submitUpdateEmployee(employee as Employee)}
+          employee={employeeToEdit ? employeeToEdit : undefined}
+        />
+        <Box {...props}>
+          <EmployeeTableView
+            setEmployeeToEdit={setEmployeeToEdit}
+            setEmployeeToDelete={setEmployeeToDelete}
+            showInactiveEmployees={showInactiveEmployees}
+            useEmployees={useEmployees}
+          />
+        </Box>
+      </Suspense>
+    </>
+  );
+}
+
+function TeamMemberSwitch({
+  onChange,
+  isChecked,
+}: {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isChecked: boolean;
+}): JSX.Element {
+  return (
+    <FormControl
+      display="flex"
+      alignItems="center"
+      justifyContent="end"
+      marginTop="2em"
+    >
+      <FormLabel htmlFor="showInactiveEmployees" mb="0">
+        Show inactive team members
+      </FormLabel>
+      <Switch
+        id="showInactiveEmployees"
+        isChecked={isChecked}
+        onChange={onChange}
+      />
+    </FormControl>
+  );
+}
+
+interface EmployeeTableViewProps {
+  showInactiveEmployees: boolean;
+  setEmployeeToDelete: Dispatch<SetStateAction<Employee | null>>;
+  setEmployeeToEdit: Dispatch<SetStateAction<Employee | null>>;
+  useEmployees: typeof useEmployeesDefault;
+}
+
+function EmployeeTableView({
+  showInactiveEmployees,
+  setEmployeeToDelete,
+  setEmployeeToEdit,
+  useEmployees,
+}: EmployeeTableViewProps) {
+  const employeesFetched = useEmployees({ include: "skills", sort: "name" });
+
+  const employees = useMemo(
+    () =>
+      employeesFetched.filter((emp) =>
+        showInactiveEmployees
+          ? true
+          : emp.endDate == null || emp.endDate > new Date(),
+      ),
+    [employeesFetched, showInactiveEmployees],
+  );
+
   const lastEmployeeIndex = Array.isArray(employees)
     ? employees.length - 1
     : -1;
 
-  return (
-    <>
-      <DeleteConfirmationModal
-        key={employeeToDelete ? employeeToDelete.id : undefined}
-        employee={employeeToDelete}
-        setEmployee={setEmployeeToDelete}
-        destroyEmployee={destroyEmployee}
-      />
-      <EmployeeModal
-        isOpen={!isEmpty(employeeToEdit)}
-        onClose={() => setEmployeeToEdit(null)}
-        onSave={(employee) => submitUpdateEmployee(employee as Employee)}
-        employee={employeeToEdit ? employeeToEdit : undefined}
-      />
-      <Box {...props}>
-        {employees && employees.length === 0 && (
-          <Flex
-            width="100%"
-            flexDirection="column"
-            minHeight="30px"
-            boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
-            backgroundColor="white"
-            padding="82px 30px 153px"
-            border="1px solid #eee"
-            borderRadius="4px"
-            alignItems="center"
-          >
-            <Image
-              height="100px"
-              width="100px"
-              src="assets/images/folderWithFile.png"
-              alt="Folder With File"
-            />
-            <Text fontWeight="bold" fontSize="16px" lineHeight="24px">
-              There are currently no team members.
-            </Text>
-          </Flex>
-        )}
+  if (employees.length === 0) {
+    return <NoResults />;
+  }
 
-        {employees && employees.length > 0 && (
-          <>
-            <Box paddingInline="40px" marginBottom="40px">
-              <Table>
-                <Thead py={4}>
-                  <EmployeeTableHeader />
-                </Thead>
-                <Tbody>
-                  {orderBy(employees, [
-                    (employee) => employee.name.toLowerCase(),
-                  ]).map((employee, index) => (
-                    <EmployeeTableRow
-                      key={employee.id}
-                      handleEditEmployee={setEmployeeToEdit}
-                      handleDeleteEmployee={setEmployeeToDelete}
-                      employee={employee}
-                      lastChild={lastEmployeeIndex === index}
-                    />
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
-          </>
-        )}
-      </Box>
-    </>
+  return (
+    <Box paddingInline="40px" marginBottom="40px">
+      <Table>
+        <Thead py={4}>
+          <EmployeeTableHeader />
+        </Thead>
+        <Tbody>
+          {orderBy(employees, [(employee) => employee.name.toLowerCase()]).map(
+            (employee, index) => (
+              <EmployeeTableRow
+                key={employee.id}
+                handleEditEmployee={setEmployeeToEdit}
+                handleDeleteEmployee={setEmployeeToDelete}
+                employee={employee}
+                lastChild={lastEmployeeIndex === index}
+              />
+            ),
+          )}
+        </Tbody>
+      </Table>
+    </Box>
+  );
+}
+
+function NoResults() {
+  return (
+    <Flex
+      width="100%"
+      flexDirection="column"
+      minHeight="30px"
+      boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
+      backgroundColor="white"
+      padding="82px 30px 153px"
+      border="1px solid #eee"
+      borderRadius="4px"
+      alignItems="center"
+    >
+      <Image
+        height="100px"
+        width="100px"
+        src="assets/images/folderWithFile.png"
+        alt="Folder With File"
+      />
+      <Text fontWeight="bold" fontSize="16px" lineHeight="24px">
+        There are currently no team members.
+      </Text>
+    </Flex>
   );
 }
 

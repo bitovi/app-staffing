@@ -1,9 +1,7 @@
-import { Suspense, useState, useMemo } from "react";
+import { useState } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
-import { Switch, FormLabel, FormControl } from "@chakra-ui/react";
 import {
   Employee,
-  useEmployees as useEmployeesDefault,
   useEmployeeMutations as useEmployeeMutationsDefault,
 } from "../../services/api";
 import EmployeeTable from "./components/EmployeeTable";
@@ -14,8 +12,7 @@ import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
 import { MemoryRouter } from "react-router-dom";
 
 interface EmployeesProps {
-  useEmployees: typeof useEmployeesDefault;
-  useEmployeeMutations: typeof useEmployeeMutationsDefault;
+  useEmployeeMutations?: typeof useEmployeeMutationsDefault;
 }
 
 export function EmployeePageLoadingLayout(): JSX.Element {
@@ -58,37 +55,11 @@ export function EmployeePageLoadingLayout(): JSX.Element {
   );
 }
 
-export default function EmployeesWrapper(): JSX.Element {
-  return (
-    <Suspense fallback={<EmployeePageLoadingLayout />}>
-      <MemoryRouter>
-        <Employees
-          useEmployees={useEmployeesDefault}
-          useEmployeeMutations={useEmployeeMutationsDefault}
-        />
-      </MemoryRouter>
-    </Suspense>
-  );
-}
-
-export function Employees({
-  useEmployees,
-  useEmployeeMutations,
+export default function Employees({
+  useEmployeeMutations = useEmployeeMutationsDefault,
 }: EmployeesProps): JSX.Element {
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
-  const employees = useEmployees({ include: "skills", sort: "name" });
-
-  const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
-  const activeEmployees = useMemo(
-    () =>
-      employees.filter((emp) =>
-        showInactiveEmployees
-          ? true
-          : emp.endDate == null || emp.endDate > new Date(),
-      ),
-    [employees, showInactiveEmployees],
-  );
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
@@ -96,73 +67,58 @@ export function Employees({
     await createEmployee(data);
   };
   return (
-    <Box>
-      {employeeModal && (
-        <EmployeeModal
-          isOpen={employeeModal}
-          onClose={() => setEmployeeModal(false)}
-          onSave={addNewEmployee}
-        />
-      )}
-
-      <Box
-        position="sticky"
-        top="0"
-        background="gray.10"
-        padding="40px"
-        paddingBottom="0"
-        zIndex="10"
-      >
-        <EmployeesBreadcrumbs />
-
-        <Flex
-          width="full"
-          fontFamily="Arial, Helvetica, sans-serif"
-          display="flex"
-          justifyContent="space-between"
-        >
-          <Heading
-            as="h1"
-            textStyle="title"
-            color="gray.700"
-            data-testid="employeesTitle"
-          >
-            Team Members
-          </Heading>
-
-          <Button
-            size="lg"
-            variant="primary"
-            onClick={() => setEmployeeModal(true)}
-            arialabel="Add Employee"
-          >
-            Add Team Member
-          </Button>
-        </Flex>
-
-        <FormControl
-          display="flex"
-          alignItems="center"
-          justifyContent="end"
-          marginTop="2em"
-        >
-          <FormLabel htmlFor="showInactiveEmployees" mb="0">
-            Show inactive team members
-          </FormLabel>
-          <Switch
-            id="showInactiveEmployees"
-            isChecked={showInactiveEmployees}
-            onChange={({ target }) => setShowInactiveEmployees(target.checked)}
+    <MemoryRouter>
+      <Box>
+        {employeeModal && (
+          <EmployeeModal
+            isOpen={employeeModal}
+            onClose={() => setEmployeeModal(false)}
+            onSave={addNewEmployee}
           />
-        </FormControl>
-      </Box>
+        )}
 
-      <EmployeeTable
-        mt="32px"
-        updateEmployee={updateEmployee}
-        destroyEmployee={destroyEmployee}
-        employees={activeEmployees}
-      />
-    </Box>
+        <Box
+          position="sticky"
+          top="0"
+          background="gray.10"
+          padding="40px"
+          paddingBottom="0"
+          zIndex="10"
+        >
+          <EmployeesBreadcrumbs />
+
+          <Flex
+            width="full"
+            fontFamily="Arial, Helvetica, sans-serif"
+            display="flex"
+            justifyContent="space-between"
+          >
+            <Heading
+              as="h1"
+              textStyle="title"
+              color="gray.700"
+              data-testid="employeesTitle"
+            >
+              Team Members
+            </Heading>
+
+            <Button
+              size="lg"
+              variant="primary"
+              onClick={() => setEmployeeModal(true)}
+              arialabel="Add Employee"
+            >
+              Add Team Member
+            </Button>
+          </Flex>
+        </Box>
+
+        <EmployeeTable
+          mt="32px"
+          updateEmployee={updateEmployee}
+          destroyEmployee={destroyEmployee}
+        />
+      </Box>
+    </MemoryRouter>
   );
 }
