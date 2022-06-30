@@ -1,6 +1,6 @@
 import { Flex, IconButton, Td, Text, Tr } from "@chakra-ui/react";
-import { Skill } from "../../../../services/api";
-import { EditIcon, TrashIcon } from "../../../assets";
+import { Skill } from "../../../../../../services/api";
+import { EditIcon, TrashIcon } from "../../../../../assets";
 
 interface SkillCardProps {
   skill: Skill;
@@ -31,14 +31,14 @@ export default function SkillCard({ skill }: SkillCardProps): JSX.Element {
           <Flex justifyContent="end" justifySelf="end">
             <IconButton
               variant="editAction"
-              aria-label="Edit Member"
+              aria-label="Edit Skill"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
             />
             <IconButton
               ml="8px"
               variant="deleteAction"
-              aria-label="Delete Member"
+              aria-label="Delete Skill"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
             />
