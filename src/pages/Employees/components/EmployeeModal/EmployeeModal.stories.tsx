@@ -8,6 +8,7 @@ export default {
   component: EmployeeModal,
 } as ComponentMeta<typeof EmployeeModal>;
 
+//TODO: Skills not resolving after suspense
 export const Works: ComponentStory<typeof EmployeeModal> = () => {
   return (
     <EmployeeModal

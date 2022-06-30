@@ -10,6 +10,7 @@ export default {
   component: EmployeeModalSkillsCard,
 } as ComponentMeta<typeof EmployeeModalSkillsCard>;
 
+//TODO: Stories not loading after suspense
 export const Works: ComponentStory<typeof EmployeeModalSkillsCard> = () => {
   const { control } = useForm<EmployeeFormData>();
   return (
@@ -20,3 +21,16 @@ export const Works: ComponentStory<typeof EmployeeModalSkillsCard> = () => {
     />
   );
 };
+
+//TODO: Stories not loading after suspense
+export const ServerError: ComponentStory<typeof EmployeeModalSkillsCard> =
+  () => {
+    const { control } = useForm<EmployeeFormData>();
+    return (
+      <EmployeeModalSkillsCard
+        control={control}
+        setSkills={() => console.log(skills)}
+        skills={skills}
+      />
+    );
+  };

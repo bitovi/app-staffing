@@ -38,7 +38,9 @@ describe("EmployeeModalSkillsCard loads", () => {
   it("renders clickable skill checkboxes", async () => {
     const mockSetSkills = jest.fn();
     render(<EmployeeModalSkillCardMock mockSetSkills={mockSetSkills} />);
-    let checkboxes = await screen.findAllByRole("checkbox", { checked: false });
+    const checkboxes = await screen.findAllByRole("checkbox", {
+      checked: false,
+    });
     const onScreenIds = Array.from(checkboxes).map(
       (checkbox) => (checkbox as HTMLInputElement).value,
     );
