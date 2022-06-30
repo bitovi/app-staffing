@@ -36,10 +36,11 @@ export function Projects({
   useProjectMutations = defaultUseProjectMutations,
 }: ProjectProps): JSX.Element {
   const { createProject } = useProjectMutations();
-  const projects = useProjects({
-    sort: "name",
-    include: ["roles.skills", "roles.assignments.employee"],
-  });
+  const projects = sortProjectRoles(
+    useProjects({
+      include: ["roles.skills", "roles.assignments.employee"],
+    }),
+  );
 
   return (
     <>
@@ -58,4 +59,11 @@ export default function ProjectsWrapper(): JSX.Element {
       />
     </Suspense>
   );
+}
+
+function sortProjectRoles(projects):  {
+  projects.forEach((project) => {
+    project.roles.sort((a, b) => a.name < b.name);
+  });
+  return projects;
 }

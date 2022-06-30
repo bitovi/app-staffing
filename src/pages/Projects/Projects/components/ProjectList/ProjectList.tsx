@@ -1,52 +1,18 @@
-import { useCallback } from "react";
-import {
-  Badge,
-  Box,
-  BoxProps,
-  chakra,
-  Flex,
-  Link,
-  Table,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Link, Text } from "@chakra-ui/react";
 import { FolderWithFilesIcon } from "../../../../assets/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
-
 import ProjectCard from "../ProjectCard";
 import { Project } from "../../../../../services/api";
-
+import { skillBackgrounds } from "../../../../Dashboard/components/ReportTable/TableRow/TableRow";
+import Badge from "../../../../../components/Badge";
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
 }
-
-const StickyHeader = chakra(Th, {
-  baseStyle: {
-    position: "sticky",
-    top: "11em",
-    background: "gray.10",
-    zIndex: "10",
-  },
-});
 
 export default function ProjectList({
   projects,
   ...rest
 }: ProjectListProps): JSX.Element {
-  const generateRows = useCallback(() => {
-    return projects?.map(
-      (project, index): JSX.Element => (
-        <ProjectListRow key={project.id} project={project}>
-          {projects.length - 1 !== index && <Tr height={5}></Tr>}
-        </ProjectListRow>
-      ),
-    );
-  }, [projects]);
-
   return (
     <>
       <Box {...rest}>
@@ -69,24 +35,31 @@ export default function ProjectList({
           </Flex>
         )}
 
-        {projects && projects.length > 0 && (
+        {projects && projects?.length > 0 && (
           <Box>
-            <Flex className="timelineHeader"> {/* sticky */}</Flex>
+            <Flex>{/* TODO sticky header goes here */}</Flex>
             <Flex flexDirection="column">
               {projects?.length &&
                 projects.map((project) => (
                   <Box
-                    padding="51px 15px"
+                    backgroundColor="#FFFFFF"
+                    borderRadius="4px"
+                    boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
                     key={project.id}
-                    className="projectWrapper"
+                    margin="15px 51px"
                   >
-                    <Flex className="projectHeader" justify="space-between">
-                      <Text>{project.name}</Text>
+                    <Flex
+                      backgroundColor="#EDF2F7"
+                      borderRadius="4px 4px 0px 0px"
+                      justify="space-between"
+                      padding="6px 10px"
+                    >
+                      <Text fontWeight="600">{project.name}</Text>
                       <Link
+                        to={`projects/${project.id}`}
                         as={ReactRouterLink}
                         color="teal.500"
                         fontWeight="bold"
-                        to={`projects/${project.id}`}
                       >
                         View Project Detail
                       </Link>
@@ -94,10 +67,33 @@ export default function ProjectList({
                     <Flex direction="column">
                       {project?.roles?.map((role) => (
                         <Box key={role.id}>
-                          {" "}
-                          {/* row */}
                           {role?.skills?.map((skill) => (
-                            <Badge key={skill.id}>{skill.name}</Badge>
+                            <Flex
+                              alignItems="center"
+                              borderBottom="1px solid rgba(0, 0, 0, 0.04)"
+                              key={skill.id}
+                              minHeight="50px"
+                            >
+                              <Flex
+                                alignItems="center"
+                                alignSelf="stretch"
+                                flex="0 1 150px"
+                                justify="center"
+                                padding="0 16px"
+                              >
+                                <Badge
+                                  background={skillBackgrounds[skill.name]}
+                                  display="flex"
+                                  isTruncated={false}
+                                  maxWidth="100px"
+                                  size="sm"
+                                  textAlign="center"
+                                  whiteSpace="break-spaces"
+                                >
+                                  {skill.name}
+                                </Badge>
+                              </Flex>
+                            </Flex>
                           ))}
                         </Box>
                       ))}
@@ -106,47 +102,6 @@ export default function ProjectList({
                 ))}
             </Flex>
           </Box>
-        )}
-
-        {projects && projects.length > 0 && (
-          <>
-            <Box paddingInline="40px" marginBottom="40px">
-              <Table variant="unstyled">
-                <Thead>
-                  <Tr>
-                    <StickyHeader
-                      px="25px"
-                      pb="26px"
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
-                      NAME
-                    </StickyHeader>
-                    <StickyHeader
-                      px="25px"
-                      pb="26px"
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
-                      {/* Using <VisuallyHidden> here because although the Figma file doesn't contain this header, I assume it's an accessibility liability to use a blank table header. */}
-                      <VisuallyHidden>DESCRIPTION</VisuallyHidden>
-                    </StickyHeader>
-                    <StickyHeader
-                      px="25px"
-                      pb="26px"
-                      pr={12}
-                      color="gray.800"
-                      textStyle="table.title"
-                      isNumeric
-                    >
-                      ACTIONS
-                    </StickyHeader>
-                  </Tr>
-                </Thead>
-                <Tbody>{generateRows()}</Tbody>
-              </Table>
-            </Box>
-          </>
         )}
       </Box>
     </>
