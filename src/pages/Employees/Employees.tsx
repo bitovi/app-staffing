@@ -84,7 +84,6 @@ export function Employees({
     useEmployeeMutations();
 
   const [sortData, setSortData] = useState("name");
-  // const [filterData, setFilterData] = useState();
 
   function updateSortData(field: string) {
     if (!sortData || !sortData.includes(field)) {
@@ -118,7 +117,7 @@ export function Employees({
 
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
 
-  // TODO: implement active/inactive filter on the server-side
+  // active/inactive filter should be done on the server-side and tie into other sorting/filtering
   // and coordinate query with other filters/sorting
   // const activeEmployees = useMemo(
   //   () =>
