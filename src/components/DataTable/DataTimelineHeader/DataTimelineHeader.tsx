@@ -17,8 +17,8 @@ function DataTimelineHeader({
   timeline,
 }: DataTimelineHeaderProps): JSX.Element {
   return (
-    <Flex pl={11} flex="1" flexDirection="row">
-      <Flex width={headingWidth} fontWeight="700" textTransform="uppercase">
+    <Flex flex="1" flexDirection="row">
+      <Flex pl={11} width={headingWidth} fontWeight="700" textTransform="uppercase">
         {heading}
       </Flex>
       {timeline.map(({ title, type, startDate }, index) => {

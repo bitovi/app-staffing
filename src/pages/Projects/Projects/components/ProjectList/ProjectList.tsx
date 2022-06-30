@@ -41,7 +41,7 @@ export default function ProjectList({
             <Flex padding="15px 51px" borderBottom="1px solid #CBD5E0">
               <DataTimelineHeader
                 heading="Name"
-                headingWidth="112px"
+                headingWidth="150px"
                 timeline={timeline}
               />
             </Flex>
@@ -51,7 +51,7 @@ export default function ProjectList({
                   <ProjectCard
                     key={project.id}
                     project={project}
-                    columnCount={timeline.length - 1}
+                    columnCount={timeline.length}
                   />
                 ))}
             </Flex>

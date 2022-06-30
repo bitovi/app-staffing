@@ -60,7 +60,7 @@ const ProjectCard = ({
                 <Flex
                   alignItems="center"
                   alignSelf="stretch"
-                  flex="0 1 112px"
+                  flex="0 1 150px"
                   justify="center"
                   padding="0 16px"
                 >
