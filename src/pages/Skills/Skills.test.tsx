@@ -8,8 +8,9 @@ describe("Pages/Skills", () => {
       cleanup();
     });
 
+    // Simulate forever loading request to trigger Suspense
     const useSkillsMocked = () => {
-      throw new Promise(() => {});
+      throw new Promise(() => undefined);
     };
 
     it("renders table headers", async () => {
