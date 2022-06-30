@@ -29,7 +29,6 @@ function DataTimelineHeader({
           >
             <Center
               flex={1}
-              key={index}
               alignItems={"start"}
               flexDirection="column"
             >
@@ -39,7 +38,6 @@ function DataTimelineHeader({
                 </Text>
               </Center>
 
-              {/* Sub Heading */}
               <Center height={4} flex={1} justifyContent="start">
                 {(type === "month" || type === "quarter") && (
                   <Text color={"#718096"}>
