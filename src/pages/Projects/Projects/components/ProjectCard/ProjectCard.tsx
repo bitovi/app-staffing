@@ -27,7 +27,7 @@ const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
       >
         <Text fontWeight="600">{project.name}</Text>
         <Link
-          to={`projects/${project.id}`}
+          to={`/projects/${project.id}`}
           as={ReactRouterLink}
           color="teal.500"
           fontWeight="bold"
