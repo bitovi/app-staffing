@@ -34,7 +34,7 @@ export default function ProjectList({
 
         {projects && projects?.length > 0 && (
           <Box>
-            <Flex>{/* TODO sticky header goes here */}</Flex>
+            <Flex />
             <Flex flexDirection="column">
               {projects?.length &&
                 projects.map((project) => (
