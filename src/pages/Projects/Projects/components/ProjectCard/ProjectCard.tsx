@@ -31,6 +31,8 @@ const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
           as={ReactRouterLink}
           color="teal.500"
           fontWeight="bold"
+          textDecoration="underline"
+          _hover={{ textDecoration: "none" }}
         >
           View Project Detail
         </Link>
