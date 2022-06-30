@@ -1,15 +1,14 @@
-import { Table, Tbody, Thead, Box } from "@chakra-ui/react";
+import { Table, Tbody, Box } from "@chakra-ui/react";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import { BrowserRouter } from "react-router-dom";
 import { colors } from "../../../../theme/colors";
 
 import EmployeeCard from "./EmployeeCard";
-import EmployeeTableHeader from "../EmployeeTable/components/EmployeeTableHeader";
 
 const skillOptions = Object.keys(colors.skills);
 
 export default {
-  title: "Pages/Employees/EmployeeCard",
+  title: "Pages/Employees/EmployeeRow",
   component: EmployeeCard,
   argTypes: {
     skills: {
@@ -74,9 +73,6 @@ const Template: ComponentStory<any> = (args) => {
       <Box paddingInline="40px" marginBottom="40px">
         <Box height="11em"></Box>
         <Table>
-          <Thead>
-            <EmployeeTableHeader />
-          </Thead>
           <Tbody>
             <EmployeeCard
               employee={employee}

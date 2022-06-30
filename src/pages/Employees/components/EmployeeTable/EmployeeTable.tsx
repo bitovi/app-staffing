@@ -15,7 +15,6 @@ import type { Employee, Skill } from "../../../../services/api";
 import EmployeeCard from "../EmployeeCard";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import EmployeeModal from "../EmployeeModal";
-import orderBy from "lodash/orderBy";
 import EmployeeTableHeader from "./components/EmployeeTableHeader/EmployeeTableHeader";
 
 interface EmployeeTableProps extends BoxProps {
@@ -23,12 +22,16 @@ interface EmployeeTableProps extends BoxProps {
   skills?: Skill[];
   updateEmployee: (id: string, data: Employee) => Promise<void>;
   destroyEmployee: (employeeId: string) => Promise<void>;
+  changeSort: (sortData: string) => void;
+  sortData: string;
 }
 
 export default function EmployeeTable({
   employees,
   updateEmployee,
   destroyEmployee,
+  changeSort,
+  sortData,
   skills,
   ...props
 }: EmployeeTableProps): JSX.Element {
@@ -93,12 +96,10 @@ export default function EmployeeTable({
             <Box paddingInline="40px" marginBottom="40px">
               <Table>
                 <Thead py={4}>
-                  <EmployeeTableHeader />
+                  <EmployeeTableHeader changeSort={changeSort} sortData={sortData} />
                 </Thead>
                 <Tbody>
-                  {orderBy(employees, [
-                    (employee) => employee.name.toLowerCase(),
-                  ]).map((employee, index) => (
+                  {employees.map((employee, index) => (
                     <EmployeeTableRow
                       key={employee.id}
                       handleEditEmployee={setEmployeeToEdit}

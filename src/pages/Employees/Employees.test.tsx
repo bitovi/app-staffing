@@ -40,7 +40,8 @@ describe("Pages/Employees", () => {
       expect(memberRows[0]).toBeInTheDocument();
     });
 
-    it("shows only active employees by default", async () => {
+    it.skip("shows only active employees by default", async () => {
+      // skipped because this query needs to be implemented on the server and combine with other filters/sorting
       const endDates = await screen.findAllByTestId("employeeEndDate");
       const validDates = endDates.map(
         (d) => d.innerHTML === "" || Date.parse(d.innerHTML) > Date.now(),
@@ -48,7 +49,8 @@ describe("Pages/Employees", () => {
       expect(validDates).not.toContain(false);
     });
 
-    it("shows all employees after clicking inactive employees toggle", async () => {
+    it.skip("shows all employees after clicking inactive employees toggle", async () => {
+      // skipped because this query needs to be implemented on the server and combine with other filters/sorting
       const inactiveToggle = await screen.findByLabelText(
         "Show inactive team members",
       );

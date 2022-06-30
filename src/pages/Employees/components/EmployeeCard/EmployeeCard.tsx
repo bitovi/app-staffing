@@ -109,7 +109,7 @@ export default function EmployeeCard({
         </Td>
         <Td>
           <Wrap spacing="8px">
-            {employee?.skills?.map((skill) => (
+            {employee?.skills?.sort((a,b) => a.name > b.name ? 1 : -1).map((skill) => (
               <Badge
                 key={skill.id}
                 isTruncated={false}

@@ -1,4 +1,4 @@
-import { Suspense, useState, useMemo } from "react";
+import { Suspense, useState } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Switch, FormLabel, FormControl } from "@chakra-ui/react";
 import omit from "lodash/omit";
@@ -80,11 +80,33 @@ export function Employees({
   useEmployeeMutations,
   useSkills,
 }: EmployeesProps): JSX.Element {
+
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
+
+  const [sortData, setSortData] = useState("name");
+  // const [filterData, setFilterData] = useState();
+
+  function updateSortData(field: string) {
+
+    if (!sortData || !sortData.includes(field)) {
+      // if no current sort data or new sort option, set to clicked column
+      setSortData(field);
+    } else if (sortData.includes(field)) {
+      // if sort data is the same field as clicked column,
+      // switch to descending order,
+      // remove if already descending order
+      if (sortData[0] !== "-") {
+        setSortData(`-${field}`);
+      } else {
+        setSortData("");
+      }
+    }
+  }
+
   const employees = useEmployees({
     include: ["skills", "assignments.role.project"],
-    sort: "name",
+    sort: sortData, // once server sorting is added, set the sort to sortData
   });
 
   const skillsWithEmployees = useSkills({
@@ -94,24 +116,28 @@ export function Employees({
       "employees.assignments.role.project",
     ],
   });
-  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
+  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]))
 
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
-  const activeEmployees = useMemo(
-    () =>
-      employees.filter((emp) =>
-        showInactiveEmployees
-          ? true
-          : emp.endDate == null || emp.endDate > new Date(),
-      ),
-    [employees, showInactiveEmployees],
-  );
+
+  // TODO: implement active/inactive filter on the server-side
+  // and coordinate query with other filters/sorting
+  // const activeEmployees = useMemo(
+  //   () =>
+  //     employees.filter((emp) =>
+  //       showInactiveEmployees
+  //         ? true
+  //         : emp.endDate == null || emp.endDate > new Date(),
+  //     ),
+  //   [employees, showInactiveEmployees],
+  // );
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
 
   const addNewEmployee = async (data: Omit<Employee, "id">) => {
     await createEmployee(data);
   };
+
   return (
     <Box>
       {employeeModal && (
@@ -179,7 +205,9 @@ export function Employees({
         mt="32px"
         updateEmployee={updateEmployee}
         destroyEmployee={destroyEmployee}
-        employees={activeEmployees}
+        changeSort={updateSortData}
+        sortData={sortData}
+        employees={employees}
         skills={skills}
       />
     </Box>

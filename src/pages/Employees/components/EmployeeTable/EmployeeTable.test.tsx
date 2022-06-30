@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { employees } from "../../../../mocks/fixtures";
 import EmployeeTable from "./EmployeeTable";
 import { MemoryRouter } from "react-router-dom";
+import { getByTestId } from "@testing-library/dom";
 
 describe("EmployeeTable", () => {
   it("has an 'empty' state", async () => {
@@ -14,6 +15,8 @@ describe("EmployeeTable", () => {
           destroyEmployee={(id) => new Promise((resolve) => resolve())}
           employees={[]}
           skills={[]}
+          changeSort={() => null}
+          sortData=""
         />
         ,
       </MemoryRouter>,
@@ -30,6 +33,8 @@ describe("EmployeeTable", () => {
           destroyEmployee={(id) => new Promise((resolve) => resolve())}
           employees={employees}
           skills={[]}
+          changeSort={() => null}
+          sortData=""
         />
       </MemoryRouter>,
     );
@@ -37,6 +42,42 @@ describe("EmployeeTable", () => {
     employees.forEach((employee) => {
       expect(screen.getByText(employee.name)).toBeInTheDocument();
     });
+  });
+
+  it("chevron icon shows in sorted column header", async () => {
+
+    render(
+      <MemoryRouter>
+        <EmployeeTable
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={(id) => new Promise((resolve) => resolve())}
+          employees={employees}
+          skills={[]}
+          changeSort={() => null}
+          sortData="start_date"
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByTestId("sort-icon-asc"));
+  });
+
+  it("chevron icon shows for sorted column header in descending order with '-' prefix", async () => {
+
+    render(
+      <MemoryRouter>
+        <EmployeeTable
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={(id) => new Promise((resolve) => resolve())}
+          employees={employees}
+          skills={[]}
+          changeSort={() => null}
+          sortData="-start_date"
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByTestId("sort-icon-desc"));
   });
 
   it("should not retain error message in delete confirmation modal", async () => {
@@ -49,6 +90,8 @@ describe("EmployeeTable", () => {
           destroyEmployee={(id) => deferred.promise}
           employees={employees}
           skills={[]}
+          changeSort={() => null}
+          sortData=""
         />
         ,
       </MemoryRouter>,
