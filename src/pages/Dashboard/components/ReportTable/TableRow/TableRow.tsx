@@ -15,6 +15,17 @@ export interface TableRowProps {
   projections: Projection[];
 }
 
+export const skillBackgrounds: { [key: string]: string } = {
+  Design: "#435BAE",
+  UX: "#AE436A",
+  Angular: "#876363",
+  React: "#61D0D7",
+  Node: "#805AD5",
+  DevOps: "#5FAE43",
+  "UI Designer": "#435BAE",
+  "UX Designer": "#AE436A",
+  "Project Management": "#B55F10",
+};
 function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   const [isExpanded, setExpanded] = useState(false);
 
