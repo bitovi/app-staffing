@@ -1,9 +1,9 @@
 import React from "react";
-import { TimelineRange } from "../../services/projection";
+import { TimelineRange } from "../../../services/projection";
 import { Flex } from "@chakra-ui/layout";
 import { Center, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { formatDateToUTC } from "../../services/helpers/utcdate";
+import { formatDateToUTC } from "../../../services/helpers/utcdate";
 
 type DataTimelineHeaderProps = {
   heading: string;
