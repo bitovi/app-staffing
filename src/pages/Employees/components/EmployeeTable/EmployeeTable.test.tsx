@@ -44,7 +44,6 @@ describe("EmployeeTable", () => {
   });
 
   it("chevron icon shows in sorted column header", async () => {
-
     render(
       <MemoryRouter>
         <EmployeeTable
@@ -62,7 +61,6 @@ describe("EmployeeTable", () => {
   });
 
   it("chevron icon shows for sorted column header in descending order with '-' prefix", async () => {
-
     render(
       <MemoryRouter>
         <EmployeeTable

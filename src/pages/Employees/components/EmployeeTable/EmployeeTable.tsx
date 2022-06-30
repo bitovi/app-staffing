@@ -96,7 +96,10 @@ export default function EmployeeTable({
             <Box paddingInline="40px" marginBottom="40px">
               <Table>
                 <Thead py={4}>
-                  <EmployeeTableHeader changeSort={changeSort} sortData={sortData} />
+                  <EmployeeTableHeader
+                    changeSort={changeSort}
+                    sortData={sortData}
+                  />
                 </Thead>
                 <Tbody>
                   {employees.map((employee, index) => (

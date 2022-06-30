@@ -14,10 +14,9 @@ export default function EmployeeTableHeader({
   changeSort,
   sortData,
 }: {
-  changeSort: (sortData: string) => void,
-  sortData?: string,
+  changeSort: (sortData: string) => void;
+  sortData?: string;
 }): JSX.Element {
-
   const columnHeaders = [
     { displayName: "EMPLOYEE NAME", queryName: "name", sortable: true },
     { displayName: "CURRENT PROJECT", queryName: "", sortable: false },
@@ -30,20 +29,29 @@ export default function EmployeeTableHeader({
   return (
     <>
       <Tr>
-        {columnHeaders.map(column => (
-          <StickyHeader key={JSON.stringify(column)} color="gray.800" textStyle="table.title">
-            { column.sortable ? 
-              <Text cursor="pointer" onClick={() => changeSort(column.queryName)} display="flex">
+        {columnHeaders.map((column) => (
+          <StickyHeader
+            key={JSON.stringify(column)}
+            color="gray.800"
+            textStyle="table.title"
+          >
+            {column.sortable ? (
+              <Text
+                cursor="pointer"
+                onClick={() => changeSort(column.queryName)}
+                display="flex"
+              >
                 {column.displayName}
-                {sortData?.includes(column.queryName) 
-                  && (sortData?.includes("-") 
-                  ? <ChevronDownIcon data-testid="sort-icon-desc"></ChevronDownIcon>
-                  : <ChevronUpIcon data-testid="sort-icon-asc"></ChevronUpIcon>)
-                }
+                {sortData?.includes(column.queryName) &&
+                  (sortData?.includes("-") ? (
+                    <ChevronDownIcon data-testid="sort-icon-desc"></ChevronDownIcon>
+                  ) : (
+                    <ChevronUpIcon data-testid="sort-icon-asc"></ChevronUpIcon>
+                  ))}
               </Text>
-              :
+            ) : (
               <Text>{column.displayName}</Text>
-            }
+            )}
           </StickyHeader>
         ))}
       </Tr>

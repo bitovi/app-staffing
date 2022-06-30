@@ -80,7 +80,6 @@ export function Employees({
   useEmployeeMutations,
   useSkills,
 }: EmployeesProps): JSX.Element {
-
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
 
@@ -88,7 +87,6 @@ export function Employees({
   // const [filterData, setFilterData] = useState();
 
   function updateSortData(field: string) {
-
     if (!sortData || !sortData.includes(field)) {
       // if no current sort data or new sort option, set to clicked column
       setSortData(field);
@@ -116,7 +114,7 @@ export function Employees({
       "employees.assignments.role.project",
     ],
   });
-  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]))
+  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
 
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
 
