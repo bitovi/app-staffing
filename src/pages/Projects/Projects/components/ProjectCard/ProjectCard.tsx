@@ -8,9 +8,19 @@ import { Link, Box, Flex } from "@chakra-ui/react";
 
 interface PropjectCardProps {
   project: Project;
+  columnCount?: number;
 }
 
-const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
+const ProjectCard = ({
+  project,
+  columnCount = 10,
+}: PropjectCardProps): JSX.Element => {
+  const columnArray: boolean[] = [];
+
+  for (let i = 0; i < columnCount; i++) {
+    columnArray.push(true);
+  }
+
   return (
     <Box
       backgroundColor="#FFFFFF"
@@ -50,7 +60,7 @@ const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
                 <Flex
                   alignItems="center"
                   alignSelf="stretch"
-                  flex="0 1 150px"
+                  flex="0 1 112px"
                   justify="center"
                   padding="0 16px"
                 >
@@ -66,6 +76,17 @@ const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
                     {skill.name}
                   </Badge>
                 </Flex>
+                {columnArray.map((item: boolean, index: number) => (
+                  <Box
+                    textAlign="center"
+                    alignSelf="stretch"
+                    backgroundColor={
+                      index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                    }
+                    flex="1"
+                    key={`${!!item}=${index}`}
+                  ></Box>
+                ))}
               </Flex>
             ))}
           </Box>

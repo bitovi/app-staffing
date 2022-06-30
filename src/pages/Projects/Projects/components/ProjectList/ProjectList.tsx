@@ -2,6 +2,8 @@ import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 import { FolderWithFilesIcon } from "../../../../assets/Icons";
 import ProjectCard from "../ProjectCard";
 import { Project } from "../../../../../services/api";
+import DataTimelineHeader from "../../../../../components/DataTable";
+import { useTimeline } from "../../../../../services/projection";
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
 }
@@ -10,6 +12,8 @@ export default function ProjectList({
   projects,
   ...rest
 }: ProjectListProps): JSX.Element {
+  const { timeline } = useTimeline(new Date());
+
   return (
     <>
       <Box {...rest}>
@@ -34,11 +38,21 @@ export default function ProjectList({
 
         {projects && projects?.length > 0 && (
           <Box>
-            <Flex>{/* TODO sticky header goes here */}</Flex>
+            <Flex padding="15px 51px" borderBottom="1px solid #CBD5E0">
+              <DataTimelineHeader
+                heading="Name"
+                headingWidth="112px"
+                timeline={timeline}
+              />
+            </Flex>
             <Flex flexDirection="column">
               {projects?.length &&
                 projects.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    columnCount={timeline.length - 1}
+                  />
                 ))}
             </Flex>
           </Box>
