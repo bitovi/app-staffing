@@ -183,8 +183,8 @@ function DeleteConfirmationModal({
       title="Delete Team Member"
       closeText="Cancel"
       confirmText="Delete Team Member"
-      confirmButtonVariant="modalConfirm"
-      confirmLoadingText="Deleting Team Member ..."
+      variant="modalConfirm"
+      loadingText="Deleting Team Member ..."
       modalSize="lg"
       message={
         employee

@@ -42,7 +42,7 @@ const DeleteProjectModal = ({
       closeText="No, Return to Page"
       isOpen={isOpen}
       onClose={onCloseModal}
-      confirmButtonVariant="danger"
+      variant="danger"
     />
   );
 };
