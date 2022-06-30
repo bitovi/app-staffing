@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import { PageNotFound } from "../assets/PageNotFound";
 import { useHistory } from "react-router-dom";
 
@@ -17,10 +17,24 @@ export default function Error(): JSX.Element {
       padding={100}
     >
       <PageNotFound />
-      <Heading as="h2" padding={10} size="2xl">
+      <Text
+        as="h2"
+        paddingTop={8}
+        fontSize="30px"
+        fontWeight={800}
+        color="black"
+      >
         404 PAGE NOT FOUND
-      </Heading>
-      <Text fontSize={16} fontWeight={400} paddingBottom={10}>
+      </Text>
+      <Text
+        fontSize={16}
+        fontWeight={400}
+        paddingBottom={7}
+        color="black"
+        maxWidth="600px"
+        textAlign="center"
+        paddingTop={4}
+      >
         Check that you typed the address correctly, go back to your previous
         page or click a selection from the menu on the left.
       </Text>
