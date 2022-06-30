@@ -14,7 +14,7 @@ describe("Components/Layout", () => {
     render(
       <MemoryRouter>
         <StylesProvider value={theme}>
-            <ProjectCard key={project.id} project={project} />
+          <ProjectCard key={project.id} project={project} />
         </StylesProvider>
       </MemoryRouter>,
     );
