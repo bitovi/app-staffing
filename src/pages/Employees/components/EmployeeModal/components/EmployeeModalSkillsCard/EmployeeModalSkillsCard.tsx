@@ -20,7 +20,7 @@ export default function EmployeeModalSkillsCard({
   useSkills = useSkillsDefault,
   setSkills,
   skills,
-}: EmployeeModalSkillsCardProps):JSX.Element {
+}: EmployeeModalSkillsCardProps): JSX.Element {
   const skillsFetched = useSkills();
 
   useEffect(() => {
