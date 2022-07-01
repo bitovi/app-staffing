@@ -1,37 +1,71 @@
-import { useState, Dispatch, SetStateAction } from "react";
+import { Suspense, useMemo, useState } from "react";
+import { Box, BoxProps, Table, Tbody, Thead } from "@chakra-ui/react";
 import {
-  Box,
-  BoxProps,
-  Flex,
-  Table,
-  Tbody,
-  Text,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
-import { Image } from "@chakra-ui/image";
-import isEmpty from "lodash/isEmpty";
-import type { Employee, Skill } from "../../../../services/api";
-import EmployeeCard from "../EmployeeCard";
-import ConfirmationModal from "../../../../components/ConfirmationModal";
-import EmployeeModal from "../EmployeeModal";
+  Employee,
+  useEmployees as useEmployeesDefault,
+} from "../../../../services/api";
+import { EmployeeCardSkeleton } from "../EmployeeCard";
 import orderBy from "lodash/orderBy";
-import EmployeeTableHeader from "./components/EmployeeTableHeader/EmployeeTableHeader";
+import EmployeeTableHeader from "./components/EmployeeTableHeader";
+import { EmployeeTableNoResults } from "./components/EmployeeTableNoResults";
+import EmployeeTableRow from "./components/EmployeeTableRow";
+import { isEmpty } from "lodash";
+import EmployeeModal from "../EmployeeModal";
+import DeleteConfirmationModal from "../EmployeeDeleteConfirmationModal";
 
-interface EmployeeTableProps extends BoxProps {
-  employees: Employee[] | undefined;
-  skills?: Skill[];
-  updateEmployee: (id: string, data: Employee) => Promise<void>;
-  destroyEmployee: (employeeId: string) => Promise<void>;
+interface EmployeeTableWrapperProps extends BoxProps {
+  updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
+  destroyEmployee: (id: string) => Promise<void>;
+  showInactiveEmployees: boolean;
+  useEmployees?: typeof useEmployeesDefault;
 }
 
-export default function EmployeeTable({
-  employees,
+export default function EmployeeTableWrapper({
   updateEmployee,
   destroyEmployee,
-  skills,
+  showInactiveEmployees,
+  useEmployees = useEmployeesDefault,
   ...props
-}: EmployeeTableProps): JSX.Element {
+}: EmployeeTableWrapperProps): JSX.Element {
+  return (
+    <Suspense fallback={<EmployeeCardSkeleton />}>
+      <Box {...props}>
+        <EmployeeTable
+          updateEmployee={updateEmployee}
+          destroyEmployee={destroyEmployee}
+          showInactiveEmployees={showInactiveEmployees}
+          useEmployees={useEmployees}
+        />
+      </Box>
+    </Suspense>
+  );
+}
+
+interface EmployeeTableProps {
+  showInactiveEmployees: boolean;
+  updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
+  destroyEmployee: (id: string) => Promise<void>;
+  useEmployees: typeof useEmployeesDefault;
+}
+
+function EmployeeTable({
+  showInactiveEmployees,
+  updateEmployee,
+  destroyEmployee,
+  useEmployees = useEmployeesDefault,
+}: EmployeeTableProps) {
+  const employeesFetched = useEmployees({ include: "skills", sort: "name" });
+
+  const employees = useMemo(
+    () =>
+      employeesFetched?.filter((emp) =>
+        showInactiveEmployees
+          ? true
+          : emp.endDate == null || emp.endDate > new Date(),
+      ),
+    [employeesFetched, showInactiveEmployees],
+  );
+
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null,
   );
@@ -48,8 +82,12 @@ export default function EmployeeTable({
     ? employees.length - 1
     : -1;
 
+  if (employees.length === 0) {
+    return <EmployeeTableNoResults />;
+  }
+
   return (
-    <>
+    <Box paddingInline="40px" marginBottom="40px">
       <DeleteConfirmationModal
         key={employeeToDelete ? employeeToDelete.id : undefined}
         employee={employeeToDelete}
@@ -60,137 +98,26 @@ export default function EmployeeTable({
         isOpen={!isEmpty(employeeToEdit)}
         onClose={() => setEmployeeToEdit(null)}
         onSave={(employee) => submitUpdateEmployee(employee as Employee)}
-        skills={skills}
         employee={employeeToEdit ? employeeToEdit : undefined}
       />
-      <Box {...props}>
-        {employees && employees.length === 0 && (
-          <Flex
-            width="100%"
-            flexDirection="column"
-            minHeight="30px"
-            boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
-            backgroundColor="white"
-            padding="82px 30px 153px"
-            border="1px solid #eee"
-            borderRadius="4px"
-            alignItems="center"
-          >
-            <Image
-              height="100px"
-              width="100px"
-              src="assets/images/folderWithFile.png"
-              alt="Folder With File"
-            />
-            <Text fontWeight="bold" fontSize="16px" lineHeight="24px">
-              There are currently no team members.
-            </Text>
-          </Flex>
-        )}
-
-        {employees && employees.length > 0 && (
-          <>
-            <Box paddingInline="40px" marginBottom="40px">
-              <Table>
-                <Thead py={4}>
-                  <EmployeeTableHeader />
-                </Thead>
-                <Tbody>
-                  {orderBy(employees, [
-                    (employee) => employee.name.toLowerCase(),
-                  ]).map((employee, index) => (
-                    <EmployeeTableRow
-                      key={employee.id}
-                      handleEditEmployee={setEmployeeToEdit}
-                      handleDeleteEmployee={setEmployeeToDelete}
-                      employee={employee}
-                      lastChild={lastEmployeeIndex === index}
-                    />
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
-          </>
-        )}
-      </Box>
-    </>
-  );
-}
-
-function EmployeeTableRow({
-  employee,
-  handleEditEmployee,
-  handleDeleteEmployee,
-  lastChild = false,
-}: {
-  employee: Employee;
-  handleEditEmployee: Dispatch<SetStateAction<Employee | null>>;
-  handleDeleteEmployee: Dispatch<SetStateAction<Employee | null>>;
-  lastChild: boolean;
-}) {
-  return (
-    <>
-      <EmployeeCard
-        employee={employee}
-        handleEditEmployee={handleEditEmployee}
-        handleDeleteEmployee={handleDeleteEmployee}
-      />
-      {/* add space between rows */}
-      {!lastChild && <Tr height={4} />}
-    </>
-  );
-}
-
-function DeleteConfirmationModal({
-  employee,
-  setEmployee,
-  destroyEmployee,
-}: {
-  employee: Employee | null;
-  setEmployee: (employee: Employee | null) => void;
-  destroyEmployee: (employeeId: string) => Promise<void>;
-}) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const isOpen = employee != null;
-
-  const onClose = () => {
-    setEmployee(null);
-  };
-
-  const onConfirm = async () => {
-    if (!employee) return;
-
-    setIsLoading(true);
-
-    try {
-      await destroyEmployee(employee.id);
-      setIsLoading(false);
-      setEmployee(null);
-    } catch (error) {
-      setIsLoading(false);
-      setError((error as Error).message);
-    }
-  };
-
-  return (
-    <ConfirmationModal
-      isOpen={isOpen}
-      error={error || undefined}
-      isLoading={isLoading}
-      onClose={onClose}
-      onConfirm={onConfirm}
-      title="Delete Team Member"
-      closeText="Cancel"
-      confirmText="Delete Team Member"
-      variant="modalConfirm"
-      loadingText="Deleting Team Member ..."
-      modalSize="lg"
-      message={
-        employee
-          ? `You are about to remove ${employee.name}. This can't be undone.`
-          : ""
-      }
-    />
+      <Table>
+        <Thead py={4}>
+          <EmployeeTableHeader />
+        </Thead>
+        <Tbody>
+          {orderBy(employees, [(employee) => employee.name.toLowerCase()]).map(
+            (employee, index) => (
+              <EmployeeTableRow
+                key={employee.id}
+                handleEditEmployee={setEmployeeToEdit}
+                handleDeleteEmployee={setEmployeeToDelete}
+                employee={employee}
+                lastChild={lastEmployeeIndex === index}
+              />
+            ),
+          )}
+        </Tbody>
+      </Table>
+    </Box>
   );
 }

@@ -1,6 +1,6 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import EmployeeModal from ".";
-import { useEmployees, useSkills } from "../../../../services/api";
+import { useEmployees } from "../../../../services/api";
 import "../../../../theme/fonts/styles.css";
 
 export default {
@@ -8,22 +8,18 @@ export default {
   component: EmployeeModal,
 } as ComponentMeta<typeof EmployeeModal>;
 
+//TODO: Skills not resolving after suspense
 export const Works: ComponentStory<typeof EmployeeModal> = () => {
-  const skills = useSkills();
-
   return (
     <EmployeeModal
       onSave={() => Promise.resolve()}
       onClose={() => true}
       isOpen={true}
-      skills={skills}
     />
   );
 };
 
 export const ServerError: ComponentStory<typeof EmployeeModal> = () => {
-  const skills = useSkills();
-
   return (
     <EmployeeModal
       onSave={() => {
@@ -31,35 +27,29 @@ export const ServerError: ComponentStory<typeof EmployeeModal> = () => {
       }}
       onClose={() => true}
       isOpen={true}
-      skills={skills}
     />
   );
 };
 
 export const EditEmployee: ComponentStory<typeof EmployeeModal> = () => {
   const employees = useEmployees();
-  const skills = useSkills();
 
   return (
     <EmployeeModal
       onSave={() => Promise.resolve()}
       onClose={() => true}
       isOpen={true}
-      skills={skills}
       employee={employees && employees[0]}
     />
   );
 };
 
 export const SavePending: ComponentStory<typeof EmployeeModal> = () => {
-  const skills = useSkills();
-
   return (
     <EmployeeModal
       onSave={() => new Promise(() => true)}
       onClose={() => true}
       isOpen
-      skills={skills}
     />
   );
 };

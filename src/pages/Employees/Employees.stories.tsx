@@ -1,10 +1,8 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { useEffect } from "react";
 import { Flex, Box } from "@chakra-ui/layout";
 
-import { Employees, EmployeePageLoadingLayout } from "./Employees";
-import { useEmployees } from "../../services/api";
+import Employees, { EmployeePageLoadingLayout } from "./Employees";
 import { BrowserRouter } from "react-router-dom";
 
 export default {
@@ -21,7 +19,6 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
     <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
       <Employees
         {...props}
-        useEmployees={() => []}
         useEmployeeMutations={() => {
           return {
             createEmployee: (employee) => Promise.resolve(""),
@@ -29,7 +26,7 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
             destroyEmployee: (id) => Promise.resolve(),
           };
         }}
-        useSkills={() => []}
+        useEmployees={() => []}
       />
     </Box>
   </Flex>
@@ -44,23 +41,12 @@ export const Loading: ComponentStory<typeof Flex> = ({ ...props }) => (
 );
 
 function NonEmptyEmployeesPage({ ...props }) {
-  // STAF-90: Prevent an "extra vertical scrollbar" in the storybook canvas to
-  // show up; the non-empty employees page adds a scrollable table section and
-  // having two vertical scrollbars is undesirable.
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.removeProperty("overflow");
-    };
-  }, []);
-
   return (
     <BrowserRouter>
-      <Flex height="100%" width="100%">
+      <Flex height="100%" width="100%" overflow={"visible"}>
         <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
           <Employees
             {...props}
-            useEmployees={useEmployees}
             useEmployeeMutations={() => {
               return {
                 createEmployee: (employee) => Promise.resolve(""),
@@ -68,7 +54,6 @@ function NonEmptyEmployeesPage({ ...props }) {
                 destroyEmployee: (id) => Promise.resolve(),
               };
             }}
-            useSkills={() => []}
           />
         </Box>
       </Flex>

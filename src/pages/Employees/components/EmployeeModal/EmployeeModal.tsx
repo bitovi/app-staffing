@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import {
   Modal,
   ModalBody,
@@ -9,30 +9,31 @@ import {
   ModalOverlay,
 } from "@chakra-ui/modal";
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  HStack,
-  VStack,
-  Checkbox,
-  Flex,
-  FormErrorMessage,
   Box,
-  SimpleGrid,
+  Center,
   Divider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Input,
+  Spinner,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/button";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { isEmpty, pickBy } from "lodash";
 import formatISO from "date-fns/formatISO";
 
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import { Employee, Skill } from "../../../../services/api";
 import { ServiceError } from "../../../../components/ServiceError";
+import EmployeeModalSkillsCard from "./components/EmployeeModalSkillsCard";
 
-interface EmployeeFormData {
+export interface EmployeeFormData {
   name: string;
   startDate: string;
   endDate: string;
@@ -52,12 +53,13 @@ export default function EmployeeModal({
   onSave,
   onClose,
   isOpen,
-  skills,
   employee,
 }: EmployeeModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
   const employeeData = employee ? toEmployeeFormData(employee) : undefined;
+  const [skills, setSkills] = useState<Skill[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -239,30 +241,19 @@ export default function EmployeeModal({
 
             <FormControl>
               <FormLabel>Skills</FormLabel>
-              <Flex mt={4} flexGrow={1}>
-                <SimpleGrid columns={2} spacingX={24} spacingY={4}>
-                  {skills?.map((skill) => (
-                    <Controller
-                      key={skill.id}
-                      control={control}
-                      name={`skills.${skill.id}`}
-                      render={({ field: { onChange, onBlur, value } }) => {
-                        return (
-                          <Checkbox
-                            value={skill.id}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            isChecked={Boolean(value)}
-                            textStyle="modal.checkboxLabel"
-                          >
-                            {skill.name}
-                          </Checkbox>
-                        );
-                      }}
-                    />
-                  ))}
-                </SimpleGrid>
-              </Flex>
+              <Suspense
+                fallback={
+                  <Center w="100%" h="100%">
+                    <Spinner />
+                  </Center>
+                }
+              >
+                <EmployeeModalSkillsCard
+                  control={control}
+                  setSkills={setSkills}
+                  skills={skills}
+                />
+              </Suspense>
             </FormControl>
           </VStack>
         </ModalBody>
