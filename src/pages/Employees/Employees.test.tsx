@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { clearFixtures, loadFixtures } from "../../mocks";
 import { employees } from "../../mocks/employees/fixtures";
 
-import EmployeesWrapper from "./Employees";
+import Employees from "./Employees";
 
 describe("Pages/Employees", () => {
   jest.setTimeout(30000);
@@ -29,7 +29,7 @@ describe("Pages/Employees", () => {
 
   describe("Employees list", () => {
     beforeEach(() => {
-      render(<EmployeesWrapper />);
+      render(<Employees />);
     });
 
     it("renders data in list", async () => {
@@ -68,14 +68,14 @@ describe("Pages/Employees", () => {
   });
 
   it("Displays loading state skeleton", () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
     expect(
       document.body.getElementsByClassName("chakra-skeleton"),
     ).toBeDefined();
   });
 
   it("renders breadcrumbs", () => {
-    const { queryByTestId } = render(<EmployeesWrapper />);
+    const { queryByTestId } = render(<Employees />);
 
     const homeBreadcrumb = queryByTestId("homeBreadcrumb");
     const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
@@ -85,7 +85,7 @@ describe("Pages/Employees", () => {
   });
 
   it("renders home breadcrumb with the correct link", () => {
-    const { queryByTestId } = render(<EmployeesWrapper />);
+    const { queryByTestId } = render(<Employees />);
 
     const homeBreadcrumb = queryByTestId("homeBreadcrumb");
 
@@ -93,7 +93,7 @@ describe("Pages/Employees", () => {
   });
 
   it("renders team member breadcrumb as span", () => {
-    const { queryByTestId } = render(<EmployeesWrapper />);
+    const { queryByTestId } = render(<Employees />);
 
     const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
 
@@ -101,7 +101,7 @@ describe("Pages/Employees", () => {
   });
 
   it("Renders h1 tag for page title", () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const pageTitle = screen.getByTestId("employeesTitle");
 
@@ -111,7 +111,7 @@ describe("Pages/Employees", () => {
   });
 
   it.skip("Creates employee", async () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const addButton = screen.getByText(/add team member/i);
 
@@ -159,7 +159,7 @@ describe("Pages/Employees", () => {
   });
 
   it("resets modal form fields when closed", async () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const addButton = screen.getByText(/add team member/i);
 
@@ -183,7 +183,7 @@ describe("Pages/Employees", () => {
   });
 
   it("Edits employee", async () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const memberRows = await screen.findAllByRole("row");
     const editMember = await within(memberRows[1]).findByLabelText(
@@ -226,7 +226,7 @@ describe("Pages/Employees", () => {
   it("Deletes employee", async () => {
     render(
       <SWRConfig value={{ provider: () => new Map() }}>
-        <EmployeesWrapper />
+        <Employees />
       </SWRConfig>,
     );
     await screen.findAllByRole("button", {

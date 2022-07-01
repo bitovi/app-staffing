@@ -1,41 +1,71 @@
-import { useState, Dispatch, SetStateAction, Suspense, useMemo } from "react";
-import {
-  Box,
-  BoxProps,
-  Flex,
-  FormControl,
-  FormLabel,
-  Switch,
-  Table,
-  Tbody,
-  Text,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
-import { Image } from "@chakra-ui/image";
-import isEmpty from "lodash/isEmpty";
+import { Suspense, useMemo, useState } from "react";
+import { Box, BoxProps, Table, Tbody, Thead } from "@chakra-ui/react";
 import {
   Employee,
   useEmployees as useEmployeesDefault,
 } from "../../../../services/api";
-import EmployeeCard, { EmployeeCardSkeleton } from "../EmployeeCard";
-import ConfirmationModal from "../../../../components/ConfirmationModal";
-import EmployeeModal from "../EmployeeModal";
+import { EmployeeCardSkeleton } from "../EmployeeCard";
 import orderBy from "lodash/orderBy";
-import EmployeeTableHeader from "./components/EmployeeTableHeader/EmployeeTableHeader";
+import EmployeeTableHeader from "./components/EmployeeTableHeader";
+import { EmployeeTableNoResults } from "./components/EmployeeTableNoResults";
+import EmployeeTableRow from "./components/EmployeeTableRow";
+import { isEmpty } from "lodash";
+import EmployeeModal from "../EmployeeModal";
+import DeleteConfirmationModal from "../EmployeeDeleteConfirmationModal";
 
-interface EmployeeTableProps extends BoxProps {
-  updateEmployee: (id: string, data: Employee) => Promise<void>;
-  destroyEmployee: (employeeId: string) => Promise<void>;
+interface EmployeeTableWrapperProps extends BoxProps {
+  updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
+  destroyEmployee: (id: string) => Promise<void>;
+  showInactiveEmployees: boolean;
   useEmployees?: typeof useEmployeesDefault;
 }
 
-export default function EmployeeTable({
+export default function EmployeeTableWrapper({
+  updateEmployee,
+  destroyEmployee,
+  showInactiveEmployees,
+  useEmployees = useEmployeesDefault,
+  ...props
+}: EmployeeTableWrapperProps): JSX.Element {
+  return (
+    <Suspense fallback={<EmployeeCardSkeleton />}>
+      <Box {...props}>
+        <EmployeeTable
+          updateEmployee={updateEmployee}
+          destroyEmployee={destroyEmployee}
+          showInactiveEmployees={showInactiveEmployees}
+          useEmployees={useEmployees}
+        />
+      </Box>
+    </Suspense>
+  );
+}
+
+interface EmployeeTableProps {
+  showInactiveEmployees: boolean;
+  updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
+  destroyEmployee: (id: string) => Promise<void>;
+  useEmployees: typeof useEmployeesDefault;
+}
+
+function EmployeeTable({
+  showInactiveEmployees,
   updateEmployee,
   destroyEmployee,
   useEmployees = useEmployeesDefault,
-  ...props
-}: EmployeeTableProps): JSX.Element {
+}: EmployeeTableProps) {
+  const employeesFetched = useEmployees({ include: "skills", sort: "name" });
+
+  const employees = useMemo(
+    () =>
+      employeesFetched?.filter((emp) =>
+        showInactiveEmployees
+          ? true
+          : emp.endDate == null || emp.endDate > new Date(),
+      ),
+    [employeesFetched, showInactiveEmployees],
+  );
+
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null,
   );
@@ -48,101 +78,28 @@ export default function EmployeeTable({
     }
   };
 
-  const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
-
-  return (
-    <>
-      <TeamMemberSwitch
-        onChange={(e) => setShowInactiveEmployees(e.target.checked)}
-        isChecked={showInactiveEmployees}
-      />
-      <Suspense fallback={<EmployeeCardSkeleton />}>
-        <DeleteConfirmationModal
-          key={employeeToDelete ? employeeToDelete.id : undefined}
-          employee={employeeToDelete}
-          setEmployee={setEmployeeToDelete}
-          destroyEmployee={destroyEmployee}
-        />
-        <EmployeeModal
-          isOpen={!isEmpty(employeeToEdit)}
-          onClose={() => setEmployeeToEdit(null)}
-          onSave={(employee) => submitUpdateEmployee(employee as Employee)}
-          employee={employeeToEdit ? employeeToEdit : undefined}
-        />
-        <Box {...props}>
-          <EmployeeTableView
-            setEmployeeToEdit={setEmployeeToEdit}
-            setEmployeeToDelete={setEmployeeToDelete}
-            showInactiveEmployees={showInactiveEmployees}
-            useEmployees={useEmployees}
-          />
-        </Box>
-      </Suspense>
-    </>
-  );
-}
-
-function TeamMemberSwitch({
-  onChange,
-  isChecked,
-}: {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isChecked: boolean;
-}): JSX.Element {
-  return (
-    <FormControl
-      display="flex"
-      alignItems="center"
-      justifyContent="end"
-      marginTop="2em"
-    >
-      <FormLabel htmlFor="showInactiveEmployees" mb="0">
-        Show inactive team members
-      </FormLabel>
-      <Switch
-        id="showInactiveEmployees"
-        isChecked={isChecked}
-        onChange={onChange}
-      />
-    </FormControl>
-  );
-}
-
-interface EmployeeTableViewProps {
-  showInactiveEmployees: boolean;
-  setEmployeeToDelete: Dispatch<SetStateAction<Employee | null>>;
-  setEmployeeToEdit: Dispatch<SetStateAction<Employee | null>>;
-  useEmployees: typeof useEmployeesDefault;
-}
-
-function EmployeeTableView({
-  showInactiveEmployees,
-  setEmployeeToDelete,
-  setEmployeeToEdit,
-  useEmployees,
-}: EmployeeTableViewProps) {
-  const employeesFetched = useEmployees({ include: "skills", sort: "name" });
-
-  const employees = useMemo(
-    () =>
-      employeesFetched.filter((emp) =>
-        showInactiveEmployees
-          ? true
-          : emp.endDate == null || emp.endDate > new Date(),
-      ),
-    [employeesFetched, showInactiveEmployees],
-  );
-
   const lastEmployeeIndex = Array.isArray(employees)
     ? employees.length - 1
     : -1;
 
   if (employees.length === 0) {
-    return <NoResults />;
+    return <EmployeeTableNoResults />;
   }
 
   return (
     <Box paddingInline="40px" marginBottom="40px">
+      <DeleteConfirmationModal
+        key={employeeToDelete ? employeeToDelete.id : undefined}
+        employee={employeeToDelete}
+        setEmployee={setEmployeeToDelete}
+        destroyEmployee={destroyEmployee}
+      />
+      <EmployeeModal
+        isOpen={!isEmpty(employeeToEdit)}
+        onClose={() => setEmployeeToEdit(null)}
+        onSave={(employee) => submitUpdateEmployee(employee as Employee)}
+        employee={employeeToEdit ? employeeToEdit : undefined}
+      />
       <Table>
         <Thead py={4}>
           <EmployeeTableHeader />
@@ -162,109 +119,5 @@ function EmployeeTableView({
         </Tbody>
       </Table>
     </Box>
-  );
-}
-
-function NoResults() {
-  return (
-    <Flex
-      width="100%"
-      flexDirection="column"
-      minHeight="30px"
-      boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
-      backgroundColor="white"
-      padding="82px 30px 153px"
-      border="1px solid #eee"
-      borderRadius="4px"
-      alignItems="center"
-    >
-      <Image
-        height="100px"
-        width="100px"
-        src="assets/images/folderWithFile.png"
-        alt="Folder With File"
-      />
-      <Text fontWeight="bold" fontSize="16px" lineHeight="24px">
-        There are currently no team members.
-      </Text>
-    </Flex>
-  );
-}
-
-function EmployeeTableRow({
-  employee,
-  handleEditEmployee,
-  handleDeleteEmployee,
-  lastChild = false,
-}: {
-  employee: Employee;
-  handleEditEmployee: Dispatch<SetStateAction<Employee | null>>;
-  handleDeleteEmployee: Dispatch<SetStateAction<Employee | null>>;
-  lastChild: boolean;
-}) {
-  return (
-    <>
-      <EmployeeCard
-        employee={employee}
-        handleEditEmployee={handleEditEmployee}
-        handleDeleteEmployee={handleDeleteEmployee}
-      />
-      {/* add space between rows */}
-      {!lastChild && <Tr height={4} />}
-    </>
-  );
-}
-
-function DeleteConfirmationModal({
-  employee,
-  setEmployee,
-  destroyEmployee,
-}: {
-  employee: Employee | null;
-  setEmployee: (employee: Employee | null) => void;
-  destroyEmployee: (employeeId: string) => Promise<void>;
-}) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const isOpen = employee != null;
-
-  const onClose = () => {
-    setEmployee(null);
-  };
-
-  const onConfirm = async () => {
-    if (!employee) return;
-
-    setIsLoading(true);
-
-    try {
-      await destroyEmployee(employee.id);
-      setIsLoading(false);
-      setEmployee(null);
-    } catch (error) {
-      setIsLoading(false);
-      setError((error as Error).message);
-    }
-  };
-
-  return (
-    <ConfirmationModal
-      isOpen={isOpen}
-      error={error || undefined}
-      isLoading={isLoading}
-      onClose={onClose}
-      onConfirm={onConfirm}
-      title="Delete Team Member"
-      closeText="Cancel"
-      confirmText="Delete Team Member"
-      variant="modalConfirm"
-      loadingText="Deleting Team Member ..."
-      modalSize="lg"
-      message={
-        employee
-          ? `You are about to remove ${employee.name}. This can't be undone.`
-          : ""
-      }
-    />
   );
 }
