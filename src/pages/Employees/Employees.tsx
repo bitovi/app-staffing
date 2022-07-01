@@ -103,7 +103,7 @@ export function Employees({
 
   const employees = useEmployees({
     include: ["skills", "assignments.role.project"],
-    sort: sortData, // does not technically work because of caching issue 
+    sort: sortData, // does not technically work because of caching issue
   });
 
   const skillsWithEmployees = useSkills({
