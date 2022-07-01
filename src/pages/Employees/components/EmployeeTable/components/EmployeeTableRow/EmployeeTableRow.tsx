@@ -13,7 +13,7 @@ export default function EmployeeTableRow({
   handleEditEmployee: Dispatch<SetStateAction<Employee | null>>;
   handleDeleteEmployee: Dispatch<SetStateAction<Employee | null>>;
   lastChild: boolean;
-}) {
+}): JSX.Element {
   return (
     <>
       <EmployeeCard

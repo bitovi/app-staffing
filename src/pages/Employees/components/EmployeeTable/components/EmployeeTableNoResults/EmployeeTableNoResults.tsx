@@ -1,6 +1,6 @@
 import { Flex, Image, Text } from "@chakra-ui/react";
 
-export default function NoResults() {
+export default function NoResults(): JSX.Element {
   return (
     <Flex
       width="100%"

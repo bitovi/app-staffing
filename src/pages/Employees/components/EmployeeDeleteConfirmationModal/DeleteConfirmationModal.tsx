@@ -10,7 +10,7 @@ export default function DeleteConfirmationModal({
   employee: Employee | null;
   setEmployee: (employee: Employee | null) => void;
   destroyEmployee: (employeeId: string) => Promise<void>;
-}) {
+}): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isOpen = employee != null;
