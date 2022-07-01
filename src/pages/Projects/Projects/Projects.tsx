@@ -36,7 +36,10 @@ export function Projects({
   useProjectMutations = defaultUseProjectMutations,
 }: ProjectProps): JSX.Element {
   const { createProject } = useProjectMutations();
-  const projects = useProjects({ sort: "name" });
+  const projects = useProjects({
+    include: ["roles.skills", "roles.assignments.employee"],
+    sort: "name",
+  });
 
   return (
     <>

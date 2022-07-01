@@ -14,7 +14,7 @@ import parseDate from "./parseDate";
 import formatISO from "date-fns/formatISO";
 import snakeCase from "lodash/snakeCase";
 
-interface ListQuery<T> {
+export interface ListQuery<T> {
   filter?: Filter<T>;
   sort?: string;
   page?: number;
@@ -54,11 +54,11 @@ export default function restBuilder<Data extends BaseData>(
 } {
   function useRestList(query?: ListQuery<Data>): Data[] {
     const { data, error } = useSWR<Data[], Error>(
-      path,
+      makeUrl(path, query),
       async (path) => {
         const response = await fetcher<JSONAPIDocument>(
           "GET",
-          makeUrl(path, query),
+          path,
         );
 
         if (response) {
