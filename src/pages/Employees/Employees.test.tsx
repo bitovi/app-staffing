@@ -11,7 +11,8 @@ import { format } from "date-fns";
 import { clearFixtures, loadFixtures } from "../../mocks";
 import { employees } from "../../mocks/employees/fixtures";
 
-import EmployeesWrapper from "./Employees";
+import Employees from "./Employees";
+import { Employee } from "../../services/api";
 
 describe("Pages/Employees", () => {
   jest.setTimeout(30000);
@@ -29,7 +30,7 @@ describe("Pages/Employees", () => {
 
   describe("Employees list", () => {
     beforeEach(() => {
-      render(<EmployeesWrapper />);
+      render(<Employees />);
     });
 
     it("renders data in list", async () => {
@@ -68,14 +69,14 @@ describe("Pages/Employees", () => {
   });
 
   it("Displays loading state skeleton", () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
     expect(
       document.body.getElementsByClassName("chakra-skeleton"),
     ).toBeDefined();
   });
 
   it("renders breadcrumbs", () => {
-    const { queryByTestId } = render(<EmployeesWrapper />);
+    const { queryByTestId } = render(<Employees />);
 
     const homeBreadcrumb = queryByTestId("homeBreadcrumb");
     const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
@@ -85,7 +86,7 @@ describe("Pages/Employees", () => {
   });
 
   it("renders home breadcrumb with the correct link", () => {
-    const { queryByTestId } = render(<EmployeesWrapper />);
+    const { queryByTestId } = render(<Employees />);
 
     const homeBreadcrumb = queryByTestId("homeBreadcrumb");
 
@@ -93,7 +94,7 @@ describe("Pages/Employees", () => {
   });
 
   it("renders team member breadcrumb as span", () => {
-    const { queryByTestId } = render(<EmployeesWrapper />);
+    const { queryByTestId } = render(<Employees />);
 
     const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
 
@@ -101,7 +102,7 @@ describe("Pages/Employees", () => {
   });
 
   it("Renders h1 tag for page title", () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const pageTitle = screen.getByTestId("employeesTitle");
 
@@ -111,7 +112,7 @@ describe("Pages/Employees", () => {
   });
 
   it.skip("Creates employee", async () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const addButton = screen.getByText(/add team member/i);
 
@@ -159,7 +160,7 @@ describe("Pages/Employees", () => {
   });
 
   it("resets modal form fields when closed", async () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const addButton = screen.getByText(/add team member/i);
 
@@ -183,7 +184,7 @@ describe("Pages/Employees", () => {
   });
 
   it("Edits employee", async () => {
-    render(<EmployeesWrapper />);
+    render(<Employees />);
 
     const memberRows = await screen.findAllByRole("row");
     const editMember = await within(memberRows[1]).findByLabelText(
@@ -226,7 +227,7 @@ describe("Pages/Employees", () => {
   it("Deletes employee", async () => {
     render(
       <SWRConfig value={{ provider: () => new Map() }}>
-        <EmployeesWrapper />
+        <Employees />
       </SWRConfig>,
     );
     await screen.findAllByRole("button", {
@@ -260,6 +261,78 @@ describe("Pages/Employees", () => {
     );
     await waitFor(() => expect(toastMessage).not.toBeInTheDocument());
     expect(employeeToDelete).not.toBeInTheDocument();
+  });
+
+  it("should not retain error message in delete confirmation modal", async () => {
+    const { findByRole, findAllByRole } = render(
+      <Employees
+        useEmployeeMutations={() => ({
+          destroyEmployee: (id: string) => {
+            return new Promise((res, rej) => {
+              setTimeout(() => {
+                rej({ message: "Uh-oh, something bad happened" });
+              }, 10);
+            });
+          },
+          updateEmployee: (id: string, data: Partial<Employee>) =>
+            Promise.resolve(undefined),
+          createEmployee: (data: Partial<Omit<Employee, "id">>) =>
+            Promise.resolve(""),
+        })}
+      />,
+    );
+
+    // click delete icon on the employee table row
+    const employeeRows = await findAllByRole("row");
+    const employeeToDelete = employeeRows[1];
+    const deleteButton = await within(employeeToDelete).findByRole("button", {
+      name: "Delete Member",
+    });
+    userEvent.click(deleteButton);
+
+    // make sure the confirmation modal shows up
+    const confirmationModal = await findByRole("dialog");
+    const confirmButton = await within(confirmationModal).findByLabelText(
+      /confirm button/i,
+    );
+    userEvent.click(confirmButton);
+
+    // make sure the CTA button has the loading state once it has been clicked
+    expect(confirmButton).toHaveAttribute("data-loading");
+    await within(confirmationModal).findByText(/deleting team member/i);
+
+    // check the button loading state was removed and the error
+    await waitFor(() => {
+      expect(confirmButton).not.toHaveAttribute("data-loading");
+    });
+
+    const errorAlert = await within(confirmationModal).findByRole("alert");
+    await within(errorAlert).findByText(/something bad happened/);
+
+    // Dismiss the confirmation modal
+    const cancelButton = within(confirmationModal).getByRole("button", {
+      name: "Cancel",
+    });
+    userEvent.click(cancelButton);
+    await waitFor(() => {
+      expect(confirmationModal).not.toBeInTheDocument();
+    });
+
+    // Try to delete the employee again
+    userEvent.click(deleteButton);
+    const secondConfirmationModal = await findByRole("dialog");
+
+    // make sure the previous error alert does not persist
+    const secondErrorAlert = await within(secondConfirmationModal).queryByRole(
+      "alert",
+    );
+    expect(secondErrorAlert).toBeNull();
+
+    // the confirm button loading state should not persist
+    const secondConfirmButton = await within(confirmationModal).findByLabelText(
+      /confirm button/i,
+    );
+    expect(secondConfirmButton).not.toHaveAttribute("data-loading");
   });
 
   function getInputLabel(el: HTMLInputElement) {

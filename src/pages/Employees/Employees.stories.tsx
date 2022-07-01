@@ -1,6 +1,5 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { useEffect } from "react";
 import { Flex, Box } from "@chakra-ui/layout";
 
 import Employees, { EmployeePageLoadingLayout } from "./Employees";
@@ -27,6 +26,7 @@ export const Empty: ComponentStory<typeof Employees> = ({ ...props }) => (
             destroyEmployee: (id) => Promise.resolve(),
           };
         }}
+        useEmployees={() => []}
       />
     </Box>
   </Flex>
@@ -41,19 +41,9 @@ export const Loading: ComponentStory<typeof Flex> = ({ ...props }) => (
 );
 
 function NonEmptyEmployeesPage({ ...props }) {
-  // STAF-90: Prevent an "extra vertical scrollbar" in the storybook canvas to
-  // show up; the non-empty employees page adds a scrollable table section and
-  // having two vertical scrollbars is undesirable.
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.removeProperty("overflow");
-    };
-  }, []);
-
   return (
     <BrowserRouter>
-      <Flex height="100%" width="100%">
+      <Flex height="100%" width="100%" overflow={"visible"}>
         <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
           <Employees
             {...props}
