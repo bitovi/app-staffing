@@ -2,18 +2,17 @@ import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 import { FolderWithFilesIcon } from "../../../../assets/Icons";
 import { Project } from "../../../../../services/api";
 import DataTableBody from "../../../../../components/DataTable/DataTableBody";
-import { TimelineRange } from "../../../../../services/projection";
+import { useTimeline } from "../../../../../services/projection";
+// import { TimelineRange } from "../../../../../services/projection";
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
-  timeline: TimelineRange[]
 }
 
 export default function ProjectList({
   projects,
-  timeline,
   ...rest
 }: ProjectListProps): JSX.Element {
-  
+  const { timeline } = useTimeline(new Date());
   return (
     <>
       <Box {...rest}>
@@ -37,13 +36,6 @@ export default function ProjectList({
         )}
         {projects && projects?.length > 0 && (
           <Box>
-            {/* <Flex padding="15px 51px" borderBottom="1px solid #CBD5E0">
-              <DataTimelineHeader
-                heading="Name"
-                headingWidth="150px"
-                timeline={timeline}
-              />
-            </Flex> */}
             <Flex flexDirection="column">
               {projects?.length &&
                 projects.map((project) => (

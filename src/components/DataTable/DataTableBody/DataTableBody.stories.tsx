@@ -8,7 +8,6 @@ import DataTableBody from "./DataTableBody";
 import theme from "../../../theme";
 import { useProjects } from "../../../services/api";
 
-
 export default {
   title: "Components/DataTableBody",
   component: DataTableBody,

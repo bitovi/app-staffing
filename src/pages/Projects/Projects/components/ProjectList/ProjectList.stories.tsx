@@ -18,7 +18,6 @@ export default {
 
 export const Basic: ComponentStory<typeof ProjectList> = ({ ...props }) => {
   const projects = useProjects();
-
   return <ProjectList {...props} projects={projects} />;
 };
 

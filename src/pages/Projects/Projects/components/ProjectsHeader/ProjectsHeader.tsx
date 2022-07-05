@@ -63,7 +63,7 @@ export default function ProjectsHeader({
         direction="column"
         justifyContent="space-between"
       >
-        <Flex justify='space-between'>
+        <Flex justify="space-between">
           <Heading
             as="h1"
             textStyle="title"
@@ -74,25 +74,25 @@ export default function ProjectsHeader({
           </Heading>
 
           {!project && (
-          <>
-            <Button
-              size="lg"
-              variant="primary"
-              arialabel="Add Project"
-              onClick={onOpen}
-              data-testid="addProjectButton"
-            >
-              Add Project
-            </Button>
+            <>
+              <Button
+                size="lg"
+                variant="primary"
+                arialabel="Add Project"
+                onClick={onOpen}
+                data-testid="addProjectButton"
+              >
+                Add Project
+              </Button>
 
-            <ProjectModal
-              isOpen={isOpen}
-              onClose={onClose}
-              addProject={(project) => addProject?.(project)}
-              project={project}
-            />
-          </>
-        )}
+              <ProjectModal
+                isOpen={isOpen}
+                onClose={onClose}
+                addProject={(project) => addProject?.(project)}
+                project={project}
+              />
+            </>
+          )}
         </Flex>
 
         <Flex padding="15px 0" borderBottom="1px solid #CBD5E0">
