@@ -1,17 +1,16 @@
-import type { Project } from "../../../../../services/api";
-
-import { skillBackgrounds } from "../../../../Dashboard/components/ReportTable/TableRow/TableRow";
-import Badge from "../../../../../components/Badge";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Text } from "@chakra-ui/layout";
 import { Link, Box, Flex } from "@chakra-ui/react";
+import { skillBackgrounds } from "../../../pages/Dashboard/components/ReportTable/TableRow/TableRow";
+import Badge from "../../Badge";
+import { Project } from "../../../services/api";
 
 interface PropjectCardProps {
   project: Project;
   columnCount?: number;
 }
 
-const ProjectCard = ({
+const DataTableBody = ({
   project,
   columnCount = 10,
 }: PropjectCardProps): JSX.Element => {
@@ -96,4 +95,4 @@ const ProjectCard = ({
   );
 };
 
-export default ProjectCard;
+export default DataTableBody;

@@ -4,14 +4,14 @@ import { Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import { StylesProvider } from "@chakra-ui/react";
+import DataTableBody from "./DataTableBody";
+import theme from "../../../theme";
+import { useProjects } from "../../../services/api";
 
-import ProjectCard from "./ProjectCard";
-import { useProjects } from "../../../../../services/api";
-import theme from "../../../../../theme";
 
 export default {
-  title: "Pages/Projects/ProjectCard",
-  component: ProjectCard,
+  title: "Components/DataTableBody",
+  component: DataTableBody,
   decorators: [
     (Story) => (
       <StylesProvider value={theme}>
@@ -23,10 +23,10 @@ export default {
       </StylesProvider>
     ),
   ],
-} as ComponentMeta<typeof ProjectCard>;
+} as ComponentMeta<typeof DataTableBody>;
 
-export const Basic: ComponentStory<typeof ProjectCard> = () => {
+export const Basic: ComponentStory<typeof DataTableBody> = () => {
   const project = useProjects()[0];
 
-  return <ProjectCard project={project} />;
+  return <DataTableBody project={project} />;
 };

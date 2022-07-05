@@ -9,6 +9,8 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
 import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBreadCrumb";
 import ProjectModal from "../ProjectModal";
+import { useTimeline } from "../../../../../services/projection";
+import DataTimelineHeader from "../../../../../components/DataTable/DataTimelineHeader";
 
 interface ProjectHeaderProps {
   loading?: boolean;
@@ -22,7 +24,7 @@ export default function ProjectsHeader({
   project,
 }: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const { timeline } = useTimeline(new Date());
   return (
     <Box
       mb={project ? "" : "32px"}
@@ -58,18 +60,20 @@ export default function ProjectsHeader({
         width="full"
         fontFamily="Arial, Helvetica, sans-serif"
         display="flex"
+        direction="column"
         justifyContent="space-between"
       >
-        <Heading
-          as="h1"
-          textStyle="title"
-          color="gray.700"
-          data-testid="projectListTitle"
-        >
-          {project ? project.name : "Projects"}
-        </Heading>
+        <Flex justify='space-between'>
+          <Heading
+            as="h1"
+            textStyle="title"
+            color="gray.700"
+            data-testid="projectListTitle"
+          >
+            {project ? project.name : "Projects"}
+          </Heading>
 
-        {!project && (
+          {!project && (
           <>
             <Button
               size="lg"
@@ -89,6 +93,15 @@ export default function ProjectsHeader({
             />
           </>
         )}
+        </Flex>
+
+        <Flex padding="15px 0" borderBottom="1px solid #CBD5E0">
+          <DataTimelineHeader
+            heading="Name"
+            headingWidth="150px"
+            timeline={timeline}
+          />
+        </Flex>
       </Flex>
     </Box>
   );

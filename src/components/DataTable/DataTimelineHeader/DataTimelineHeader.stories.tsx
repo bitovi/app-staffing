@@ -3,7 +3,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { useTimeline } from "../../../services/projection";
 
 export default {
-  title: "Component/DataTimelineHeader",
+  title: "Components/DataTimelineHeader",
   component: DataTimelineHeader,
 } as ComponentMeta<typeof DataTimelineHeader>;
 

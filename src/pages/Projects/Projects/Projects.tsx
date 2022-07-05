@@ -7,6 +7,7 @@ import {
   useProjects as defaultUseProjects,
   useProjectMutations as defaultUseProjectMutations,
 } from "../../../services/api";
+import { useTimeline } from "../../../services/projection";
 
 interface ProjectProps {
   useProjects: typeof defaultUseProjects;
@@ -40,11 +41,11 @@ export function Projects({
     include: ["roles.skills", "roles.assignments.employee"],
     sort: "name",
   });
-
+  const { timeline } = useTimeline(new Date());
   return (
     <>
       <ProjectsHeader addProject={createProject} />
-      <ProjectList projects={projects} />
+      <ProjectList timeline={timeline} projects={projects} />
     </>
   );
 }
