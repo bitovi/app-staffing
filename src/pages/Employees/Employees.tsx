@@ -1,23 +1,21 @@
-import { Suspense, useState, useMemo } from "react";
+import { useState } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
-import { Switch, FormLabel, FormControl } from "@chakra-ui/react";
-import omit from "lodash/omit";
 import {
   Employee,
-  useEmployees as useEmployeesDefault,
   useEmployeeMutations as useEmployeeMutationsDefault,
-  useSkills as useSkillsDefault,
+  useEmployees as useEmployeesDefault,
 } from "../../services/api";
-import EmployeeTable from "./components/EmployeeTable";
+import EmployeeTableWrapper from "./components/EmployeeTable";
 import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
 import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
+import { MemoryRouter } from "react-router-dom";
+import { FormControl, FormLabel, Switch } from "@chakra-ui/react";
 
 interface EmployeesProps {
-  useEmployees: typeof useEmployeesDefault;
-  useEmployeeMutations: typeof useEmployeeMutationsDefault;
-  useSkills: typeof useSkillsDefault;
+  useEmployeeMutations?: typeof useEmployeeMutationsDefault;
+  useEmployees?: typeof useEmployeesDefault;
 }
 
 export function EmployeePageLoadingLayout(): JSX.Element {
@@ -60,121 +58,103 @@ export function EmployeePageLoadingLayout(): JSX.Element {
   );
 }
 
-export default function EmployeesWrapper(): JSX.Element {
-  return (
-    <Suspense fallback={<EmployeePageLoadingLayout />}>
-      <Employees
-        useEmployees={useEmployeesDefault}
-        useEmployeeMutations={useEmployeeMutationsDefault}
-        useSkills={useSkillsDefault}
-      />
-    </Suspense>
-  );
-}
-
-export function Employees({
-  useEmployees,
-  useEmployeeMutations,
-  useSkills,
+export default function Employees({
+  useEmployeeMutations = useEmployeeMutationsDefault,
+  useEmployees = useEmployeesDefault,
 }: EmployeesProps): JSX.Element {
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
-  const employees = useEmployees({ include: "skills", sort: "name" });
-  const skillsWithEmployees = useSkills({
-    include: [
-      "employees.skills",
-      "employees.assignments.role.skills",
-      "employees.assignments.role.project",
-    ],
-  });
-  const skills = skillsWithEmployees.map((skill) => omit(skill, ["employees"]));
-
-  const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
-  const activeEmployees = useMemo(
-    () =>
-      employees.filter((emp) =>
-        showInactiveEmployees
-          ? true
-          : emp.endDate == null || emp.endDate > new Date(),
-      ),
-    [employees, showInactiveEmployees],
-  );
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
+  const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
 
   const addNewEmployee = async (data: Omit<Employee, "id">) => {
     await createEmployee(data);
   };
   return (
-    <Box>
-      {employeeModal && (
-        <EmployeeModal
-          isOpen={employeeModal}
-          onClose={() => setEmployeeModal(false)}
-          onSave={addNewEmployee}
-          skills={skills}
-        />
-      )}
-
-      <Box
-        position="sticky"
-        top="0"
-        background="gray.10"
-        padding="40px"
-        paddingBottom="0"
-        zIndex="10"
-      >
-        <EmployeesBreadcrumbs />
-
-        <Flex
-          width="full"
-          fontFamily="Arial, Helvetica, sans-serif"
-          display="flex"
-          justifyContent="space-between"
-        >
-          <Heading
-            as="h1"
-            textStyle="title"
-            color="gray.700"
-            data-testid="employeesTitle"
-          >
-            Team Members
-          </Heading>
-
-          <Button
-            size="lg"
-            variant="primary"
-            onClick={() => setEmployeeModal(true)}
-            arialabel="Add Employee"
-          >
-            Add Team Member
-          </Button>
-        </Flex>
-
-        <FormControl
-          display="flex"
-          alignItems="center"
-          justifyContent="end"
-          marginTop="2em"
-        >
-          <FormLabel htmlFor="showInactiveEmployees" mb="0">
-            Show inactive team members
-          </FormLabel>
-          <Switch
-            id="showInactiveEmployees"
-            isChecked={showInactiveEmployees}
-            onChange={({ target }) => setShowInactiveEmployees(target.checked)}
+    <MemoryRouter>
+      <Box>
+        {employeeModal && (
+          <EmployeeModal
+            isOpen={employeeModal}
+            onClose={() => setEmployeeModal(false)}
+            onSave={addNewEmployee}
           />
-        </FormControl>
-      </Box>
+        )}
 
-      <EmployeeTable
-        mt="32px"
-        updateEmployee={updateEmployee}
-        destroyEmployee={destroyEmployee}
-        employees={activeEmployees}
-        skills={skills}
+        <Box
+          position="sticky"
+          top="0"
+          background="gray.10"
+          padding="40px"
+          paddingBottom="0"
+          zIndex="10"
+        >
+          <EmployeesBreadcrumbs />
+
+          <Flex
+            width="full"
+            fontFamily="Arial, Helvetica, sans-serif"
+            display="flex"
+            justifyContent="space-between"
+          >
+            <Heading
+              as="h1"
+              textStyle="title"
+              color="gray.700"
+              data-testid="employeesTitle"
+            >
+              Team Members
+            </Heading>
+
+            <Button
+              size="lg"
+              variant="primary"
+              onClick={() => setEmployeeModal(true)}
+              arialabel="Add Employee"
+            >
+              Add Team Member
+            </Button>
+          </Flex>
+        </Box>
+        <TeamMemberSwitch
+          onChange={(e) => setShowInactiveEmployees(e.target.checked)}
+          isChecked={showInactiveEmployees}
+        />
+        <EmployeeTableWrapper
+          mt="32px"
+          updateEmployee={updateEmployee}
+          destroyEmployee={destroyEmployee}
+          showInactiveEmployees={showInactiveEmployees}
+          useEmployees={useEmployees}
+        />
+      </Box>
+    </MemoryRouter>
+  );
+}
+
+function TeamMemberSwitch({
+  onChange,
+  isChecked,
+}: {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isChecked: boolean;
+}): JSX.Element {
+  return (
+    <FormControl
+      display="flex"
+      alignItems="center"
+      justifyContent="end"
+      marginTop="2em"
+    >
+      <FormLabel htmlFor="showInactiveEmployees" mb="0">
+        Show inactive team members
+      </FormLabel>
+      <Switch
+        id="showInactiveEmployees"
+        isChecked={isChecked}
+        onChange={onChange}
       />
-    </Box>
+    </FormControl>
   );
 }

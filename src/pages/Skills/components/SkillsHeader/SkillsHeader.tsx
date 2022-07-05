@@ -12,12 +12,10 @@ import Button from "../../../../components/Button";
 import { NewSkill } from "../../../../services/api";
 
 interface SkillsHeaderProps {
-  isLoading?: boolean;
   createSkill?: (skill: NewSkill) => void;
 }
 
 export default function SkillsHeader({
-  isLoading,
   createSkill,
 }: SkillsHeaderProps): JSX.Element {
   const { onOpen } = useDisclosure();
@@ -65,11 +63,7 @@ export default function SkillsHeader({
           Skills
         </Heading>
 
-        <Button
-          size="lg"
-          variant="primary"
-          onClick={isLoading ? () => undefined : onOpen}
-        >
+        <Button size="lg" variant="primary" onClick={onOpen}>
           Add Skill
         </Button>
       </Flex>

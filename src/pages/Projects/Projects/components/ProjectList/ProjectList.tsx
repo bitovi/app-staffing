@@ -3,7 +3,6 @@ import { FolderWithFilesIcon } from "../../../../assets/Icons";
 import { Project } from "../../../../../services/api";
 import DataTableBody from "../../../../../components/DataTable/DataTableBody";
 import { useTimeline } from "../../../../../services/projection";
-// import { TimelineRange } from "../../../../../services/projection";
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
 }

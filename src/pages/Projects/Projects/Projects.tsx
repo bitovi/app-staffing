@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import { Skeleton, Stack } from "@chakra-ui/react";
 
 import ProjectsHeader from "./components/ProjectsHeader";
-import ProjectList from "./components/ProjectList";
 import {
   useProjects as defaultUseProjects,
   useProjectMutations as defaultUseProjectMutations,
 } from "../../../services/api";
+import ProjectList from "./components/ProjectList";
 
 interface ProjectProps {
   useProjects: typeof defaultUseProjects;

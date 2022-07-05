@@ -12,14 +12,16 @@ describe("Pages/Projects", () => {
 
   it("lazy loads", async () => {
     const { getAllByText } = render(
-    <MemoryRouter>
+      <MemoryRouter>
         <Projects />
       </MemoryRouter>,
     );
 
     expect(screen.getByTestId("loading-projects-skeleton")).toBeInTheDocument();
 
-    const linkElement = await waitFor(() => getAllByText("View Project Detail")[0]);
+    const linkElement = await waitFor(
+      () => getAllByText("View Project Detail")[0],
+    );
 
     expect(linkElement).toBeInTheDocument();
     expect(

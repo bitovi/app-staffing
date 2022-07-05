@@ -1,6 +1,6 @@
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import Error from "./Error";
+import Error from "./NotFound";
 
 export default {
   title: "Pages/Error",

@@ -92,7 +92,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                 isTruncated={false}
                 size="sm"
                 whiteSpace="break-spaces"
-                background={skillBackgrounds[skill.name]}
+                background={`skills.${skill.name}`}
                 maxWidth="100px"
                 textAlign="center"
                 display="flex"

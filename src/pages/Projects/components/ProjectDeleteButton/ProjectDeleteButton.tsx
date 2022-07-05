@@ -51,7 +51,7 @@ const ProjectDeleteButton = ({
         closeText="No, Return to Page"
         isOpen={isOpen}
         onClose={onClose}
-        confirmButtonVariant="danger"
+        variant="danger"
       />
     </>
   );

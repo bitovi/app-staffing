@@ -1,18 +1,23 @@
-import noop from "lodash/noop";
-import { render, screen, within, act, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { employees } from "../../../../mocks/fixtures";
-import EmployeeTable from "./EmployeeTable";
+import EmployeeTableWrapper from "./EmployeeTable";
+import { MemoryRouter } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
 
 describe("EmployeeTable", () => {
   it("has an 'empty' state", async () => {
     render(
-      <EmployeeTable
-        updateEmployee={() => Promise.resolve()}
-        destroyEmployee={(id) => new Promise((resolve) => resolve())}
-        employees={[]}
-        skills={[]}
-      />,
+      <MemoryRouter>
+        <EmployeeTableWrapper
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={() => Promise.resolve()}
+          showInactiveEmployees={false}
+          useEmployees={() => {
+            return [];
+          }}
+        />
+        ,
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/There are currently no team members./i));
@@ -20,29 +25,38 @@ describe("EmployeeTable", () => {
 
   it("shows employees", async () => {
     render(
-      <EmployeeTable
-        updateEmployee={() => Promise.resolve()}
-        destroyEmployee={(id) => new Promise((resolve) => resolve())}
-        employees={employees}
-        skills={[]}
-      />,
+      <MemoryRouter>
+        <EmployeeTableWrapper
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={() => Promise.resolve()}
+          showInactiveEmployees={false}
+          useEmployees={() => {
+            return employees;
+          }}
+        />
+      </MemoryRouter>,
     );
-
-    employees.forEach((employee) => {
-      expect(screen.getByText(employee.name)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(employees[0].name)).toBeInTheDocument();
   });
 
   it("should not retain error message in delete confirmation modal", async () => {
-    const deferred = makeDeferred();
-
     const { findByRole, findAllByRole } = render(
-      <EmployeeTable
-        updateEmployee={() => Promise.resolve()}
-        destroyEmployee={(id) => deferred.promise}
-        employees={employees}
-        skills={[]}
-      />,
+      <MemoryRouter>
+        <EmployeeTableWrapper
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={(id: string) => {
+            return new Promise((res, rej) => {
+              setTimeout(() => {
+                rej({ message: "Uh-oh, something bad happened" });
+              }, 10);
+            });
+          }}
+          showInactiveEmployees={false}
+          useEmployees={() => {
+            return employees;
+          }}
+        />
+      </MemoryRouter>,
     );
 
     // click delete icon on the employee table row
@@ -64,15 +78,11 @@ describe("EmployeeTable", () => {
     expect(confirmButton).toHaveAttribute("data-loading");
     await within(confirmationModal).findByText(/deleting team member/i);
 
-    // simulate an error from the delete employee endpoint
-    act(() => {
-      deferred.reject(new Error("Uh-oh, something bad happened"));
-    });
-
     // check the button loading state was removed and the error
     await waitFor(() => {
       expect(confirmButton).not.toHaveAttribute("data-loading");
     });
+
     const errorAlert = await within(confirmationModal).findByRole("alert");
     await within(errorAlert).findByText(/something bad happened/);
 
@@ -101,20 +111,4 @@ describe("EmployeeTable", () => {
     );
     expect(secondConfirmButton).not.toHaveAttribute("data-loading");
   });
-
-  function makeDeferred() {
-    let resolve = noop;
-    let reject = noop;
-
-    const promise = new Promise<void>((res, rej) => {
-      resolve = res;
-      reject = rej;
-    });
-
-    return {
-      resolve,
-      reject,
-      promise,
-    };
-  }
 });

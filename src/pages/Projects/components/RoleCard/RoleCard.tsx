@@ -16,18 +16,6 @@ export default function RoleCard({
   handleDeleteRole,
   handleEditRole,
 }: RoleCardProps): JSX.Element {
-  const skillBackgrounds: { [key: string]: string } = {
-    Design: "#435BAE",
-    UX: "#AE436A",
-    Angular: "#876363",
-    React: "#61D0D7",
-    Node: "#805AD5",
-    DevOps: "#5FAE43",
-    "UI Designer": "#435BAE",
-    "UX Designer": "#AE436A",
-    "Project Management": "#B55F10",
-  };
-
   const filterAssignments = (assignments: Assignment[]) => {
     return assignments.filter(
       (assignment) =>
@@ -51,7 +39,7 @@ export default function RoleCard({
             {role?.skills?.map((skill) => (
               <Badge
                 size="sm"
-                background={skillBackgrounds[skill.name]}
+                background={`skills.${skill.name}`}
                 key={skill.id}
               >
                 {skill.name}
