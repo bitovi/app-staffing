@@ -1,7 +1,8 @@
 import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 import { FolderWithFilesIcon } from "../../../../assets/Icons";
-import ProjectCard from "../ProjectCard";
 import { Project } from "../../../../../services/api";
+import DataTableBody from "../../../../../components/DataTable/DataTableBody";
+import { useTimeline } from "../../../../../services/projection";
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
 }
@@ -10,6 +11,7 @@ export default function ProjectList({
   projects,
   ...rest
 }: ProjectListProps): JSX.Element {
+  const { timeline } = useTimeline(new Date());
   return (
     <>
       <Box {...rest}>
@@ -31,14 +33,16 @@ export default function ProjectList({
             </Text>
           </Flex>
         )}
-
         {projects && projects?.length > 0 && (
           <Box>
-            <Flex />
             <Flex flexDirection="column">
               {projects?.length &&
                 projects.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
+                  <DataTableBody
+                    key={project.id}
+                    project={project}
+                    columnCount={timeline.length}
+                  />
                 ))}
             </Flex>
           </Box>
@@ -57,7 +61,7 @@ export const ProjectListRow = ({
 }): JSX.Element => {
   return (
     <>
-      <ProjectCard project={project} />
+      <DataTableBody project={project} />
       {children}
     </>
   );
