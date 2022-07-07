@@ -1,16 +1,25 @@
-import type { Project } from "../../../../../services/api";
-
-import { skillBackgrounds } from "../../../../Dashboard/components/ReportTable/TableRow/TableRow";
-import Badge from "../../../../../components/Badge";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Text } from "@chakra-ui/layout";
 import { Link, Box, Flex } from "@chakra-ui/react";
+import { skillBackgrounds } from "../../../pages/Dashboard/components/ReportTable/TableRow/TableRow";
+import Badge from "../../Badge";
+import { Project } from "../../../services/api";
 
 interface PropjectCardProps {
   project: Project;
+  columnCount?: number;
 }
 
-const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
+const DataTableBody = ({
+  project,
+  columnCount = 10,
+}: PropjectCardProps): JSX.Element => {
+  const columnArray: boolean[] = [];
+
+  for (let i = 0; i < columnCount; i++) {
+    columnArray.push(true);
+  }
+
   return (
     <Box
       backgroundColor="#FFFFFF"
@@ -66,6 +75,17 @@ const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
                     {skill.name}
                   </Badge>
                 </Flex>
+                {columnArray.map((item: boolean, index: number) => (
+                  <Box
+                    textAlign="center"
+                    alignSelf="stretch"
+                    backgroundColor={
+                      index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                    }
+                    flex="1"
+                    key={`${!!item}=${index}`}
+                  ></Box>
+                ))}
               </Flex>
             ))}
           </Box>
@@ -75,4 +95,4 @@ const ProjectCard = ({ project }: PropjectCardProps): JSX.Element => {
   );
 };
 
-export default ProjectCard;
+export default DataTableBody;
