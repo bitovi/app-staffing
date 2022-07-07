@@ -220,7 +220,7 @@ describe("Pages/Employees", () => {
     });
 
     const newRole = getInputLabel(unchecked[0]) || "unknown role label";
-    await within(memberRows[1]).findByText(newRole);
+    await within(memberRows[1]).findByText(newRole, {}, { timeout: 5000 });
   });
 
   it("Deletes employee", async () => {
@@ -229,10 +229,16 @@ describe("Pages/Employees", () => {
         <Employees />
       </SWRConfig>,
     );
-    await screen.findAllByRole("button", {
-      name: "Delete Member",
-      exact: false,
-    });
+    await screen.findAllByRole(
+      "button",
+      {
+        name: "Delete Member",
+        exact: false,
+      },
+      {
+        timeout: 5000,
+      },
+    );
 
     const employeeRows = await screen.findAllByRole("row");
     const employeeToDelete = employeeRows[1];

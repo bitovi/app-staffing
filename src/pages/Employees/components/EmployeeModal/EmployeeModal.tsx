@@ -240,7 +240,7 @@ export default function EmployeeModal({
             </HStack>
 
             <FormControl>
-              <FormLabel>Skills</FormLabel>
+              <FormLabel htmlFor="">Skills</FormLabel>
               <Suspense
                 fallback={
                   <Center w="100%" h="100%">
