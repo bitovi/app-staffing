@@ -71,6 +71,7 @@ export default function Employees({
   const addNewEmployee = async (data: Omit<Employee, "id">) => {
     await createEmployee(data);
   };
+
   return (
     <MemoryRouter>
       <Box>

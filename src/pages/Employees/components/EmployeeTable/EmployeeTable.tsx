@@ -56,6 +56,24 @@ function EmployeeTable({
 }: EmployeeTableProps) {
   const employeesFetched = useEmployees({ include: "skills", sort: "name" });
 
+  const [sortData, setSortData] = useState("name");
+
+  function updateSortData(field: string) {
+    if (!sortData || !sortData.includes(field)) {
+      // if no current sort data or new sort option, set to clicked column
+      setSortData(field);
+    } else if (sortData.includes(field)) {
+      // if sort data is the same field as clicked column,
+      // switch to descending order,
+      // remove if already descending order
+      if (sortData[0] !== "-") {
+        setSortData(`-${field}`);
+      } else {
+        setSortData("");
+      }
+    }
+  }
+
   const employees = useMemo(
     () =>
       employeesFetched?.filter((emp) =>
@@ -102,10 +120,10 @@ function EmployeeTable({
       />
       <Table>
         <Thead py={4}>
-          <EmployeeTableHeader />
+          <EmployeeTableHeader sortData={sortData} changeSort={updateSortData} />
         </Thead>
         <Tbody>
-          {orderBy(employees, [(employee) => employee.name.toLowerCase()]).map(
+          {employees.map(
             (employee, index) => (
               <EmployeeTableRow
                 key={employee.id}

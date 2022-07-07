@@ -3,6 +3,7 @@ import { employees } from "../../../../mocks/fixtures";
 import EmployeeTableWrapper from "./EmployeeTable";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
+import EmployeeTable from "./EmployeeTable";
 
 describe("EmployeeTable", () => {
   it("has an 'empty' state", async () => {
@@ -12,9 +13,7 @@ describe("EmployeeTable", () => {
           updateEmployee={() => Promise.resolve()}
           destroyEmployee={() => Promise.resolve()}
           showInactiveEmployees={false}
-          useEmployees={() => {
-            return [];
-          }}
+          useEmployees={() => []}
         />
         ,
       </MemoryRouter>,
@@ -37,6 +36,36 @@ describe("EmployeeTable", () => {
       </MemoryRouter>,
     );
     expect(await screen.findByText(employees[0].name)).toBeInTheDocument();
+  });
+
+  it("chevron icon shows in sorted column header", async () => {
+    render(
+      <MemoryRouter>
+        <EmployeeTable
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={() => new Promise<void>((resolve) => resolve())}
+          showInactiveEmployees={false}
+          useEmployees={() => employees}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByTestId("sort-icon-asc"));
+  });
+
+  it("chevron icon shows for sorted column header in descending order with '-' prefix", async () => {
+    render(
+      <MemoryRouter>
+        <EmployeeTable
+          updateEmployee={() => Promise.resolve()}
+          destroyEmployee={() => new Promise<void>((resolve) => resolve())}
+          showInactiveEmployees={false}
+          useEmployees={() => employees}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByTestId("sort-icon-desc"));
   });
 
   it("should not retain error message in delete confirmation modal", async () => {
