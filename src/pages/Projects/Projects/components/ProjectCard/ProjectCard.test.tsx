@@ -14,17 +14,12 @@ describe("Components/Layout", () => {
     render(
       <MemoryRouter>
         <StylesProvider value={theme}>
-          <table>
-            <tbody>
-              <ProjectCard key={project.id} project={project} />
-            </tbody>
-          </table>
+          <ProjectCard key={project.id} project={project} />
         </StylesProvider>
       </MemoryRouter>,
     );
 
     expect(screen.getByText(project.name)).toBeInTheDocument();
-    expect(screen.getByText(project?.description || "")).toBeInTheDocument();
-    expect(screen.getByText("View")).toBeInTheDocument();
+    expect(screen.getAllByText("View Project Detail")[0]).toBeInTheDocument();
   });
 });

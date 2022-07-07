@@ -11,7 +11,7 @@ describe("Pages/Projects/ProjectList", () => {
       </MemoryRouter>,
     );
 
-    const viewCount = screen.getAllByText("View");
+    const viewCount = screen.getAllByText("View Project Detail");
     expect(viewCount.length).toEqual(projects.length);
   });
 

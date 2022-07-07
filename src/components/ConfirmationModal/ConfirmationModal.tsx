@@ -1,8 +1,6 @@
 import { HStack, Text } from "@chakra-ui/layout";
 import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
+  Divider,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,66 +9,64 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import AlertBar from "../AlertBar";
 import Button, { ButtonVariant } from "../Button";
 
 interface ConfirmationModalProps {
+  children?: React.ReactNode;
+  closeText: string;
+  variant?: ButtonVariant;
+  loadingText?: string;
+  confirmText: string;
+  error?: string;
+  isCentered?: boolean;
+  isLoading?: boolean;
   isOpen: boolean;
+  message: string;
+  modalSize?: string;
   onClose: () => void;
   onConfirm: () => Promise<void> | void;
+  showCloseButton?: boolean;
+  showDivider?: boolean;
   title: string;
-  message: string;
-  closeText: string;
-  confirmText: string;
-  confirmLoadingText?: string;
-  error?: string;
-  isLoading?: boolean;
-  confirmButtonVariant?: ButtonVariant;
-  modalSize?: string;
-  isCentered?: boolean;
-  focusConfirmationButton?: boolean;
 }
 
 export default function ConfirmationModal({
+  children,
+  closeText,
+  variant = "primary",
+  loadingText,
+  confirmText,
+  error,
+  isCentered = false,
+  isLoading,
   isOpen,
+  message,
+  modalSize = "md",
   onClose,
   onConfirm,
+  showCloseButton = false,
+  showDivider = false,
   title,
-  message,
-  closeText,
-  confirmText,
-  confirmLoadingText,
-  error,
-  isLoading,
-  confirmButtonVariant = "primary",
-  modalSize = "md",
-  isCentered = false,
-  focusConfirmationButton = false,
 }: ConfirmationModalProps): JSX.Element {
-  const initialRef = useRef<HTMLButtonElement>(null);
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       size={modalSize}
       isCentered={isCentered}
-      initialFocusRef={initialRef}
     >
       <ModalOverlay />
       <ModalContent mt="14vh">
-        <ModalCloseButton />
+        {showCloseButton && <ModalCloseButton />}
         <ModalHeader>{title}</ModalHeader>
+        {showDivider && <Divider />}
         <ModalBody>
+          {children}
           <Text textStyle="modal.text" whiteSpace="pre-wrap">
             {message}
           </Text>
-          {error && (
-            <Alert status="error" mt="15px">
-              <AlertIcon />
-              <AlertTitle mr={2}>{error}</AlertTitle>
-            </Alert>
-          )}
+          {error && <AlertBar description={error} status="error" />}
         </ModalBody>
         <ModalFooter>
           <HStack flexGrow={1} justifyContent="flex-end">
@@ -85,10 +81,9 @@ export default function ConfirmationModal({
               isLoading={isLoading}
               isDisabled={isLoading}
               onClick={onConfirm}
-              variant={confirmButtonVariant}
+              variant={variant}
               aria-label="confirm button"
-              loadingText={confirmLoadingText}
-              innerref={focusConfirmationButton ? initialRef : null}
+              loadingText={loadingText}
             >
               {confirmText}
             </Button>

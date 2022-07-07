@@ -1,33 +1,35 @@
-import { useToast, ChakraProvider, Button } from "@chakra-ui/react";
-import theme from "../../theme";
-
-type ToastBoxProps = {
-  title: string;
-  description: string;
-};
+import { Button } from "@chakra-ui/react";
+import type { UseToastOptions } from "@chakra-ui/toast";
+import { useToast } from "../../services/toast";
 
 // used for Stories visualization
 // toast implementation in production is the toast call within the component
-const ToastBox = ({ title, description }: ToastBoxProps): JSX.Element => {
+// You can send a tost option object to make it behaves as desired
+const ToastBox = ({
+  title,
+  description,
+  status = "success",
+  isClosable,
+  duration,
+}: UseToastOptions): JSX.Element => {
   const toast = useToast();
+
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        onClick={() =>
-          toast({
-            title,
-            description,
-            duration: 5000,
-            isClosable: false,
-            position: "bottom-right",
-            variant: "left-accent",
-            status: "success",
-          })
-        }
-      >
-        Test Toast
-      </Button>
-    </ChakraProvider>
+    <Button
+      onClick={() =>
+        toast({
+          description,
+          duration,
+          isClosable,
+          position: "bottom-right",
+          status,
+          title,
+          variant: "left-accent",
+        })
+      }
+    >
+      Test Toast
+    </Button>
   );
 };
 

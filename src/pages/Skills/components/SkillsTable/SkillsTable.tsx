@@ -10,20 +10,23 @@ import {
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import { Skill } from "../../../../services/api";
-import SkillsTableHeader from "./SkillsTableHeader";
-import SkillCard from "../SkillCard/SkillCard";
+import SkillsTableHeader from "./SkillsTableHeader/SkillsTableHeader";
+import SkillsTableBody from "./SkillsTableBody/SkillsTableBody";
+import { ListQuery } from "../../../../services/api/restBuilder";
 
 interface SkillsTableProps {
-  skills?: Skill[];
+  useSkills: (query?: ListQuery<Skill>) => Skill[];
   updateSkill: (id: string, data: Skill) => Promise<void>;
   destroySkill: (skillId: string) => Promise<void>;
 }
 
 export default function SkillsTable({
-  skills,
+  useSkills,
   updateSkill,
   destroySkill,
 }: SkillsTableProps): JSX.Element {
+  const skills = useSkills({ sort: "name" });
+
   return (
     <>
       {Array.isArray(skills) && skills.length === 0 && (
@@ -51,34 +54,10 @@ export default function SkillsTable({
           <Table>
             <SkillsTableHeader />
 
-            <Tbody>
-              {skills.map((skill, index) => (
-                <SkillTableRow
-                  key={skill.id}
-                  skill={skill}
-                  lastChild={skills.length - 1 === index}
-                />
-              ))}
-            </Tbody>
+            <SkillsTableBody skills={skills} />
           </Table>
         </Box>
       )}
-    </>
-  );
-}
-
-function SkillTableRow({
-  skill,
-  lastChild = false,
-}: {
-  skill: Skill;
-  lastChild: boolean;
-}) {
-  return (
-    <>
-      <SkillCard skill={skill} />
-      {/* add space between rows */}
-      {!lastChild && <Tr height={4} />}
     </>
   );
 }
@@ -100,7 +79,13 @@ export function SkillsTableSkeleton(): JSX.Element {
 
 const SkeletonRow = () => (
   <>
-    <Tr p="16px" alignItems="center" backgroundColor="#DCDCDC" height="55px">
+    <Tr
+      p="16px"
+      alignItems="center"
+      backgroundColor="#DCDCDC"
+      height="55px"
+      data-testid="skeleton-row"
+    >
       <Td>
         <Skeleton
           startColor="#C4C4C4"

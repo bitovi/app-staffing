@@ -8,45 +8,26 @@ import SkillsTable from "./components/SkillsTable";
 import { SkillsTableSkeleton } from "./components/SkillsTable/SkillsTable";
 
 interface SkillsProps {
-  useSkills: typeof useSkillsDefault;
-  useSkillMutations: typeof useSkillMutationsDefault;
+  useSkills?: typeof useSkillsDefault;
+  useSkillMutations?: typeof useSkillMutationsDefault;
 }
 
-export function SkillsPageLoadingLayout(): JSX.Element {
-  return (
-    <>
-      <SkillsHeader isLoading />
-      <SkillsTableSkeleton />
-    </>
-  );
-}
-
-export function Skills({
-  useSkills,
-  useSkillMutations,
+export default function Skills({
+  useSkills = useSkillsDefault,
+  useSkillMutations = useSkillMutationsDefault,
 }: SkillsProps): JSX.Element {
-  const skills = useSkills({ sort: "name" });
   const { createSkill, updateSkill, destroySkill } = useSkillMutations();
 
   return (
     <>
       <SkillsHeader createSkill={createSkill} />
-      <SkillsTable
-        skills={skills}
-        updateSkill={updateSkill}
-        destroySkill={destroySkill}
-      />
+      <Suspense fallback={<SkillsTableSkeleton />}>
+        <SkillsTable
+          useSkills={useSkills}
+          updateSkill={updateSkill}
+          destroySkill={destroySkill}
+        />
+      </Suspense>
     </>
-  );
-}
-
-export default function SkillsWrapper(): JSX.Element {
-  return (
-    <Suspense fallback={<SkillsPageLoadingLayout />}>
-      <Skills
-        useSkills={useSkillsDefault}
-        useSkillMutations={useSkillMutationsDefault}
-      />
-    </Suspense>
   );
 }

@@ -1,4 +1,5 @@
 import type { Employee } from "../../../../services/api";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 import {
   Flex,
@@ -13,11 +14,12 @@ import {
   Thead,
   Text,
   Box,
+  Link,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 
-import { Tag } from "../../../../components/Tag";
+import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
 
 interface EmployeeCardProps {
@@ -33,6 +35,11 @@ export default function EmployeeCard({
   handleEditEmployee,
   handleDeleteEmployee,
 }: EmployeeCardProps): JSX.Element {
+  const employeeProject = {
+    id: employee.assignments?.[0]?.role?.project.id,
+    name: employee.assignments?.[0]?.role?.project.name,
+  };
+
   return (
     <>
       <Tr
@@ -56,12 +63,23 @@ export default function EmployeeCard({
           <Text
             color="gray.600"
             fontWeight="400"
-            fontSize="14px"
+            fontSize="16px"
             lineHeight="20px"
             letterSpacing="0.25px"
           >
-            {employee.startDate &&
-              format(formatDateToUTC(employee.startDate), "MM/dd/yyyy")}
+            {/* We could make a custom hook like "useEmployeeProjects" */}
+            {employeeProject.id ? (
+              <Link
+                as={ReactRouterLink}
+                to={`/projects/${employeeProject.id}`}
+                color="primary"
+                textDecoration="underline"
+              >
+                {employeeProject.name}
+              </Link>
+            ) : (
+              "Bench"
+            )}
           </Text>
         </Td>
         <Td>
@@ -72,6 +90,19 @@ export default function EmployeeCard({
             lineHeight="20px"
             letterSpacing="0.25px"
           >
+            {employee.startDate &&
+              format(formatDateToUTC(employee.startDate), "MM/dd/yyyy")}
+          </Text>
+        </Td>
+        <Td>
+          <Text
+            color="gray.10"
+            fontWeight="400"
+            fontSize="14px"
+            lineHeight="20px"
+            letterSpacing="0.25px"
+            data-testid="employeeEndDate"
+          >
             {employee.endDate &&
               format(formatDateToUTC(employee.endDate), "MM/dd/yyyy")}
           </Text>
@@ -79,17 +110,18 @@ export default function EmployeeCard({
         <Td>
           <Wrap spacing="8px">
             {employee?.skills?.map((skill) => (
-              <Tag variant="primary" key={skill.id}>
-                <Text
-                  fontFamily="Inter"
-                  fontStyle="normal"
-                  fontWeight="500"
-                  fontSize="12px"
-                  lineHeight="16px"
-                >
-                  {skill.name}
-                </Text>
-              </Tag>
+              <Badge
+                key={skill.id}
+                isTruncated={false}
+                size="sm"
+                whiteSpace="break-spaces"
+                maxWidth="100px"
+                textAlign="center"
+                display="flex"
+                background={`skills.${skill.name}`}
+              >
+                {skill.name}
+              </Badge>
             ))}
           </Wrap>
         </Td>

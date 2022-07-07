@@ -1,49 +1,15 @@
-import { useCallback } from "react";
-import {
-  Box,
-  BoxProps,
-  chakra,
-  Flex,
-  Table,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 import { FolderWithFilesIcon } from "../../../../assets/Icons";
-
 import ProjectCard from "../ProjectCard";
 import { Project } from "../../../../../services/api";
-
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
 }
-
-const StickyHeader = chakra(Th, {
-  baseStyle: {
-    position: "sticky",
-    top: "11em",
-    background: "gray.10",
-    zIndex: "10",
-  },
-});
 
 export default function ProjectList({
   projects,
   ...rest
 }: ProjectListProps): JSX.Element {
-  const generateRows = useCallback(() => {
-    return projects?.map(
-      (project, index): JSX.Element => (
-        <ProjectListRow key={project.id} project={project}>
-          {projects.length - 1 !== index && <Tr height={5}></Tr>}
-        </ProjectListRow>
-      ),
-    );
-  }, [projects]);
-
   return (
     <>
       <Box {...rest}>
@@ -66,45 +32,16 @@ export default function ProjectList({
           </Flex>
         )}
 
-        {projects && projects.length > 0 && (
-          <>
-            <Box paddingInline="40px" marginBottom="40px">
-              <Table variant="unstyled">
-                <Thead>
-                  <Tr>
-                    <StickyHeader
-                      px="25px"
-                      pb="26px"
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
-                      NAME
-                    </StickyHeader>
-                    <StickyHeader
-                      px="25px"
-                      pb="26px"
-                      color="gray.800"
-                      textStyle="table.title"
-                    >
-                      {/* Using <VisuallyHidden> here because although the Figma file doesn't contain this header, I assume it's an accessibility liability to use a blank table header. */}
-                      <VisuallyHidden>DESCRIPTION</VisuallyHidden>
-                    </StickyHeader>
-                    <StickyHeader
-                      px="25px"
-                      pb="26px"
-                      pr={12}
-                      color="gray.800"
-                      textStyle="table.title"
-                      isNumeric
-                    >
-                      ACTIONS
-                    </StickyHeader>
-                  </Tr>
-                </Thead>
-                <Tbody>{generateRows()}</Tbody>
-              </Table>
-            </Box>
-          </>
+        {projects && projects?.length > 0 && (
+          <Box>
+            <Flex />
+            <Flex flexDirection="column">
+              {projects?.length &&
+                projects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+            </Flex>
+          </Box>
         )}
       </Box>
     </>

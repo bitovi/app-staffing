@@ -3,7 +3,8 @@ import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import Loading from "../pages/Loading";
-import Error from "../pages/Error";
+import NotFound from "../pages/NotFound";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 import "./App.scss";
 
@@ -18,19 +19,27 @@ export default function App(): JSX.Element {
       <Suspense fallback={<Loading />}>
         <Switch>
           <Route path="/" exact>
-            <Dashboard />
+            <ErrorBoundary>
+              <Dashboard />
+            </ErrorBoundary>
           </Route>
           <Route path="/team-members">
-            <Employees />
+            <ErrorBoundary>
+              <Employees />
+            </ErrorBoundary>
           </Route>
           <Route path="/projects">
-            <ProjectRoutes />
+            <ErrorBoundary>
+              <ProjectRoutes />
+            </ErrorBoundary>
           </Route>
           <Route path="/skills">
-            <Skills />
+            <ErrorBoundary>
+              <Skills />
+            </ErrorBoundary>
           </Route>
           <Route>
-            <Error />
+            <NotFound />
           </Route>
         </Switch>
       </Suspense>

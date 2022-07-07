@@ -14,7 +14,7 @@ import parseDate from "./parseDate";
 import formatISO from "date-fns/formatISO";
 import snakeCase from "lodash/snakeCase";
 
-interface ListQuery<T> {
+export interface ListQuery<T> {
   filter?: Filter<T>;
   sort?: string;
   page?: number;
