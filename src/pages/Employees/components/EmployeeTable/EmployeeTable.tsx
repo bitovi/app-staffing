@@ -16,6 +16,7 @@ import DeleteConfirmationModal from "../EmployeeDeleteConfirmationModal";
 interface EmployeeTableWrapperProps extends BoxProps {
   updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
   destroyEmployee: (id: string) => Promise<void>;
+  showActiveEmployees: boolean;
   showInactiveEmployees: boolean;
   useEmployees?: typeof useEmployeesDefault;
 }
@@ -23,6 +24,7 @@ interface EmployeeTableWrapperProps extends BoxProps {
 export default function EmployeeTableWrapper({
   updateEmployee,
   destroyEmployee,
+  showActiveEmployees,
   showInactiveEmployees,
   useEmployees = useEmployeesDefault,
   ...props
@@ -33,6 +35,7 @@ export default function EmployeeTableWrapper({
         <EmployeeTable
           updateEmployee={updateEmployee}
           destroyEmployee={destroyEmployee}
+          showActiveEmployees={showActiveEmployees}
           showInactiveEmployees={showInactiveEmployees}
           useEmployees={useEmployees}
         />
@@ -42,6 +45,7 @@ export default function EmployeeTableWrapper({
 }
 
 interface EmployeeTableProps {
+  showActiveEmployees: boolean;
   showInactiveEmployees: boolean;
   updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
   destroyEmployee: (id: string) => Promise<void>;
@@ -49,6 +53,7 @@ interface EmployeeTableProps {
 }
 
 function EmployeeTable({
+  showActiveEmployees,
   showInactiveEmployees,
   updateEmployee,
   destroyEmployee,
@@ -58,12 +63,15 @@ function EmployeeTable({
 
   const employees = useMemo(
     () =>
-      employeesFetched?.filter((emp) =>
-        showInactiveEmployees
-          ? true
-          : emp.endDate == null || emp.endDate > new Date(),
+      employeesFetched?.filter(
+        (emp) =>
+          (showInactiveEmployees &&
+            emp.endDate != null &&
+            emp.endDate < new Date()) ||
+          (showActiveEmployees &&
+            (emp.endDate == null || emp.endDate > new Date())),
       ),
-    [employeesFetched, showInactiveEmployees],
+    [employeesFetched, showActiveEmployees, showInactiveEmployees],
   );
 
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(

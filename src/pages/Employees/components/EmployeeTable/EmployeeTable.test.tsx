@@ -11,6 +11,7 @@ describe("EmployeeTable", () => {
         <EmployeeTableWrapper
           updateEmployee={() => Promise.resolve()}
           destroyEmployee={() => Promise.resolve()}
+          showActiveEmployees={true}
           showInactiveEmployees={false}
           useEmployees={() => {
             return [];
@@ -29,6 +30,7 @@ describe("EmployeeTable", () => {
         <EmployeeTableWrapper
           updateEmployee={() => Promise.resolve()}
           destroyEmployee={() => Promise.resolve()}
+          showActiveEmployees={true}
           showInactiveEmployees={false}
           useEmployees={() => {
             return employees;
@@ -51,6 +53,7 @@ describe("EmployeeTable", () => {
               }, 10);
             });
           }}
+          showActiveEmployees={true}
           showInactiveEmployees={false}
           useEmployees={() => {
             return employees;

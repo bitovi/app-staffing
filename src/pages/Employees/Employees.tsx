@@ -11,7 +11,7 @@ import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
 import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
 import { MemoryRouter } from "react-router-dom";
-import { FormControl, FormLabel, Switch } from "@chakra-ui/react";
+import { Tabs, TabList, Tab } from "@chakra-ui/react";
 
 interface EmployeesProps {
   useEmployeeMutations?: typeof useEmployeeMutationsDefault;
@@ -66,7 +66,15 @@ export default function Employees({
     useEmployeeMutations();
 
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
+  const [showActiveEmployees, setShowActiveEmployees] = useState(true);
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
+
+  const tabIndex =
+    showActiveEmployees && showInactiveEmployees
+      ? 2
+      : showInactiveEmployees
+      ? 1
+      : 0;
 
   const addNewEmployee = async (data: Omit<Employee, "id">) => {
     await createEmployee(data);
@@ -117,14 +125,24 @@ export default function Employees({
             </Button>
           </Flex>
         </Box>
-        <TeamMemberSwitch
-          onChange={(e) => setShowInactiveEmployees(e.target.checked)}
-          isChecked={showInactiveEmployees}
+        <TeamMemberTabs
+          onChange={({
+            active,
+            inactive,
+          }: {
+            active: boolean;
+            inactive: boolean;
+          }) => {
+            setShowActiveEmployees(active);
+            setShowInactiveEmployees(inactive);
+          }}
+          defaultIndex={tabIndex}
         />
         <EmployeeTableWrapper
           mt="32px"
           updateEmployee={updateEmployee}
           destroyEmployee={destroyEmployee}
+          showActiveEmployees={showActiveEmployees}
           showInactiveEmployees={showInactiveEmployees}
           useEmployees={useEmployees}
         />
@@ -133,28 +151,41 @@ export default function Employees({
   );
 }
 
-function TeamMemberSwitch({
+function TeamMemberTabs({
   onChange,
-  isChecked,
+  defaultIndex = 0,
 }: {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isChecked: boolean;
+  onChange: (e: { active: boolean; inactive: boolean }) => void;
+  defaultIndex?: number;
 }): JSX.Element {
+  const onTabChange = (index: number) => {
+    switch (index) {
+      case 0:
+        onChange({ active: true, inactive: false });
+        break;
+      case 1:
+        onChange({ active: false, inactive: true });
+        break;
+      case 2:
+        onChange({ active: true, inactive: true });
+        break;
+    }
+  };
+
   return (
-    <FormControl
-      display="flex"
-      alignItems="center"
-      justifyContent="end"
-      marginTop="2em"
+    <Tabs
+      size="lg"
+      variant="enclosed-colored"
+      defaultIndex={defaultIndex}
+      onChange={onTabChange}
+      mt="5px"
+      ml="40px"
     >
-      <FormLabel htmlFor="showInactiveEmployees" mb="0">
-        Show inactive team members
-      </FormLabel>
-      <Switch
-        id="showInactiveEmployees"
-        isChecked={isChecked}
-        onChange={onChange}
-      />
-    </FormControl>
+      <TabList>
+        <Tab>Active</Tab>
+        <Tab>Inactive</Tab>
+        <Tab>Both</Tab>
+      </TabList>
+    </Tabs>
   );
 }
