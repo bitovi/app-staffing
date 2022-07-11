@@ -129,7 +129,6 @@ function getGanttCell(role: Role, timeline: TimelineRange[], index: number) {
   const borderRadius = ["0", "0", "0", "0"];
   let width = 100;
   let rightAlign = true; // if true then align the cell right (the starting gantt cell in this case)
-  // const cellTimeline=timeline[index].endDate.getTime()-timeline[index].startDate.getTime();
   if (isRoleInTimeline(role, timeline, index)) {
     color = getStartConfidenceColor(role.startConfidence);
     if (index > 0) {

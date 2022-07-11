@@ -6,5 +6,5 @@ export default function ProjectDescription({
 }: {
   project: Project;
 }): JSX.Element {
-  return <Text name="project-description">{project.description}</Text>;
+  return <Text>{project.description}</Text>;
 }

@@ -388,7 +388,8 @@ async function mutateParentCache(
           if (deserialized) cache.push(deserialized);
           break;
         case "Update":
-        // To do
+          // To do
+          break;
         case "Delete":
           cache = cache.filter((item) => item.id !== id);
           break;

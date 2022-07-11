@@ -10,6 +10,7 @@ import userEvent from "@testing-library/user-event";
 import { format } from "date-fns";
 import { clearFixtures, loadFixtures } from "../../mocks";
 import { employees } from "../../mocks/employees/fixtures";
+import { formatDateToUTC } from "../../services/helpers/utcdate";
 
 import Employees from "./Employees";
 
@@ -48,18 +49,15 @@ describe("Pages/Employees", () => {
       expect(validDates).not.toContain(false);
     });
 
-    //TODO test fails because one date entry is off by a date
-    it.skip("shows all employees after clicking inactive employees toggle", async () => {
-      const inactiveToggle = await screen.findByLabelText(
-        "Show inactive team members",
-      );
+    it("shows all employees after clicking both employees tab", async () => {
+      const inactiveToggle = await screen.findByText("Both");
       await waitFor(() => userEvent.click(inactiveToggle));
       const endDates = await screen.findAllByTestId("employeeEndDate");
       expect(endDates.map((e) => e.innerHTML).sort()).toEqual(
         employees
           .map((e) =>
             e.attributes.end_date
-              ? format(e.attributes.end_date, "MM/dd/yyyy")
+              ? format(formatDateToUTC(e.attributes.end_date), "MM/dd/yyyy")
               : "",
           )
           .sort(),
@@ -220,7 +218,7 @@ describe("Pages/Employees", () => {
     });
 
     const newRole = getInputLabel(unchecked[0]) || "unknown role label";
-    await within(memberRows[1]).findByText(newRole);
+    await within(memberRows[1]).findByText(newRole, {}, { timeout: 5000 });
   });
 
   it("Deletes employee", async () => {
@@ -229,10 +227,16 @@ describe("Pages/Employees", () => {
         <Employees />
       </SWRConfig>,
     );
-    await screen.findAllByRole("button", {
-      name: "Delete Member",
-      exact: false,
-    });
+    await screen.findAllByRole(
+      "button",
+      {
+        name: "Delete Member",
+        exact: false,
+      },
+      {
+        timeout: 5000,
+      },
+    );
 
     const employeeRows = await screen.findAllByRole("row");
     const employeeToDelete = employeeRows[1];

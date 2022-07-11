@@ -142,7 +142,7 @@ export default function ProjectModal({
                   validate: (name) =>
                     fullNameProvided(name) || "Full name required",
                 })}
-                label="Project Name"
+                aria-label="Project Name"
                 data-testid="projectInput"
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
@@ -151,7 +151,7 @@ export default function ProjectModal({
               <FormLabel>Description</FormLabel>
               <Textarea
                 {...register("description")}
-                label="Description"
+                aria-label="Description"
                 name="description"
               />
               <FormErrorMessage>
