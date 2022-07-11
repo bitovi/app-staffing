@@ -17,4 +17,17 @@ export const colors = {
     "UX Designer": "#AE436A",
     "Project Management": "#B55F10",
   },
+  start_confidence: {
+    "0": "transparent",
+    "10": "#C4F1F9",
+    "20": "#9DECF9",
+    "30": "#76E4F7",
+    "40": "#0BC5EA",
+    "50": "#00B5D8",
+    "60": "#00A3C4",
+    "70": "#0987A0",
+    "80": "#086F83",
+    "90": "#065666",
+    "100": "#065666",
+  },
 };
