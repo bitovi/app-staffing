@@ -1,4 +1,5 @@
 import React, { Component, ReactNode } from "react";
+import { Redirect } from "react-router-dom";
 import AlertBar from "../AlertBar";
 
 interface Props {
@@ -24,9 +25,17 @@ class ErrorBoundary extends Component<Props, State> {
   public render(): ReactNode {
     if (this.state.hasError) {
       if (this.state?.error?.message) {
-        return (
-          <AlertBar description={this.state.error.message} status="error" />
-        );
+        if (
+          this.state.error.message.includes(
+            "An error occurred while fetching: GET /projects/",
+          )
+        ) {
+          return <Redirect to="/404" />;
+        } else {
+          return (
+            <AlertBar description={this.state.error.message} status="error" />
+          );
+        }
       }
 
       return <h1>Sorry... there was an error.</h1>;
