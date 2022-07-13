@@ -68,7 +68,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   const neededNeeded: boolean[] = [];
   projections.forEach(({ needed }, i) => {
     maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
-    neededNeeded.push((needed.roles && needed.roles[i] && needed.roles[i].value > 0) || false);
+    neededNeeded.push(
+      (needed.roles && needed.roles[i] && needed.roles[i].value > 0) || false,
+    );
   });
 
   let maxBenchEmployees = 0;
@@ -132,46 +134,55 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
       </Tr>
 
       {isExpanded && maxNeededRoles
-        ? Array.from({ length: maxNeededRoles }).map((_item, index) => (
-          neededNeeded[index] && <Tr key={index}>
-              <Th color="transparent" borderBottom="none">
-                Needed
-              </Th>
+        ? Array.from({ length: maxNeededRoles }).map(
+            (_item, index) =>
+              neededNeeded[index] && (
+                <Tr key={index}>
+                  <Th color="transparent" borderBottom="none">
+                    Needed
+                  </Th>
 
-              {projections.map(({ action, needed }, i) => {
-                const { highlight, text } = getRowColors(action);
-                if (needed.roles && needed.roles[index] && needed.roles[index].value) {
-                  const neededRole = needed.roles[index];
-                  const neededProject = neededRole.project;
+                  {projections.map(({ action, needed }, i) => {
+                    const { highlight, text } = getRowColors(action);
+                    if (
+                      needed.roles &&
+                      needed.roles[index] &&
+                      needed.roles[index].value
+                    ) {
+                      const neededRole = needed.roles[index];
+                      const neededProject = neededRole.project;
 
-                  return (
-                    <Td
-                      whiteSpace="pre-wrap"
-                      borderBottom="none"
-                      key={i}
-                      background={highlight}
-                      color={text}
-                      p="5px"
-                      paddingRight="5px"
-                      textAlign="right"
-                    >
-                      <Box fontSize="10px" fontWeight="600" color="#3171D0">
-                        {neededProject ? (
-                          <Link to={`projects/${neededProject.id}`}>
-                            <Text key={neededProject.name}>{`${
-                              neededProject.name
-                            } ${(neededRole.value * 100).toFixed(0)}%`}</Text>
-                          </Link>
-                        ) : null}
-                      </Box>
-                    </Td>
-                  );
-                } else {
-                  return <Td key={i}></Td>;
-                }
-              })}
-            </Tr>
-          ))
+                      return (
+                        <Td
+                          whiteSpace="pre-wrap"
+                          borderBottom="none"
+                          key={i}
+                          background={highlight}
+                          color={text}
+                          p="5px"
+                          paddingRight="5px"
+                          textAlign="right"
+                        >
+                          <Box fontSize="10px" fontWeight="600" color="#3171D0">
+                            {neededProject ? (
+                              <Link to={`projects/${neededProject.id}`}>
+                                <Text key={neededProject.name}>{`${
+                                  neededProject.name
+                                } ${(neededRole.value * 100).toFixed(
+                                  0,
+                                )}%`}</Text>
+                              </Link>
+                            ) : null}
+                          </Box>
+                        </Td>
+                      );
+                    } else {
+                      return <Td key={i}></Td>;
+                    }
+                  })}
+                </Tr>
+              ),
+          )
         : null}
 
       <Tr>
