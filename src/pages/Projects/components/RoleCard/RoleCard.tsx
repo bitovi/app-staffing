@@ -1,9 +1,13 @@
+import { useState } from "react";
 import type { Assignment, Role } from "../../../../services/api";
 import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import DataTimelineHeader from "../../../../components/DataTable/DataTimelineHeader";
+import { useTimeline } from "../../../../services/projection";
 
 interface RoleCardProps {
   role: Role;
@@ -16,6 +20,8 @@ export default function RoleCard({
   handleDeleteRole,
   handleEditRole,
 }: RoleCardProps): JSX.Element {
+  const [isExpanded, setExpanded] = useState(false);
+
   const filterAssignments = (assignments: Assignment[]) => {
     return assignments.filter(
       (assignment) =>
@@ -25,6 +31,12 @@ export default function RoleCard({
           : new Date(assignment.endDate).getTime() > new Date().getTime()),
     );
   };
+
+  const handleExpandRow = () => {
+    setExpanded(!isExpanded);
+  };
+
+  const { timeline } = useTimeline(new Date());
 
   return (
     <>
@@ -128,9 +140,63 @@ export default function RoleCard({
               icon={<TrashIcon fill="currentColor" />}
               onClick={() => handleDeleteRole(role)}
             />
+            <IconButton
+              ml="8px"
+              variant="expandAction"
+              aria-label="Expand Role"
+              fontSize="40px"
+              icon={
+                !isExpanded ? (
+                  <ChevronDownIcon fill="currentColor" />
+                ) : (
+                  <ChevronUpIcon fill="currentColor" />
+                )
+              }
+              onClick={() => handleExpandRow()}
+            />
           </Flex>
         </Td>
       </Tr>
+      {isExpanded && (
+        <>
+          <Tr p="16px" alignItems="center" backgroundColor="eggshell">
+            <Td></Td>
+            <Td colSpan={6}>
+              <DataTimelineHeader
+                heading=""
+                headingWidth="0px"
+                timeline={timeline}
+              />
+            </Td>
+          </Tr>
+          <Tr p="16px" alignItems="center" backgroundColor="eggshell">
+            <Td>
+              <Text
+                color="gray.600"
+                fontWeight="700"
+                fontSize="14px"
+                lineHeight="20px"
+                letterSpacing="0.25px"
+              >
+                Timeline
+              </Text>
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>
+              <Text
+                color="gray.600"
+                fontWeight="700"
+                fontSize="14px"
+                lineHeight="20px"
+                letterSpacing="0.25px"
+              >
+                Assignment
+              </Text>
+            </Td>
+          </Tr>
+        </>
+      )}
     </>
   );
 }
