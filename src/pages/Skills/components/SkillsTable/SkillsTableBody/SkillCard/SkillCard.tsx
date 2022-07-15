@@ -7,7 +7,10 @@ interface SkillCardProps {
   editSkill: (data: Skill) => void;
 }
 
-export default function SkillCard({ skill, editSkill }: SkillCardProps): JSX.Element {
+export default function SkillCard({
+  skill,
+  editSkill,
+}: SkillCardProps): JSX.Element {
   return (
     <>
       <Tr
@@ -35,7 +38,9 @@ export default function SkillCard({ skill, editSkill }: SkillCardProps): JSX.Ele
               aria-label="Edit Skill"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
-              onClick={() => { editSkill(skill) }}
+              onClick={() => {
+                editSkill(skill);
+              }}
             />
             <IconButton
               ml="8px"

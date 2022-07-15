@@ -61,8 +61,8 @@ export default function SkillModal({
   const skillName = watch("name");
 
   const canSubmitForm =
-    ((isNewSkill && nameProvided(skillName)) ||
-      (!isNewSkill && formIsDirty && nameProvided(skillName)));
+    (isNewSkill && nameProvided(skillName)) ||
+    (!isNewSkill && formIsDirty && nameProvided(skillName));
 
   const submitForm = async (data: SkillFormData) => {
     if (canSubmitForm) {

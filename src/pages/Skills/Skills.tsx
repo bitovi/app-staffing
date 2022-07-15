@@ -45,7 +45,7 @@ export default function Skills({
       <Suspense fallback={<SkillsTableSkeleton />}>
         <SkillsTable
           useSkills={useSkills}
-          editSkill={skill => {
+          editSkill={(skill) => {
             setSkillToEdit(skill);
             setSkillModal(true);
           }}

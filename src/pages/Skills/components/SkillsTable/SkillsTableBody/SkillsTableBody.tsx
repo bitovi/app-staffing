@@ -2,7 +2,13 @@ import { Tbody, Tr } from "@chakra-ui/react";
 import { Skill } from "../../../../../services/api";
 import SkillCard from "./SkillCard/SkillCard";
 
-const SkillsTableBody = ({ skills, editSkill }: { skills: Skill[], editSkill: (data: Skill) => void}): JSX.Element => {
+const SkillsTableBody = ({
+  skills,
+  editSkill,
+}: {
+  skills: Skill[];
+  editSkill: (data: Skill) => void;
+}): JSX.Element => {
   return (
     <Tbody>
       {skills.map((skill, index) => (

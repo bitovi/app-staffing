@@ -17,14 +17,13 @@ describe("SkillModal", () => {
   });
 
   it("renders 'new skill' UI when 'skill' prop is not set", async () => {
-    const { getByText, getByRole, getByPlaceholderText } =
-      render(
-        <SkillModal
-          onSave={() => Promise.resolve()}
-          onClose={() => true}
-          isOpen
-        />,
-      );
+    const { getByText, getByRole, getByPlaceholderText } = render(
+      <SkillModal
+        onSave={() => Promise.resolve()}
+        onClose={() => true}
+        isOpen
+      />,
+    );
 
     getByText("Add a New Skill");
 
@@ -69,14 +68,13 @@ describe("SkillModal", () => {
   });
 
   it("should reset form fields when cancel button is clicked", async () => {
-    const { getByText, getByRole, getByPlaceholderText } =
-      render(
-        <SkillModal
-          onSave={() => Promise.resolve()}
-          onClose={() => true}
-          isOpen={true}
-        />,
-      );
+    const { getByText, getByRole, getByPlaceholderText } = render(
+      <SkillModal
+        onSave={() => Promise.resolve()}
+        onClose={() => true}
+        isOpen={true}
+      />,
+    );
 
     // make sure the form is empty on open
     getByText("Add a New Skill");
