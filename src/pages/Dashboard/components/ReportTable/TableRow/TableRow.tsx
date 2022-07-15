@@ -65,18 +65,19 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   };
 
   let maxNeededRoles = 0;
-  projections.forEach(({ needed }, i) => {
+  projections.forEach(({ needed }) => {
     maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
   });
   const notNeededRows = Array.from({ length: maxNeededRoles }).map(
     (_item, index) =>
       !projections.some(
-        ({ needed }) =>
-          needed.roles && needed.roles[index] && needed.roles[index].value > 0,
+        ({ needed }) => needed?.roles?.[index] && needed.roles[index].value > 0,
       ),
   );
   const maxNeededRolesExpandable =
     maxNeededRoles - notNeededRows.filter((x) => x).length;
+
+  const minRowSpan = 3;
 
   let maxBenchEmployees = 0;
   projections.forEach(({ bench }) => {
@@ -90,7 +91,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
       <Tr>
         <Th
           rowSpan={
-            isExpanded ? 3 + maxNeededRolesExpandable + maxBenchEmployees : 3
+            isExpanded
+              ? minRowSpan + maxNeededRolesExpandable + maxBenchEmployees
+              : minRowSpan
           }
           textTransform="none"
           borderRadius="8px"
@@ -129,7 +132,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
         <Td
           rowSpan={
-            isExpanded ? 3 + maxNeededRolesExpandable + maxBenchEmployees : 3
+            isExpanded
+              ? minRowSpan + maxNeededRolesExpandable + maxBenchEmployees
+              : minRowSpan
           }
           borderRadius="8px"
         >
@@ -155,11 +160,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
                   {projections.map(({ action, needed }, i) => {
                     const { highlight, text } = getRowColors(action);
-                    if (
-                      needed.roles &&
-                      needed.roles[index] &&
-                      needed.roles[index].value
-                    ) {
+                    if (needed?.roles?.[index] && needed.roles[index].value) {
                       const neededRole = needed.roles[index];
                       const neededProject = neededRole.project;
 
