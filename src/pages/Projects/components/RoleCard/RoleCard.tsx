@@ -127,7 +127,7 @@ export default function RoleCard({
           <Flex justifyContent="end" justifySelf="end">
             <IconButton
               variant="editAction"
-              aria-label="Edit Member"
+              aria-label="Edit Role"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
               onClick={() => handleEditRole(role)}
@@ -135,7 +135,7 @@ export default function RoleCard({
             <IconButton
               ml="8px"
               variant="deleteAction"
-              aria-label="Delete Member"
+              aria-label="Delete Role"
               fontSize="20px"
               icon={<TrashIcon fill="currentColor" />}
               onClick={() => handleDeleteRole(role)}
