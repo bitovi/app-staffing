@@ -1,10 +1,12 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import {
+  Skill,
   useSkillMutations as useSkillMutationsDefault,
   useSkills as useSkillsDefault,
 } from "../../services/api";
 import SkillsHeader from "./components/SkillsHeader";
 import SkillsTable from "./components/SkillsTable";
+import SkillModal from "./components/SkillModal";
 import { SkillsTableSkeleton } from "./components/SkillsTable/SkillsTable";
 
 interface SkillsProps {
@@ -17,14 +19,36 @@ export default function Skills({
   useSkillMutations = useSkillMutationsDefault,
 }: SkillsProps): JSX.Element {
   const { createSkill, updateSkill, destroySkill } = useSkillMutations();
+  const [skillModal, setSkillModal] = useState<boolean>(false);
+  const [skillToEdit, setSkillToEdit] = useState<Skill | null>(null);
 
+  const addNewSkill = async (data: Omit<Skill, "id">) => {
+    await createSkill(data);
+  };
+  const saveEditSkill = async (data: Omit<Skill, "id">) => {
+    await updateSkill(skillToEdit?.id || "", data);
+  };
   return (
     <>
-      <SkillsHeader createSkill={createSkill} />
+      {skillModal && (
+        <SkillModal
+          isOpen={skillModal}
+          onClose={() => {
+            setSkillToEdit(null);
+            setSkillModal(false);
+          }}
+          onSave={skillToEdit ? saveEditSkill : addNewSkill}
+          skill={skillToEdit ? skillToEdit : undefined}
+        />
+      )}
+      <SkillsHeader createSkill={() => setSkillModal(true)} />
       <Suspense fallback={<SkillsTableSkeleton />}>
         <SkillsTable
           useSkills={useSkills}
-          updateSkill={updateSkill}
+          editSkill={(skill) => {
+            setSkillToEdit(skill);
+            setSkillModal(true);
+          }}
           destroySkill={destroySkill}
         />
       </Suspense>
