@@ -68,7 +68,7 @@ export default function TableHeader({
                 {/* Sub Heading */}
                 <Center height={4} flex={1} justifyContent="start">
                   {(type === "month" || type === "quarter") && (
-                    <Text color={"#718096"}>
+                    <Text color={"#718096"} fontSize="12px">
                       {format(formatDateToUTC(startDate), "MMM do")}
                     </Text>
                   )}
