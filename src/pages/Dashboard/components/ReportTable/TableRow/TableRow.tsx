@@ -68,6 +68,15 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   projections.forEach(({ needed }, i) => {
     maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
   });
+  const notNeededRows = Array.from({ length: maxNeededRoles }).map(
+    (_item, index) =>
+      !projections.some(
+        ({ needed }) =>
+          needed.roles && needed.roles[index] && needed.roles[index].value > 0,
+      ),
+  );
+  const maxNeededRolesExpandable =
+    maxNeededRoles - notNeededRows.filter((x) => x).length;
 
   let maxBenchEmployees = 0;
   projections.forEach(({ bench }) => {
@@ -80,7 +89,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
     <Tbody bg="white" w="100%" borderRadius="lg">
       <Tr>
         <Th
-          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          rowSpan={
+            isExpanded ? 3 + maxNeededRolesExpandable + maxBenchEmployees : 3
+          }
           textTransform="none"
           borderRadius="8px"
         >
@@ -117,7 +128,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
         })}
 
         <Td
-          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          rowSpan={
+            isExpanded ? 3 + maxNeededRolesExpandable + maxBenchEmployees : 3
+          }
           borderRadius="8px"
         >
           <Center cursor="pointer" onClick={handleRowClick}>
@@ -131,12 +144,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
       {isExpanded && maxNeededRoles
         ? Array.from({ length: maxNeededRoles }).map((_item, index) => {
-            const rowNeeded = projections.some(
-              ({ needed }) =>
-                needed.roles &&
-                needed.roles[index] &&
-                needed.roles[index].value > 0,
-            );
+            const rowNeeded = !notNeededRows[index];
 
             return (
               rowNeeded && (
