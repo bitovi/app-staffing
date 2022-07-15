@@ -65,12 +65,8 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   };
 
   let maxNeededRoles = 0;
-  const neededNeeded: boolean[] = [];
   projections.forEach(({ needed }, i) => {
     maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
-    neededNeeded.push(
-      (needed.roles && needed.roles[i] && needed.roles[i].value > 0) || false,
-    );
   });
 
   let maxBenchEmployees = 0;
@@ -134,9 +130,16 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
       </Tr>
 
       {isExpanded && maxNeededRoles
-        ? Array.from({ length: maxNeededRoles }).map(
-            (_item, index) =>
-              neededNeeded[index] && (
+        ? Array.from({ length: maxNeededRoles }).map((_item, index) => {
+            const rowNeeded = projections.some(
+              ({ needed }) =>
+                needed.roles &&
+                needed.roles[index] &&
+                needed.roles[index].value > 0,
+            );
+
+            return (
+              rowNeeded && (
                 <Tr key={index}>
                   <Th color="transparent" borderBottom="none">
                     Needed
@@ -181,8 +184,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                     }
                   })}
                 </Tr>
-              ),
-          )
+              )
+            );
+          })
         : null}
 
       <Tr>
