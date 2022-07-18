@@ -124,6 +124,9 @@ export default function RoleModal({
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
 
+  const [filteredEmployees, setFilteredEmployees] =
+    useState<typeof employees>(employees);
+
   const initialValues = {
     startDate: "",
     startConfidence: 1,
@@ -174,6 +177,47 @@ export default function RoleModal({
 
   const roleAssignments = watch("assignments");
 
+  const selectedSkill = watch("skillId");
+
+  useEffect(() => {
+    if (selectedSkill) {
+      filterEmployees(selectedSkill);
+    }
+  }, [selectedSkill]);
+
+  useEffect(() => {
+    // When the list of employees changes, we need to delete any added assignment
+    // that has an inadequate employee
+    // and we only do it if we're in Add role mode
+    if (roleAssignments && !roleToEdit) {
+      resetAssignments(filteredEmployees, roleAssignments);
+    }
+  }, [filteredEmployees]);
+
+  const filterEmployees = (skillId: string) => {
+    setFilteredEmployees(
+      employees.filter((employee) => employee.skills[0].id == skillId),
+    );
+  };
+
+  const resetAssignments = (
+    employees: Employee[],
+    assignments: AssignmentFormData[],
+  ) => {
+    let index = 0;
+    for (const assignment of assignments) {
+      if (
+        assignment.employeeId &&
+        !employees.some((employee) => employee.id === assignment.employeeId)
+      ) {
+        remove(index);
+      } else {
+        // The index will not change if we remove a record
+        index++;
+      }
+    }
+  };
+
   const canSubmitForm = (): boolean => {
     if (roleAssignments) {
       for (const assignment of roleAssignments) {
@@ -208,6 +252,8 @@ export default function RoleModal({
 
     if (roleToEdit) {
       reset(initialValuesEdit);
+
+      filterEmployees(roleToEdit.skills[0].id);
     }
   }, [roleToEdit, reset]);
 
@@ -248,6 +294,7 @@ export default function RoleModal({
       reset(initialValues);
       if (roleToEdit && setRoleToEdit) setRoleToEdit(undefined);
       setServerError(false);
+      setFilteredEmployees(employees);
     });
   };
 
@@ -482,7 +529,7 @@ export default function RoleModal({
     }
   }
 
-  const assignmentsOptions = employees.map((employee) => ({
+  const assignmentsOptions = filteredEmployees.map((employee) => ({
     value: employee.id,
     label: employee.name,
   }));
