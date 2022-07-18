@@ -42,6 +42,8 @@ function DataTimelineHeader({
                   fontSize="12px"
                   fontWeight="700"
                   textTransform="uppercase"
+                  wordSpacing="1000px"
+                  textAlign="center"
                 >
                   {title}
                 </Text>
@@ -49,7 +51,7 @@ function DataTimelineHeader({
               {/* Sub Heading */}
               <Center height={4} flex={1} justifyContent="start">
                 {(type === "month" || type === "quarter") && (
-                  <Text color={"#718096"}>
+                  <Text fontSize="12px" textAlign="center" color={"#718096"}>
                     {format(formatDateToUTC(startDate), "MMM do")}
                   </Text>
                 )}
