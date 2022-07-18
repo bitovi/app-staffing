@@ -222,6 +222,7 @@ function getGanttCell(
       }
       boxes.push(
         <Box
+          key={`${roleAssignment.id}-${boxes.length}`}
           minHeight="18px"
           margin="auto"
           marginLeft={rightAlign ? "auto" : 0}
@@ -235,8 +236,10 @@ function getGanttCell(
     }
   }
   if (!boxes.length && !skipRow) {
+    const id = uuidv4();
     boxes.push(
       <Box
+        key={`${id}-${boxes.length}`}
         minHeight="18px"
         margin="auto"
         marginLeft={rightAlign ? "auto" : 0}
