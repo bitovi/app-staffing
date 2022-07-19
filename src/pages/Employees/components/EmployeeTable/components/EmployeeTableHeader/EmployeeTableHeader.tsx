@@ -3,7 +3,7 @@ import { chakra, Th, Tr } from "@chakra-ui/react";
 const StickyHeader = chakra(Th, {
   baseStyle: {
     position: "sticky",
-    top: "11em",
+    top: "15em",
     background: "gray.10",
     zIndex: "10",
   },

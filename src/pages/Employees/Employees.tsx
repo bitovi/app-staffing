@@ -124,20 +124,20 @@ export default function Employees({
               Add Team Member
             </Button>
           </Flex>
+          <TeamMemberTabs
+            onChange={({
+              active,
+              inactive,
+            }: {
+              active: boolean;
+              inactive: boolean;
+            }) => {
+              setShowActiveEmployees(active);
+              setShowInactiveEmployees(inactive);
+            }}
+            defaultIndex={tabIndex}
+          />
         </Box>
-        <TeamMemberTabs
-          onChange={({
-            active,
-            inactive,
-          }: {
-            active: boolean;
-            inactive: boolean;
-          }) => {
-            setShowActiveEmployees(active);
-            setShowInactiveEmployees(inactive);
-          }}
-          defaultIndex={tabIndex}
-        />
         <EmployeeTableWrapper
           mt="32px"
           updateEmployee={updateEmployee}
