@@ -9,8 +9,6 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
 import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBreadCrumb";
 import ProjectModal from "../ProjectModal";
-import { useTimeline } from "../../../../../services/projection";
-import DataTimelineHeader from "../../../../../components/DataTable/DataTimelineHeader";
 
 interface ProjectHeaderProps {
   loading?: boolean;
@@ -24,7 +22,6 @@ export default function ProjectsHeader({
   project,
 }: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { timeline } = useTimeline(new Date());
   return (
     <Box
       mb={project ? "" : "32px"}
@@ -95,13 +92,7 @@ export default function ProjectsHeader({
           )}
         </Flex>
 
-        <Flex padding="15px 0" borderBottom="1px solid #CBD5E0">
-          <DataTimelineHeader
-            heading="Name"
-            headingWidth="150px"
-            timeline={timeline}
-          />
-        </Flex>
+        <Flex padding="15px 0" borderBottom="1px solid #CBD5E0" />
       </Flex>
     </Box>
   );

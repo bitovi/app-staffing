@@ -68,13 +68,21 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   projections.forEach(({ needed }) => {
     maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
   });
+  const notNeededRows = Array.from({ length: maxNeededRoles }).map(
+    (_item, index) =>
+      !projections.some(
+        ({ needed }) => needed?.roles?.[index] && needed.roles[index].value > 0,
+      ),
+  );
+  const maxNeededRolesExpandable =
+    maxNeededRoles - notNeededRows.filter((x) => x).length;
+
+  const minRowSpan = 3;
 
   let maxBenchEmployees = 0;
   projections.forEach(({ bench }) => {
-    // We only want to show employees with a confidence greater or equal to 50%
-    const employees = bench.employees?.filter(
-      (employee) => employee.value >= 0.5,
-    );
+    // We only want to show employees with a confidence greater than 0%
+    const employees = bench.employees?.filter((employee) => employee.value > 0);
     maxBenchEmployees = Math.max(maxBenchEmployees, employees?.length || 0);
   });
 
@@ -82,7 +90,11 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
     <Tbody bg="white" w="100%" borderRadius="lg">
       <Tr>
         <Th
-          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          rowSpan={
+            isExpanded
+              ? minRowSpan + maxNeededRolesExpandable + maxBenchEmployees
+              : minRowSpan
+          }
           textTransform="none"
           borderRadius="8px"
         >
@@ -119,7 +131,11 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
         })}
 
         <Td
-          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          rowSpan={
+            isExpanded
+              ? minRowSpan + maxNeededRolesExpandable + maxBenchEmployees
+              : minRowSpan
+          }
           borderRadius="8px"
         >
           <Center cursor="pointer" onClick={handleRowClick}>
@@ -132,46 +148,54 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
       </Tr>
 
       {isExpanded && maxNeededRoles
-        ? Array.from({ length: maxNeededRoles }).map((_item, index) => (
-            <Tr key={index}>
-              <Th color="transparent" borderBottom="none">
-                Needed
-              </Th>
+        ? Array.from({ length: maxNeededRoles }).map((_item, index) => {
+            const rowNeeded = !notNeededRows[index];
 
-              {projections.map(({ action, needed }, i) => {
-                const { highlight, text } = getRowColors(action);
-                if (needed.roles && needed.roles[index]) {
-                  const neededRole = needed.roles[index];
-                  const neededProject = neededRole.project;
+            return (
+              rowNeeded && (
+                <Tr key={index}>
+                  <Th color="transparent" borderBottom="none">
+                    Needed
+                  </Th>
 
-                  return (
-                    <Td
-                      whiteSpace="pre-wrap"
-                      borderBottom="none"
-                      key={i}
-                      background={highlight}
-                      color={text}
-                      p="5px"
-                      paddingRight="5px"
-                      textAlign="right"
-                    >
-                      <Box fontSize="10px" fontWeight="600" color="#3171D0">
-                        {neededProject ? (
-                          <Link to={`projects/${neededProject.id}`}>
-                            <Text key={neededProject.name}>{`${
-                              neededProject.name
-                            } ${(neededRole.value * 100).toFixed(0)}%`}</Text>
-                          </Link>
-                        ) : null}
-                      </Box>
-                    </Td>
-                  );
-                } else {
-                  return <Td key={i}></Td>;
-                }
-              })}
-            </Tr>
-          ))
+                  {projections.map(({ action, needed }, i) => {
+                    const { highlight, text } = getRowColors(action);
+                    if (needed?.roles?.[index] && needed.roles[index].value) {
+                      const neededRole = needed.roles[index];
+                      const neededProject = neededRole.project;
+
+                      return (
+                        <Td
+                          whiteSpace="pre-wrap"
+                          borderBottom="none"
+                          key={i}
+                          background={highlight}
+                          color={text}
+                          p="5px"
+                          paddingRight="5px"
+                          textAlign="right"
+                        >
+                          <Box fontSize="10px" fontWeight="600" color="#3171D0">
+                            {neededProject ? (
+                              <Link to={`projects/${neededProject.id}`}>
+                                <Text key={neededProject.name}>{`${
+                                  neededProject.name
+                                } ${(neededRole.value * 100).toFixed(
+                                  0,
+                                )}%`}</Text>
+                              </Link>
+                            ) : null}
+                          </Box>
+                        </Td>
+                      );
+                    } else {
+                      return <Td key={i}></Td>;
+                    }
+                  })}
+                </Tr>
+              )
+            );
+          })
         : null}
 
       <Tr>
@@ -207,7 +231,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                 const { highlight, text } = getRowColors(action);
 
                 const employees = bench.employees?.filter(
-                  (employee) => employee.value >= 0.5,
+                  (employee) => employee.value > 0,
                 );
 
                 return (

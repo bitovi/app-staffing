@@ -16,13 +16,13 @@ import { ListQuery } from "../../../../services/api/restBuilder";
 
 interface SkillsTableProps {
   useSkills: (query?: ListQuery<Skill>) => Skill[];
-  updateSkill: (id: string, data: Skill) => Promise<void>;
+  editSkill: (data: Skill) => void;
   destroySkill: (skillId: string) => Promise<void>;
 }
 
 export default function SkillsTable({
   useSkills,
-  updateSkill,
+  editSkill,
   destroySkill,
 }: SkillsTableProps): JSX.Element {
   const skills = useSkills({ sort: "name" });
@@ -54,7 +54,7 @@ export default function SkillsTable({
           <Table>
             <SkillsTableHeader />
 
-            <SkillsTableBody skills={skills} />
+            <SkillsTableBody skills={skills} editSkill={editSkill} />
           </Table>
         </Box>
       )}
