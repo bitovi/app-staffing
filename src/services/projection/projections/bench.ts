@@ -2,6 +2,7 @@ import sortBy from "lodash/sortBy";
 import { Employee } from "../../api";
 import { TimelineRange } from "../timeline";
 import { Bench, SkillRole } from "./projections";
+import { formatDateToUTC } from "../../helpers/utcdate";
 
 export function calculateBenchForSkill(
   skill: SkillRole,
@@ -38,12 +39,10 @@ export function calculateBenchForSkillForPeriod(
       (periodStart.valueOf() - periodEnd.valueOf()) / (24 * 60 * 60 * 1000),
     ),
   );
-
   let projectionBench = 0;
 
   for (let i = 0; i < employees.length; i++) {
     const employee = employees[i];
-
     // How many skills this employee has
     // When an employee is on the bench, they're on the bench for each skill they have
     // so we need to divide their time between skills
@@ -54,8 +53,9 @@ export function calculateBenchForSkillForPeriod(
 
     // Verification that the employee is currently employed
     if (
-      (!employee.startDate || employee.startDate <= periodStart) &&
-      (!employee.endDate || employee.endDate >= periodEnd)
+      (!employee.startDate ||
+        formatDateToUTC(employee.startDate) <= periodStart) &&
+      (!employee.endDate || formatDateToUTC(employee.endDate) >= periodEnd)
     ) {
       // If the employee has no assignments then he's on the bench
       // If he has assignments, we check the dates
@@ -74,7 +74,6 @@ export function calculateBenchForSkillForPeriod(
           j.setDate(j.getDate() + 1)
         ) {
           index += 1;
-
           for (const assignment of orderedAssignments) {
             // The days when the employee is assigned
             // The assignment has started and either it didn't end yet,
@@ -94,6 +93,7 @@ export function calculateBenchForSkillForPeriod(
               ).toFixed(2);
 
               daysInPeriod.days.push(benchValue);
+
               continue daysLoop;
             }
             // If the assignment has ended, the assigned employee is now on the bench
@@ -119,7 +119,6 @@ export function calculateBenchForSkillForPeriod(
             ) {
               const benchValue =
                 (assignment.role.endConfidence || 1) / employeeNoOfSkills;
-
               if (daysInPeriod.days[index]) {
                 daysInPeriod.days[index] = +(
                   daysInPeriod.days[index] * benchValue

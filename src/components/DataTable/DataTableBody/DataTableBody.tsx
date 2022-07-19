@@ -58,10 +58,8 @@ const DataTableBody = ({
               >
                 <Flex
                   alignItems="center"
-                  alignSelf="stretch"
-                  flex="0 1 150px"
-                  justify="center"
-                  padding="0 16px"
+                  borderBottom="1px solid rgba(0, 0, 0, 0.04)"
+                  minHeight="50px"
                 >
                   <Badge
                     background={skillBackgrounds[skill.name]}

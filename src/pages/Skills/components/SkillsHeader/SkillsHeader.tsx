@@ -6,20 +6,17 @@ import {
   BreadcrumbLink,
   Flex,
   Heading,
-  useDisclosure,
 } from "@chakra-ui/react";
 import Button from "../../../../components/Button";
-import { NewSkill } from "../../../../services/api";
+// import { NewSkill } from "../../../../services/api";
 
 interface SkillsHeaderProps {
-  createSkill?: (skill: NewSkill) => void;
+  createSkill?: () => void;
 }
 
 export default function SkillsHeader({
   createSkill,
 }: SkillsHeaderProps): JSX.Element {
-  const { onOpen } = useDisclosure();
-
   return (
     <Box
       position="sticky"
@@ -63,7 +60,7 @@ export default function SkillsHeader({
           Skills
         </Heading>
 
-        <Button size="lg" variant="primary" onClick={onOpen}>
+        <Button size="lg" variant="primary" onClick={createSkill}>
           Add Skill
         </Button>
       </Flex>

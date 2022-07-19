@@ -4,9 +4,13 @@ import { EditIcon, TrashIcon } from "../../../../../assets";
 
 interface SkillCardProps {
   skill: Skill;
+  editSkill: (data: Skill) => void;
 }
 
-export default function SkillCard({ skill }: SkillCardProps): JSX.Element {
+export default function SkillCard({
+  skill,
+  editSkill,
+}: SkillCardProps): JSX.Element {
   return (
     <>
       <Tr
@@ -34,6 +38,9 @@ export default function SkillCard({ skill }: SkillCardProps): JSX.Element {
               aria-label="Edit Skill"
               fontSize="20px"
               icon={<EditIcon fill="currentColor" />}
+              onClick={() => {
+                editSkill(skill);
+              }}
             />
             <IconButton
               ml="8px"
