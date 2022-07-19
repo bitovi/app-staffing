@@ -1,9 +1,11 @@
-class HttpError extends Error {
+export class HttpError extends Error {
   status?: number;
+  serverErrorMessages?: string;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, serverErrorMessages: string) {
     super(message);
     this.status = status;
+    this.serverErrorMessages = serverErrorMessages;
   }
 }
 
@@ -39,9 +41,22 @@ export default async function fetcher<T>(
   });
 
   if (!response.ok) {
+    let serverErrorMessages = "";
+    try {
+      const jsonResponse = await response.json();
+
+      if (jsonResponse?.errors?.forEach) {
+        for (let i = 0; i < jsonResponse.errors.length; i++) {
+          serverErrorMessages += "\n" + (jsonResponse.errors[i].title || "");
+        }
+      }
+    } catch (e) {
+      serverErrorMessages = "Could not forward server errors.";
+    }
     throw new HttpError(
       response.status,
       `An error occurred while fetching: ${method} ${url}`,
+      serverErrorMessages,
     );
   }
 
