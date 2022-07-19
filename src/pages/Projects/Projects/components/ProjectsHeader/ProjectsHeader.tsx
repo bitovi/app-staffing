@@ -102,7 +102,6 @@ export default function ProjectsHeader({
           />
         </Flex>
       </Flex>
-
     </Box>
   );
 }
