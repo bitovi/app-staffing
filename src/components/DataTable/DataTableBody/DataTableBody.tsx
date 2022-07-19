@@ -1,25 +1,24 @@
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Text } from "@chakra-ui/layout";
-import { Link, Box, Flex } from "@chakra-ui/react";
+import { Link, Box, Flex, Tooltip } from "@chakra-ui/react";
 import { skillBackgrounds } from "../../../pages/Dashboard/components/ReportTable/TableRow/TableRow";
 import Badge from "../../Badge";
-import { Project } from "../../../services/api";
+import { Assignment, Project } from "../../../services/api";
+import { TimelineRange } from "../../../services/projection";
+import {
+  GanttCell,
+  groupAssignments,
+} from "../../../services/helpers/gantt/ganttCell/GanttCell";
 
 interface PropjectCardProps {
   project: Project;
-  columnCount?: number;
+  timeline?: TimelineRange[];
 }
 
 const DataTableBody = ({
   project,
-  columnCount = 10,
+  timeline = [],
 }: PropjectCardProps): JSX.Element => {
-  const columnArray: boolean[] = [];
-
-  for (let i = 0; i < columnCount; i++) {
-    columnArray.push(true);
-  }
-
   return (
     <Box
       backgroundColor="#FFFFFF"
@@ -46,14 +45,15 @@ const DataTableBody = ({
           View Project Detail
         </Link>
       </Flex>
+
       <Flex direction="column">
         {project?.roles?.map((role) => (
           <Box key={role.id}>
             {role?.skills?.map((skill) => (
               <Flex
+                key={skill.id}
                 alignItems="center"
                 borderBottom="1px solid rgba(0, 0, 0, 0.04)"
-                key={skill.id}
                 minHeight="50px"
               >
                 <Flex
@@ -75,17 +75,49 @@ const DataTableBody = ({
                     {skill.name}
                   </Badge>
                 </Flex>
-                {columnArray.map((item: boolean, index: number) => (
-                  <Box
-                    textAlign="center"
-                    alignSelf="stretch"
-                    backgroundColor={
-                      index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
-                    }
-                    flex="1"
-                    key={`${!!item}=${index}`}
-                  ></Box>
-                ))}
+
+                {timeline.map((item: TimelineRange, index: number) => {
+                  return (
+                    <Box
+                      textAlign="center"
+                      alignSelf="stretch"
+                      key={`gantt-cell-project-${role.id}-${index}`}
+                      backgroundColor={
+                        index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                      }
+                      flex="1"
+                    >
+                      <Flex marginTop="14px" flexDirection="column">
+                        <GanttCell
+                          roleAssignments={[role]}
+                          timeline={timeline}
+                          index={index}
+                          skill={skill}
+                        />
+                      </Flex>
+                      <Flex title="role/assignments" flexDirection="column">
+                        {role.assignments &&
+                          role.assignments.length > 0 &&
+                          groupAssignments(role.assignments, timeline).map(
+                            (
+                              assignments: Assignment[],
+                              assignIndex: number,
+                            ) => {
+                              return (
+                                <GanttCell
+                                  key={`gantt-cell-${role.id}-${assignIndex}`}
+                                  roleAssignments={assignments}
+                                  timeline={timeline}
+                                  index={index}
+                                  skill={skill}
+                                />
+                              );
+                            },
+                          )}
+                      </Flex>
+                    </Box>
+                  );
+                })}
               </Flex>
             ))}
           </Box>

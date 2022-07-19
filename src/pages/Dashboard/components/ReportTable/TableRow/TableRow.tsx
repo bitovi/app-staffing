@@ -65,13 +65,19 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
   };
 
   let maxNeededRoles = 0;
-  const neededNeeded: boolean[] = [];
-  projections.forEach(({ needed }, i) => {
+  projections.forEach(({ needed }) => {
     maxNeededRoles = Math.max(maxNeededRoles, needed.roles?.length || 0);
-    neededNeeded.push(
-      (needed.roles && needed.roles[i] && needed.roles[i].value > 0) || false,
-    );
   });
+  const notNeededRows = Array.from({ length: maxNeededRoles }).map(
+    (_item, index) =>
+      !projections.some(
+        ({ needed }) => needed?.roles?.[index] && needed.roles[index].value > 0,
+      ),
+  );
+  const maxNeededRolesExpandable =
+    maxNeededRoles - notNeededRows.filter((x) => x).length;
+
+  const minRowSpan = 3;
 
   let maxBenchEmployees = 0;
   projections.forEach(({ bench }) => {
@@ -84,7 +90,11 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
     <Tbody bg="white" w="100%" borderRadius="lg">
       <Tr>
         <Th
-          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          rowSpan={
+            isExpanded
+              ? minRowSpan + maxNeededRolesExpandable + maxBenchEmployees
+              : minRowSpan
+          }
           textTransform="none"
           borderRadius="8px"
         >
@@ -121,7 +131,11 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
         })}
 
         <Td
-          rowSpan={isExpanded ? 3 + maxNeededRoles + maxBenchEmployees : 3}
+          rowSpan={
+            isExpanded
+              ? minRowSpan + maxNeededRolesExpandable + maxBenchEmployees
+              : minRowSpan
+          }
           borderRadius="8px"
         >
           <Center cursor="pointer" onClick={handleRowClick}>
@@ -134,9 +148,11 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
       </Tr>
 
       {isExpanded && maxNeededRoles
-        ? Array.from({ length: maxNeededRoles }).map(
-            (_item, index) =>
-              neededNeeded[index] && (
+        ? Array.from({ length: maxNeededRoles }).map((_item, index) => {
+            const rowNeeded = !notNeededRows[index];
+
+            return (
+              rowNeeded && (
                 <Tr key={index}>
                   <Th color="transparent" borderBottom="none">
                     Needed
@@ -144,11 +160,7 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
 
                   {projections.map(({ action, needed }, i) => {
                     const { highlight, text } = getRowColors(action);
-                    if (
-                      needed.roles &&
-                      needed.roles[index] &&
-                      needed.roles[index].value
-                    ) {
+                    if (needed?.roles?.[index] && needed.roles[index].value) {
                       const neededRole = needed.roles[index];
                       const neededProject = neededRole.project;
 
@@ -181,8 +193,9 @@ function TableRow({ skill, projections }: TableRowProps): JSX.Element {
                     }
                   })}
                 </Tr>
-              ),
-          )
+              )
+            );
+          })
         : null}
 
       <Tr>
