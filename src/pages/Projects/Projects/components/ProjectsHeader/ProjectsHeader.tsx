@@ -11,6 +11,7 @@ import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBr
 import ProjectModal from "../ProjectModal";
 import { useTimeline } from "../../../../../services/projection";
 import DataTimelineHeader from "../../../../../components/DataTable/DataTimelineHeader";
+
 interface ProjectHeaderProps {
   loading?: boolean;
   addProject?: (project: NewProject) => void;
