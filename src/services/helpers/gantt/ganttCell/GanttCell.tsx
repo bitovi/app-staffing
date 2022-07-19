@@ -1,19 +1,23 @@
-import { Box, Flex } from "@chakra-ui/react";
-import { Assignment, Role } from "../../../api";
+import { Box, Flex, Tooltip } from "@chakra-ui/react";
+import { Assignment, Role, Skill } from "../../../api";
 import { TimelineRange } from "../../../projection";
 import { formatDateToUTC } from "../../utcdate";
 import { getStartConfidenceColor } from "../color";
 import { v4 as uuidv4 } from "uuid";
+import { ProjectHoverInfo } from "../../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
+import { AssignmentHoverInfo } from "../../../../pages/Projects/AssignmentHover/AssignmentHoverInfo";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
   index: number;
+  skill: Skill;
 }
 
 export function GanttCell({
   roleAssignments,
   timeline,
   index,
+  skill,
 }: GantCellProps): JSX.Element {
   let color = "transparent";
   let borderRadius = ["0", "0", "0", "0"];
@@ -81,19 +85,59 @@ export function GanttCell({
           );
         }
       }
-      boxes.push(
-        <Box
-          key={`${roleAssignment.id}-${boxes.length}`}
-          minHeight="18px"
-          margin="auto"
-          marginLeft={rightAlign ? "auto" : 0}
-          marginRight={rightAlign ? 0 : "auto"}
-          borderRadius={`${borderRadius[0]} ${borderRadius[1]} ${borderRadius[2]} ${borderRadius[3]}`}
-          width={`${width}%`}
-          opacity={0.7}
-          backgroundColor={color}
-        />,
-      );
+      if ("startConfidence" in roleAssignment) {
+        boxes.push(
+          <Tooltip
+            minWidth="400px"
+            height="fit-content"
+            hasArrow
+            key={`${roleAssignment.id}-tooltip-${boxes.length}`}
+            placement="top"
+            label={
+              <ProjectHoverInfo role={roleAssignment as Role} skill={skill} />
+            }
+            aria-label="project start and end tooltip"
+          >
+            <Box
+              minHeight="18px"
+              margin="auto"
+              marginLeft={rightAlign ? "auto" : 0}
+              marginRight={rightAlign ? 0 : "auto"}
+              borderRadius={`${borderRadius[0]} ${borderRadius[1]} ${borderRadius[2]} ${borderRadius[3]}`}
+              width={`${width}%`}
+              opacity={0.7}
+              backgroundColor={color}
+            />
+          </Tooltip>,
+        );
+      } else {
+        boxes.push(
+          <Tooltip
+            height="fit-content"
+            hasArrow
+            placement="top"
+            key={`${roleAssignment.id}-tooltip-${boxes.length}`}
+            label={
+              <AssignmentHoverInfo
+                skill={skill}
+                assignment={roleAssignment as Assignment}
+              />
+            }
+            aria-label="assignment start and end tooltip"
+          >
+            <Box
+              minHeight="18px"
+              margin="auto"
+              marginLeft={rightAlign ? "auto" : 0}
+              marginRight={rightAlign ? 0 : "auto"}
+              borderRadius={`${borderRadius[0]} ${borderRadius[1]} ${borderRadius[2]} ${borderRadius[3]}`}
+              width={`${width}%`}
+              opacity={0.7}
+              backgroundColor={color}
+            />
+          </Tooltip>,
+        );
+      }
     }
   }
   if (!boxes.length && !skipRow) {

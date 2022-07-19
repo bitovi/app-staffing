@@ -16,7 +16,12 @@ describe("Project and Assignment Gantt Cells", () => {
           data-testid={`gantt-cell-${0}`}
           key={`gantt-cell-${0}-${roles[0].id}`}
         >
-          <GanttCell role={roles[0]} timeline={timeline} index={0} />
+          <GanttCell
+            skill={roles[0].skills[0]}
+            roleAssignments={[roles[0]]}
+            timeline={timeline}
+            index={0}
+          />
         </Box>
       </MemoryRouter>,
     );

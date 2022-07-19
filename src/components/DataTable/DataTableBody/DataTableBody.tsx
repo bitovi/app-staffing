@@ -5,8 +5,10 @@ import { skillBackgrounds } from "../../../pages/Dashboard/components/ReportTabl
 import Badge from "../../Badge";
 import { Assignment, Project } from "../../../services/api";
 import { TimelineRange } from "../../../services/projection";
-import { HoverInfo } from "../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
-import { GanttCell, groupAssignments } from "../../../services/helpers/gantt/ganttCell/GanttCell";
+import {
+  GanttCell,
+  groupAssignments,
+} from "../../../services/helpers/gantt/ganttCell/GanttCell";
 
 interface PropjectCardProps {
   project: Project;
@@ -76,37 +78,44 @@ const DataTableBody = ({
 
                 {timeline.map((item: TimelineRange, index: number) => {
                   return (
-                    <Tooltip
-                      minWidth="400px"
-                      height="fit-content"
-                      hasArrow
-                      key={`${!!item}=${index}`}
-                      placement="top"
-                      label={<HoverInfo role={role} skill={skill} />}
-                      aria-label="project start and end tooltip"
+                    <Box
+                      textAlign="center"
+                      alignSelf="stretch"
+                      key={`gantt-cell-project-${role.id}-${index}`}
+                      backgroundColor={
+                        index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                      }
+                      flex="1"
                     >
-                      <Box
-                        textAlign="center"
-                        alignSelf="stretch"
-                        backgroundColor={
-                          index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
-                        }
-                        flex="1"
-                      >
-                        <Flex marginTop="14px" flexDirection="column">
-                          <GanttCell roleAssignments={[role]} timeline={timeline} index={index}/>
-                        </Flex>
-                        <Flex title="role/assignments" flexDirection="column">
-                          {role.assignments &&
-                            role.assignments.length > 0 &&
-                            groupAssignments(role.assignments, timeline).map(
-                              (assignments: Assignment[], assignIndex:number) => {
-                                return <GanttCell key={`gantt-cell-${role.id}-${assignIndex}`}roleAssignments={assignments} timeline={timeline} index={index}/>
-                              },
-                            )}
-                        </Flex>
-                      </Box>
-                    </Tooltip>
+                      <Flex marginTop="14px" flexDirection="column">
+                        <GanttCell
+                          roleAssignments={[role]}
+                          timeline={timeline}
+                          index={index}
+                          skill={skill}
+                        />
+                      </Flex>
+                      <Flex title="role/assignments" flexDirection="column">
+                        {role.assignments &&
+                          role.assignments.length > 0 &&
+                          groupAssignments(role.assignments, timeline).map(
+                            (
+                              assignments: Assignment[],
+                              assignIndex: number,
+                            ) => {
+                              return (
+                                <GanttCell
+                                  key={`gantt-cell-${role.id}-${assignIndex}`}
+                                  roleAssignments={assignments}
+                                  timeline={timeline}
+                                  index={index}
+                                  skill={skill}
+                                />
+                              );
+                            },
+                          )}
+                      </Flex>
+                    </Box>
                   );
                 })}
               </Flex>
@@ -119,5 +128,3 @@ const DataTableBody = ({
 };
 
 export default DataTableBody;
-
-
