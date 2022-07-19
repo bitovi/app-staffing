@@ -1,25 +1,22 @@
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Text } from "@chakra-ui/layout";
-import { Link, Box, Flex } from "@chakra-ui/react";
+import { Link, Box, Flex, Tooltip } from "@chakra-ui/react";
 import { skillBackgrounds } from "../../../pages/Dashboard/components/ReportTable/TableRow/TableRow";
 import Badge from "../../Badge";
 import { Project } from "../../../services/api";
+import { TimelineRange } from "../../../services/projection";
+import { HoverInfo } from "../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
+import { GanttCell } from "../../../services/helpers/gantt/ganttCell/GanttCell";
 
 interface PropjectCardProps {
   project: Project;
-  columnCount?: number;
+  timeline?: TimelineRange[];
 }
 
 const DataTableBody = ({
   project,
-  columnCount = 10,
+  timeline = [],
 }: PropjectCardProps): JSX.Element => {
-  const columnArray: boolean[] = [];
-
-  for (let i = 0; i < columnCount; i++) {
-    columnArray.push(true);
-  }
-
   return (
     <Box
       backgroundColor="#FFFFFF"
@@ -46,47 +43,67 @@ const DataTableBody = ({
           View Project Detail
         </Link>
       </Flex>
+
       <Flex direction="column">
         {project?.roles?.map((role) => (
           <Box key={role.id}>
             {role?.skills?.map((skill) => (
-              <Flex
-                alignItems="center"
-                borderBottom="1px solid rgba(0, 0, 0, 0.04)"
+              <Tooltip
                 key={skill.id}
-                minHeight="50px"
+                minWidth="400px"
+                height="fit-content"
+                hasArrow
+                placement="top"
+                label={<HoverInfo role={role} skill={skill} />}
+                aria-label="project start and end tooltip"
               >
                 <Flex
                   alignItems="center"
-                  alignSelf="stretch"
-                  flex="0 1 150px"
-                  justify="center"
-                  padding="0 16px"
+                  borderBottom="1px solid rgba(0, 0, 0, 0.04)"
+                  minHeight="50px"
                 >
-                  <Badge
-                    background={skillBackgrounds[skill.name]}
-                    display="flex"
-                    isTruncated={false}
-                    maxWidth="100px"
-                    size="sm"
-                    textAlign="center"
-                    whiteSpace="break-spaces"
-                  >
-                    {skill.name}
-                  </Badge>
-                </Flex>
-                {columnArray.map((item: boolean, index: number) => (
-                  <Box
-                    textAlign="center"
+                  <Flex
+                    alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor={
-                      index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
-                    }
-                    flex="1"
-                    key={`${!!item}=${index}`}
-                  ></Box>
-                ))}
-              </Flex>
+                    flex="0 1 150px"
+                    justify="center"
+                    padding="0 16px"
+                  >
+                    <Badge
+                      background={skillBackgrounds[skill.name]}
+                      display="flex"
+                      isTruncated={false}
+                      maxWidth="100px"
+                      size="sm"
+                      textAlign="center"
+                      whiteSpace="break-spaces"
+                    >
+                      {skill.name}
+                    </Badge>
+                  </Flex>
+                  {timeline.map((item: TimelineRange, index: number) => {
+                    return (
+                      <Box
+                        textAlign="center"
+                        alignSelf="stretch"
+                        backgroundColor={
+                          index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                        }
+                        flex="1"
+                        key={`${!!item}=${index}`}
+                      >
+                        <Flex width="100%" height="100%">
+                          <GanttCell
+                            role={role}
+                            timeline={timeline}
+                            index={index}
+                          />
+                        </Flex>
+                      </Box>
+                    );
+                  })}
+                </Flex>
+              </Tooltip>
             ))}
           </Box>
         ))}

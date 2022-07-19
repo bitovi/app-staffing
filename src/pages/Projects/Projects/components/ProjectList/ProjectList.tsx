@@ -41,7 +41,7 @@ export default function ProjectList({
                   <DataTableBody
                     key={project.id}
                     project={project}
-                    columnCount={timeline.length}
+                    timeline={timeline}
                   />
                 ))}
             </Flex>
