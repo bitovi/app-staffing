@@ -1,16 +1,16 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
-import React from "react";
-import { Role, Skill } from "../../../../../services/api";
-import { skillBackgrounds } from "../../../../Dashboard/components/ReportTable/TableRow/TableRow";
-interface ProjectHoverInfoProps {
-  role: Role;
-  skill?: Skill;
+import { Assignment, Skill } from "../../../services/api";
+import { colors } from "../../../theme/colors";
+import { skillBackgrounds } from "../../Dashboard/components/ReportTable/TableRow/TableRow";
+interface AssignmentHoverInfoProps {
+  assignment: Assignment;
+  skill: Skill;
 }
-export const ProjectHoverInfo = ({
-  role,
+export const AssignmentHoverInfo = ({
+  assignment,
   skill,
-}: ProjectHoverInfoProps): JSX.Element => {
+}: AssignmentHoverInfoProps): JSX.Element => {
   return (
     <Flex flex="1" alignItems="center">
       <Flex
@@ -20,10 +20,15 @@ export const ProjectHoverInfo = ({
         padding="8px"
         borderRadius="50%"
         boxSizing="content-box"
-        backgroundColor={skill ? skillBackgrounds[skill.name] : "transparent"}
+        backgroundColor={skillBackgrounds[skill.name]}
       >
-        <Text fontWeight="700" textAlign="center" boxSizing="content-box">
-          {skill ? skill.name : "-"}
+        <Text
+          fontWeight="500"
+          fontSize="20px"
+          textAlign="center"
+          boxSizing="content-box"
+        >
+          {getInitials(assignment.employee.name)}
         </Text>
       </Flex>
       <Box>
@@ -31,30 +36,17 @@ export const ProjectHoverInfo = ({
           <Flex padding="4px">
             <Flex>
               <Text paddingRight="4px" fontWeight="bold" whiteSpace="nowrap">
-                {role.startConfidence * 100}%
-              </Text>
-              <Text fontWeight="normal" paddingRight="8px" whiteSpace="nowrap">
-                Confidence
-              </Text>
-            </Flex>
-
-            <Flex>
-              <Text paddingRight="4px" fontWeight="bold" whiteSpace="nowrap">
-                {role.endConfidence ? `${role.endConfidence * 100}%` : "-"}
-              </Text>
-              <Text fontWeight="normal" paddingRight="8px" whiteSpace="nowrap">
-                {role.endConfidence ? "Confidence" : ""}
+                {assignment.employee.name}
               </Text>
             </Flex>
           </Flex>
-
           <Flex padding="4px">
             <Flex>
               <Text paddingRight="4px" fontWeight="bold" whiteSpace="nowrap">
                 Start
               </Text>
               <Text fontWeight="normal" paddingRight="8px" whiteSpace="nowrap">
-                {format(new Date(role.startDate), "MM/dd/yyyy")}
+                {format(new Date(assignment.startDate), "MM/dd/yyyy")}
               </Text>
             </Flex>
 
@@ -63,8 +55,8 @@ export const ProjectHoverInfo = ({
                 End
               </Text>
               <Text fontWeight="normal" paddingRight="8px" whiteSpace="nowrap">
-                {role.endDate
-                  ? `${format(new Date(role.endDate), "MM/dd/yyyy")}`
+                {assignment.endDate
+                  ? `${format(new Date(assignment.endDate), "MM/dd/yyyy")}`
                   : "No End"}
               </Text>
             </Flex>
@@ -74,3 +66,12 @@ export const ProjectHoverInfo = ({
     </Flex>
   );
 };
+
+function getInitials(name: string) {
+  const splitName = name.split(" ");
+  if (splitName.length > 1) {
+    return `${splitName[0][0]}${splitName[1][0]}`;
+  } else {
+    return splitName[0][0];
+  }
+}
