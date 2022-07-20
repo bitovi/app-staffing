@@ -659,9 +659,9 @@ describe("Pages/Projects/components/RoleModal", () => {
     fireEvent.focus(selectElement);
     fireEvent.keyDown(selectElement, { key: "ArrowDown", code: 40 });
 
-    // Filtered employees that have the selected skill as their first
+    // Filtered employees that have the selected skill as one of their skill
     const filteredEmployees = employees.reduce<string[]>((prev, curr) => {
-      if (curr.skills[0].id === radioInputValue) {
+      if (curr.skills.some(skill => skill.id === radioInputValue)) {
         prev.push(curr.name);
       }
       return prev;
@@ -675,8 +675,7 @@ describe("Pages/Projects/components/RoleModal", () => {
         return prev;
       }, []);
 
-      // After selecting a skill, it should show only the employees that have that skill as their first
-      // (for now we consider only one skill)
+      // After selecting a skill, it should show only the employees that have that skill
       // We verify here that the dropdown content corresponds to our desired filtering
       expect(filteredEmployees).toEqual(options);
     });

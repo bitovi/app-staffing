@@ -196,7 +196,7 @@ export default function RoleModal({
 
   const filterEmployees = (skillId: string) => {
     setFilteredEmployees(
-      employees.filter((employee) => employee.skills[0].id == skillId),
+      employees.filter((employee) => employee.skills.some(skill => skill.id === skillId)),
     );
   };
 
