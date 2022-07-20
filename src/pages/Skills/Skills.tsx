@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   Skill,
   useSkillMutations as useSkillMutationsDefault,
@@ -18,6 +18,10 @@ export default function Skills({
   useSkills = useSkillsDefault,
   useSkillMutations = useSkillMutationsDefault,
 }: SkillsProps): JSX.Element {
+  useEffect(() => {
+    document.title = "Skills - Staffing App";
+  }, []);
+
   const { createSkill, updateSkill, destroySkill } = useSkillMutations();
   const [skillModal, setSkillModal] = useState<boolean>(false);
   const [skillToEdit, setSkillToEdit] = useState<Skill | null>(null);

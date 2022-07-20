@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
 import {
   Employee,
@@ -62,6 +62,10 @@ export default function Employees({
   useEmployeeMutations = useEmployeeMutationsDefault,
   useEmployees = useEmployeesDefault,
 }: EmployeesProps): JSX.Element {
+  useEffect(() => {
+    document.title = "Team Members - Staffing App";
+  }, []);
+
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
 
