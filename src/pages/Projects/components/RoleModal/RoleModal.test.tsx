@@ -661,7 +661,7 @@ describe("Pages/Projects/components/RoleModal", () => {
 
     // Filtered employees that have the selected skill as one of their skill
     const filteredEmployees = employees.reduce<string[]>((prev, curr) => {
-      if (curr.skills.some(skill => skill.id === radioInputValue)) {
+      if (curr.skills.some((skill) => skill.id === radioInputValue)) {
         prev.push(curr.name);
       }
       return prev;
