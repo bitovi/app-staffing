@@ -606,6 +606,81 @@ describe("Pages/Projects/components/RoleModal", () => {
     });
   });
 
+  it("Filters available employees after selecting a skill", async () => {
+    const { getByTestId, getAllByTestId, getAllByLabelText, getAllByRole } =
+      render(
+        <>
+          <RoleModal
+            createRole={() => Promise.resolve("")}
+            updateRole={() => Promise.resolve()}
+            createAssignment={() => Promise.resolve("")}
+            updateAssignment={() => Promise.resolve()}
+            destroyAssignment={() => Promise.resolve("")}
+            onClose={() => true}
+            isOpen={true}
+            skills={skills}
+            employees={employees}
+            project={projects[0]}
+          />
+        </>,
+      );
+
+    const addTeamMemberButton = getByTestId("add-team-member");
+
+    userEvent.click(addTeamMemberButton);
+
+    let selectElement = getAllByLabelText("Employee Name")[0];
+    let teamMemberRow = getAllByTestId("team-member-row")[0];
+
+    fireEvent.focus(selectElement);
+    fireEvent.keyDown(selectElement, { key: "ArrowDown", code: 40 });
+
+    await waitFor(() => {
+      // We get the text content of all options shown in the select drowpdown
+      const options = Array.from(
+        teamMemberRow.getElementsByClassName("assignmentSelect__option"),
+      ).reduce<string[]>((prev, curr) => {
+        prev.push(curr.textContent || "");
+        return prev;
+      }, []);
+
+      // It should show all employees by default
+      expect(options.length).toEqual(employees.length);
+    });
+
+    const radios = getAllByRole("radio", { checked: false });
+
+    // We select a skill
+    userEvent.click(radios[1]);
+    const radioInputValue = (radios[1] as HTMLInputElement).value;
+
+    selectElement = getAllByLabelText("Employee Name")[0];
+    teamMemberRow = getAllByTestId("team-member-row")[0];
+    fireEvent.focus(selectElement);
+    fireEvent.keyDown(selectElement, { key: "ArrowDown", code: 40 });
+
+    // Filtered employees that have the selected skill as one of their skill
+    const filteredEmployees = employees.reduce<string[]>((prev, curr) => {
+      if (curr.skills.some((skill) => skill.id === radioInputValue)) {
+        prev.push(curr.name);
+      }
+      return prev;
+    }, []);
+
+    await waitFor(() => {
+      const options = Array.from(
+        teamMemberRow.getElementsByClassName("assignmentSelect__option"),
+      ).reduce<string[]>((prev, curr) => {
+        prev.push(curr.textContent || "");
+        return prev;
+      }, []);
+
+      // After selecting a skill, it should show only the employees that have that skill
+      // We verify here that the dropdown content corresponds to our desired filtering
+      expect(filteredEmployees).toEqual(options);
+    });
+  });
+
   function getValue(input: HTMLElement) {
     return (input as HTMLInputElement).value;
   }
