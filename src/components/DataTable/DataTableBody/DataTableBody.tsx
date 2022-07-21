@@ -3,10 +3,11 @@ import { Text } from "@chakra-ui/layout";
 import { Link, Box, Flex, Tooltip } from "@chakra-ui/react";
 import { skillBackgrounds } from "../../../pages/Dashboard/components/ReportTable/TableRow/TableRow";
 import Badge from "../../Badge";
-import { Assignment, Project } from "../../../services/api";
+import { Assignment, Project, Role } from "../../../services/api";
 import { TimelineRange } from "../../../services/projection";
 import {
   GanttCell,
+  getRolesAsRow,
   groupAssignments,
 } from "../../../services/helpers/gantt/ganttCell/GanttCell";
 
@@ -89,7 +90,7 @@ const DataTableBody = ({
                     >
                       <Flex marginTop="14px" flexDirection="column">
                         <GanttCell
-                          roleAssignments={[role]}
+                          roleAssignments={getRolesAsRow(role)}
                           timeline={timeline}
                           index={index}
                           skill={skill}
