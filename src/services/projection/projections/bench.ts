@@ -57,8 +57,8 @@ export function calculateBenchForSkillForPeriod(
         formatDateToUTC(employee.startDate) <= periodStart) &&
       (!employee.endDate || formatDateToUTC(employee.endDate) >= periodEnd)
     ) {
-      // If the employee has no assignments then he's on the bench
-      // If he has assignments, we check the dates
+      // If the employee has no assignments then they're on the bench
+      // If they have assignments, we check the dates
       if (
         Array.isArray(employee.assignments) &&
         employee.assignments.length > 0
@@ -76,16 +76,15 @@ export function calculateBenchForSkillForPeriod(
           index += 1;
           for (const assignment of orderedAssignments) {
             // The days when the employee is assigned
-            // The assignment has started and either it didn't end yet,
+            // The assignment didn't end yet,
             // or it doesnt have an end date and we check if the role has not ended yet
             // which means either the role end date is later than date j or that there is no end date
             if (
-              assignment.startDate <= j &&
-              (assignment.endDate
+              assignment.endDate
                 ? assignment.endDate >= j
                 : assignment.role.endDate
                 ? assignment.role.endDate >= j
-                : true)
+                : true
             ) {
               const benchValue = +(
                 (1 - assignment.role.startConfidence) /
