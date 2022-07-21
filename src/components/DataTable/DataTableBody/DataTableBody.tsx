@@ -1,9 +1,9 @@
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Text } from "@chakra-ui/layout";
-import { Link, Box, Flex, Tooltip } from "@chakra-ui/react";
+import { Link, Box, Flex } from "@chakra-ui/react";
 import { skillBackgrounds } from "../../../pages/Dashboard/components/ReportTable/TableRow/TableRow";
 import Badge from "../../Badge";
-import { Assignment, Project, Role } from "../../../services/api";
+import { Assignment, Project } from "../../../services/api";
 import { TimelineRange } from "../../../services/projection";
 import {
   GanttCell,
