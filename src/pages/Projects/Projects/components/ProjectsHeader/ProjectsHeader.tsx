@@ -94,13 +94,15 @@ export default function ProjectsHeader({
           )}
         </Flex>
 
-        <Flex padding="15px 0" borderBottom="1px solid #CBD5E0">
-          <DataTimelineHeader
-            heading="Name"
-            headingWidth="150px"
-            timeline={timeline}
-          />
-        </Flex>
+        {!project && (
+          <Flex padding="15px 0" borderBottom="1px solid #CBD5E0">
+            <DataTimelineHeader
+              heading="Name"
+              headingWidth="150px"
+              timeline={timeline}
+            />
+          </Flex>
+        )}
       </Flex>
     </Box>
   );
