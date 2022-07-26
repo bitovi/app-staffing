@@ -1,7 +1,7 @@
 import { colors } from "../../../../theme/colors";
 
 // typescript enforces that the key has to match exactly whats in the dictionary.
-export function getStartConfidenceColor(startConfidence: number): string {
+export function getConfidenceColor(startConfidence: number): string {
   startConfidence = Math.max(0, Math.min(startConfidence, 1));
   startConfidence = Math.round(startConfidence * 10) * 10;
   switch (startConfidence) {
@@ -32,4 +32,4 @@ export function getStartConfidenceColor(startConfidence: number): string {
   }
 }
 
-export default getStartConfidenceColor;
+export default getConfidenceColor;
