@@ -10,7 +10,6 @@ import { EmployeeCardSkeleton } from "./components/EmployeeCard/EmployeeCard";
 import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
 import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
-import { MemoryRouter } from "react-router-dom";
 import { Tabs, TabList, Tab } from "@chakra-ui/react";
 
 interface EmployeesProps {
@@ -84,74 +83,72 @@ export default function Employees({
     await createEmployee(data);
   };
   return (
-    <MemoryRouter>
-      <Box>
-        {employeeModal && (
-          <EmployeeModal
-            isOpen={employeeModal}
-            onClose={() => setEmployeeModal(false)}
-            onSave={addNewEmployee}
-          />
-        )}
+    <Box>
+      {employeeModal && (
+        <EmployeeModal
+          isOpen={employeeModal}
+          onClose={() => setEmployeeModal(false)}
+          onSave={addNewEmployee}
+        />
+      )}
 
-        <Box
-          position="sticky"
-          top="0"
-          background="gray.10"
-          padding="40px"
-          paddingBottom="0"
-          zIndex="10"
+      <Box
+        position="sticky"
+        top="0"
+        background="gray.10"
+        padding="40px"
+        paddingBottom="0"
+        zIndex="10"
+      >
+        <EmployeesBreadcrumbs />
+
+        <Flex
+          width="full"
+          fontFamily="Arial, Helvetica, sans-serif"
+          display="flex"
+          justifyContent="space-between"
         >
-          <EmployeesBreadcrumbs />
-
-          <Flex
-            width="full"
-            fontFamily="Arial, Helvetica, sans-serif"
-            display="flex"
-            justifyContent="space-between"
+          <Heading
+            as="h1"
+            textStyle="title"
+            color="gray.700"
+            data-testid="employeesTitle"
           >
-            <Heading
-              as="h1"
-              textStyle="title"
-              color="gray.700"
-              data-testid="employeesTitle"
-            >
-              Team Members
-            </Heading>
+            Team Members
+          </Heading>
 
-            <Button
-              size="lg"
-              variant="primary"
-              onClick={() => setEmployeeModal(true)}
-              arialabel="Add Employee"
-            >
-              Add Team Member
-            </Button>
-          </Flex>
-          <TeamMemberTabs
-            onChange={({
-              active,
-              inactive,
-            }: {
-              active: boolean;
-              inactive: boolean;
-            }) => {
-              setShowActiveEmployees(active);
-              setShowInactiveEmployees(inactive);
-            }}
-            defaultIndex={tabIndex}
-          />
-        </Box>
-        <EmployeeTableWrapper
-          mt="32px"
-          updateEmployee={updateEmployee}
-          destroyEmployee={destroyEmployee}
-          showActiveEmployees={showActiveEmployees}
-          showInactiveEmployees={showInactiveEmployees}
-          useEmployees={useEmployees}
+          <Button
+            size="lg"
+            variant="primary"
+            onClick={() => setEmployeeModal(true)}
+            arialabel="Add Employee"
+          >
+            Add Team Member
+          </Button>
+        </Flex>
+        <TeamMemberTabs
+          onChange={({
+            active,
+            inactive,
+          }: {
+            active: boolean;
+            inactive: boolean;
+          }) => {
+            setShowActiveEmployees(active);
+            setShowInactiveEmployees(inactive);
+          }}
+          defaultIndex={tabIndex}
         />
       </Box>
-    </MemoryRouter>
+      <EmployeeTableWrapper
+        mt="32px"
+        updateEmployee={updateEmployee}
+        destroyEmployee={destroyEmployee}
+        showActiveEmployees={showActiveEmployees}
+        showInactiveEmployees={showInactiveEmployees}
+        useEmployees={useEmployees}
+      />
+    </Box>
   );
 }
 
