@@ -6,7 +6,6 @@ import { getConfidenceColor } from "../color";
 import { v4 as uuidv4 } from "uuid";
 import { ProjectHoverInfo } from "../../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
 import { AssignmentHoverInfo } from "../../../../pages/Projects/AssignmentHover/AssignmentHoverInfo";
-import { resourceUsage } from "process";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
@@ -281,10 +280,8 @@ export function getRolesAsRow(role: Role): Role[] {
   ) {
     clonedRole.startDate = clonedRole.endDate;
     clonedRole.endDate = null;
-    if (clonedRole.endConfidence) {
-      clonedRole.startConfidence = clonedRole.endConfidence;
-      clonedRole.endConfidence = 0;
-    }
+    clonedRole.startConfidence = clonedRole.endConfidence;
+    clonedRole.endConfidence = 0;
     result.push(clonedRole);
   }
   return result;
