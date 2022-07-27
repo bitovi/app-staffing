@@ -47,8 +47,7 @@ export function GanttCell({
       if ("startConfidence" in roleAssignment) {
         roleAssignment = roleAssignment as Role;
         color = getConfidenceColor(roleAssignment.startConfidence);
-      } 
-       else {
+      } else {
         color = "grey";
       }
 
@@ -300,6 +299,24 @@ export function groupAssignments(
     groupedAssignments.push([assignment]);
   }
   return groupedAssignments;
+}
+
+// this is to display the end confidence as a gantt cell next to the project start gantt cell
+export function getRolesAsRow(role: Role): Role[] {
+  const clonedRole = { ...role };
+  const result = [role];
+  if (
+    clonedRole.endDate &&
+    clonedRole.endConfidence &&
+    clonedRole.endConfidence < 1
+  ) {
+    clonedRole.startDate = clonedRole.endDate;
+    clonedRole.endDate = null;
+    clonedRole.startConfidence = clonedRole.endConfidence;
+    clonedRole.endConfidence = 0;
+    result.push(clonedRole);
+  }
+  return result;
 }
 
 export default GanttCell;

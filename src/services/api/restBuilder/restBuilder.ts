@@ -7,7 +7,7 @@ import type { mutate as Mutate } from "swr";
 import param from "can-param";
 import { useToast } from "../../toast";
 
-import fetcher from "./fetcher";
+import fetcher, { HttpError } from "./fetcher";
 
 import serializer, { SerializerTypes } from "./serializer";
 import parseDate from "./parseDate";
@@ -124,59 +124,75 @@ export default function restBuilder<Data extends BaseData>(
         identifier?: string,
         updateParentCache?: boolean,
       ) => {
-        const payload = serializer.serialize(type, data);
-        const response = await fetcher<JSONAPIDocument>("POST", path, payload);
-
-        if (response) {
-          const deserialized = serializer.deserialize(type, response) as Data;
-
-          if (!identifier) identifier = deserialized.name || deserialized.id;
-
-          parseDate(deserialized);
-
-          // mutate list cache
-          await mutate(
+        try {
+          const payload = serializer.serialize(type, data);
+          const response = await fetcher<JSONAPIDocument>(
+            "POST",
             path,
-            async (cache: Data[] | undefined) => {
-              if (!cache || updateParentCache) {
-                if (parentStore) {
-                  const source = deserialized[
-                    parentStore.sourceRelationship as keyof BaseData
-                  ] as unknown as BaseData;
-                  mutateParentCache(
-                    mutate,
-                    type,
-                    parentStore,
-                    source.id,
-                    "Create",
-                    deserialized,
-                  );
+            payload,
+          );
+
+          if (response) {
+            const deserialized = serializer.deserialize(type, response) as Data;
+
+            if (!identifier) identifier = deserialized.name || deserialized.id;
+
+            parseDate(deserialized);
+
+            // mutate list cache
+            await mutate(
+              path,
+              async (cache: Data[] | undefined) => {
+                if (!cache || updateParentCache) {
+                  if (parentStore) {
+                    const source = deserialized[
+                      parentStore.sourceRelationship as keyof BaseData
+                    ] as unknown as BaseData;
+                    mutateParentCache(
+                      mutate,
+                      type,
+                      parentStore,
+                      source.id,
+                      "Create",
+                      deserialized,
+                    );
+                  }
+                  return cache;
                 }
-                return cache;
-              }
 
-              return [...cache, deserialized];
-            },
-            false,
-          );
+                return [...cache, deserialized];
+              },
+              false,
+            );
 
-          // mutate individual cache
-          await mutate(
-            `${path}/${deserialized.id}`,
-            async (cache: Data) => {
-              return deserialized;
-            },
-            false,
-          );
+            // mutate individual cache
+            await mutate(
+              `${path}/${deserialized.id}`,
+              async (cache: Data) => {
+                return deserialized;
+              },
+              false,
+            );
 
-          if (messages) {
+            if (messages) {
+              toast({
+                title: `${messages.title} added`,
+                description: `${identifier} was succesfully added!`,
+              });
+            }
+
+            return deserialized.id;
+          }
+        } catch (e) {
+          if (e instanceof HttpError) {
             toast({
-              title: `${messages.title} added`,
-              description: `${identifier} was succesfully added!`,
+              title: "Server Errors: " + e.serverErrorMessages,
+              status: "error",
+              isClosable: true,
+              duration: null,
             });
           }
-
-          return deserialized.id;
+          throw e;
         }
       },
       [toast, mutate],
@@ -190,74 +206,86 @@ export default function restBuilder<Data extends BaseData>(
         undefinedValues?: string[],
         updateParentCache?: boolean,
       ) => {
-        const payload = serializer.serialize(type, { ...data, id });
-        const response = await fetcher<JSONAPIDocument>(
-          "PATCH",
-          `${path}/${id}`,
-          payload,
-          undefinedValues,
-        );
-
-        if (response) {
-          const deserialized = serializer.deserialize(type, response) as Data;
-
-          if (!identifier) identifier = deserialized.name || deserialized.id;
-
-          parseDate(deserialized);
-
-          // mutate list cache
-          await mutate(
-            path,
-            async (cache: Data[] | undefined) => {
-              if (!cache || updateParentCache) {
-                if (parentStore) {
-                  const source = deserialized[
-                    parentStore.sourceRelationship as keyof BaseData
-                  ] as unknown as BaseData;
-                  mutateParentCache(
-                    mutate,
-                    type,
-                    parentStore,
-                    source.id,
-                    "Update",
-                    deserialized,
-                  );
-                }
-                return cache;
-              }
-
-              const index = cache.findIndex(
-                (item) => item.id === deserialized.id,
-              );
-
-              if (index > -1) {
-                return [
-                  ...cache.slice(0, index),
-                  deserialized,
-                  ...cache.slice(index + 1),
-                ];
-              }
-
-              return [...cache, deserialized];
-            },
-            false,
-          );
-
-          // mutate individual cache
-          await mutate(
+        try {
+          const payload = serializer.serialize(type, { ...data, id });
+          const response = await fetcher<JSONAPIDocument>(
+            "PATCH",
             `${path}/${id}`,
-            async (cache: Data) => {
-              return { ...cache, ...deserialized };
-            },
-            false,
+            payload,
+            undefinedValues,
           );
 
-          if (messages) {
+          if (response) {
+            const deserialized = serializer.deserialize(type, response) as Data;
+
+            if (!identifier) identifier = deserialized.name || deserialized.id;
+
+            parseDate(deserialized);
+
+            // mutate list cache
+            await mutate(
+              path,
+              async (cache: Data[] | undefined) => {
+                if (!cache || updateParentCache) {
+                  if (parentStore) {
+                    const source = deserialized[
+                      parentStore.sourceRelationship as keyof BaseData
+                    ] as unknown as BaseData;
+                    mutateParentCache(
+                      mutate,
+                      type,
+                      parentStore,
+                      source.id,
+                      "Update",
+                      deserialized,
+                    );
+                  }
+                  return cache;
+                }
+
+                const index = cache.findIndex(
+                  (item) => item.id === deserialized.id,
+                );
+
+                if (index > -1) {
+                  return [
+                    ...cache.slice(0, index),
+                    deserialized,
+                    ...cache.slice(index + 1),
+                  ];
+                }
+
+                return [...cache, deserialized];
+              },
+              false,
+            );
+
+            // mutate individual cache
+            await mutate(
+              `${path}/${id}`,
+              async (cache: Data) => {
+                return { ...cache, ...deserialized };
+              },
+              false,
+            );
+
+            if (messages) {
+              toast({
+                title: `${messages.title} updated`,
+                description: `${identifier} was succesfully updated!`,
+              });
+            }
+          }
+        } catch (e) {
+          if (e instanceof HttpError) {
             toast({
-              title: `${messages.title} updated`,
-              description: `${identifier} was succesfully updated!`,
+              title: "Server Errors: " + e.serverErrorMessages,
+              status: "error",
+              isClosable: true,
+              duration: null,
             });
           }
+          throw e;
         }
       },
       [toast, mutate],
@@ -270,55 +298,67 @@ export default function restBuilder<Data extends BaseData>(
         identifier?: string,
         updateParentCache?: boolean,
       ) => {
-        await fetcher<undefined>("DELETE", `${path}/${id}`);
+        try {
+          await fetcher<undefined>("DELETE", `${path}/${id}`);
 
-        // mutate list cache
-        await mutate(
-          path,
-          async (cache: Data[] | undefined) => {
-            if (!cache || updateParentCache) {
-              if (parentStore && parentId) {
-                mutateParentCache(
-                  mutate,
-                  type,
-                  parentStore,
-                  parentId,
-                  "Delete",
-                  undefined,
-                  id,
-                );
+          // mutate list cache
+          await mutate(
+            path,
+            async (cache: Data[] | undefined) => {
+              if (!cache || updateParentCache) {
+                if (parentStore && parentId) {
+                  mutateParentCache(
+                    mutate,
+                    type,
+                    parentStore,
+                    parentId,
+                    "Delete",
+                    undefined,
+                    id,
+                  );
+                }
+                return cache;
               }
-              return cache;
-            }
 
-            const item = cache.find((item) => item.id === id);
-            if (item) {
-              identifier = item.name;
-            }
+              const item = cache.find((item) => item.id === id);
+              if (item) {
+                identifier = item.name;
+              }
 
-            return cache.filter((item) => item.id !== id);
-          },
-          false,
-        );
+              return cache.filter((item) => item.id !== id);
+            },
+            false,
+          );
 
-        // mutate individual cache
-        await mutate(
-          `${path}/${id}`,
-          async (cache: Data) => {
-            if (cache && !identifier) {
-              identifier = cache.name;
-            }
+          // mutate individual cache
+          await mutate(
+            `${path}/${id}`,
+            async (cache: Data) => {
+              if (cache && !identifier) {
+                identifier = cache.name;
+              }
 
-            return undefined;
-          },
-          false,
-        );
+              return undefined;
+            },
+            false,
+          );
 
-        if (messages) {
-          toast({
-            title: `${messages.title} deleted`,
-            description: `${identifier || id} was successfully deleted!`,
-          });
+          if (messages) {
+            toast({
+              title: `${messages.title} deleted`,
+              description: `${identifier || id} was successfully deleted!`,
+            });
+          }
+        } catch (e) {
+          if (e instanceof HttpError) {
+            toast({
+              title: "Server Errors: " + e.serverErrorMessages,
+              status: "error",
+              isClosable: true,
+              duration: null,
+            });
+          }
+          throw e;
         }
       },
       [toast, mutate],

@@ -1,7 +1,7 @@
 import ReportTable from "./components/ReportTable";
 import { Flex } from "@chakra-ui/layout";
 import Heading from "../../components/Typography/Heading";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 export function DashboardLoadingLayout(): JSX.Element {
   return (
@@ -34,6 +34,9 @@ export function Dashboard(): JSX.Element {
 }
 
 export default function DashboardWrapper(): JSX.Element {
+  useEffect(() => {
+    document.title = "Dashboard - Staffing App";
+  }, []);
   return (
     <Suspense fallback={<DashboardLoadingLayout />}>
       <Dashboard />

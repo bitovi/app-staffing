@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
 import {
@@ -71,6 +71,10 @@ export function ProjectDetail({
   const onSave = (id: string, updated: Partial<Project>) => {
     updateProject(id, updated);
   };
+
+  useEffect(() => {
+    document.title = `${project.name} - Staffing App`;
+  }, []);
 
   return (
     <div>

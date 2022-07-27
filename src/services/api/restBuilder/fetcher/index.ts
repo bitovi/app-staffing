@@ -1,1 +1,1 @@
-export { default } from "./fetcher";
+export { default, HttpError } from "./fetcher";

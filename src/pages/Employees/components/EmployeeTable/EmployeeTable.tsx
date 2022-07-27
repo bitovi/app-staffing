@@ -59,7 +59,10 @@ function EmployeeTable({
   destroyEmployee,
   useEmployees = useEmployeesDefault,
 }: EmployeeTableProps) {
-  const employeesFetched = useEmployees({ include: "skills", sort: "name" });
+  const employeesFetched = useEmployees({
+    include: ["skills", "assignments.role.project"],
+    sort: "name",
+  });
 
   const employees = useMemo(
     () =>

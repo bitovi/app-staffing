@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Skeleton, Stack } from "@chakra-ui/react";
 
 import ProjectsHeader from "./components/ProjectsHeader";
@@ -79,6 +79,10 @@ export function Projects({
 }
 
 export default function ProjectsWrapper(): JSX.Element {
+  useEffect(() => {
+    document.title = "Projects - Staffing App";
+  }, []);
+
   return (
     <Suspense fallback={<LoadingProjectList />}>
       <Projects
