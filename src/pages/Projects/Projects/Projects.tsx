@@ -5,6 +5,7 @@ import ProjectsHeader from "./components/ProjectsHeader";
 import {
   useProjects as defaultUseProjects,
   useProjectMutations as defaultUseProjectMutations,
+  Project,
 } from "../../../services/api";
 import ProjectList from "./components/ProjectList";
 
@@ -12,6 +13,35 @@ interface ProjectProps {
   useProjects: typeof defaultUseProjects;
   useProjectMutations: typeof defaultUseProjectMutations;
 }
+
+const mockEndDate = "8/24/22";
+const mockStartDate = "8/1/22";
+const mockRole = {
+  assignments: [
+    {
+      employee: {
+        assignments: ["1234"],
+        endDate: new Date(mockEndDate),
+        id: "5555",
+        name: "Jimmy Smitts",
+        skills: [{ id: "1002", name: "React" }],
+        startDate: new Date(mockStartDate),
+      },
+      endConfidence: 0.6,
+      endDate: new Date(mockEndDate),
+      id: "9876",
+      project: {
+        descrption:
+          "blah blah this is a description of the project. we're going to do wthings and maybe write some code, who knows",
+        id: "5353",
+        name: "Andrews Test Project",
+      },
+      skills: [{ id: "1002", name: "React" }],
+      startConfidence: 0.9,
+      startDate: new Date(mockStartDate),
+    },
+  ],
+};
 
 export function LoadingProjectList(): JSX.Element {
   return (

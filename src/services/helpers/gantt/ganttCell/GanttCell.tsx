@@ -2,15 +2,16 @@ import { Box, Flex, Tooltip } from "@chakra-ui/react";
 import { Assignment, Role, Skill } from "../../../api";
 import { TimelineRange } from "../../../projection";
 import { formatDateToUTC } from "../../utcdate";
-import { getStartConfidenceColor } from "../color";
+import { getConfidenceColor } from "../color";
 import { v4 as uuidv4 } from "uuid";
 import { ProjectHoverInfo } from "../../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
 import { AssignmentHoverInfo } from "../../../../pages/Projects/AssignmentHover/AssignmentHoverInfo";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
-  index: number;
+  index: number; // number in the timeline 
   skill: Skill;
+  isEndConfidence?: boolean;
 }
 
 export function GanttCell({
@@ -18,16 +19,22 @@ export function GanttCell({
   timeline,
   index,
   skill,
+  isEndConfidence = false,
 }: GantCellProps): JSX.Element {
+  console.log("heres the role from gantt cell", roleAssignments);
   let color = "transparent";
   let borderRadius = ["0", "0", "0", "0"];
   let width = 100;
   let rightAlign = true; // if true then align the cell right (the starting gantt cell in this case)
   let skipRow = false;
   const boxes: JSX.Element[] = [];
+
+  // for every role/assignment in the roleAssignments Array:
   for (let i = 0; i < roleAssignments.length; i++) {
+    // grab the current one
     let roleAssignment: Role | Assignment = roleAssignments[i];
     skipRow = false;
+    // if its not in the the timeline at all, skip
     if (!showInTimeline(roleAssignment, timeline)) {
       skipRow = true;
       continue;
@@ -39,12 +46,14 @@ export function GanttCell({
     if (isRoleAssignmentInTimeline(roleAssignment, timeline, index)) {
       if ("startConfidence" in roleAssignment) {
         roleAssignment = roleAssignment as Role;
-        color = getStartConfidenceColor(roleAssignment.startConfidence);
-      } else {
+        color = getConfidenceColor(roleAssignment.startConfidence);
+      } 
+       else {
         color = "grey";
       }
 
       if (index > 0) {
+        //check if previous box was empty, if so, round the left corner
         if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index - 1)) {
           borderRadius[0] = "8px";
           borderRadius[3] = "8px"; //farthest to the left
@@ -55,6 +64,8 @@ export function GanttCell({
             false,
           );
         } else if (index === timeline.length - 1) {
+          //if we're at the end of the timeline, fill cell 
+
           rightAlign = false; //farthest to the right
           width = calculateGanttCellWidth(
             roleAssignment,
@@ -72,6 +83,8 @@ export function GanttCell({
         }
       }
       if (index < timeline.length - 1) {
+        // if we're not at the end yet, check if the NEXT cell would be blank. If so, round the RIGHT edge of this. 
+        // but we need more here to deal with end confidence. may need to just rewrite this whole logic lmao fml 
         if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)) {
           // then last cell shown in timeline (farthest to the right)
           borderRadius[1] = "8px";
@@ -203,7 +216,10 @@ function isRoleAssignmentInTimeline(
   timeline[index].endDate = formatDateToUTC(timeline[index].endDate);
   if (role.startDate < timeline[index].endDate) {
     if (role.endDate) {
-      if (role.endDate > timeline[index].startDate) {
+      if (
+        role.endDate > timeline[index].startDate ||
+        ("endConfidence" in role && (role.endConfidence ?? 0) < 1)
+      ) {
         return true;
       } else {
         return false;
@@ -221,10 +237,27 @@ function showInTimeline(
   if (!roleAssignment) {
     return false;
   }
-  return (
-    new Date(roleAssignment.startDate).getTime() <
-    timeline[timeline.length - 1].endDate.getTime()
-  );
+
+  let shouldEnd = false
+
+  if ("endConfidence" in roleAssignment) {
+    roleAssignment.endConfidence  === 1 ? shouldEnd = true : shouldEnd = false
+  }
+
+  const roleStart = new Date(roleAssignment.startDate).getTime();
+  const roleEnd = new Date(roleAssignment.endDate as string | Date).getTime();
+  const tlStart = new Date(timeline[0].startDate).getTime();
+  const tlEnd = new Date(timeline[timeline.length - 1].endDate).getTime();
+
+  if (roleEnd < tlStart && shouldEnd){
+    return false 
+  }
+  else if (tlEnd < roleStart){
+    return false
+  }
+  else{ 
+    return true
+  }
 }
 
 export function groupAssignments(

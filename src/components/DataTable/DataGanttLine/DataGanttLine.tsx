@@ -1,42 +1,112 @@
-import { Center, Flex, Td, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Td, Text, VStack } from "@chakra-ui/react";
 import { isBefore } from "date-fns";
+import { date } from "faker";
+import { roleMocks } from "../../../mocks/roles/mocks";
+import { Role } from "../../../services/api";
+import GanttCell from "../../../services/helpers/gantt/ganttCell";
+import { TimelineRange, useTimeline } from "../../../services/projection";
 
 const DataGanttLine = (props: any) => {
-  const items = [0, 1, 2, 3, 4, 5, 6];
+  const endDate = props.role.endDate;
+  const endOfTimeline = props.timeline[props.timeline.length - 1].endDate;
 
-
-  const generateGantt = () => {
-    return props.timeline.map((timeframe)=>{
-      // if start date of role is after the end date of timeframe, empty cell
-      if (isBefore(timeframe.endDate, props.role.startDate)){
-        return (
-          <Flex flex={1} backgroundColor="#ffffff">
-            <Center height = {5} flex={1}>
-              <div> empty! </div>
-            </Center>
-          </Flex>
-        )
-      }
+  const isEndInTimeLine = () => {
+    if (isBefore(endDate, endOfTimeline)) {
+      return true;
     }
-  }
+  };
 
+  console.log({ endOfTimeline });
 
+  const { timeline: newTimeline } = useTimeline(new Date(endOfTimeline));
+
+  // const endDateTimeline = () => {
+
+  //   return (
+  //     <Box
+  //             textAlign="center"
+  //             alignSelf="stretch"
+  //             key={`gantt-cell-project-${role.id}-${index}`}
+  //             backgroundColor={
+  //               index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+  //             }
+  //             flex="1"
+  //           >
+  //             <Flex marginTop="14px" flexDirection="column"><GanttCell
+  //                 roleAssignments={[role]}
+  //                 timeline={timeline}
+  //                 index={index}
+  //                 skill={skill}
+  //               />
+  //             </Flex>
+  //           </Box>
+  //   )
+  // }
+
+  const role = props.role;
+  console.log('role in gantt', role)
+  const timeline = props.timeline;
+  const skill = props.role.skills[0];
   return (
-    <>
-      <Flex flex="1" flexDirection="row">
-        {items.map(() => {
+    <Box key={role.id}>
+      <Flex
+        key={skill.id}
+        alignItems="center"
+        borderBottom="1px solid rgba(0, 0, 0, 0.04)"
+        minHeight="50px"
+      >
+       
+        {timeline.map((item: TimelineRange, index: number) => {
           return (
-          
-              <Flex flex={1} backgroundColor="#440022">
-                <Center  borderRadius="8px" height={5} flex={1}>
-                  <div>x</div>
-                </Center>
+            <Box
+              textAlign="center"
+              alignSelf="stretch"
+              key={`gantt-cell-project-${role.id}-${index}`}
+              backgroundColor={
+                index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+              }
+              flex="1"
+            >
+              <Flex marginTop="14px" flexDirection="column">
+                <GanttCell
+                  roleAssignments={[role]}
+                  timeline={timeline}
+                  index={index}
+                  skill={skill}
+                />
               </Flex>
+            </Box>
           );
         })}
+        
+        {/* {isEndInTimeLine() &&
+          newTimeline.map((item: TimelineRange, index: number) => {
+            return (
+              <Box
+                textAlign="center"
+                alignSelf="stretch"
+                key={`gantt-cell-project-${role.id}-${index}`}
+                backgroundColor={
+                  index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                }
+                flex="1"
+              >
+                <Flex marginTop="14px" flexDirection="column">
+                  <GanttCell
+                    roleAssignments={[role]}
+                    timeline={timeline}
+                    index={index}
+                    skill={skill}
+                    isEndConfidence={true}
+                  />
+                </Flex>
+              </Box>
+            );
+          })} */}
       </Flex>
-    </>
+    </Box>
   );
 };
 
 export default DataGanttLine;
+
