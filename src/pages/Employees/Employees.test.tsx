@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { clearFixtures, loadFixtures } from "../../mocks";
 import { employees } from "../../mocks/employees/fixtures";
 import { formatDateToUTC } from "../../services/helpers/utcdate";
+import { MemoryRouter } from "react-router-dom";
 
 import Employees from "./Employees";
 
@@ -30,7 +31,11 @@ describe("Pages/Employees", () => {
 
   describe("Employees list", () => {
     beforeEach(() => {
-      render(<Employees />);
+      render(
+        <MemoryRouter>
+          <Employees />
+        </MemoryRouter>,
+      );
     });
 
     it("renders data in list", async () => {
@@ -66,14 +71,22 @@ describe("Pages/Employees", () => {
   });
 
   it("Displays loading state skeleton", () => {
-    render(<Employees />);
+    render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
     expect(
       document.body.getElementsByClassName("chakra-skeleton"),
     ).toBeDefined();
   });
 
   it("renders breadcrumbs", () => {
-    const { queryByTestId } = render(<Employees />);
+    const { queryByTestId } = render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
 
     const homeBreadcrumb = queryByTestId("homeBreadcrumb");
     const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
@@ -83,7 +96,11 @@ describe("Pages/Employees", () => {
   });
 
   it("renders home breadcrumb with the correct link", () => {
-    const { queryByTestId } = render(<Employees />);
+    const { queryByTestId } = render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
 
     const homeBreadcrumb = queryByTestId("homeBreadcrumb");
 
@@ -91,7 +108,11 @@ describe("Pages/Employees", () => {
   });
 
   it("renders team member breadcrumb as span", () => {
-    const { queryByTestId } = render(<Employees />);
+    const { queryByTestId } = render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
 
     const employeesBreadcrumb = queryByTestId("employeesBreadcrumb");
 
@@ -99,7 +120,11 @@ describe("Pages/Employees", () => {
   });
 
   it("Renders h1 tag for page title", () => {
-    render(<Employees />);
+    render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
 
     const pageTitle = screen.getByTestId("employeesTitle");
 
@@ -109,7 +134,11 @@ describe("Pages/Employees", () => {
   });
 
   it.skip("Creates employee", async () => {
-    render(<Employees />);
+    render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
 
     const addButton = screen.getByText(/add team member/i);
 
@@ -157,7 +186,11 @@ describe("Pages/Employees", () => {
   });
 
   it("resets modal form fields when closed", async () => {
-    render(<Employees />);
+    render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
 
     const addButton = screen.getByText(/add team member/i);
 
@@ -181,7 +214,11 @@ describe("Pages/Employees", () => {
   });
 
   it("Edits employee", async () => {
-    render(<Employees />);
+    render(
+      <MemoryRouter>
+        <Employees />
+      </MemoryRouter>,
+    );
 
     const memberRows = await screen.findAllByRole("row");
     const editMember = await within(memberRows[1]).findByLabelText(
@@ -224,7 +261,9 @@ describe("Pages/Employees", () => {
   it("Deletes employee", async () => {
     render(
       <SWRConfig value={{ provider: () => new Map() }}>
-        <Employees />
+        <MemoryRouter>
+          <Employees />
+        </MemoryRouter>
       </SWRConfig>,
     );
     await screen.findAllByRole(
