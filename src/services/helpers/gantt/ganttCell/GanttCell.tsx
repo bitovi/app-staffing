@@ -9,10 +9,45 @@ import { AssignmentHoverInfo } from "../../../../pages/Projects/AssignmentHover/
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
-  index: number; // number in the timeline 
+  index: number; // number in the timeline
   skill: Skill;
   isEndConfidence?: boolean;
 }
+
+const SplitGantt = ({
+  width,
+  startColor,
+  endConfidence,
+}: {
+  width: number;
+  startColor: string;
+  endConfidence: number;
+}) => {
+  return (
+    <>
+      <Box
+        minHeight="18px"
+        margin="auto"
+        marginLeft={0}
+        marginRight={"auto"}
+        borderRadius={`0px 8px 8px 0px`}
+        width={`${width}%`}
+        opacity={0.7}
+        backgroundColor={startColor}
+      />
+      <Box
+        minHeight="18px"
+        margin="auto"
+        marginLeft={"auto"}
+        marginRight={0}
+        borderRadius={`8px 0px 0px 8px`}
+        width={`${100 - width}%`}
+        opacity={0.7}
+        backgroundColor={getConfidenceColor(endConfidence, "endConfidence")}
+      />
+    </>
+  );
+};
 
 export function GanttCell({
   roleAssignments,
@@ -21,7 +56,8 @@ export function GanttCell({
   skill,
   isEndConfidence = false,
 }: GantCellProps): JSX.Element {
-  console.log("heres the role from gantt cell", roleAssignments);
+  // console.log("heres the role from gantt cell", roleAssignments);
+  let split = false;
   let color = "transparent";
   let borderRadius = ["0", "0", "0", "0"];
   let width = 100;
@@ -63,7 +99,7 @@ export function GanttCell({
             false,
           );
         } else if (index === timeline.length - 1) {
-          //if we're at the end of the timeline, fill cell 
+          //if we're at the end of the timeline, fill cell
 
           rightAlign = false; //farthest to the right
           width = calculateGanttCellWidth(
@@ -82,10 +118,10 @@ export function GanttCell({
         }
       }
       if (index < timeline.length - 1) {
-        // if we're not at the end yet, check if the NEXT cell would be blank. If so, round the RIGHT edge of this. 
-        // but we need more here to deal with end confidence. may need to just rewrite this whole logic lmao fml 
+        // if we're not at the end yet, check if the NEXT cell would be blank. If so, round the RIGHT edge of this.
         if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)) {
           // then last cell shown in timeline (farthest to the right)
+          console.log('this one at index', index,' should be the split')
           borderRadius[1] = "8px";
           borderRadius[2] = "8px";
           rightAlign = false;
@@ -95,6 +131,12 @@ export function GanttCell({
             index,
             true,
           );
+          if (
+            "endConfidence" in roleAssignment &&
+            (roleAssignment.endConfidence as number) < 1
+          ) {
+            split = true;
+          }
         }
       }
       if ("startConfidence" in roleAssignment) {
@@ -110,16 +152,24 @@ export function GanttCell({
             }
             aria-label="project start and end tooltip"
           >
-            <Box
-              minHeight="18px"
-              margin="auto"
-              marginLeft={rightAlign ? "auto" : 0}
-              marginRight={rightAlign ? 0 : "auto"}
-              borderRadius={`${borderRadius[0]} ${borderRadius[1]} ${borderRadius[2]} ${borderRadius[3]}`}
-              width={`${width}%`}
-              opacity={0.7}
-              backgroundColor={color}
-            />
+            {split ? (
+              <SplitGantt
+                width={width}
+                startColor={color}
+                endConfidence={roleAssignment?.endConfidence || 0}
+              />
+            ) : (
+              <Box
+                minHeight="18px"
+                margin="auto"
+                marginLeft={rightAlign ? "auto" : 0}
+                marginRight={rightAlign ? 0 : "auto"}
+                borderRadius={`${borderRadius[0]} ${borderRadius[1]} ${borderRadius[2]} ${borderRadius[3]}`}
+                width={`${width}%`}
+                opacity={0.7}
+                backgroundColor={color}
+              />
+            )}
           </Tooltip>,
         );
       } else {
@@ -224,7 +274,7 @@ function isRoleAssignmentInTimeline(
         return false;
       }
     } else {
-      return true;
+      return true; 
     }
   }
   return false;
@@ -237,10 +287,12 @@ function showInTimeline(
     return false;
   }
 
-  let shouldEnd = false
+  let shouldEnd = false;
 
   if ("endConfidence" in roleAssignment) {
-    roleAssignment.endConfidence  === 1 ? shouldEnd = true : shouldEnd = false
+    roleAssignment.endConfidence === 1
+      ? (shouldEnd = true)
+      : (shouldEnd = false);
   }
 
   const roleStart = new Date(roleAssignment.startDate).getTime();
@@ -248,14 +300,12 @@ function showInTimeline(
   const tlStart = new Date(timeline[0].startDate).getTime();
   const tlEnd = new Date(timeline[timeline.length - 1].endDate).getTime();
 
-  if (roleEnd < tlStart && shouldEnd){
-    return false 
-  }
-  else if (tlEnd < roleStart){
-    return false
-  }
-  else{ 
-    return true
+  if (roleEnd < tlStart && shouldEnd) {
+    return false;
+  } else if (tlEnd < roleStart) {
+    return false;
+  } else {
+    return true;
   }
 }
 

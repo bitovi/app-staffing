@@ -90,7 +90,7 @@ const DataTableBody = ({
                     >
                       <Flex marginTop="14px" flexDirection="column">
                         <GanttCell
-                          roleAssignments={getRolesAsRow(role)}
+                          roleAssignments={[role]}
                           timeline={timeline}
                           index={index}
                           skill={skill}
