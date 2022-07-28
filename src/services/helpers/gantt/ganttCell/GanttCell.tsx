@@ -6,6 +6,7 @@ import { getConfidenceColor } from "../color";
 import { v4 as uuidv4 } from "uuid";
 import { ProjectHoverInfo } from "../../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
 import { AssignmentHoverInfo } from "../../../../pages/Projects/AssignmentHover/AssignmentHoverInfo";
+import { time } from "console";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
@@ -16,13 +17,14 @@ interface GantCellProps {
 
 const SplitGantt = ({
   width,
-  startColor,
+  startConfidence,
   endConfidence,
 }: {
   width: number;
-  startColor: string;
+  startConfidence: number;
   endConfidence: number;
 }) => {
+  console.log("A SPLIT");
   return (
     <>
       <Box
@@ -33,7 +35,7 @@ const SplitGantt = ({
         borderRadius={`0px 8px 8px 0px`}
         width={`${width}%`}
         opacity={0.7}
-        backgroundColor={startColor}
+        backgroundColor={getConfidenceColor(startConfidence)}
       />
       <Box
         minHeight="18px"
@@ -65,6 +67,17 @@ export function GanttCell({
   let skipRow = false;
   const boxes: JSX.Element[] = [];
 
+  const shouldBeEndConfBar = (roleAssignment: any, tl: any, index: number) => {
+    const roleEnd = formatDateToUTC(roleAssignment.endDate);
+    const tlEnd = formatDateToUTC(tl[index].endDate);
+    const confidence = roleAssignment.endConfidence;
+    if (roleEnd < tlEnd && confidence < 1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   // for every role/assignment in the roleAssignments Array:
   for (let i = 0; i < roleAssignments.length; i++) {
     // grab the current one
@@ -79,17 +92,27 @@ export function GanttCell({
     borderRadius = ["0", "0", "0", "0"];
     width = 100;
     rightAlign = true; // if true then align the cell right (the starting gantt cell in this case)
-    if (isRoleAssignmentInTimeline(roleAssignment, timeline, index)) {
-      if ("startConfidence" in roleAssignment) {
+    const endBar = shouldBeEndConfBar(roleAssignment, timeline, index);
+    if (isRoleAssignmentInTimeline(roleAssignment, timeline, index) || endBar) {
+      if ("startConfidence" in roleAssignment && !endBar) {
         roleAssignment = roleAssignment as Role;
         color = getConfidenceColor(roleAssignment.startConfidence);
+      } else if (endBar) {
+        roleAssignment = roleAssignment as Role;
+        color = getConfidenceColor(
+          roleAssignment.endConfidence || 0,
+          "endConfidence",
+        );
       } else {
         color = "grey";
       }
 
       if (index > 0) {
         //check if previous box was empty, if so, round the left corner
-        if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index - 1)) {
+        if (
+          !isRoleAssignmentInTimeline(roleAssignment, timeline, index - 1) &&
+          !shouldBeEndConfBar(roleAssignment, timeline, index - 1)
+        ) {
           borderRadius[0] = "8px";
           borderRadius[3] = "8px"; //farthest to the left
           width = calculateGanttCellWidth(
@@ -119,9 +142,15 @@ export function GanttCell({
       }
       if (index < timeline.length - 1) {
         // if we're not at the end yet, check if the NEXT cell would be blank. If so, round the RIGHT edge of this.
-        if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)) {
+        if (
+          !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1) &&
+          !shouldBeEndConfBar(roleAssignment, timeline, index + 1)
+
+          // THE ISSUE IS SOMETHING WITH THIS LINE ABOVE. without it, lines arent continuous. with it, we don;t get the proper split
+          // probably need to do some more precise conditional work
+          // holy hell refactoring this mess is going to fucking suck so much
+        ) {
           // then last cell shown in timeline (farthest to the right)
-          console.log('this one at index', index,' should be the split')
           borderRadius[1] = "8px";
           borderRadius[2] = "8px";
           rightAlign = false;
@@ -131,12 +160,20 @@ export function GanttCell({
             index,
             true,
           );
-          if (
-            "endConfidence" in roleAssignment &&
-            (roleAssignment.endConfidence as number) < 1
-          ) {
-            split = true;
-          }
+        }
+        if (
+          "endConfidence" in roleAssignment &&
+          (roleAssignment.endConfidence as number) < 1 &&
+          !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)
+          && isRoleAssignmentInTimeline(roleAssignment, timeline, index)
+        ) {
+          width = calculateGanttCellWidth(
+            roleAssignment,
+            timeline,
+            index,
+            true,
+          );
+          split = true;
         }
       }
       if ("startConfidence" in roleAssignment) {
@@ -155,7 +192,7 @@ export function GanttCell({
             {split ? (
               <SplitGantt
                 width={width}
-                startColor={color}
+                startConfidence={roleAssignment.startConfidence}
                 endConfidence={roleAssignment?.endConfidence || 0}
               />
             ) : (
@@ -265,16 +302,13 @@ function isRoleAssignmentInTimeline(
   timeline[index].endDate = formatDateToUTC(timeline[index].endDate);
   if (role.startDate < timeline[index].endDate) {
     if (role.endDate) {
-      if (
-        role.endDate > timeline[index].startDate ||
-        ("endConfidence" in role && (role.endConfidence ?? 0) < 1)
-      ) {
+      if (role.endDate > timeline[index].startDate) {
         return true;
       } else {
         return false;
       }
     } else {
-      return true; 
+      return true;
     }
   }
   return false;
