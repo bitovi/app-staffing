@@ -10,7 +10,7 @@ import SplitGantt from "./components/SplitGantt";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
-  index: number; // number in the timeline
+  index: number; 
   skill: Skill;
 }
 
@@ -27,8 +27,6 @@ export function GanttCell({
   let rightAlign = true; // if true then align the cell right (the starting gantt cell in this case)
   let skipRow = false;
   const boxes: JSX.Element[] = [];
-
- 
 
   // for every role/assignment in the roleAssignments Array:
   for (let i = 0; i < roleAssignments.length; i++) {
