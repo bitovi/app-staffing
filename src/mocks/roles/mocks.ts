@@ -1,6 +1,7 @@
 import type { JSONRole } from "./fixtures";
 
 import QueryLogic from "can-query-logic";
+
 import { createStoreManager, requestCreator, DateString } from "../baseMocks";
 
 import { roles } from "./fixtures";
