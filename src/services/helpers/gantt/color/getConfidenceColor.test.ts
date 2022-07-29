@@ -12,7 +12,11 @@ describe("start confidence color calculation", () => {
     expect(getConfidenceColor(0)).toEqual(colors.start_confidence["0"]);
     expect(getConfidenceColor(0.1)).toEqual(colors.start_confidence["10"]);
   });
-  // should add end confidence tests
+  it("should get a valid end confidence color", () =>{
+    expect(getConfidenceColor(.15, "endConfidence")).toEqual(colors.end_confidence["30"]);
+    expect(getConfidenceColor(45, "endConfidence")).toEqual(colors.end_confidence["50"]);
+    expect(getConfidenceColor(90, "endConfidence")).toEqual(colors.end_confidence["70"])
+  })
 });
 
 export {};
