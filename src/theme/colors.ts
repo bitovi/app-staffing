@@ -31,8 +31,8 @@ export const colors = {
     "100": "#065666",
   },
   end_confidence: {
-    "70": "#D3EBF9",
+    "30": "#85B7EA",
     "50": "##B6DCF6",
-    "30": "#85B7EA"
+    "70": "#D3EBF9",
   },
 };

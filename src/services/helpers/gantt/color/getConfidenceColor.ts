@@ -1,4 +1,3 @@
-import { Console } from "console";
 import { colors } from "../../../../theme/colors";
 
 // typescript enforces that the key has to match exactly whats in the dictionary.
@@ -6,12 +5,9 @@ export function getConfidenceColor(
   confidence: number,
   confidenceType = "startConfidence",
 ): string {
-  console.log({ confidenceType });
   confidence = Math.max(0, Math.min(confidence, 1));
   confidence = Math.round(confidence * 10) * 10;
-  if ((confidenceType == "startConfidence")) {
-    console.log('were in start confidence colors');
-    
+  if ((confidenceType == "startConfidence")) {    
     switch (confidence) {
       case 0:
         return colors.start_confidence[0];
@@ -39,18 +35,13 @@ export function getConfidenceColor(
     //     return colors.start_confidence[0];
     }
   } else {
-    console.log('got to end confidenc colors');
-    
     if (confidence < 31) {
-      
       return colors.end_confidence[30];
     }
     if (confidence < 51) {
       return colors.end_confidence[50];
     }
     if (confidence < 100) {
-      console.log('color should be', colors.end_confidence[70]);
-      
       return colors.end_confidence[70];
     } else {
       return colors.end_confidence[30];

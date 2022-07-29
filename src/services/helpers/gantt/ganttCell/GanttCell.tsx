@@ -6,7 +6,7 @@ import { getConfidenceColor } from "../color";
 import { v4 as uuidv4 } from "uuid";
 import { ProjectHoverInfo } from "../../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
 import { AssignmentHoverInfo } from "../../../../pages/Projects/AssignmentHover/AssignmentHoverInfo";
-import { time } from "console";
+import SplitGantt from "./components/SplitGantt";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
@@ -14,42 +14,6 @@ interface GantCellProps {
   skill: Skill;
   isEndConfidence?: boolean;
 }
-
-const SplitGantt = ({
-  width,
-  startConfidence,
-  endConfidence,
-}: {
-  width: number;
-  startConfidence: number;
-  endConfidence: number;
-}) => {
-  console.log("A SPLIT");
-  return (
-    <>
-      <Box
-        minHeight="18px"
-        margin="auto"
-        marginLeft={0}
-        marginRight={"auto"}
-        borderRadius={`0px 8px 8px 0px`}
-        width={`${width}%`}
-        opacity={0.7}
-        backgroundColor={getConfidenceColor(startConfidence)}
-      />
-      <Box
-        minHeight="18px"
-        margin="auto"
-        marginLeft={"auto"}
-        marginRight={0}
-        borderRadius={`8px 0px 0px 8px`}
-        width={`${100 - width}%`}
-        opacity={0.7}
-        backgroundColor={getConfidenceColor(endConfidence, "endConfidence")}
-      />
-    </>
-  );
-};
 
 export function GanttCell({
   roleAssignments,
@@ -164,8 +128,8 @@ export function GanttCell({
         if (
           "endConfidence" in roleAssignment &&
           (roleAssignment.endConfidence as number) < 1 &&
-          !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)
-          && isRoleAssignmentInTimeline(roleAssignment, timeline, index)
+          !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1) &&
+          isRoleAssignmentInTimeline(roleAssignment, timeline, index)
         ) {
           width = calculateGanttCellWidth(
             roleAssignment,

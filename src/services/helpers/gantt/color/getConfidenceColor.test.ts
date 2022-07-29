@@ -1,5 +1,5 @@
 import { colors } from "../../../../theme/colors";
-import getConfidenceColor from "./startConfidenceColor";
+import getConfidenceColor from "./getConfidenceColor";
 
 describe("start confidence color calculation", () => {
   it("should get a valid start confidence color", () => {
@@ -12,6 +12,7 @@ describe("start confidence color calculation", () => {
     expect(getConfidenceColor(0)).toEqual(colors.start_confidence["0"]);
     expect(getConfidenceColor(0.1)).toEqual(colors.start_confidence["10"]);
   });
+  // should add end confidence tests
 });
 
 export {};

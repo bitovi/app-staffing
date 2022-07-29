@@ -7,7 +7,6 @@ import { Assignment, Project } from "../../../services/api";
 import { TimelineRange } from "../../../services/projection";
 import {
   GanttCell,
-  getRolesAsRow,
   groupAssignments,
 } from "../../../services/helpers/gantt/ganttCell/GanttCell";
 
