@@ -12,7 +12,6 @@ interface GantCellProps {
   timeline: TimelineRange[];
   index: number; // number in the timeline
   skill: Skill;
-  isEndConfidence?: boolean;
 }
 
 export function GanttCell({
@@ -20,9 +19,7 @@ export function GanttCell({
   timeline,
   index,
   skill,
-  isEndConfidence = false,
 }: GantCellProps): JSX.Element {
-  // console.log("heres the role from gantt cell", roleAssignments);
   let split = false;
   let color = "transparent";
   let borderRadius = ["0", "0", "0", "0"];
@@ -31,10 +28,16 @@ export function GanttCell({
   let skipRow = false;
   const boxes: JSX.Element[] = [];
 
-  const shouldBeEndConfBar = (roleAssignment: any, tl: any, index: number) => {
-    const roleEnd = formatDateToUTC(roleAssignment.endDate);
-    const tlEnd = formatDateToUTC(tl[index].endDate);
-    const confidence = roleAssignment.endConfidence;
+  const shouldBeEndConfBar = (
+    roleAssignment: Role | Assignment,
+    timeline: TimelineRange[],
+    index: number,
+  ) => {
+    const roleEnd =
+      (roleAssignment.endDate && formatDateToUTC(roleAssignment.endDate)) || 0;
+    const tlEnd = formatDateToUTC(timeline[index].endDate);
+    const confidence =
+      ("endConfidence" in roleAssignment && roleAssignment.endConfidence) || 0;
     if (roleEnd < tlEnd && confidence < 1) {
       return true;
     } else {
@@ -109,10 +112,6 @@ export function GanttCell({
         if (
           !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1) &&
           !shouldBeEndConfBar(roleAssignment, timeline, index + 1)
-
-          // THE ISSUE IS SOMETHING WITH THIS LINE ABOVE. without it, lines arent continuous. with it, we don;t get the proper split
-          // probably need to do some more precise conditional work
-          // holy hell refactoring this mess is going to fucking suck so much
         ) {
           // then last cell shown in timeline (farthest to the right)
           borderRadius[1] = "8px";
@@ -347,24 +346,6 @@ export function groupAssignments(
     groupedAssignments.push([assignment]);
   }
   return groupedAssignments;
-}
-
-// this is to display the end confidence as a gantt cell next to the project start gantt cell
-export function getRolesAsRow(role: Role): Role[] {
-  const clonedRole = { ...role };
-  const result = [role];
-  if (
-    clonedRole.endDate &&
-    clonedRole.endConfidence &&
-    clonedRole.endConfidence < 1
-  ) {
-    clonedRole.startDate = clonedRole.endDate;
-    clonedRole.endDate = null;
-    clonedRole.startConfidence = clonedRole.endConfidence;
-    clonedRole.endConfidence = 0;
-    result.push(clonedRole);
-  }
-  return result;
 }
 
 export default GanttCell;
