@@ -10,7 +10,7 @@ import SplitGantt from "./components/SplitGantt";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
-  index: number; 
+  index: number;
   skill: Skill;
 }
 
@@ -109,7 +109,7 @@ export function GanttCell({
         }
         // if we're at the end of the START confidence, but end confidence < 1, create split Gantt cell
         if (
-          getConfidenceLevel("end", roleAssignment) < 1 && 
+          getConfidenceLevel("end", roleAssignment) < 1 &&
           !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1) &&
           isRoleAssignmentInTimeline(roleAssignment, timeline, index)
         ) {

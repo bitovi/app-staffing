@@ -7,7 +7,7 @@ export function getConfidenceColor(
 ): string {
   confidence = Math.max(0, Math.min(confidence, 1));
   confidence = Math.round(confidence * 10) * 10;
-  if ((confidenceType == "startConfidence")) {    
+  if (confidenceType == "startConfidence") {
     switch (confidence) {
       case 0:
         return colors.start_confidence[0];
@@ -31,8 +31,8 @@ export function getConfidenceColor(
         return colors.start_confidence[90];
       case 100:
         return colors.start_confidence[100];
-    //   default:
-    //     return colors.start_confidence[0];
+      //   default:
+      //     return colors.start_confidence[0];
     }
   } else {
     if (confidence < 31) {

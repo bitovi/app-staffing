@@ -36,4 +36,4 @@ const SplitGantt = ({
   );
 };
 
-export default SplitGantt
+export default SplitGantt;
