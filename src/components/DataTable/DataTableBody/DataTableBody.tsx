@@ -7,7 +7,6 @@ import { Assignment, Project } from "../../../services/api";
 import { TimelineRange } from "../../../services/projection";
 import {
   GanttCell,
-  getRolesAsRow,
   groupAssignments,
 } from "../../../services/helpers/gantt/ganttCell/GanttCell";
 
@@ -90,7 +89,7 @@ const DataTableBody = ({
                     >
                       <Flex marginTop="14px" flexDirection="column">
                         <GanttCell
-                          roleAssignments={getRolesAsRow(role)}
+                          roleAssignments={[role]}
                           timeline={timeline}
                           index={index}
                           skill={skill}

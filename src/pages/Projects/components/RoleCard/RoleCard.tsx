@@ -8,6 +8,7 @@ import { TrashIcon, EditIcon } from "../../../assets";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import DataTimelineHeader from "../../../../components/DataTable/DataTimelineHeader";
 import { useTimeline } from "../../../../services/projection";
+import DataGanttLine from "../../../../components/DataTable/DataGanttLine";
 
 interface RoleCardProps {
   role: Role;
@@ -37,7 +38,6 @@ export default function RoleCard({
   };
 
   const { timeline } = useTimeline(new Date());
-
   return (
     <>
       <Tr
@@ -180,6 +180,9 @@ export default function RoleCard({
               >
                 Timeline
               </Text>
+            </Td>
+            <Td colSpan={6}>
+              <DataGanttLine timeline={timeline} role={role} />
             </Td>
           </Tr>
           <Tr>
