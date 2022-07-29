@@ -28,22 +28,7 @@ export function GanttCell({
   let skipRow = false;
   const boxes: JSX.Element[] = [];
 
-  const shouldBeEndConfBar = (
-    roleAssignment: Role | Assignment,
-    timeline: TimelineRange[],
-    index: number,
-  ) => {
-    const roleEnd =
-      (roleAssignment.endDate && formatDateToUTC(roleAssignment.endDate)) || 0;
-    const tlEnd = formatDateToUTC(timeline[index].endDate);
-    const confidence =
-      ("endConfidence" in roleAssignment && roleAssignment.endConfidence) || 0;
-    if (roleEnd < tlEnd && confidence < 1) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+ 
 
   // for every role/assignment in the roleAssignments Array:
   for (let i = 0; i < roleAssignments.length; i++) {
@@ -125,8 +110,7 @@ export function GanttCell({
           );
         }
         if (
-          "endConfidence" in roleAssignment &&
-          (roleAssignment.endConfidence as number) < 1 &&
+          getConfidenceLevel("end", roleAssignment) < 1 && 
           !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1) &&
           isRoleAssignmentInTimeline(roleAssignment, timeline, index)
         ) {
@@ -251,7 +235,6 @@ function calculateGanttCellWidth(
   }
   return width;
 }
-
 function isRoleAssignmentInTimeline(
   role: Role | Assignment,
   timeline: TimelineRange[],
@@ -305,6 +288,39 @@ function showInTimeline(
     return true;
   }
 }
+const getConfidenceLevel = (
+  confidenceType: string,
+  roleAssignment: Role | Assignment,
+): number => {
+  if (confidenceType === "start") {
+    if ("startConfidence" in roleAssignment) {
+      return roleAssignment.startConfidence;
+    } else {
+      return 0;
+    }
+  } else if (confidenceType === "end") {
+    if ("endConfidence" in roleAssignment) {
+      return roleAssignment.endConfidence ? roleAssignment.endConfidence : 0;
+    } else return 0;
+  } else {
+    return 0;
+  }
+};
+const shouldBeEndConfBar = (
+  roleAssignment: Role | Assignment,
+  timeline: TimelineRange[],
+  index: number,
+) => {
+  const roleEnd =
+    (roleAssignment.endDate && formatDateToUTC(roleAssignment.endDate)) || 0;
+  const tlEnd = formatDateToUTC(timeline[index].endDate);
+  const confidence = getConfidenceLevel("end", roleAssignment);
+  if (roleEnd < tlEnd && confidence < 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 export function groupAssignments(
   assignments: Assignment[],
