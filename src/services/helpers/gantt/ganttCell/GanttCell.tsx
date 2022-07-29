@@ -93,7 +93,7 @@ export function GanttCell({
         }
       }
       if (index < timeline.length - 1) {
-        // if we're not at the end yet, check if the NEXT cell would be blank. If so, round the RIGHT edge of this.
+        // if we're not at the end yet, check if the NEXT cell would be totally blank. If so, round the RIGHT edge of this.
         if (
           !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1) &&
           !shouldBeEndConfBar(roleAssignment, timeline, index + 1)
@@ -109,6 +109,7 @@ export function GanttCell({
             true,
           );
         }
+        // if we're at the end of the START confidence, but end confidence < 1, create split Gantt cell
         if (
           getConfidenceLevel("end", roleAssignment) < 1 && 
           !isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1) &&
