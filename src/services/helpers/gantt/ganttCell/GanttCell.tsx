@@ -2,10 +2,11 @@ import { Box, Flex, Tooltip } from "@chakra-ui/react";
 import { Assignment, Role, Skill } from "../../../api";
 import { TimelineRange } from "../../../projection";
 import { formatDateToUTC } from "../../utcdate";
-import { getConfidenceColor } from "../color";
+import { getConfidenceColor, getRandomSkillColor } from "../color";
 import { v4 as uuidv4 } from "uuid";
 import { ProjectHoverInfo } from "../../../../pages/Projects/Projects/components/ProjectHoverInfo/ProjectHoverInfo";
 import { AssignmentHoverInfo } from "../../../../pages/Projects/AssignmentHover/AssignmentHoverInfo";
+import { colors } from "../../../../theme/colors";
 interface GantCellProps {
   roleAssignments: Role[] | Assignment[];
   timeline: TimelineRange[];
@@ -22,6 +23,8 @@ export function GanttCell({
   let color = "transparent";
   let borderRadius = ["0", "0", "0", "0"];
   let width = 100;
+  let showAssnDot = false;
+  let height = "18px";
   let rightAlign = true; // if true then align the cell right (the starting gantt cell in this case)
   let skipRow = false;
   const boxes: JSX.Element[] = [];
@@ -35,13 +38,23 @@ export function GanttCell({
     color = "transparent";
     borderRadius = ["0", "0", "0", "0"];
     width = 100;
+
     rightAlign = true; // if true then align the cell right (the starting gantt cell in this case)
     if (isRoleAssignmentInTimeline(roleAssignment, timeline, index)) {
       if ("startConfidence" in roleAssignment) {
         roleAssignment = roleAssignment as Role;
-        color = getConfidenceColor(roleAssignment.startConfidence);
+        let confidenceType = "startConfidence";
+        if (i === 1) {
+          confidenceType = "endConfidence";
+        }
+        color = getConfidenceColor(
+          roleAssignment.startConfidence,
+          confidenceType,
+        );
       } else {
-        color = "grey";
+        height = "14px";
+        color = colors.gray[300];
+        showAssnDot = false;
       }
 
       if (index > 0) {
@@ -54,6 +67,9 @@ export function GanttCell({
             index,
             false,
           );
+          if(!("startConfidence" in roleAssignment)){
+            showAssnDot=true
+          }
         } else if (index === timeline.length - 1) {
           rightAlign = false; //farthest to the right
           width = calculateGanttCellWidth(
@@ -62,10 +78,12 @@ export function GanttCell({
             index,
             true,
           );
+         
         }
       } else {
         // first item in timeline (farthest to the left)
         width = calculateGanttCellWidth(roleAssignment, timeline, index, false);
+        showAssnDot = true;
         if (width < 100) {
           borderRadius[0] = "8px";
           borderRadius[3] = "8px";
@@ -74,6 +92,9 @@ export function GanttCell({
       if (index < timeline.length - 1) {
         if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)) {
           // then last cell shown in timeline (farthest to the right)
+          showAssnDot=false
+
+          showAssnDot = false;
           borderRadius[1] = "8px";
           borderRadius[2] = "8px";
           rightAlign = false;
@@ -99,7 +120,7 @@ export function GanttCell({
             aria-label="project start and end tooltip"
           >
             <Box
-              minHeight="18px"
+              minHeight={height}
               margin="auto"
               marginLeft={rightAlign ? "auto" : 0}
               marginRight={rightAlign ? 0 : "auto"}
@@ -126,7 +147,7 @@ export function GanttCell({
             aria-label="assignment start and end tooltip"
           >
             <Box
-              minHeight="18px"
+              minHeight={height}
               margin="auto"
               marginLeft={rightAlign ? "auto" : 0}
               marginRight={rightAlign ? 0 : "auto"}
@@ -134,7 +155,18 @@ export function GanttCell({
               width={`${width}%`}
               opacity={0.7}
               backgroundColor={color}
-            />
+            >
+              {showAssnDot ? (
+                <Box
+                  minHeight="12px"
+                  borderRadius="50%"
+                  width="12px"
+                  backgroundColor={getRandomSkillColor()}
+                />
+              ) : (
+                ""
+              )}
+            </Box>
           </Tooltip>,
         );
       }
@@ -145,7 +177,7 @@ export function GanttCell({
     boxes.push(
       <Box
         key={`${id}-${boxes.length}`}
-        minHeight="18px"
+        minHeight={height}
         margin="auto"
         marginLeft={rightAlign ? "auto" : 0}
         marginRight={rightAlign ? 0 : "auto"}

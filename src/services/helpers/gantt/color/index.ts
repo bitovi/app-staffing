@@ -1,2 +1,2 @@
-export { default } from "./startConfidenceColor";
-export * from "./startConfidenceColor";
+export { default } from "./confidenceColor";
+export * from "./confidenceColor";

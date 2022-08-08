@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { Assignment, Role } from "../../../../services/api";
-import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
+import { Flex, IconButton, Wrap, Td, Tr, Text, Box } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import DataTimelineHeader from "../../../../components/DataTable/DataTimelineHeader";
-import { useTimeline } from "../../../../services/projection";
+import { TimelineRange, useTimeline } from "../../../../services/projection";
+import GanttCell, { getRolesAsRow } from "../../../../services/helpers/gantt/ganttCell";
 
 interface RoleCardProps {
   role: Role;
