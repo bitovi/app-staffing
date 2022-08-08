@@ -185,9 +185,8 @@ export default function RoleCard({
               </Text>
             </Td>
             <Td colSpan={6}>
-              <Box key={role.id}>
+              <Box>
                 <Flex
-                  key={role.skills[0].id}
                   alignItems="center"
                   borderBottom="1px solid rgba(0,0,0,0,04)"
                   minHeight="50px"
@@ -208,6 +207,7 @@ export default function RoleCard({
                             roleAssignments={getRolesAsRow(role)}
                             timeline={timeline}
                             index={index}
+                            // role should only ever have one skill
                             skill={role.skills[0]}
                           />
                         </Flex>

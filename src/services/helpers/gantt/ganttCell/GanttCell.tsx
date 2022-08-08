@@ -44,6 +44,7 @@ export function GanttCell({
       if ("startConfidence" in roleAssignment) {
         roleAssignment = roleAssignment as Role;
         let confidenceType = "startConfidence";
+        // current implementation of duiplicating role to display both confidences necessitates this index check. should refactor in next round of work
         if (i === 1) {
           confidenceType = "endConfidence";
         }
@@ -91,8 +92,6 @@ export function GanttCell({
       if (index < timeline.length - 1) {
         if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)) {
           // then last cell shown in timeline (farthest to the right)
-          showAssnDot = false;
-
           showAssnDot = false;
           borderRadius[1] = "8px";
           borderRadius[2] = "8px";
@@ -155,15 +154,13 @@ export function GanttCell({
               opacity={0.7}
               backgroundColor={color}
             >
-              {showAssnDot ? (
+              {showAssnDot && (
                 <Box
                   minHeight="12px"
                   borderRadius="50%"
                   width="12px"
                   backgroundColor={getRandomSkillColor()}
                 />
-              ) : (
-                ""
               )}
             </Box>
           </Tooltip>,

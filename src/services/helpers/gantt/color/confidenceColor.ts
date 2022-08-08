@@ -31,8 +31,6 @@ export function getConfidenceColor(
         return colors.start_confidence[90];
       case 100:
         return colors.start_confidence[100];
-      //   default:
-      //     return colors.start_confidence[0];
     }
   } else {
     if (confidence < 31) {
@@ -50,6 +48,7 @@ export function getConfidenceColor(
   return colors.start_confidence[0];
 }
 
+// this is temporary to show colored dots on Assignment gantts. When employees get assigned colors, this can be deleted
 export const getRandomSkillColor = (): string => {
   const options = Object.values(colors.skills);
   const random = options[Math.floor(Math.random() * options.length)];
