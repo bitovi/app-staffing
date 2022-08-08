@@ -67,8 +67,8 @@ export function GanttCell({
             index,
             false,
           );
-          if(!("startConfidence" in roleAssignment)){
-            showAssnDot=true
+          if (!("startConfidence" in roleAssignment)) {
+            showAssnDot = true;
           }
         } else if (index === timeline.length - 1) {
           rightAlign = false; //farthest to the right
@@ -78,7 +78,6 @@ export function GanttCell({
             index,
             true,
           );
-         
         }
       } else {
         // first item in timeline (farthest to the left)
@@ -92,7 +91,7 @@ export function GanttCell({
       if (index < timeline.length - 1) {
         if (!isRoleAssignmentInTimeline(roleAssignment, timeline, index + 1)) {
           // then last cell shown in timeline (farthest to the right)
-          showAssnDot=false
+          showAssnDot = false;
 
           showAssnDot = false;
           borderRadius[1] = "8px";
