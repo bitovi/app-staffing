@@ -8,7 +8,9 @@ import { TrashIcon, EditIcon } from "../../../assets";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import DataTimelineHeader from "../../../../components/DataTable/DataTimelineHeader";
 import { TimelineRange, useTimeline } from "../../../../services/projection";
-import GanttCell, { getRolesAsRow } from "../../../../services/helpers/gantt/ganttCell";
+import GanttCell, {
+  getRolesAsRow,
+} from "../../../../services/helpers/gantt/ganttCell";
 
 interface RoleCardProps {
   role: Role;
@@ -181,6 +183,39 @@ export default function RoleCard({
               >
                 Timeline
               </Text>
+            </Td>
+            <Td colSpan={6}>
+              <Box key={role.id}>
+                <Flex
+                  key={role.skills[0].id}
+                  alignItems="center"
+                  borderBottom="1px solid rgba(0,0,0,0,04)"
+                  minHeight="50px"
+                >
+                  {timeline.map((item: TimelineRange, index: number) => {
+                    return (
+                      <Box
+                        textAlign="center"
+                        alignSelf="stretch"
+                        key={`gantt-cell-project-${role.id}-${index}`}
+                        backgroundColor={
+                          index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                        }
+                        flex="1"
+                      >
+                        <Flex marginTop="14px" flexDirection="column">
+                          <GanttCell
+                            roleAssignments={getRolesAsRow(role)}
+                            timeline={timeline}
+                            index={index}
+                            skill={role.skills[0]}
+                          />
+                        </Flex>
+                      </Box>
+                    );
+                  })}
+                </Flex>
+              </Box>
             </Td>
           </Tr>
           <Tr>
