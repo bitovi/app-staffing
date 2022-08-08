@@ -1,5 +1,5 @@
 import { colors } from "../../../../theme/colors";
-import getConfidenceColor from "./startConfidenceColor";
+import getConfidenceColor from "./confidenceColor";
 
 describe("start confidence color calculation", () => {
   it("should get a valid start confidence color", () => {

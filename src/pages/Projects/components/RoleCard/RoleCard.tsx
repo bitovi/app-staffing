@@ -1,13 +1,16 @@
 import { useState } from "react";
 import type { Assignment, Role } from "../../../../services/api";
-import { Flex, IconButton, Wrap, Td, Tr, Text } from "@chakra-ui/react";
+import { Flex, IconButton, Wrap, Td, Tr, Text, Box } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { formatDateToUTC } from "../../../../services/helpers/utcdate";
 import Badge from "../../../../components/Badge";
 import { TrashIcon, EditIcon } from "../../../assets";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import DataTimelineHeader from "../../../../components/DataTable/DataTimelineHeader";
-import { useTimeline } from "../../../../services/projection";
+import { TimelineRange, useTimeline } from "../../../../services/projection";
+import GanttCell, {
+  getRolesAsRow,
+} from "../../../../services/helpers/gantt/ganttCell";
 
 interface RoleCardProps {
   role: Role;
@@ -180,6 +183,39 @@ export default function RoleCard({
               >
                 Timeline
               </Text>
+            </Td>
+            <Td colSpan={6}>
+              <Box>
+                <Flex
+                  alignItems="center"
+                  borderBottom="1px solid rgba(0,0,0,0,04)"
+                  minHeight="50px"
+                >
+                  {timeline.map((item: TimelineRange, index: number) => {
+                    return (
+                      <Box
+                        textAlign="center"
+                        alignSelf="stretch"
+                        key={`gantt-cell-project-${role.id}-${index}`}
+                        backgroundColor={
+                          index % 2 === 0 ? "rgba(0,0,0,.04)" : "transparent"
+                        }
+                        flex="1"
+                      >
+                        <Flex marginTop="14px" flexDirection="column">
+                          <GanttCell
+                            roleAssignments={getRolesAsRow(role)}
+                            timeline={timeline}
+                            index={index}
+                            // role should only ever have one skill
+                            skill={role.skills[0]}
+                          />
+                        </Flex>
+                      </Box>
+                    );
+                  })}
+                </Flex>
+              </Box>
             </Td>
           </Tr>
           <Tr>

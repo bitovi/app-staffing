@@ -4,6 +4,7 @@ export const colors = {
   gray: {
     10: "#F9F9F9",
     800: "#333333",
+    300: "#CBD5E0",
   },
 
   skills: {
@@ -29,5 +30,10 @@ export const colors = {
     "80": "#086F83",
     "90": "#065666",
     "100": "#065666",
+  },
+  end_confidence: {
+    "30": "#85B7EA",
+    "50": "##B6DCF6",
+    "70": "#D3EBF9",
   },
 };
