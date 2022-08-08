@@ -50,7 +50,7 @@ export function getConfidenceColor(
   return colors.start_confidence[0];
 }
 
-export const getRandomSkillColor = () => {
+export const getRandomSkillColor = (): string => {
   const options = Object.values(colors.skills);
   const random = options[Math.floor(Math.random() * options.length)];
   return random;
