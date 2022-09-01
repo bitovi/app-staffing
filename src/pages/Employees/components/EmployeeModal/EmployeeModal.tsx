@@ -164,7 +164,7 @@ export default function EmployeeModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md" variant="team_modal">
       <ModalOverlay />
-      <ModalContent mt="14vh">
+      <ModalContent margin="auto" alignSelf="center">
         <ModalHeader textStyle="modal.title" pt={6} pl={6}>
           {isNewEmployee ? "Add a New Team Member" : "Edit Team Member"}
         </ModalHeader>
