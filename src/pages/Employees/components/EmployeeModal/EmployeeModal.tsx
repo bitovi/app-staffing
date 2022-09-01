@@ -138,10 +138,10 @@ export default function EmployeeModal({
         });
         reset({ name: "", startDate: "", endDate: "" });
         onClose();
-        setStatus("idle");
       } catch (e) {
         setServerError(!serverError);
       }
+      setStatus("idle");
     }
   };
 
