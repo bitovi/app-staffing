@@ -128,8 +128,8 @@ export default function EmployeeModal({
   const submitForm = async (data: EmployeeFormData) => {
     if (canSubmitForm) {
       const employeeSkills = getSelectedSkills(data.skills, skills || []);
+      setStatus("pending");
       try {
-        setStatus("pending");
         await onSave({
           name: data.name,
           startDate: data.startDate ? data.startDate : null,
