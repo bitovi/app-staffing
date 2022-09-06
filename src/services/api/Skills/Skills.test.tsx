@@ -2,15 +2,11 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
 import { skills as skillsFixture } from "../../../mocks/skills/fixtures";
 
 import { useSkills, useSkill, useSkillMutations } from "./Skills";
 
 describe("Services/API/Skills", () => {
-  beforeEach(async () => loadFixtures());
-  afterEach(async () => clearFixtures());
-
   describe("useSkill", () => {
     it("makes the right request", async () => {
       const expected = skillsFixture[2];

@@ -1,21 +1,11 @@
-import { cleanup, render, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import SkillModal from "./SkillModal";
-import { clearFixtures, loadFixtures } from "../../../../mocks";
 import { skills } from "../../../../mocks/fixtures";
 
 describe("SkillModal", () => {
-  beforeEach(async () => {
-    await loadFixtures();
-  });
-
-  afterEach(async () => {
-    await clearFixtures();
-    cleanup();
-  });
-
   it("renders 'new skill' UI when 'skill' prop is not set", async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(
       <SkillModal

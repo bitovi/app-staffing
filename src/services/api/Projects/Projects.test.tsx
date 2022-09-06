@@ -2,15 +2,11 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
 import { projects } from "../../../mocks/fixtures";
 
 import { useProjects, useProject, useProjectMutations } from "./Projects";
 
 describe("Services/API/Projects", () => {
-  beforeEach(async () => loadFixtures());
-  afterEach(async () => clearFixtures());
-
   describe("useProject", () => {
     it("makes the right request", async () => {
       const expected = projects[2];

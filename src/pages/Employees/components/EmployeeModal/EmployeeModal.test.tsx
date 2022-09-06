@@ -1,21 +1,11 @@
-import { cleanup, render, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import EmployeeModal from "./EmployeeModal";
-import { clearFixtures, loadFixtures } from "../../../../mocks";
 import { skills, employees } from "../../../../mocks/fixtures";
 
 describe("EmployeeModal", () => {
-  beforeEach(async () => {
-    await loadFixtures();
-  });
-
-  afterEach(async () => {
-    await clearFixtures();
-    cleanup();
-  });
-
   it("renders 'new employee' UI when 'employee' prop is not set", async () => {
     const { getByText, getByRole, findAllByRole, getByPlaceholderText } =
       render(

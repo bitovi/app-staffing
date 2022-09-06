@@ -2,15 +2,11 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
 import { roles } from "../../../mocks/fixtures";
 
 import { useRoles, useRole, useRoleMutations } from "./Roles";
 
 describe("Services/API/Roles", () => {
-  beforeEach(async () => loadFixtures());
-  afterEach(async () => clearFixtures());
-
   describe("useRole", () => {
     it("makes the right request", async () => {
       const expected = roles[2];
