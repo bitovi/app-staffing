@@ -1,9 +1,8 @@
 import { Suspense } from "react";
-import { cleanup, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useForm } from "react-hook-form";
 import EmployeeModalSkillsCard from "./EmployeeModalSkillsCard";
-import { clearFixtures, loadFixtures } from "../../../../../../mocks";
 import { skills } from "../../../../../../mocks/fixtures";
 import { EmployeeFormData } from "../../EmployeeModal";
 
@@ -26,15 +25,6 @@ const EmployeeModalSkillCardMock = ({
 };
 
 describe("EmployeeModalSkillsCard loads", () => {
-  beforeEach(async () => {
-    await loadFixtures();
-  });
-
-  afterEach(async () => {
-    await clearFixtures();
-    cleanup();
-  });
-
   it("renders clickable skill checkboxes", async () => {
     const mockSetSkills = jest.fn();
     render(<EmployeeModalSkillCardMock mockSetSkills={mockSetSkills} />);

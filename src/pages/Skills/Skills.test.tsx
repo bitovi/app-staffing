@@ -1,13 +1,9 @@
-import { cleanup, render } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { skills } from "../../mocks/fixtures";
 import Skills from "./Skills";
 
 describe("Pages/Skills", () => {
   describe("Skills fallback when loading", () => {
-    afterEach(async () => {
-      cleanup();
-    });
-
     // Simulate forever loading request to trigger Suspense
     const useSkillsMocked = () => {
       throw new Promise(() => undefined);
@@ -37,10 +33,6 @@ describe("Pages/Skills", () => {
   });
 
   describe("Skills with data", () => {
-    afterEach(async () => {
-      cleanup();
-    });
-
     const useSkillsMocked = () => {
       return skills;
     };

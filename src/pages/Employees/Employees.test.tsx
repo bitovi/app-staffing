@@ -1,14 +1,7 @@
-import {
-  render,
-  screen,
-  within,
-  waitFor,
-  cleanup,
-} from "@testing-library/react";
+import { render, screen, within, waitFor } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import userEvent from "@testing-library/user-event";
 import { format } from "date-fns";
-import { clearFixtures, loadFixtures } from "../../mocks";
 import { employees } from "../../mocks/employees/fixtures";
 import { formatDateToUTC } from "../../services/helpers/utcdate";
 import { MemoryRouter } from "react-router-dom";
@@ -19,15 +12,6 @@ describe("Pages/Employees", () => {
   jest.setTimeout(30000);
   jest.useFakeTimers();
   jest.runAllTimers();
-
-  beforeEach(async () => {
-    await loadFixtures();
-  });
-
-  afterEach(async () => {
-    await clearFixtures();
-    cleanup();
-  });
 
   describe("Employees list", () => {
     beforeEach(() => {

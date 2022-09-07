@@ -2,7 +2,6 @@ import { renderHook } from "@testing-library/react-hooks";
 import { expect } from "chai";
 
 import { wrapper } from "../restBuilder/restBuilder.test";
-import { loadFixtures, clearFixtures } from "../../../mocks";
 import { assignments } from "../../../mocks/fixtures";
 
 import {
@@ -12,9 +11,6 @@ import {
 } from "./Assignments";
 
 describe("Services/API/Assignments", () => {
-  beforeEach(async () => loadFixtures());
-  afterEach(async () => clearFixtures());
-
   describe("useAssignment", () => {
     it("makes the right request", async () => {
       const expected = assignments[2];

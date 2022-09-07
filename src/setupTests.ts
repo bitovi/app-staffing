@@ -10,8 +10,18 @@ chai.use(chaiSpies);
 
 import { setupServer } from "msw/node";
 import mocks from "./mocks";
+import { clearFixtures, loadFixtures } from "./mocks";
+import { cleanup } from "@testing-library/react";
 
 const server = setupServer(...mocks);
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterAll(() => server.close());
-afterEach(() => server.resetHandlers());
+beforeEach(async () => {
+  await loadFixtures();
+});
+
+afterEach(async () => {
+  server.resetHandlers();
+  await clearFixtures();
+  cleanup();
+});
