@@ -126,23 +126,25 @@ export default function EmployeeModal({
       (!isNewEmployee && formIsDirty && nameProvided(employeeName)));
 
   const submitForm = async (data: EmployeeFormData) => {
-    if (canSubmitForm) {
-      const employeeSkills = getSelectedSkills(data.skills, skills || []);
-      setStatus("pending");
-      try {
-        await onSave({
-          name: data.name,
-          startDate: data.startDate ? data.startDate : null,
-          endDate: data.endDate ? data.endDate : null,
-          skills: employeeSkills,
-        });
-        reset({ name: "", startDate: "", endDate: "" });
-        onClose();
-      } catch (e) {
-        setServerError(!serverError);
-      }
-      setStatus("idle");
+    if (!canSubmitForm) return;
+
+    setStatus("pending");
+
+    try {
+      await onSave({
+        name: data.name,
+        startDate: data.startDate ? data.startDate : null,
+        endDate: data.endDate ? data.endDate : null,
+        skills: getSelectedSkills(data.skills, skills || []),
+      });
+
+      reset({ name: "", startDate: "", endDate: "" });
+      onClose();
+    } catch (e) {
+      setServerError(!serverError);
     }
+
+    setStatus("idle");
   };
 
   const resetForm = () => {
@@ -355,9 +357,16 @@ function getSelectedSkills(roles: Record<string, boolean>, skills: Skill[]) {
   if (isEmpty(roles)) return [];
 
   const selected = pickBy(roles, (checked) => !!checked);
-  return Object.keys(selected).map(
-    (entry: string) => skills.find((skill) => skill.id === entry) as Skill,
-  );
+
+  return Object.keys(selected).map((skillID) => {
+    const temp = skills.find((skill) => skill.id === skillID);
+
+    if (!temp) {
+      throw new Error(`Could not find skill with ID ${skillID}`);
+    }
+
+    return { id: temp.id, name: temp.name };
+  });
 }
 
 function toEmployeeFormData(data: Employee): EmployeeFormData {
