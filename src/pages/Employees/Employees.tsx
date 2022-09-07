@@ -176,11 +176,10 @@ function TeamMemberTabs({
   return (
     <Tabs
       size="lg"
-      variant="enclosed-colored"
+      variant="line"
       defaultIndex={defaultIndex}
       onChange={onTabChange}
       mt="5px"
-      ml="40px"
     >
       <TabList>
         <Tab>Active</Tab>
