@@ -61,7 +61,6 @@ export default function ProjectModal({
     setValue,
     watch,
     getValues,
-    setError,
     formState: { errors, isDirty },
   } = useForm<ProjectFormData>({
     defaultValues: project ? project : undefined,
