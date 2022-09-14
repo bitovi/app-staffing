@@ -96,7 +96,7 @@ export default function EmployeeCard({
         </Td>
         <Td>
           <Text
-            color="gray.10"
+            color="gray.600"
             fontWeight="400"
             fontSize="14px"
             lineHeight="20px"
