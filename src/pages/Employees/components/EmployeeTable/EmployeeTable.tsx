@@ -52,6 +52,11 @@ interface EmployeeTableProps {
   useEmployees: typeof useEmployeesDefault;
 }
 
+export interface sortData {
+  iteratee: string;
+  order: "desc" | "asc" | boolean;
+}
+
 function EmployeeTable({
   showActiveEmployees,
   showInactiveEmployees,
@@ -59,32 +64,37 @@ function EmployeeTable({
   destroyEmployee,
   useEmployees = useEmployeesDefault,
 }: EmployeeTableProps) {
-  const [sortData, setSortData] = useState("name");
+  const [sortData, setSortData] = useState<sortData>({
+    iteratee: "",
+    order: false,
+  });
   // const [filterData, setFilterData] = useState();
 
   function updateSortData(field: string) {
-    if (!sortData || !sortData.includes(field)) {
+    if (!sortData || sortData.iteratee !== field) {
       // if no current sort data or new sort option, set to clicked column
-      setSortData(field);
-    } else if (sortData.includes(field)) {
+      setSortData({ iteratee: field, order: "desc" });
+    } else if (sortData.iteratee === field) {
       // if sort data is the same field as clicked column,
       // switch to descending order,
       // remove if already descending order
-      if (sortData[0] !== "-") {
-        setSortData(`-${field}`);
+      if (sortData.order === "desc") {
+        setSortData((sortData) => ({
+          iteratee: sortData.iteratee,
+          order: "asc",
+        }));
       } else {
-        setSortData("");
+        setSortData({ iteratee: "", order: false });
       }
     }
   }
 
   const employeesFetched = useEmployees({
     include: ["skills", "assignments.role.project"],
-    sort: sortData,
   });
 
-  const employees = useMemo(
-    () =>
+  const employees = useMemo(() => {
+    return orderBy(
       employeesFetched?.filter(
         (emp) =>
           (showInactiveEmployees &&
@@ -93,8 +103,10 @@ function EmployeeTable({
           (showActiveEmployees &&
             (emp.endDate == null || emp.endDate > new Date())),
       ),
-    [employeesFetched, showActiveEmployees, showInactiveEmployees],
-  );
+      [sortData.iteratee],
+      [sortData.order],
+    );
+  }, [employeesFetched, showActiveEmployees, showInactiveEmployees, sortData]);
 
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null,
@@ -132,19 +144,21 @@ function EmployeeTable({
       />
       <Table>
         <Thead py={4}>
-          <EmployeeTableHeader changeSort={updateSortData} sortData={sortData} />
+          <EmployeeTableHeader
+            changeSort={updateSortData}
+            sortData={sortData}
+          />
         </Thead>
         <Tbody>
           {employees.map((employee, index) => (
-              <EmployeeTableRow
-                key={employee.id}
-                handleEditEmployee={setEmployeeToEdit}
-                handleDeleteEmployee={setEmployeeToDelete}
-                employee={employee}
-                lastChild={lastEmployeeIndex === index}
-              />
-            ),
-          )}
+            <EmployeeTableRow
+              key={employee.id}
+              handleEditEmployee={setEmployeeToEdit}
+              handleDeleteEmployee={setEmployeeToDelete}
+              employee={employee}
+              lastChild={lastEmployeeIndex === index}
+            />
+          ))}
         </Tbody>
       </Table>
     </Box>

@@ -1,6 +1,6 @@
 import { chakra, Th, Tr, Text } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-
+import { sortData } from "../../EmployeeTable";
 
 const StickyHeader = chakra(Th, {
   baseStyle: {
@@ -15,37 +15,55 @@ export default function EmployeeTableHeader({
   changeSort,
   sortData,
 }: {
-  changeSort: (sortData: string) => void,
-  sortData?: string,
+  changeSort: (sortData: string) => void;
+  sortData?: sortData;
 }): JSX.Element {
-
   const columnHeaders = [
-    { displayName: "EMPLOYEE NAME", queryName: "name", sortable: true },
+    { displayName: "NAME", queryName: "name", sortable: true },
     { displayName: "CURRENT PROJECT", queryName: "", sortable: false },
-    { displayName: "START DATE", queryName: "start_date", sortable: true },
-    { displayName: "END DATE", queryName: "end_date", sortable: true },
+    { displayName: "START DATE", queryName: "startDate", sortable: true },
+    { displayName: "END DATE", queryName: "endDate", sortable: true },
     { displayName: "SKILLS", queryName: "", sortable: false },
     { displayName: "ACTIONS", queryName: "", sortable: false },
   ];
 
-
   return (
     <>
       <Tr>
-        {columnHeaders.map(column => (
-          <StickyHeader key={JSON.stringify(column)} color="gray.800" textStyle="table.title">
-            { column.sortable ? 
-              <Text cursor="pointer" onClick={() => changeSort(column.queryName)} display="flex">
+        {columnHeaders.map((column) => (
+          <StickyHeader
+            key={JSON.stringify(column)}
+            color="gray.800"
+            textStyle="table.title"
+          >
+            {column.sortable ? (
+              <Text
+                cursor="pointer"
+                onClick={() => changeSort(column.queryName)}
+                display="flex"
+                alignItems="center"
+              >
                 {column.displayName}
-                {sortData?.includes(column.queryName) 
-                  && (sortData?.includes("-") 
-                  ? <ChevronDownIcon data-testid="sort-icon-desc"></ChevronDownIcon>
-                  : <ChevronUpIcon data-testid="sort-icon-asc"></ChevronUpIcon>)
-                }
+                {sortData?.iteratee === column.queryName &&
+                  (sortData?.order === "asc" ? (
+                    <ChevronDownIcon
+                      w="20px"
+                      h="20px"
+                      ml="5px"
+                      data-testid="sort-icon-desc"
+                    ></ChevronDownIcon>
+                  ) : (
+                    <ChevronUpIcon
+                      w="20px"
+                      h="20px"
+                      ml="5px"
+                      data-testid="sort-icon-asc"
+                    ></ChevronUpIcon>
+                  ))}
               </Text>
-              :
+            ) : (
               <Text>{column.displayName}</Text>
-            }
+            )}
           </StickyHeader>
         ))}
       </Tr>
