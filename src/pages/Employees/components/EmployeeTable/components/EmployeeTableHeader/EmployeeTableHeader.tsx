@@ -1,4 +1,6 @@
-import { chakra, Th, Tr } from "@chakra-ui/react";
+import { chakra, Th, Tr, Text } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+
 
 const StickyHeader = chakra(Th, {
   baseStyle: {
@@ -9,34 +11,43 @@ const StickyHeader = chakra(Th, {
   },
 });
 
-export default function EmployeeTableHeader(): JSX.Element {
+export default function EmployeeTableHeader({
+  changeSort,
+  sortData,
+}: {
+  changeSort: (sortData: string) => void,
+  sortData?: string,
+}): JSX.Element {
+
+  const columnHeaders = [
+    { displayName: "EMPLOYEE NAME", queryName: "name", sortable: true },
+    { displayName: "CURRENT PROJECT", queryName: "", sortable: false },
+    { displayName: "START DATE", queryName: "start_date", sortable: true },
+    { displayName: "END DATE", queryName: "end_date", sortable: true },
+    { displayName: "SKILLS", queryName: "", sortable: false },
+    { displayName: "ACTIONS", queryName: "", sortable: false },
+  ];
+
+
   return (
     <>
       <Tr>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          EMPLOYEE NAME
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          CURRENT PROJECT
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          START DATE
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          END DATE
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          SKILLS
-        </StickyHeader>
-        <StickyHeader
-          py={4}
-          pr={12}
-          color="gray.800"
-          textStyle="table.title"
-          isNumeric
-        >
-          ACTIONS
-        </StickyHeader>
+        {columnHeaders.map(column => (
+          <StickyHeader key={JSON.stringify(column)} color="gray.800" textStyle="table.title">
+            { column.sortable ? 
+              <Text cursor="pointer" onClick={() => changeSort(column.queryName)} display="flex">
+                {column.displayName}
+                {sortData?.includes(column.queryName) 
+                  && (sortData?.includes("-") 
+                  ? <ChevronDownIcon data-testid="sort-icon-desc"></ChevronDownIcon>
+                  : <ChevronUpIcon data-testid="sort-icon-asc"></ChevronUpIcon>)
+                }
+              </Text>
+              :
+              <Text>{column.displayName}</Text>
+            }
+          </StickyHeader>
+        ))}
       </Tr>
     </>
   );
