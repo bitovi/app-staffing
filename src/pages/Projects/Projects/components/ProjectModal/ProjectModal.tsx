@@ -52,8 +52,8 @@ export default function ProjectModal({
 }: ProjectModalProps): JSX.Element {
   const history = useHistory();
   const [serverError, setServerError] = useState(false);
+  const [customFormError, setCustomFormError] = useState("");
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
-
   const {
     register,
     handleSubmit,
@@ -88,22 +88,27 @@ export default function ProjectModal({
   };
 
   const update = async () => {
-    if (project && updateProject && isDirty) {
-      try {
-        setStatus("pending");
-        const desc = getValues("description");
-        updateProject(project.id, { name: projectName, description: desc });
-        resetForm();
-        onClose();
-        setStatus("idle");
-        setServerError(false);
-      } catch (e) {
-        setServerError(true);
+    if (!isDirty) {
+      setCustomFormError("No Changes Made");
+    } else {
+      if (project && updateProject && isDirty) {
+        try {
+          setStatus("pending");
+          const desc = getValues("description");
+          updateProject(project.id, { name: projectName, description: desc });
+          resetForm();
+          onClose();
+          setStatus("idle");
+          setServerError(false);
+        } catch (e) {
+          setServerError(true);
+        }
       }
     }
   };
 
   const resetForm = () => {
+    setCustomFormError("");
     reset({
       name: project ? project.name : "",
       description: project ? project.description : "",
@@ -117,7 +122,6 @@ export default function ProjectModal({
     }
   }, [isOpen, project, setValue]);
   useEffect(resetForm, [reset, project]);
-
   return (
     <Modal size="md" isOpen={isOpen} onClose={onClose} variant="project_modal">
       <ModalOverlay />
@@ -134,7 +138,10 @@ export default function ProjectModal({
         />
         <ModalBody pt={4}>
           <VStack spacing="16px" pb={6}>
-            <FormControl isRequired isInvalid={!!errors.name || !isDirty}>
+            <FormControl
+              isRequired
+              isInvalid={!!errors.name || !!customFormError}
+            >
               <FormLabel>Project Name</FormLabel>
               <Input
                 {...register("name", {
@@ -142,12 +149,13 @@ export default function ProjectModal({
                   validate: (name) =>
                     fullNameProvided(name) || "Full name required",
                 })}
+                onChange={() => setCustomFormError("")}
                 aria-label="Project Name"
                 data-testid="projectInput"
               />
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!errors.description || !isDirty}>
+            <FormControl isInvalid={!!errors.description || !!customFormError}>
               <FormLabel>Description</FormLabel>
               <Textarea
                 {...register("description")}
@@ -157,9 +165,7 @@ export default function ProjectModal({
               <FormErrorMessage>
                 {errors?.description?.message}
               </FormErrorMessage>
-              <FormErrorMessage>
-                {!isDirty ? "No Changes Made" : null}
-              </FormErrorMessage>
+              <FormErrorMessage>{customFormError}</FormErrorMessage>
             </FormControl>
           </VStack>
         </ModalBody>

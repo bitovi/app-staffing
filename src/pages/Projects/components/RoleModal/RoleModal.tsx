@@ -123,7 +123,6 @@ export default function RoleModal({
 }: RoleModalProps): JSX.Element {
   const [serverError, setServerError] = useState(false);
   const [status, setStatus] = useState<SaveButtonStatus>("idle");
-
   const [filteredEmployees, setFilteredEmployees] =
     useState<typeof employees>(employees);
 
@@ -843,7 +842,11 @@ export default function RoleModal({
             {...getSubmitButtonProps({
               status,
               canSubmitForm,
-              onClick: handleSubmit((data) => submitForm(data)),
+              onClick: handleSubmit((data) => {
+                if (isDirty) {
+                  submitForm(data);
+                }
+              }),
             })}
             aria-disabled={!canSubmitForm()}
           >
