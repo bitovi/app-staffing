@@ -65,8 +65,8 @@ function EmployeeTable({
   useEmployees = useEmployeesDefault,
 }: EmployeeTableProps) {
   const [sortData, setSortData] = useState<sortData>({
-    iteratee: "",
-    order: false,
+    iteratee: "name",
+    order: "desc",
   });
   // const [filterData, setFilterData] = useState();
 
