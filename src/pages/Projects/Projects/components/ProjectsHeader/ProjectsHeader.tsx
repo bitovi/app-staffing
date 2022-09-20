@@ -21,12 +21,15 @@ import ProjectModal from "../ProjectModal";
 import { useTimeline } from "../../../../../services/projection";
 import DataTimelineHeader from "../../../../../components/DataTable/DataTimelineHeader";
 import { sortData } from "../../Projects";
+import FilterBar from "../../../../FilterBar";
+
 interface ProjectHeaderProps {
   loading?: boolean;
   addProject?: (project: NewProject) => void;
   project?: Project;
   changeSort?: (sortData: string) => void;
   sortData?: sortData;
+  onFilterChange?(filters: string[]): void;
 }
 
 export default function ProjectsHeader({
@@ -35,6 +38,7 @@ export default function ProjectsHeader({
   project,
   changeSort,
   sortData,
+  onFilterChange,
 }: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { timeline } = useTimeline(new Date());
@@ -108,6 +112,16 @@ export default function ProjectsHeader({
             </>
           )}
         </Flex>
+
+        {onFilterChange && (
+          <FilterBar
+            ml={0}
+            mb={6}
+            maxWidth="100%"
+            onFilterChange={onFilterChange}
+            placeholder="Search by project name"
+          ></FilterBar>
+        )}
 
         {!project && changeSort && (
           <Flex padding="15px 0" borderBottom="1px solid #CBD5E0">

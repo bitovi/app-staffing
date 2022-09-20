@@ -901,7 +901,7 @@ type option = {
 const DropdownIndicator = (props: IndicatorProps<option, false>) => {
   return (
     <components.DropdownIndicator {...props}>
-      <SearchIcon />
+      <SearchIcon color="gray.700" />
     </components.DropdownIndicator>
   );
 };

@@ -18,6 +18,7 @@ interface EmployeeTableWrapperProps extends BoxProps {
   destroyEmployee: (id: string) => Promise<void>;
   showActiveEmployees: boolean;
   showInactiveEmployees: boolean;
+  filters?: string[];
   useEmployees?: typeof useEmployeesDefault;
 }
 
@@ -26,6 +27,7 @@ export default function EmployeeTableWrapper({
   destroyEmployee,
   showActiveEmployees,
   showInactiveEmployees,
+  filters,
   useEmployees = useEmployeesDefault,
   ...props
 }: EmployeeTableWrapperProps): JSX.Element {
@@ -37,6 +39,7 @@ export default function EmployeeTableWrapper({
           destroyEmployee={destroyEmployee}
           showActiveEmployees={showActiveEmployees}
           showInactiveEmployees={showInactiveEmployees}
+          filters={filters}
           useEmployees={useEmployees}
         />
       </Box>
@@ -49,6 +52,7 @@ interface EmployeeTableProps {
   showInactiveEmployees: boolean;
   updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
   destroyEmployee: (id: string) => Promise<void>;
+  filters?: string[];
   useEmployees: typeof useEmployeesDefault;
 }
 
@@ -62,6 +66,7 @@ function EmployeeTable({
   showInactiveEmployees,
   updateEmployee,
   destroyEmployee,
+  filters,
   useEmployees = useEmployeesDefault,
 }: EmployeeTableProps) {
   const [sortData, setSortData] = useState<sortData>({
@@ -95,18 +100,54 @@ function EmployeeTable({
 
   const employees = useMemo(() => {
     return orderBy(
-      employeesFetched?.filter(
-        (emp) =>
-          (showInactiveEmployees &&
-            emp.endDate != null &&
-            emp.endDate < new Date()) ||
-          (showActiveEmployees &&
-            (emp.endDate == null || emp.endDate > new Date())),
-      ),
+      employeesFetched
+        ?.filter(
+          (emp) =>
+            (showInactiveEmployees &&
+              emp.endDate != null &&
+              emp.endDate < new Date()) ||
+            (showActiveEmployees &&
+              (emp.endDate == null || emp.endDate > new Date())),
+        )
+        ?.filter((emp) => {
+          // filterBar filters come in already lower case and apply to name, current project, and/or skills
+          // emp.name,
+          // emp.assignments?.[0]?.role?.project.name,
+          // emp.skills[].name
+          if (!filters || !filters.length) {
+            return true;
+          }
+          // every filter needs to match at least once for the row to be included
+          return filters.every((filter) => {
+            if (emp.name.toLocaleLowerCase().indexOf(filter) > -1) {
+              return true;
+            }
+            const projName = (
+              emp.assignments?.[0]?.role?.project.name || ""
+            ).toLocaleLowerCase();
+            if (projName.indexOf(filter) > -1) {
+              return true;
+            }
+            if (
+              emp.skills.some(
+                (s) => s.name.toLocaleLowerCase().indexOf(filter) > -1,
+              )
+            ) {
+              return true;
+            }
+            return false;
+          });
+        }),
       [sortData.iteratee],
       [sortData.order],
     );
-  }, [employeesFetched, showActiveEmployees, showInactiveEmployees, sortData]);
+  }, [
+    employeesFetched,
+    showActiveEmployees,
+    showInactiveEmployees,
+    sortData,
+    filters,
+  ]);
 
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null,

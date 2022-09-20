@@ -18,18 +18,31 @@ interface SkillsTableProps {
   useSkills: (query?: ListQuery<Skill>) => Skill[];
   editSkill: (data: Skill) => void;
   destroySkill: (skillId: string) => Promise<void>;
+  filters?: string[];
 }
 
 export default function SkillsTable({
   useSkills,
   editSkill,
   destroySkill,
+  filters,
 }: SkillsTableProps): JSX.Element {
   const skills = useSkills({ sort: "name" });
 
+  const filteredSkills = (Array.isArray(skills) ? skills : [])
+    .filter((skill) => {
+      if (!filters || !filters.length) {
+        return true;
+      }
+      return filters.every(
+        (filter) =>
+          skill.name.toLocaleLowerCase().indexOf(filter) > -1,
+      );
+    });
+
   return (
     <>
-      {Array.isArray(skills) && skills.length === 0 && (
+      {filteredSkills.length === 0 && (
         <Flex
           width="100%"
           height="70%"
@@ -49,12 +62,12 @@ export default function SkillsTable({
           </Flex>
         </Flex>
       )}
-      {Array.isArray(skills) && skills.length > 0 && (
+      {filteredSkills.length > 0 && (
         <Box px="40px" my="40px">
           <Table>
             <SkillsTableHeader />
 
-            <SkillsTableBody skills={skills} editSkill={editSkill} />
+            <SkillsTableBody skills={filteredSkills} editSkill={editSkill} />
           </Table>
         </Box>
       )}

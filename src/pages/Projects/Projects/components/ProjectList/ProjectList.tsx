@@ -5,10 +5,12 @@ import DataTableBody from "../../../../../components/DataTable/DataTableBody";
 import { useTimeline } from "../../../../../services/projection";
 interface ProjectListProps extends BoxProps {
   projects: Project[] | undefined;
+  filters?: string[];
 }
 
 export default function ProjectList({
   projects,
+  filters,
   ...rest
 }: ProjectListProps): JSX.Element {
   const { timeline } = useTimeline(new Date());
@@ -37,13 +39,23 @@ export default function ProjectList({
           <Box>
             <Flex flexDirection="column">
               {projects?.length &&
-                projects.map((project) => (
-                  <DataTableBody
-                    key={project.id}
-                    project={project}
-                    timeline={timeline}
-                  />
-                ))}
+                projects
+                  .filter((project) => {
+                    if (!filters || !filters.length) {
+                      return true;
+                    }
+                    return filters.every(
+                      (filter) =>
+                        project.name.toLocaleLowerCase().indexOf(filter) > -1,
+                    );
+                  })
+                  .map((project) => (
+                    <DataTableBody
+                      key={project.id}
+                      project={project}
+                      timeline={timeline}
+                    />
+                  ))}
             </Flex>
           </Box>
         )}

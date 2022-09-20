@@ -11,6 +11,7 @@ import Button from "../../components/Button";
 import EmployeeModal from "./components/EmployeeModal";
 import EmployeesBreadcrumbs from "./components/EmployeesBreadcrumbs";
 import { Tabs, TabList, Tab } from "@chakra-ui/react";
+import FilterBar from "../FilterBar"
 
 interface EmployeesProps {
   useEmployeeMutations?: typeof useEmployeeMutationsDefault;
@@ -71,6 +72,7 @@ export default function Employees({
   const [employeeModal, setEmployeeModal] = useState<boolean>(false);
   const [showActiveEmployees, setShowActiveEmployees] = useState(true);
   const [showInactiveEmployees, setShowInactiveEmployees] = useState(false);
+  const [filters, setFilters] = useState<string[]>([]);
 
   const tabIndex =
     showActiveEmployees && showInactiveEmployees
@@ -140,6 +142,7 @@ export default function Employees({
           defaultIndex={tabIndex}
         />
       </Box>
+      <FilterBar onFilterChange={(arr: string[]) => setFilters(arr)} placeholder="Search by name, skills, or current project"></FilterBar>
       <EmployeeTableWrapper
         mt="32px"
         updateEmployee={updateEmployee}
@@ -147,6 +150,7 @@ export default function Employees({
         showActiveEmployees={showActiveEmployees}
         showInactiveEmployees={showInactiveEmployees}
         useEmployees={useEmployees}
+        filters={filters}
       />
     </Box>
   );
