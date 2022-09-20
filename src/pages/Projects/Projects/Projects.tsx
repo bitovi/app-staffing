@@ -41,6 +41,7 @@ export function Projects({
   useProjects = defaultUseProjects,
   useProjectMutations = defaultUseProjectMutations,
 }: ProjectProps): JSX.Element {
+  const [filters, setFilters] = useState<string[]>([]);
   const { createProject } = useProjectMutations();
 
   const [sortData, setSortData] = useState<sortData>({
@@ -81,8 +82,9 @@ export function Projects({
         addProject={createProject}
         changeSort={updateSortData}
         sortData={sortData}
+        onFilterChange={(arr: string[]) => setFilters(arr)}
       />
-      <ProjectList projects={projects} />
+      <ProjectList projects={projects} filters={filters} />
     </>
   );
 }

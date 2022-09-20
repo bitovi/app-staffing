@@ -132,7 +132,7 @@ describe("Pages/Employees", () => {
     const submitButton = within(modal).getByText(/Add & Close/i);
     expect(submitButton).toHaveAttribute("aria-disabled", "true");
 
-    const modalNameInput = await screen.findByPlaceholderText(/name/i);
+    const modalNameInput = await screen.findByPlaceholderText(/^name$/i);
     userEvent.type(modalNameInput, "Johnny Appleseed");
     expect(modalNameInput).toHaveValue("Johnny Appleseed");
 
@@ -183,7 +183,7 @@ describe("Pages/Employees", () => {
     const modal = await screen.findByRole("dialog");
     const cancelButton = within(modal).getByText(/Cancel/i);
 
-    const modalNameInput = await screen.findByPlaceholderText(/name/i);
+    const modalNameInput = await screen.findByPlaceholderText(/^name$/i);
     userEvent.type(modalNameInput, "Johnny Appleseed");
     expect(modalNameInput).toHaveValue("Johnny Appleseed");
 
@@ -193,7 +193,7 @@ describe("Pages/Employees", () => {
 
     userEvent.click(addButton);
 
-    const modalNameInput2 = await screen.findByPlaceholderText(/name/i);
+    const modalNameInput2 = await screen.findByPlaceholderText(/^name$/i);
     expect(modalNameInput2).toHaveValue("");
   });
 

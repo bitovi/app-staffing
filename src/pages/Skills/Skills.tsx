@@ -8,6 +8,7 @@ import SkillsHeader from "./components/SkillsHeader";
 import SkillsTable from "./components/SkillsTable";
 import SkillModal from "./components/SkillModal";
 import { SkillsTableSkeleton } from "./components/SkillsTable/SkillsTable";
+import FilterBar from "../FilterBar";
 
 interface SkillsProps {
   useSkills?: typeof useSkillsDefault;
@@ -22,6 +23,7 @@ export default function Skills({
     document.title = "Skills - Staffing App";
   }, []);
 
+  const [filters, setFilters] = useState<string[]>([]);
   const { createSkill, updateSkill, destroySkill } = useSkillMutations();
   const [skillModal, setSkillModal] = useState<boolean>(false);
   const [skillToEdit, setSkillToEdit] = useState<Skill | null>(null);
@@ -46,6 +48,10 @@ export default function Skills({
         />
       )}
       <SkillsHeader createSkill={() => setSkillModal(true)} />
+      <FilterBar
+        onFilterChange={(arr: string[]) => setFilters(arr)}
+        placeholder="Search by skill name"
+      ></FilterBar>
       <Suspense fallback={<SkillsTableSkeleton />}>
         <SkillsTable
           useSkills={useSkills}
@@ -54,6 +60,7 @@ export default function Skills({
             setSkillModal(true);
           }}
           destroySkill={destroySkill}
+          filters={filters}
         />
       </Suspense>
     </>
