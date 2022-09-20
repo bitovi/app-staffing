@@ -29,16 +29,16 @@ export default function SkillsTable({
 }: SkillsTableProps): JSX.Element {
   const skills = useSkills({ sort: "name" });
 
-  const filteredSkills = (Array.isArray(skills) ? skills : [])
-    .filter((skill) => {
+  const filteredSkills = (Array.isArray(skills) ? skills : []).filter(
+    (skill) => {
       if (!filters || !filters.length) {
         return true;
       }
       return filters.every(
-        (filter) =>
-          skill.name.toLocaleLowerCase().indexOf(filter) > -1,
+        (filter) => skill.name.toLocaleLowerCase().indexOf(filter) > -1,
       );
-    });
+    },
+  );
 
   return (
     <>
