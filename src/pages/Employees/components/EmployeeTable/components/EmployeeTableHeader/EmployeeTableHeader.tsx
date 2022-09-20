@@ -1,4 +1,6 @@
-import { chakra, Th, Tr } from "@chakra-ui/react";
+import { chakra, Th, Tr, Text } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { sortData } from "../../EmployeeTable";
 
 const StickyHeader = chakra(Th, {
   baseStyle: {
@@ -9,34 +11,61 @@ const StickyHeader = chakra(Th, {
   },
 });
 
-export default function EmployeeTableHeader(): JSX.Element {
+export default function EmployeeTableHeader({
+  changeSort,
+  sortData,
+}: {
+  changeSort: (sortData: string) => void;
+  sortData?: sortData;
+}): JSX.Element {
+  const columnHeaders = [
+    { displayName: "NAME", queryName: "name", sortable: true },
+    { displayName: "CURRENT PROJECT", queryName: "", sortable: false },
+    { displayName: "START DATE", queryName: "startDate", sortable: true },
+    { displayName: "END DATE", queryName: "endDate", sortable: true },
+    { displayName: "SKILLS", queryName: "", sortable: false },
+    { displayName: "ACTIONS", queryName: "", sortable: false },
+  ];
+
   return (
     <>
       <Tr>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          EMPLOYEE NAME
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          CURRENT PROJECT
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          START DATE
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          END DATE
-        </StickyHeader>
-        <StickyHeader color="gray.800" textStyle="table.title">
-          SKILLS
-        </StickyHeader>
-        <StickyHeader
-          py={4}
-          pr={12}
-          color="gray.800"
-          textStyle="table.title"
-          isNumeric
-        >
-          ACTIONS
-        </StickyHeader>
+        {columnHeaders.map((column) => (
+          <StickyHeader
+            key={JSON.stringify(column)}
+            color="gray.800"
+            textStyle="table.title"
+          >
+            {column.sortable ? (
+              <Text
+                cursor="pointer"
+                onClick={() => changeSort(column.queryName)}
+                display="flex"
+                alignItems="center"
+              >
+                {column.displayName}
+                {sortData?.iteratee === column.queryName &&
+                  (sortData?.order === "asc" ? (
+                    <ChevronDownIcon
+                      w="20px"
+                      h="20px"
+                      ml="5px"
+                      data-testid="sort-icon-desc"
+                    ></ChevronDownIcon>
+                  ) : (
+                    <ChevronUpIcon
+                      w="20px"
+                      h="20px"
+                      ml="5px"
+                      data-testid="sort-icon-asc"
+                    ></ChevronUpIcon>
+                  ))}
+              </Text>
+            ) : (
+              <Text>{column.displayName}</Text>
+            )}
+          </StickyHeader>
+        ))}
       </Tr>
     </>
   );

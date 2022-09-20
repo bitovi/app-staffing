@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { formatDateToUTC } from "../../../services/helpers/utcdate";
 
 type DataTimelineHeaderProps = {
-  heading: string;
+  heading: React.ReactNode;
   headingWidth?: string;
   timeline: TimelineRange[];
 };

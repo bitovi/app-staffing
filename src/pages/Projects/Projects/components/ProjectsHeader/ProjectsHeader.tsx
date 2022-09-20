@@ -2,8 +2,17 @@ import type { Project, NewProject } from "../../../../../services/api";
 
 import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
-import { ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Text,
+} from "@chakra-ui/react";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+} from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/hooks";
 
 import SingleProjectBreadCrumb from "../../../../../components/Breadcrumbs/SingleProjectBreadCrumb";
@@ -11,19 +20,25 @@ import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBr
 import ProjectModal from "../ProjectModal";
 import { useTimeline } from "../../../../../services/projection";
 import DataTimelineHeader from "../../../../../components/DataTable/DataTimelineHeader";
+import { sortData } from "../../Projects";
 interface ProjectHeaderProps {
   loading?: boolean;
   addProject?: (project: NewProject) => void;
   project?: Project;
+  changeSort?: (sortData: string) => void;
+  sortData?: sortData;
 }
 
 export default function ProjectsHeader({
   loading,
   addProject,
   project,
+  changeSort,
+  sortData,
 }: ProjectHeaderProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { timeline } = useTimeline(new Date());
+
   return (
     <Box
       mb={project ? "" : "32px"}
@@ -94,10 +109,30 @@ export default function ProjectsHeader({
           )}
         </Flex>
 
-        {!project && (
+        {!project && changeSort && (
           <Flex padding="15px 0" borderBottom="1px solid #CBD5E0">
             <DataTimelineHeader
-              heading="Name"
+              heading={
+                <Text cursor="pointer" onClick={() => changeSort("name")}>
+                  <span>Name</span>
+                  {sortData?.iteratee === "name" &&
+                    (sortData?.order === "asc" ? (
+                      <ChevronDownIcon
+                        w="20px"
+                        h="20px"
+                        ml="5px"
+                        data-testid="sort-icon-desc"
+                      ></ChevronDownIcon>
+                    ) : (
+                      <ChevronUpIcon
+                        w="20px"
+                        h="20px"
+                        ml="5px"
+                        data-testid="sort-icon-asc"
+                      ></ChevronUpIcon>
+                    ))}
+                </Text>
+              }
               headingWidth="150px"
               timeline={timeline}
             />
