@@ -1,6 +1,6 @@
 import { chakra, Th, Tr, Text } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { sortData } from "../../EmployeeTable";
+import { sortData } from "../../../../../../services/helpers/useSort/useSort";
 
 const StickyHeader = chakra(Th, {
   baseStyle: {
