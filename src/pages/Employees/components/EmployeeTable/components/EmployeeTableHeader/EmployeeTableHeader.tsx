@@ -50,14 +50,14 @@ export default function EmployeeTableHeader({
                       w="20px"
                       h="20px"
                       ml="5px"
-                      data-testid="sort-icon-desc"
+                      data-testid="sort-icon-asc"
                     ></ChevronDownIcon>
                   ) : (
                     <ChevronUpIcon
                       w="20px"
                       h="20px"
                       ml="5px"
-                      data-testid="sort-icon-asc"
+                      data-testid="sort-icon-desc"
                     ></ChevronUpIcon>
                   ))}
               </Text>

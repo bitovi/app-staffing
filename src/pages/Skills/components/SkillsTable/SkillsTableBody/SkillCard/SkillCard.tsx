@@ -26,6 +26,7 @@ export default function SkillCard({
             fontSize="16px"
             lineHeight="20px"
             letterSpacing="0.25px"
+            data-testid="skill-name"
           >
             {skill.name}
           </Text>
