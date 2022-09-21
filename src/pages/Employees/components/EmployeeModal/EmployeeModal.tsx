@@ -68,6 +68,8 @@ export default function EmployeeModal({
     control,
     setError,
     clearErrors,
+    getValues,
+    trigger,
     formState: { errors, isDirty: formIsDirty },
   } = useForm<EmployeeFormData>({
     defaultValues: employeeData,
@@ -91,6 +93,18 @@ export default function EmployeeModal({
           type: "custom",
           message: startDateValidationMessage,
         });
+      } else if (!errors.startDate) {
+        clearErrors("startDate");
+      }
+    };
+
+    startDateInput.onchange = () => {
+      trigger("startDate");
+      if (errors.startDate) {
+        setError("startDate", {
+          type: "custom",
+          message: errors.startDate.message,
+        });
       } else {
         clearErrors("startDate");
       }
@@ -109,6 +123,18 @@ export default function EmployeeModal({
         setError("endDate", {
           type: "custom",
           message: endDateValidationMessage,
+        });
+      } else if (!errors.endDate) {
+        clearErrors("endDate");
+      }
+    };
+
+    endDateInput.onchange = () => {
+      trigger("endDate");
+      if (errors.endDate) {
+        setError("endDate", {
+          type: "custom",
+          message: errors.endDate.message,
         });
       } else {
         clearErrors("endDate");
@@ -194,13 +220,22 @@ export default function EmployeeModal({
               >
                 <FormLabel>Start Date</FormLabel>
                 <Input
-                  {...register("startDate")}
+                  {...register("startDate", {
+                    validate: () =>
+                      validateEndDate(
+                        getValues("startDate"),
+                        getValues("endDate"),
+                      ) || "Start date cannot be later than end date",
+                  })}
                   id="start_date"
                   type="date"
                   data-testid="start_date"
                   min="2000-01-01"
                   max="2200-01-01"
                 />
+                <FormErrorMessage>
+                  {errors?.startDate?.message}
+                </FormErrorMessage>
                 {isStartDateInvalid && startDateValidationMessage && (
                   <Text
                     display="flex"
@@ -219,12 +254,21 @@ export default function EmployeeModal({
               >
                 <FormLabel>End Date</FormLabel>
                 <Input
-                  {...register("endDate")}
+                  {...register("endDate", {
+                    disabled: !employee,
+                    validate: () =>
+                      validateEndDate(
+                        getValues("startDate"),
+                        getValues("endDate"),
+                      ) || "End date cannot be earlier than start date",
+                  })}
                   id="end_date"
                   type="date"
                   min="2000-01-01"
                   max="2200-01-01"
                 />
+                <FormErrorMessage>{errors?.endDate?.message}</FormErrorMessage>
+
                 {isEndDateInvalid && endDateValidationMessage && (
                   <Text
                     display="flex"
@@ -315,6 +359,10 @@ export default function EmployeeModal({
 
 function nameProvided(name: string) {
   return name ? name.trim().length >= 1 : false;
+}
+
+function validateEndDate(startDate: string, endDate: string) {
+  return endDate ? endDate >= startDate : true;
 }
 
 function getSubmitButtonProps({
