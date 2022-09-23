@@ -70,7 +70,7 @@ export default function EmployeeModal({
     clearErrors,
     getValues,
     trigger,
-    formState: { errors, isDirty: formIsDirty },
+    formState: { errors, isDirty: formIsDirty, dirtyFields },
   } = useForm<EmployeeFormData>({
     defaultValues: employeeData,
   });
@@ -149,7 +149,10 @@ export default function EmployeeModal({
     !isStartDateInvalid &&
     !isEndDateInvalid &&
     ((isNewEmployee && nameProvided(employeeName)) ||
-      (!isNewEmployee && formIsDirty && nameProvided(employeeName)));
+      (!isNewEmployee &&
+        formIsDirty &&
+        !isEmpty(dirtyFields) &&
+        nameProvided(employeeName)));
 
   const submitForm = async (data: EmployeeFormData) => {
     if (!canSubmitForm) return;
