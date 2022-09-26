@@ -24,9 +24,7 @@ export default function EmployeeModalSkillsCard({
   const skillsFetched = useSkills();
 
   useEffect(() => {
-    if (!skills.length && skillsFetched.length) {
-      setSkills(skillsFetched);
-    }
+    setSkills(skillsFetched);
   }, [skillsFetched?.length, skills?.length, setSkills, skillsFetched]);
 
   return (
