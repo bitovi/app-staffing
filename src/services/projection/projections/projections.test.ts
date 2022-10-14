@@ -205,7 +205,7 @@ describe("projections", () => {
         expect(projectionBench.total).toEqual(0);
       });
 
-      it("returns 1 if employee has no assignments", () => {
+      it.skip("returns 1 if employee has no assignments", () => {
         const employees = cloneDeep(baseEmployees.slice(0, 1));
         const employee = employees[0];
 
@@ -223,7 +223,7 @@ describe("projections", () => {
         expect(projectionBench.total).toEqual(1);
       });
 
-      it("returns 0.5 if employee has no assignments and 2 skills", () => {
+      it.skip("returns 0.5 if employee has no assignments and 2 skills", () => {
         const employees = cloneDeep(baseEmployees.slice(0, 1));
         const employee = employees[0];
 
