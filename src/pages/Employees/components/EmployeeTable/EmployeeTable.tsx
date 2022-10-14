@@ -12,6 +12,7 @@ import EmployeeTableRow from "./components/EmployeeTableRow";
 import { isEmpty } from "lodash";
 import EmployeeModal from "../EmployeeModal";
 import DeleteConfirmationModal from "../EmployeeDeleteConfirmationModal";
+import { useSort } from "../../../../services/helpers/useSort/useSort";
 
 interface EmployeeTableWrapperProps extends BoxProps {
   updateEmployee: (id: string, data: Partial<Employee>) => Promise<void>;
@@ -56,11 +57,6 @@ interface EmployeeTableProps {
   useEmployees: typeof useEmployeesDefault;
 }
 
-export interface sortData {
-  iteratee: string;
-  order: "desc" | "asc" | boolean;
-}
-
 function EmployeeTable({
   showActiveEmployees,
   showInactiveEmployees,
@@ -69,30 +65,7 @@ function EmployeeTable({
   filters,
   useEmployees = useEmployeesDefault,
 }: EmployeeTableProps) {
-  const [sortData, setSortData] = useState<sortData>({
-    iteratee: "name",
-    order: "desc",
-  });
-  // const [filterData, setFilterData] = useState();
-
-  function updateSortData(field: string) {
-    if (!sortData || sortData.iteratee !== field) {
-      // if no current sort data or new sort option, set to clicked column
-      setSortData({ iteratee: field, order: "desc" });
-    } else if (sortData.iteratee === field) {
-      // if sort data is the same field as clicked column,
-      // switch to descending order,
-      // remove if already descending order
-      if (sortData.order === "desc") {
-        setSortData((sortData) => ({
-          iteratee: sortData.iteratee,
-          order: "asc",
-        }));
-      } else {
-        setSortData({ iteratee: "", order: false });
-      }
-    }
-  }
+  const { sortData, updateSortData } = useSort();
 
   const employeesFetched = useEmployees({
     include: ["skills", "assignments.role.project"],

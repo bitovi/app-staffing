@@ -1,4 +1,5 @@
-import { render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
+import { orderBy } from "lodash";
 import { skills } from "../../mocks/fixtures";
 import Skills from "./Skills";
 
@@ -49,6 +50,70 @@ describe("Pages/Skills", () => {
         name: "Edit Skill",
       });
       expect(editIcons[0]).toBeInTheDocument();
+    });
+  });
+
+  describe("Skills Sorting", () => {
+    const useSkillsMocked = () => {
+      return skills;
+    };
+
+    it("renders skills sorted descending and descending icon rendered on first load", async () => {
+      const { getByTestId, getAllByTestId } = render(
+        <Skills useSkills={useSkillsMocked} />,
+      );
+      const sortingButton = getByTestId("sort-icon-desc");
+      expect(sortingButton).toBeInTheDocument();
+
+      const renderedSkills = getAllByTestId("skill-name").map(
+        (item) => item.textContent,
+      );
+      const expectedSkills = orderBy(
+        skills.map((skill) => skill.name),
+        [],
+        ["desc"],
+      );
+      expect(renderedSkills).toEqual(expectedSkills);
+    });
+
+    it("Changes sorting order and icon direction when clicking on icon", async () => {
+      const { getByTestId, getAllByTestId } = render(
+        <Skills useSkills={useSkillsMocked} />,
+      );
+      const sortingButton = getByTestId("sort-icon-desc");
+      fireEvent.click(sortingButton);
+      expect(sortingButton).not.toBeInTheDocument();
+      const ascSortingButton = getByTestId("sort-icon-asc");
+      expect(ascSortingButton).toBeInTheDocument();
+
+      const renderedSkills = getAllByTestId("skill-name").map(
+        (item) => item.textContent,
+      );
+      const expectedSkills = orderBy(
+        skills.map((skill) => skill.name),
+        [],
+        ["asc"],
+      );
+      expect(renderedSkills).toEqual(expectedSkills);
+    });
+
+    it("hides sorting icon after clicking twice and unsorts the list", () => {
+      const { getByTestId, getAllByTestId } = render(
+        <Skills useSkills={useSkillsMocked} />,
+      );
+      const sortingButton = getByTestId("sort-icon-desc");
+      fireEvent.click(sortingButton);
+      const ascSortingButton = getByTestId("sort-icon-asc");
+      fireEvent.click(ascSortingButton);
+
+      expect(sortingButton).not.toBeInTheDocument();
+      expect(ascSortingButton).not.toBeInTheDocument();
+
+      const renderedSkills = getAllByTestId("skill-name").map(
+        (item) => item.textContent,
+      );
+      const expectedSkills = skills.map((skill) => skill.name);
+      expect(renderedSkills).toEqual(expectedSkills);
     });
   });
 });

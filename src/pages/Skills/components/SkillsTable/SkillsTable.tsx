@@ -13,6 +13,9 @@ import { Skill } from "../../../../services/api";
 import SkillsTableHeader from "./SkillsTableHeader/SkillsTableHeader";
 import SkillsTableBody from "./SkillsTableBody/SkillsTableBody";
 import { ListQuery } from "../../../../services/api/restBuilder";
+import { useSort } from "../../../../services/helpers/useSort/useSort";
+import { useMemo } from "react";
+import orderBy from "lodash/orderBy";
 
 interface SkillsTableProps {
   useSkills: (query?: ListQuery<Skill>) => Skill[];
@@ -27,18 +30,23 @@ export default function SkillsTable({
   destroySkill,
   filters,
 }: SkillsTableProps): JSX.Element {
-  const skills = useSkills({ sort: "name" });
+  const { sortData, updateSortData } = useSort();
+  const skills = useSkills();
 
-  const filteredSkills = (Array.isArray(skills) ? skills : []).filter(
-    (skill) => {
-      if (!filters || !filters.length) {
-        return true;
-      }
-      return filters.every(
-        (filter) => skill.name.toLocaleLowerCase().indexOf(filter) > -1,
-      );
-    },
-  );
+  const filteredSkills = useMemo(() => {
+    return orderBy(
+      (Array.isArray(skills) ? skills : []).filter((skill) => {
+        if (!filters || !filters.length) {
+          return true;
+        }
+        return filters.every(
+          (filter) => skill.name.toLocaleLowerCase().indexOf(filter) > -1,
+        );
+      }),
+      [sortData.iteratee],
+      [sortData.order],
+    );
+  }, [skills, sortData, filters]);
 
   return (
     <>
@@ -65,7 +73,10 @@ export default function SkillsTable({
       {filteredSkills.length > 0 && (
         <Box px="40px" my="40px">
           <Table>
-            <SkillsTableHeader />
+            <SkillsTableHeader
+              changeSort={updateSortData}
+              sortData={sortData}
+            />
 
             <SkillsTableBody skills={filteredSkills} editSkill={editSkill} />
           </Table>

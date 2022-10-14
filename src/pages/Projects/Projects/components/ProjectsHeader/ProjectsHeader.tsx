@@ -20,8 +20,8 @@ import ProjectsBreadCrumb from "../../../../../components/Breadcrumbs/ProjectsBr
 import ProjectModal from "../ProjectModal";
 import { useTimeline } from "../../../../../services/projection";
 import DataTimelineHeader from "../../../../../components/DataTable/DataTimelineHeader";
-import { sortData } from "../../Projects";
 import FilterBar from "../../../../FilterBar";
+import { sortData } from "../../../../../services/helpers/useSort/useSort";
 
 interface ProjectHeaderProps {
   loading?: boolean;
@@ -135,14 +135,14 @@ export default function ProjectsHeader({
                         w="20px"
                         h="20px"
                         ml="5px"
-                        data-testid="sort-icon-desc"
+                        data-testid="sort-icon-asc"
                       ></ChevronDownIcon>
                     ) : (
                       <ChevronUpIcon
                         w="20px"
                         h="20px"
                         ml="5px"
-                        data-testid="sort-icon-asc"
+                        data-testid="sort-icon-desc"
                       ></ChevronUpIcon>
                     ))}
                 </Text>
