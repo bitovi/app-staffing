@@ -1,10 +1,27 @@
+export type Attribute =
+  | string
+  | {
+      type: string;
+      allowNull: boolean;
+      primaryKey?: boolean;
+      defaultValue?: string;
+      unique?: boolean;
+    };
+
+export interface Relationship {
+  target: string;
+  options: { through: string; as: string };
+}
+
 export interface Schema {
   name: string;
-  attributes: {
-    [key: string]: string | { [key: string]: string | boolean };
-  };
+  attributes: { [key: string]: Attribute };
   // validation
-  belongsToMany: { target: string; options: { through: string; as: string } }[];
+  belongsToMany?: Relationship[];
+  hasMany?: Relationship[];
+  /* EXTRA */
+  displayField: string;
+  jsonApiField: string;
 }
 
 export const Employee: Schema = {
@@ -25,10 +42,14 @@ export const Employee: Schema = {
   },
   // validation
   belongsToMany: [
-    // @todo how to map roles to skills?
-    { target: "Skills", options: { through: "role__employee", as: "roles" } },
-    // { target: "Role", options: { through: "role__employee", as: "roles" } },
+    { target: "Role", options: { through: "role__employee", as: "roles" } },
   ],
+  hasMany: [
+    { target: "Skills", options: { through: "skill__employee", as: "skills" } },
+  ],
+  /* EXTRA */
+  displayField: "name",
+  jsonApiField: "employees",
 };
 
 export const Skill: Schema = {
@@ -49,4 +70,7 @@ export const Skill: Schema = {
   belongsToMany: [
     { target: "Role", options: { through: "role__skill", as: "roles" } },
   ],
+  /* EXTRA */
+  displayField: "name",
+  jsonApiField: "skills",
 };
