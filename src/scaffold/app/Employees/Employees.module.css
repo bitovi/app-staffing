@@ -1,0 +1,9 @@
+.customSkillField {
+  padding: 7.5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  background-color: #61d0d7;
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+}
