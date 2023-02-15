@@ -93,7 +93,6 @@ const ActionButtons: React.FC<{
   setEmployeeToEdit: React.Dispatch<React.SetStateAction<Employee | null>>;
   setEmployeeToDelete: React.Dispatch<React.SetStateAction<Employee | null>>;
 }> = ({ value, setEmployeeToEdit, setEmployeeToDelete }) => {
-  console.log("value", value);
   return (
     <>
       <Button variant="text" onClick={() => setEmployeeToEdit(value)}>
