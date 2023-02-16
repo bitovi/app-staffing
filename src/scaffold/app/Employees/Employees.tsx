@@ -3,17 +3,22 @@ import { Button } from "@mui/material";
 import { Button as ChakraButton } from "@chakra-ui/react";
 import isEmpty from "lodash/isEmpty";
 
-import { Employee as EmployeeSchema } from "../../schemas/schemas";
+import MuiProvider from "../../design/mui/MuiProvider/MuiProvider";
 import ScaffoldListPage from "../../components/ScaffoldListPage";
 import {
-  ScaffoldExtraColumn,
-  ScaffoldFieldColumn,
+  ScaffoldExtraDisplay,
+  ScaffoldAttributeDisplay,
 } from "../../components/ScaffoldColumns";
+import type { ValueComponent } from "../../components/ScaffoldListPage";
+import { fetchData } from "../../services/api/api";
+
+import { Employee as EmployeeSchema } from "../../schemas/schemas";
 import { Employee, useEmployeeMutations } from "../../../services/api";
 import DeleteConfirmationModal from "../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
 import EmployeeModal from "../../../pages/Employees/components/EmployeeModal";
-import type { ValueComponent } from "../../components/ScaffoldListPage";
 import styles from "./Employees.module.css";
+
+const resource = fetchData(EmployeeSchema);
 
 const EmployeesListPage: React.FC = () => {
   const { createEmployee, updateEmployee, destroyEmployee } =
@@ -54,34 +59,37 @@ const EmployeesListPage: React.FC = () => {
         onClose={() => setShowEmployeeModal(false)}
         onSave={addNewEmployee}
       />
-      <ScaffoldListPage
-        schema={EmployeeSchema}
-        valueComponents={{
-          skills: CustomSkillField,
-        }}
-        renderActions={() => (
-          <CreateEmployee onClick={() => setShowEmployeeModal(true)} />
-        )}
-      >
-        <ScaffoldFieldColumn field="name" label="Name" />
-        <ScaffoldFieldColumn field="start_date" label="Start Date" />
-        <ScaffoldFieldColumn field="end_date" label="End Date" />
-        <ScaffoldFieldColumn
-          field="skills"
-          label="Skills"
-          ValueComponent={CustomSkillField}
-        />
-        <ScaffoldExtraColumn
-          label="Actions"
-          renderValue={({ value }) => (
-            <ActionButtons
-              value={value}
-              setEmployeeToDelete={setEmployeeToDelete}
-              setEmployeeToEdit={setEmployeeToEdit}
-            />
+      <MuiProvider>
+        <ScaffoldListPage
+          schema={EmployeeSchema}
+          valueComponents={{
+            skills: CustomSkillField,
+          }}
+          renderActions={() => (
+            <CreateEmployee onClick={() => setShowEmployeeModal(true)} />
           )}
-        />
-      </ScaffoldListPage>
+          useData={() => resource.read()}
+        >
+          <ScaffoldAttributeDisplay field="name" label="Name" />
+          <ScaffoldAttributeDisplay field="start_date" label="Start Date" />
+          <ScaffoldAttributeDisplay field="end_date" label="End Date" />
+          <ScaffoldAttributeDisplay
+            field="skills"
+            label="Skills"
+            ValueComponent={CustomSkillField}
+          />
+          <ScaffoldExtraDisplay
+            label="Actions"
+            render={({ record }) => (
+              <ActionButtons
+                value={record}
+                setEmployeeToDelete={setEmployeeToDelete}
+                setEmployeeToEdit={setEmployeeToEdit}
+              />
+            )}
+          />
+        </ScaffoldListPage>
+      </MuiProvider>
     </>
   );
 };

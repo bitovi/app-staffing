@@ -1,8 +1,7 @@
 import React from "react";
-import type { Schema } from "../../schemas/schemas";
 
-import ScaffoldList from "../ScaffoldList";
-import styles from "./ScaffoldListPage.module.css";
+import { useScaffoldDesign } from "../ScaffoldDesignProvider";
+import type { Schema } from "../../schemas/schemas";
 
 export type ValueComponent = React.FC<{
   // value can be array of objects w/ label for join fields
@@ -14,20 +13,19 @@ const ScaffoldListPage: React.FC<{
   valueComponents?: { [field: string]: ValueComponent };
   renderActions?: () => JSX.Element;
   children?: React.ReactNode | null;
-}> = ({ schema, valueComponents, renderActions, children }) => {
+  useData?: () => any[];
+}> = ({ schema, valueComponents, renderActions, children, useData }) => {
+  const { Layout } = useScaffoldDesign();
+
   return (
-    <div>
-      <div className={styles.headerRow}>
-        <h1 className={styles.header}>{schema.name}</h1>
-        {/* @todo Filters */}
-        <div>{renderActions && renderActions()}</div>
-      </div>
-      <div>
-        <ScaffoldList schema={schema} valueComponents={valueComponents}>
-          {children}
-        </ScaffoldList>
-      </div>
-    </div>
+    <Layout
+      schema={schema}
+      valueComponents={valueComponents}
+      renderActions={renderActions}
+      useData={useData}
+    >
+      {children}
+    </Layout>
   );
 };
 

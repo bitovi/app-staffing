@@ -38,6 +38,7 @@ interface FlatIncluded {
 }
 
 export interface FlatData {
+  id: string | number;
   [field: string]:
     | Primitive
     | null
@@ -127,8 +128,7 @@ function getFlatData(data: JsonApiResponse): FlatData[] {
   });
 }
 
-export async function getData(schema: Schema): Promise<FlatData[]> {
-  // employees?include=skills%2Cassignments.role.project
+export function fetchData(schema: Schema) {
   let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s`;
   const includes = schema.hasMany
     ?.map((relationship) => relationship.target.toLowerCase())
@@ -138,9 +138,42 @@ export async function getData(schema: Schema): Promise<FlatData[]> {
     url = `${url}?include=${includes}`;
   }
 
-  const response = await fetch(url);
-  const data = await response.json();
-  const flat = getFlatData(data);
+  const promise = fetch(url)
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      return getFlatData(res);
+    });
 
-  return flat;
+  return wrapPromise(promise);
+}
+
+function wrapPromise(promise: Promise<FlatData[]>) {
+  let status = "pending";
+  let response: FlatData[];
+
+  const suspender = promise.then(
+    (res) => {
+      status = "success";
+      response = res;
+    },
+    (err) => {
+      status = "error";
+      response = err;
+    },
+  );
+
+  const read = () => {
+    switch (status) {
+      case "pending":
+        throw suspender;
+      case "error":
+        throw response;
+      default:
+        return response;
+    }
+  };
+
+  return { read };
 }

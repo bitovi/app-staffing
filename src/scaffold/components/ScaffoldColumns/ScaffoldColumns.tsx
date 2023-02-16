@@ -2,19 +2,27 @@ import React from "react";
 
 import type { ValueComponent } from "../ScaffoldListPage";
 
-export type ScaffoldExtraColumnProps = {
+export type ScaffoldExtraDisplayProps = {
   label: string;
   after?: string;
 } & (
-  | { renderValue: ({ value }: { value: string | number }) => JSX.Element }
+  | {
+      render: ({
+        record,
+        attributeSchema,
+      }: {
+        record: any;
+        attributeSchema: any;
+      }) => JSX.Element;
+    }
   | { ValueComponent: ValueComponent }
 );
 
-export const ScaffoldExtraColumn: React.FC<ScaffoldExtraColumnProps> = () => {
+export const ScaffoldExtraDisplay: React.FC<ScaffoldExtraDisplayProps> = () => {
   return null;
 };
 
-export type ScaffoldFieldColumnProps = {
+export type ScaffoldAttributeDisplayProps = {
   field: string;
   label?: string;
 } & (
@@ -22,6 +30,8 @@ export type ScaffoldFieldColumnProps = {
   | { ValueComponent?: ValueComponent }
 );
 
-export const ScaffoldFieldColumn: React.FC<ScaffoldFieldColumnProps> = () => {
+export const ScaffoldAttributeDisplay: React.FC<
+  ScaffoldAttributeDisplayProps
+> = () => {
   return null;
 };

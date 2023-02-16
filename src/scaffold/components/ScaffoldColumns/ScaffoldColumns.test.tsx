@@ -1,16 +1,18 @@
 import { render } from "@testing-library/react";
-import { ScaffoldExtraColumn, ScaffoldFieldColumn } from ".";
+import { ScaffoldExtraDisplay, ScaffoldAttributeDisplay } from ".";
 
 describe("scaffold/components/ScaffoldColumns", () => {
-  describe("ScaffoldExtraColumn", () => {
+  describe("ScaffoldExtraDisplay", () => {
     it("works", () => {
-      render(<ScaffoldExtraColumn label="Label" renderValue={() => <div />} />);
+      render(
+        <ScaffoldExtraDisplay label="Label" renderValue={() => <div />} />,
+      );
     });
   });
 
-  describe("ScaffoldFieldColumn", () => {
+  describe("ScaffoldAttributeDisplay", () => {
     it("works", () => {
-      render(<ScaffoldFieldColumn field="field" />);
+      render(<ScaffoldAttributeDisplay field="field" />);
     });
   });
 });

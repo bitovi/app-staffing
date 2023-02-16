@@ -1,7 +1,7 @@
 import { GridEnrichedColDef } from "@mui/x-data-grid";
 import { cloneDeep } from "lodash";
-import { ScaffoldExtraColumn } from "../../components/ScaffoldColumns";
-import { ScaffoldFieldColumn } from "../../components/ScaffoldColumns";
+import { ScaffoldExtraDisplay } from "../../components/ScaffoldColumns";
+import { ScaffoldAttributeDisplay } from "../../components/ScaffoldColumns";
 import type { Schema } from "../../schemas/schemas";
 import {
   getColumns,
@@ -34,38 +34,42 @@ describe("scaffold/services/columns", () => {
   describe("hasValidChildren", () => {
     it("returns true if name matches a child", () => {
       const children = [
-        <ScaffoldExtraColumn label="one" renderValue={() => <div />} />,
-        <ScaffoldFieldColumn field="two" />,
-        <ScaffoldExtraColumn label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
+        <ScaffoldAttributeDisplay field="two" />,
+        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
       ];
 
-      expect(hasValidChildren("ScaffoldFieldColumn", children)).toEqual(true);
+      expect(hasValidChildren("ScaffoldAttributeDisplay", children)).toEqual(
+        true,
+      );
     });
 
     it("returns false if name does not match a child", () => {
       const children = [
-        <ScaffoldExtraColumn label="one" renderValue={() => <div />} />,
-        <ScaffoldExtraColumn label="two" renderValue={() => <div />} />,
-        <ScaffoldExtraColumn label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="two" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
       ];
 
-      expect(hasValidChildren("ScaffoldFieldColumn", children)).toEqual(false);
+      expect(hasValidChildren("ScaffoldAttributeDisplay", children)).toEqual(
+        false,
+      );
     });
   });
 
   describe("injectExtraColumns", () => {
-    it("adds ScaffoldExtraColumn to the end of the mui column array", () => {
+    it("adds ScaffoldExtraDisplay to the end of the mui column array", () => {
       const initialColumns: GridEnrichedColDef[] = [
         { field: "one", flex: 1 },
         { field: "two", flex: 1 },
         { field: "three", flex: 1 },
       ];
       const extraColumns = [
-        <ScaffoldExtraColumn
+        <ScaffoldExtraDisplay
           label="four"
           renderValue={({ value }: { value: any }) => <div>{value}</div>}
         />,
-        <ScaffoldExtraColumn
+        <ScaffoldExtraDisplay
           label="five"
           ValueComponent={({ value }) => <div>{value}</div>}
         />,
@@ -104,11 +108,11 @@ describe("scaffold/services/columns", () => {
   });
 
   describe("getColumnsFromChildren", () => {
-    it("returns array of GridEnrichedColDef for the ScaffoldFieldColumn items", () => {
+    it("returns array of GridEnrichedColDef for the ScaffoldAttributeDisplay items", () => {
       const children = [
-        <ScaffoldExtraColumn label="one" renderValue={() => <div />} />,
-        <ScaffoldFieldColumn label="two" field="two" />,
-        <ScaffoldExtraColumn label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
+        <ScaffoldAttributeDisplay label="two" field="two" />,
+        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
       ];
 
       const expected = [{ field: "two", headerName: "two", flex: 1 }];
@@ -119,10 +123,10 @@ describe("scaffold/services/columns", () => {
       expect(result).toEqual(expected);
     });
 
-    it("returns empty if no ScaffoldFieldColumn items are passed", () => {
+    it("returns empty if no ScaffoldAttributeDisplay items are passed", () => {
       const children = [
-        <ScaffoldExtraColumn label="one" renderValue={() => <div />} />,
-        <ScaffoldExtraColumn label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
       ];
 
       const expected: GridEnrichedColDef[] = [];

@@ -1,79 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { DataGrid, GridEnrichedColDef } from "@mui/x-data-grid";
-import { createTheme, ThemeProvider } from "@mui/material";
-import type {} from "@mui/x-data-grid/themeAugmentation";
+import React from "react";
 
-import { getData } from "../../services/api/api";
 import {
   getColumnsFromChildren,
-  getColumns,
+  getColumnsFromSchema,
   hasValidChildren,
   injectExtraColumns,
-} from "../../services/columns/columns";
+} from "../../services/columns/scaffoldColumns";
+import { useScaffoldDesign } from "../ScaffoldDesignProvider";
 import type { Schema } from "../../schemas/schemas";
 import type { ValueComponent } from "../ScaffoldListPage";
-import type { FlatData } from "../../services/api/api";
+import type { ScaffoldColumn } from "../../services/columns/scaffoldColumns";
 
-const ScaffoldList: React.FC<{
+interface ScaffoldListProps {
   schema: Schema;
   valueComponents?: { [field: string]: ValueComponent };
+  useData?: () => any[];
   children?: React.ReactNode | null;
-}> = ({ schema, children, valueComponents }) => {
-  const [rows, setRows] = useState<FlatData[]>([]);
+}
 
-  useEffect(() => {
-    getData(schema).then((data) => {
-      setRows(data);
-    });
-  }, []);
+const ScaffoldList: React.FC<ScaffoldListProps> = ({
+  schema,
+  valueComponents,
+  useData,
+  children,
+}) => {
+  const columns = getColumns(schema, valueComponents, children);
+  const { List } = useScaffoldDesign();
 
+  if (!useData) {
+    useData = () => [];
+  }
+
+  return <List columns={columns as ScaffoldColumn[]} useData={useData} />;
+};
+
+function getColumns(
+  schema: Schema,
+  valueComponents: { [field: string]: ValueComponent } | undefined,
+  children: React.ReactNode | null,
+) {
   const childArray = React.Children.toArray(children);
 
-  const hasScaffoldListColumnChildren = hasValidChildren(
-    "ScaffoldFieldColumn",
-    childArray,
-  );
+  let columns = hasValidChildren("ScaffoldAttributeDisplay", childArray)
+    ? getColumnsFromChildren(schema, childArray)
+    : getColumnsFromSchema(schema, valueComponents || null);
 
-  const hasScaffoldExtraColumnChildren = hasValidChildren(
-    "ScaffoldExtraColumn",
-    childArray,
-  );
-
-  let columns: GridEnrichedColDef[];
-  if (hasScaffoldListColumnChildren) {
-    columns = getColumnsFromChildren(schema, childArray);
-  } else if (valueComponents) {
-    columns = getColumns(schema, valueComponents);
-  } else {
-    columns = getColumns(schema, null);
-  }
-  if (hasScaffoldExtraColumnChildren) {
+  if (hasValidChildren("ScaffoldExtraDisplay", childArray)) {
     columns = injectExtraColumns(columns, childArray);
   }
 
-  return (
-    // wrapping only DataGrid and not ScaffoldListPage because the existing
-    // edit/create/delete modals rely on Chakra and using Theme at that level
-    // will break the styles
-    <ThemeProvider theme={createTheme()}>
-      <DataGrid
-        sx={{
-          backgroundColor: "white",
-          borderRadius: 2,
-          margin: 2.5,
-          "& .MuiDataGrid-columnSeparator": {
-            display: "none",
-          },
-          "& .MuiDataGrid-columnHeaderTitle": {
-            fontWeight: "bold",
-          },
-        }}
-        autoHeight
-        rows={rows}
-        columns={columns}
-      />
-    </ThemeProvider>
-  );
-};
+  return columns;
+}
 
 export default ScaffoldList;
