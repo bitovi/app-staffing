@@ -6,7 +6,7 @@ import Employees, { EmployeePageLoadingLayout } from "./Employees";
 import { BrowserRouter } from "react-router-dom";
 
 export default {
-  title: "Pages/Employees",
+  title: "Pages/legacy/Employees",
   component: Employees,
 } as ComponentMeta<typeof Employees>;
 

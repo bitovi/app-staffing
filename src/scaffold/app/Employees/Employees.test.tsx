@@ -1,4 +1,11 @@
-import { render, screen, within, waitFor, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  within,
+  waitFor,
+  act,
+  prettyDOM,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import Employees from "./Employees";
@@ -46,10 +53,6 @@ jest.mock("../../services/api/api", () => ({
 }));
 
 describe("scaffold/app/Employees", () => {
-  jest.setTimeout(30000);
-  jest.useFakeTimers();
-  jest.runAllTimers();
-
   it("Renders h1 tag for page title", async () => {
     await act(async () => {
       render(<Employees />);
