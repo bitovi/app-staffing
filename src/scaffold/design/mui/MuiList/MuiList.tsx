@@ -57,7 +57,6 @@ const MuiListRows: React.FC<XListProps> = ({ columns, useData }) => {
               {column.renderCell({
                 value: item[column.attribute],
                 record: item,
-                attributeSchema: {},
               })}
             </TableCell>
           ))}

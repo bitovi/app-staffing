@@ -1,34 +1,35 @@
-import React from "react";
+import type {
+  ValueComponent,
+  FlatRecord,
+  CellValue,
+} from "../../design/interfaces";
+import type { Attribute } from "../../schemas/schemas";
 
-import type { ValueComponent } from "../ScaffoldListPage";
+export type Render = ({ record }: { record: FlatRecord }) => JSX.Element;
 
 export type ScaffoldExtraDisplayProps = {
   label: string;
   after?: string;
-} & (
-  | {
-      render: ({
-        record,
-        attributeSchema,
-      }: {
-        record: any;
-        attributeSchema: any;
-      }) => JSX.Element;
-    }
-  | { ValueComponent: ValueComponent }
-);
+} & ({ render: Render } | { ValueComponent: ValueComponent });
 
 export const ScaffoldExtraDisplay: React.FC<ScaffoldExtraDisplayProps> = () => {
   return null;
 };
 
+export type RenderValue = ({
+  value,
+  record,
+  attributeSchema,
+}: {
+  value: CellValue;
+  record: FlatRecord;
+  attributeSchema?: Attribute;
+}) => JSX.Element;
+
 export type ScaffoldAttributeDisplayProps = {
-  field: string;
+  attribute: string;
   label?: string;
-} & (
-  | { renderValue?: ({ value }: { value: string | number }) => JSX.Element }
-  | { ValueComponent?: ValueComponent }
-);
+} & ({ renderValue?: RenderValue } | { ValueComponent?: ValueComponent });
 
 export const ScaffoldAttributeDisplay: React.FC<
   ScaffoldAttributeDisplayProps

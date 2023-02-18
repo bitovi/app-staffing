@@ -1,22 +1,41 @@
-import type { Schema } from "../schemas/schemas";
+import type { Attribute, Schema } from "../schemas/schemas";
 import type { ScaffoldColumn } from "../services/columns/scaffoldColumns";
 
+export type Primitive = string | boolean | number;
+
+export type Relationship = {
+  id: string;
+  label: string;
+  [field: string]: Primitive;
+}[];
+
+export type CellValue = Primitive | Relationship;
+
+export interface FlatRecord {
+  id: string | number;
+  [field: string]: CellValue;
+}
+
+export type ValueComponent = React.FC<{
+  value: CellValue;
+  record: FlatRecord;
+  attributeSchema: Attribute | null;
+}>;
+
 export interface XLayoutProps {
-  // schemas?: any[];
-  // children?: any;
   schema: Schema;
-  valueComponents: any;
-  renderActions: any;
-  useData: any;
+  valueComponents?: { [attribute: string]: ValueComponent };
+  renderActions?: () => JSX.Element;
+  useData?: () => FlatRecord[];
   children: any;
 }
 
 export interface XListProps {
   columns: ScaffoldColumn[];
-  useData: () => any[];
+  useData: () => FlatRecord[];
 }
 
-export interface XProviderProps {
-  theme?: any;
+export interface XProviderProps<T> {
+  theme?: T;
   children?: any;
 }

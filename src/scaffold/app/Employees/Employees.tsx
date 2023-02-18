@@ -9,7 +9,7 @@ import {
   ScaffoldExtraDisplay,
   ScaffoldAttributeDisplay,
 } from "../../components/ScaffoldColumns";
-import type { ValueComponent } from "../../components/ScaffoldListPage";
+import type { ValueComponent } from "../../design/interfaces";
 import { fetchData } from "../../services/api/api";
 
 import { Employee as EmployeeSchema } from "../../schemas/schemas";
@@ -70,11 +70,11 @@ const EmployeesListPage: React.FC = () => {
           )}
           useData={() => resource.read()}
         >
-          <ScaffoldAttributeDisplay field="name" label="Name" />
-          <ScaffoldAttributeDisplay field="start_date" label="Start Date" />
-          <ScaffoldAttributeDisplay field="end_date" label="End Date" />
+          <ScaffoldAttributeDisplay attribute="name" label="Name" />
+          <ScaffoldAttributeDisplay attribute="start_date" label="Start Date" />
+          <ScaffoldAttributeDisplay attribute="end_date" label="End Date" />
           <ScaffoldAttributeDisplay
-            field="skills"
+            attribute="skills"
             label="Skills"
             ValueComponent={CustomSkillField}
           />

@@ -1,5 +1,6 @@
 import React from "react";
 import { createTheme, ThemeProvider } from "@mui/material";
+import type { Theme } from "@mui/material";
 
 import ScaffoldDesignProvider from "../../../components/ScaffoldDesignProvider";
 import MuiLayout from "../MuiLayout";
@@ -8,7 +9,7 @@ import type { XProviderProps } from "../../interfaces";
 
 const defaultTheme = createTheme();
 
-const MuiProvider: React.FC<XProviderProps> = ({
+const MuiProvider: React.FC<XProviderProps<Theme>> = ({
   theme = defaultTheme,
   children,
 }) => {

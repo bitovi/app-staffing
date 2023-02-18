@@ -13,10 +13,11 @@ export const ScaffoldDesignContext = createContext<ScaffoldDesignContextProps>({
   Layout: ({ schema, children }) => null,
 });
 
-export const useScaffoldDesign = () => useContext(ScaffoldDesignContext);
+export const useScaffoldDesign = (): ScaffoldDesignContextProps =>
+  useContext(ScaffoldDesignContext);
 
 interface ScaffoldDesignProviderProps extends ScaffoldDesignContextProps {
-  children: any;
+  children: any; // @todo type children
 }
 
 const ScaffoldDesignProvider: React.FC<ScaffoldDesignProviderProps> = ({

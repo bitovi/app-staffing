@@ -8,13 +8,13 @@ import {
 } from "../../services/columns/scaffoldColumns";
 import { useScaffoldDesign } from "../ScaffoldDesignProvider";
 import type { Schema } from "../../schemas/schemas";
-import type { ValueComponent } from "../ScaffoldListPage";
+import type { FlatRecord, ValueComponent } from "../../design/interfaces";
 import type { ScaffoldColumn } from "../../services/columns/scaffoldColumns";
 
 interface ScaffoldListProps {
   schema: Schema;
-  valueComponents?: { [field: string]: ValueComponent };
-  useData?: () => any[];
+  valueComponents?: { [attribute: string]: ValueComponent };
+  useData?: () => FlatRecord[];
   children?: React.ReactNode | null;
 }
 
@@ -28,10 +28,10 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
   const { List } = useScaffoldDesign();
 
   if (!useData) {
-    useData = () => [];
+    useData = () => []; // @todo
   }
 
-  return <List columns={columns as ScaffoldColumn[]} useData={useData} />;
+  return <List columns={columns} useData={useData} />;
 };
 
 function getColumns(

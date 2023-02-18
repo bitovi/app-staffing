@@ -1,22 +1,21 @@
-import { GridEnrichedColDef } from "@mui/x-data-grid";
 import { cloneDeep } from "lodash";
+
 import { ScaffoldExtraDisplay } from "../../components/ScaffoldColumns";
 import { ScaffoldAttributeDisplay } from "../../components/ScaffoldColumns";
-import type { Schema } from "../../schemas/schemas";
 import {
-  getColumns,
+  getScaffoldColumn,
   getColumnsFromChildren,
-  getMuiDataGridColumn,
-  hasValidChildren,
+  getColumnsFromSchema,
   injectExtraColumns,
-} from "./columns";
+  hasValidChildren,
+} from "./scaffoldColumns";
+import type { Schema } from "../../schemas/schemas";
+import type { ScaffoldColumn } from "./scaffoldColumns";
 
 const TestSchema: Schema = {
   name: "Test",
   attributes: { id: "string", name: "string" },
-  belongsToMany: [
-    { target: "TestRelationship", options: { through: "", as: "" } },
-  ],
+  hasMany: [{ target: "TestRelationship", options: { through: "", as: "" } }],
   displayField: "test",
   jsonApiField: "tests",
 };
@@ -24,19 +23,19 @@ const TestSchema: Schema = {
 // @todo removing renderCell function from objects because jest is giving
 // an error when comparing an array of objects with functions (even if equal)
 // https://stackoverflow.com/a/60989588/4781945
-const removeRenderCellFn = (item: GridEnrichedColDef) => {
+const removeRenderCellFn = (item: any) => {
   const clone = cloneDeep(item);
   delete clone.renderCell;
   return clone;
 };
 
-describe("scaffold/services/columns", () => {
+describe("scaffold/services/scaffoldColumns", () => {
   describe("hasValidChildren", () => {
     it("returns true if name matches a child", () => {
       const children = [
-        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
-        <ScaffoldAttributeDisplay field="two" />,
-        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" render={() => <div />} />,
+        <ScaffoldAttributeDisplay attribute="two" />,
+        <ScaffoldExtraDisplay label="three" render={() => <div />} />,
       ];
 
       expect(hasValidChildren("ScaffoldAttributeDisplay", children)).toEqual(
@@ -46,9 +45,9 @@ describe("scaffold/services/columns", () => {
 
     it("returns false if name does not match a child", () => {
       const children = [
-        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
-        <ScaffoldExtraDisplay label="two" renderValue={() => <div />} />,
-        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" render={() => <div />} />,
+        <ScaffoldExtraDisplay label="two" render={() => <div />} />,
+        <ScaffoldExtraDisplay label="three" render={() => <div />} />,
       ];
 
       expect(hasValidChildren("ScaffoldAttributeDisplay", children)).toEqual(
@@ -59,28 +58,26 @@ describe("scaffold/services/columns", () => {
 
   describe("injectExtraColumns", () => {
     it("adds ScaffoldExtraDisplay to the end of the mui column array", () => {
-      const initialColumns: GridEnrichedColDef[] = [
-        { field: "one", flex: 1 },
-        { field: "two", flex: 1 },
-        { field: "three", flex: 1 },
+      const initialColumns: ScaffoldColumn[] = [
+        { attribute: "one", headerName: "one", renderCell: jest.fn() },
+        { attribute: "two", headerName: "two", renderCell: jest.fn() },
+        { attribute: "three", headerName: "three", renderCell: jest.fn() },
       ];
+
       const extraColumns = [
-        <ScaffoldExtraDisplay
-          label="four"
-          renderValue={({ value }: { value: any }) => <div>{value}</div>}
-        />,
+        <ScaffoldExtraDisplay label="four" render={() => <div>extra</div>} />,
         <ScaffoldExtraDisplay
           label="five"
           ValueComponent={({ value }) => <div>{value}</div>}
         />,
       ];
 
-      const expectedColumns: GridEnrichedColDef[] = [
-        { field: "one", flex: 1 },
-        { field: "two", flex: 1 },
-        { field: "three", flex: 1 },
-        { field: "four", flex: 1, headerName: "four", renderCell: jest.fn() },
-        { field: "five", flex: 1, headerName: "five", renderCell: jest.fn() },
+      const expectedColumns: ScaffoldColumn[] = [
+        { attribute: "one", headerName: "one", renderCell: jest.fn() },
+        { attribute: "two", headerName: "two", renderCell: jest.fn() },
+        { attribute: "three", headerName: "three", renderCell: jest.fn() },
+        { attribute: "four", headerName: "four", renderCell: jest.fn() },
+        { attribute: "five", headerName: "five", renderCell: jest.fn() },
       ].map(removeRenderCellFn);
 
       const result = injectExtraColumns(initialColumns, extraColumns).map(
@@ -91,31 +88,32 @@ describe("scaffold/services/columns", () => {
     });
   });
 
-  describe("getMuiDataGridColumn", () => {
+  describe("getScaffoldColumn", () => {
     // @todo this test returns different renderCell (fn), not sure how to
     // test this with jest
-    it("returns GridEnrichedColDef", () => {
-      const expected = { field: "test", headerName: "test", flex: 1 };
-      const result = getMuiDataGridColumn({
+    it("returns ScaffoldColumn", () => {
+      const expected = { attribute: "test", headerName: "test" };
+      const result = getScaffoldColumn({
         label: "test",
-        field: "test",
-        schemaDefinition: "string",
+        attribute: "test",
+        attributeSchema: "string",
       });
-      delete result.renderCell;
+      const resultWithoutRenderCell: any = cloneDeep(result);
+      delete resultWithoutRenderCell.renderCell;
 
-      expect(result).toEqual(expected);
+      expect(resultWithoutRenderCell).toEqual(expected);
     });
   });
 
   describe("getColumnsFromChildren", () => {
-    it("returns array of GridEnrichedColDef for the ScaffoldAttributeDisplay items", () => {
+    it("returns ScaffoldColumn[] for the ScaffoldAttributeDisplay items", () => {
       const children = [
-        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
-        <ScaffoldAttributeDisplay label="two" field="two" />,
-        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" render={jest.fn()} />,
+        <ScaffoldAttributeDisplay label="two" attribute="two" />,
+        <ScaffoldExtraDisplay label="three" render={jest.fn()} />,
       ];
 
-      const expected = [{ field: "two", headerName: "two", flex: 1 }];
+      const expected = [{ attribute: "two", headerName: "two" }];
       const result = getColumnsFromChildren(TestSchema, children).map(
         removeRenderCellFn,
       );
@@ -125,11 +123,11 @@ describe("scaffold/services/columns", () => {
 
     it("returns empty if no ScaffoldAttributeDisplay items are passed", () => {
       const children = [
-        <ScaffoldExtraDisplay label="one" renderValue={() => <div />} />,
-        <ScaffoldExtraDisplay label="three" renderValue={() => <div />} />,
+        <ScaffoldExtraDisplay label="one" render={() => <div />} />,
+        <ScaffoldExtraDisplay label="three" render={() => <div />} />,
       ];
 
-      const expected: GridEnrichedColDef[] = [];
+      const expected: ScaffoldColumn[] = [];
       const result = getColumnsFromChildren(TestSchema, children).map(
         removeRenderCellFn,
       );
@@ -138,14 +136,18 @@ describe("scaffold/services/columns", () => {
     });
   });
 
-  describe("getColumns", () => {
-    const result = getColumns(TestSchema, null).map(removeRenderCellFn);
-    const expected = [
-      { field: "id", flex: 1 },
-      { field: "name", flex: 1 },
-      { field: "testrelationship", headerName: "TestRelationship", flex: 1 },
-    ];
+  describe("getColumnsFromSchema", () => {
+    it("returns ScaffoldColumn[] for a given schema", () => {
+      const result = getColumnsFromSchema(TestSchema, null).map(
+        removeRenderCellFn,
+      );
+      const expected = [
+        { attribute: "id", headerName: "id" },
+        { attribute: "name", headerName: "name" },
+        { attribute: "testrelationship", headerName: "TestRelationship" },
+      ];
 
-    expect(result).toEqual(expected);
+      expect(result).toEqual(expected);
+    });
   });
 });
