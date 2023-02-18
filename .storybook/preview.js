@@ -1,9 +1,13 @@
 import { Suspense } from "react";
 import { StylesProvider } from "@chakra-ui/react";
+import { initialize, mswDecorator } from "msw-storybook-addon";
 
 import theme from "../src/theme/";
 
 import "../src/setupMocks";
+
+// Initialize MSW
+initialize();
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -28,4 +32,5 @@ export const decorators = [
       </Suspense>
     </StylesProvider>
   ),
+  mswDecorator,
 ];

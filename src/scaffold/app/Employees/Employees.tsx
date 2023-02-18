@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Button as ChakraButton } from "@chakra-ui/react";
 import isEmpty from "lodash/isEmpty";
 
@@ -14,6 +14,7 @@ import DeleteConfirmationModal from "../../../pages/Employees/components/Employe
 import EmployeeModal from "../../../pages/Employees/components/EmployeeModal";
 import type { ValueComponent } from "../../components/ScaffoldListPage";
 import styles from "./Employees.module.css";
+import { EditIcon, TrashIcon } from "../../../pages/assets";
 
 const EmployeesListPage: React.FC = () => {
   const { createEmployee, updateEmployee, destroyEmployee } =
@@ -95,12 +96,20 @@ const ActionButtons: React.FC<{
 }> = ({ value, setEmployeeToEdit, setEmployeeToDelete }) => {
   return (
     <>
-      <Button variant="text" onClick={() => setEmployeeToEdit(value)}>
-        Edit
-      </Button>
-      <Button variant="text" onClick={() => setEmployeeToDelete(value)}>
-        Delete
-      </Button>
+      <IconButton
+        aria-label="Edit Employee"
+        size="small"
+        onClick={() => setEmployeeToEdit(value)}
+      >
+        <EditIcon fill="currentColor" />
+      </IconButton>
+      <IconButton
+        aria-label="Delete Employee"
+        size="small"
+        onClick={() => setEmployeeToDelete(value)}
+      >
+        <TrashIcon fill="currentColor" />
+      </IconButton>
     </>
   );
 };
