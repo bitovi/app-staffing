@@ -1,4 +1,4 @@
-import React from "react";
+import { Children as ReactChildren } from "react";
 
 import {
   getColumnsFromChildren,
@@ -7,9 +7,9 @@ import {
   injectExtraColumns,
 } from "../../services/columns/scaffoldColumns";
 import { useScaffoldDesign } from "../ScaffoldDesignProvider";
+
 import type { Schema } from "../../schemas/schemas";
 import type { FlatRecord, ValueComponent } from "../../design/interfaces";
-import type { ScaffoldColumn } from "../../services/columns/scaffoldColumns";
 
 interface ScaffoldListProps {
   schema: Schema;
@@ -39,7 +39,7 @@ function getColumns(
   valueComponents: { [field: string]: ValueComponent } | undefined,
   children: React.ReactNode | null,
 ) {
-  const childArray = React.Children.toArray(children);
+  const childArray = ReactChildren.toArray(children);
 
   let columns = hasValidChildren("ScaffoldAttributeDisplay", childArray)
     ? getColumnsFromChildren(schema, childArray)

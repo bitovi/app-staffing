@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@mui/material";
-import { Button as ChakraButton } from "@chakra-ui/react";
 import isEmpty from "lodash/isEmpty";
 
-import MuiProvider from "../../design/mui/MuiProvider/MuiProvider";
+import MuiProvider from "../../design/mui/MuiProvider";
 import ScaffoldListPage from "../../components/ScaffoldListPage";
 import {
   ScaffoldExtraDisplay,
@@ -117,9 +116,9 @@ const CreateEmployee: React.FC<{
   onClick: () => void;
 }> = ({ onClick }) => {
   return (
-    <ChakraButton size="lg" variant="primary" onClick={onClick}>
+    <Button variant="contained" onClick={onClick}>
       Add Team Member
-    </ChakraButton>
+    </Button>
   );
 };
 

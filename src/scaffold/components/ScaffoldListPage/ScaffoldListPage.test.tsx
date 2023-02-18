@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
+import ScaffoldListPage from ".";
 import type { Schema } from "../../schemas/schemas";
-import ScaffoldListPage from "./ScaffoldListPage";
 
 const TestSchema: Schema = {
   name: "Test",

@@ -1,5 +1,4 @@
-import React from "react";
-
+import ScaffoldList from "../ScaffoldList";
 import { useScaffoldDesign } from "../ScaffoldDesignProvider";
 import type { XLayoutProps } from "../../design/interfaces";
 
@@ -19,7 +18,13 @@ const ScaffoldListPage: React.FC<XLayoutProps> = ({
       renderActions={renderActions}
       useData={useData}
     >
-      {children}
+      <ScaffoldList
+        schema={schema}
+        valueComponents={valueComponents}
+        useData={useData}
+      >
+        {children}
+      </ScaffoldList>
     </Layout>
   );
 };

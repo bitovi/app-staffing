@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { css } from "@emotion/react";
 import {
   Table,

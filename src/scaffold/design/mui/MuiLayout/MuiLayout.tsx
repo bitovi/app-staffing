@@ -1,9 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
 import { Container } from "@mui/material";
 import { css } from "@emotion/react";
 
-import ScaffoldList from "../../../components/ScaffoldList";
 import { XLayoutProps } from "../../interfaces";
 
 const styles = {
@@ -24,9 +22,7 @@ const styles = {
 
 const MuiLayout: React.FC<XLayoutProps> = ({
   schema,
-  valueComponents,
   renderActions,
-  useData,
   children,
 }) => {
   return (
@@ -36,15 +32,7 @@ const MuiLayout: React.FC<XLayoutProps> = ({
         {/* @todo Filters */}
         <div>{renderActions && renderActions()}</div>
       </div>
-      <div>
-        <ScaffoldList
-          schema={schema}
-          valueComponents={valueComponents}
-          useData={useData}
-        >
-          {children}
-        </ScaffoldList>
-      </div>
+      <div>{children}</div>
     </Container>
   );
 };

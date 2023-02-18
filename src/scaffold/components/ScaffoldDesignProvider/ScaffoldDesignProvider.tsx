@@ -1,4 +1,5 @@
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
+
 import { XListProps, XLayoutProps } from "../../design/interfaces";
 
 interface ScaffoldDesignContextProps {
@@ -8,7 +9,7 @@ interface ScaffoldDesignContextProps {
 }
 
 export const ScaffoldDesignContext = createContext<ScaffoldDesignContextProps>({
-  // @todo have default/headless components?
+  // @todo default/headless components?
   List: ({ columns, useData }) => null,
   Layout: ({ schema, children }) => null,
 });

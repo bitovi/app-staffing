@@ -4,15 +4,13 @@ import { ScaffoldExtraDisplay, ScaffoldAttributeDisplay } from ".";
 describe("scaffold/components/ScaffoldColumns", () => {
   describe("ScaffoldExtraDisplay", () => {
     it("works", () => {
-      render(
-        <ScaffoldExtraDisplay label="Label" renderValue={() => <div />} />,
-      );
+      render(<ScaffoldExtraDisplay label="Label" render={() => <div />} />);
     });
   });
 
   describe("ScaffoldAttributeDisplay", () => {
     it("works", () => {
-      render(<ScaffoldAttributeDisplay field="field" />);
+      render(<ScaffoldAttributeDisplay attribute="field" />);
     });
   });
 });
