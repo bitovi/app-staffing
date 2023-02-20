@@ -1,8 +1,17 @@
 import ScaffoldList from "../ScaffoldList";
 import { useScaffoldDesign } from "../ScaffoldDesignProvider";
-import type { XLayoutProps } from "../../design/interfaces";
+import type {
+  FlatRecord,
+  ValueComponent,
+  XLayoutProps,
+} from "../../design/interfaces";
 
-const ScaffoldListPage: React.FC<XLayoutProps> = ({
+interface ScaffoldListPageProps extends XLayoutProps {
+  valueComponents: { [attribute: string]: ValueComponent };
+  useData?: () => FlatRecord[];
+}
+
+const ScaffoldListPage: React.FC<ScaffoldListPageProps> = ({
   schema,
   valueComponents,
   renderActions,
@@ -12,12 +21,7 @@ const ScaffoldListPage: React.FC<XLayoutProps> = ({
   const { Layout } = useScaffoldDesign();
 
   return (
-    <Layout
-      schema={schema}
-      valueComponents={valueComponents}
-      renderActions={renderActions}
-      useData={useData}
-    >
+    <Layout schema={schema} renderActions={renderActions}>
       <ScaffoldList
         schema={schema}
         valueComponents={valueComponents}

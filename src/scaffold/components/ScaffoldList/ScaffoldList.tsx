@@ -7,9 +7,14 @@ import {
   injectExtraColumns,
 } from "../../services/columns/scaffoldColumns";
 import { useScaffoldDesign } from "../ScaffoldDesignProvider";
+import {
+  ScaffoldAttributeDisplay,
+  ScaffoldExtraDisplay,
+} from "../ScaffoldColumns";
 
-import type { Schema } from "../../schemas/schemas";
+import { Employee, Schema } from "../../schemas/schemas";
 import type { FlatRecord, ValueComponent } from "../../design/interfaces";
+import { fetchData } from "../../services/api/api";
 
 interface ScaffoldListProps {
   schema: Schema;
@@ -27,8 +32,10 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
   const columns = getColumns(schema, valueComponents, children);
   const { List } = useScaffoldDesign();
 
+  // @todo implement this in a better way when data layer is implemented
   if (!useData) {
-    useData = () => []; // @todo
+    const resource = fetchData(Employee);
+    useData = () => resource.read();
   }
 
   return <List columns={columns} useData={useData} />;
@@ -39,13 +46,15 @@ function getColumns(
   valueComponents: { [field: string]: ValueComponent } | undefined,
   children: React.ReactNode | null,
 ) {
-  const childArray = ReactChildren.toArray(children);
+  // casting as JSX.Element because helper functions require access to
+  // `child.type.name` and `child.props`
+  const childArray = ReactChildren.toArray(children) as JSX.Element[];
 
-  let columns = hasValidChildren("ScaffoldAttributeDisplay", childArray)
+  let columns = hasValidChildren(ScaffoldAttributeDisplay.name, childArray)
     ? getColumnsFromChildren(schema, childArray)
     : getColumnsFromSchema(schema, valueComponents || null);
 
-  if (hasValidChildren("ScaffoldExtraDisplay", childArray)) {
+  if (hasValidChildren(ScaffoldExtraDisplay.name, childArray)) {
     columns = injectExtraColumns(columns, childArray);
   }
 

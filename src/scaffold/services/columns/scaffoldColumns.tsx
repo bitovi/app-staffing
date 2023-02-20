@@ -6,6 +6,10 @@ import type {
   FlatRecord,
   ValueComponent,
 } from "../../design/interfaces";
+import {
+  ScaffoldAttributeDisplay,
+  ScaffoldExtraDisplay,
+} from "../../components/ScaffoldColumns";
 import type { Render, RenderValue } from "../../components/ScaffoldColumns";
 
 export interface ScaffoldColumn {
@@ -114,15 +118,12 @@ export function getScaffoldColumn({
 
 export function getColumnsFromChildren(
   schema: Schema,
-  children: (React.ReactChild | React.ReactFragment | React.ReactPortal)[],
+  children: JSX.Element[],
 ): ScaffoldColumn[] {
   const columns = children
-    .filter(
-      (child) =>
-        (child as JSX.Element).type.name === "ScaffoldAttributeDisplay",
-    )
+    .filter((child) => child.type.name === ScaffoldAttributeDisplay.name)
     .map((child) => {
-      const { props } = child as JSX.Element;
+      const { props } = child;
       const relationship = (schema?.hasMany || []).find((relationship) => {
         return relationship.target.toLowerCase() === props.attribute;
       });
@@ -171,14 +172,13 @@ export function getColumnsFromSchema(
 
 export function injectExtraColumns(
   columns: ScaffoldColumn[],
-  children: (React.ReactChild | React.ReactFragment | React.ReactPortal)[],
+  children: JSX.Element[],
 ): ScaffoldColumn[] {
   const updatedColumns = cloneDeep(columns);
 
   for (let i = 0; i < children.length; i++) {
-    const child = children[i] as JSX.Element;
-    if (child.type.name !== "ScaffoldExtraDisplay") continue;
-    const { props } = child;
+    if (children[i].type.name !== ScaffoldExtraDisplay.name) continue;
+    const { props } = children[i];
 
     // @todo add according to props.after property
     updatedColumns.push(
@@ -197,7 +197,7 @@ export function injectExtraColumns(
 
 export function hasValidChildren(
   name: string,
-  children: (React.ReactChild | React.ReactFragment | React.ReactPortal)[],
+  children: JSX.Element[],
 ): boolean {
-  return children.some((child) => (child as JSX.Element).type.name === name);
+  return children.some((child) => child.type.name === name);
 }

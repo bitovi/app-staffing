@@ -24,9 +24,7 @@ export type ValueComponent = React.FC<{
 
 export interface XLayoutProps {
   schema: Schema;
-  valueComponents?: { [attribute: string]: ValueComponent };
   renderActions?: () => JSX.Element;
-  useData?: () => FlatRecord[];
   children: any;
 }
 
@@ -37,5 +35,5 @@ export interface XListProps {
 
 export interface XProviderProps<T> {
   theme?: T;
-  children?: any;
+  children: React.ReactNode;
 }

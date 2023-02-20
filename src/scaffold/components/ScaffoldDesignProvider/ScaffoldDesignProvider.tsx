@@ -18,7 +18,7 @@ export const useScaffoldDesign = (): ScaffoldDesignContextProps =>
   useContext(ScaffoldDesignContext);
 
 interface ScaffoldDesignProviderProps extends ScaffoldDesignContextProps {
-  children: any; // @todo type children
+  children: React.ReactNode;
 }
 
 const ScaffoldDesignProvider: React.FC<ScaffoldDesignProviderProps> = ({
