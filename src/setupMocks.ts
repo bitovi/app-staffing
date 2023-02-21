@@ -4,7 +4,7 @@ import mocks, { loadFixtures } from "./mocks";
 loadFixtures();
 
 setupWorker(...mocks).start({
-  onUnhandledRequest: "error",
+  onUnhandledRequest: "bypass",
   serviceWorker: {
     url: `${process.env.PUBLIC_URL}/mockServiceWorker.js`,
   },
