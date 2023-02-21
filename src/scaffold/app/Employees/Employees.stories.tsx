@@ -1,14 +1,24 @@
+import { useEffect } from "react";
 import { rest } from "msw";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { Flex, Box } from "@chakra-ui/layout";
 
 import Employees from "./Employees";
-import { BrowserRouter } from "react-router-dom";
 
 export default {
   title: "Pages/Employees/List",
   component: Employees,
+  // workaround to reset msw data between stories
+  decorators: [
+    (Story) => {
+      useEffect(() => {
+        return () => window.location.reload();
+      }, []);
+
+      return <Story />;
+    },
+  ],
 } as ComponentMeta<typeof Employees>;
 
 const backgroundColor = "gray.10";
@@ -50,24 +60,32 @@ Empty.parameters = {
   },
 };
 
-// @todo skeleton state when data layer is added
-// export const Loading: ComponentStory<typeof Flex> = ({ ...props }) => (
-//   <Flex height="100%" width="100%" overflow="hidden">
-//     <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
-//       <EmployeePageLoadingLayout {...props} />
-//     </Box>
-//   </Flex>
-// );
+export const Loading: ComponentStory<typeof Employees> = () => (
+  <Flex height="100%" width="100%" overflow="hidden">
+    <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
+      <Employees />
+    </Box>
+  </Flex>
+);
+
+Loading.parameters = {
+  msw: {
+    handlers: [
+      ...mswHandlers,
+      rest.get(/employees/, (_, res, ctx) => {
+        return res(ctx.delay("infinite"));
+      }),
+    ],
+  },
+};
 
 export const WithData: ComponentStory<typeof Employees> = () => {
   return (
-    <BrowserRouter>
-      <Flex height="100%" width="100%" overflow={"visible"}>
-        <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
-          <Employees />
-        </Box>
-      </Flex>
-    </BrowserRouter>
+    <Flex height="100%" width="100%" overflow={"visible"}>
+      <Box backgroundColor={backgroundColor} flex="1 1" padding="40px">
+        <Employees />
+      </Box>
+    </Flex>
   );
 };
 

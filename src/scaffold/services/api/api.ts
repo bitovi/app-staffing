@@ -1,22 +1,25 @@
+import type {
+  FlatRecord,
+  Primitive,
+  Relationship,
+} from "../../design/interfaces";
 import type { Schema } from "../../schemas/schemas";
 import * as schemas from "../../schemas/schemas";
 
-type Primitive = string | boolean | number;
-
-interface Attributes {
+interface JsonApiAttributes {
   [field: string]: Primitive;
 }
 
 interface JsonApiIncluded {
   type: string;
   id: string;
-  attributes: Attributes;
+  attributes: JsonApiAttributes;
 }
 
 interface JsonApiRecord {
   type: string;
   id: string;
-  attributes: Attributes;
+  attributes: JsonApiAttributes;
   relationships?: {
     [key: string]: {
       data: { type: string; id: string }[];
@@ -35,15 +38,6 @@ interface FlatIncluded {
   [key: string]: {
     [id: string]: { [field: string]: Primitive };
   };
-}
-
-export interface FlatData {
-  [field: string]:
-    | Primitive
-    | null
-    | {
-        [field: string]: Primitive;
-      }[];
 }
 
 /**
@@ -101,11 +95,11 @@ function getFlattenedIncluded(included?: JsonApiIncluded[]): FlatIncluded {
  * to:
  * { id, ...attributes, skills: []}
  */
-function getFlatData(data: JsonApiResponse): FlatData[] {
+function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
   const flatIncluded = getFlattenedIncluded(data?.included);
 
   return data.data.map((record: JsonApiRecord) => {
-    const flatRecord: FlatData = {
+    const flatRecord: FlatRecord = {
       ...record.attributes,
       id: record.id,
     };
@@ -120,15 +114,14 @@ function getFlatData(data: JsonApiResponse): FlatData[] {
         ...flatIncluded[key][related.id],
         id: related.id,
         label: flatIncluded[key][related.id][displayValueKey],
-      }));
+      })) as Relationship;
     }
 
     return flatRecord;
   });
 }
 
-export async function getData(schema: Schema): Promise<FlatData[]> {
-  // employees?include=skills%2Cassignments.role.project
+export function fetchData(schema: Schema): { read: () => FlatRecord[] } {
   let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s`;
   const includes = schema.hasMany
     ?.map((relationship) => relationship.target.toLowerCase())
@@ -138,9 +131,42 @@ export async function getData(schema: Schema): Promise<FlatData[]> {
     url = `${url}?include=${includes}`;
   }
 
-  const response = await fetch(url);
-  const data = await response.json();
-  const flat = getFlatData(data);
+  const promise = fetch(url)
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      return getFlatRecords(res);
+    });
 
-  return flat;
+  return wrapPromise(promise);
+}
+
+function wrapPromise(promise: Promise<FlatRecord[]>) {
+  let status = "pending";
+  let response: FlatRecord[];
+
+  const suspender = promise.then(
+    (res) => {
+      status = "success";
+      response = res;
+    },
+    (err) => {
+      status = "error";
+      response = err;
+    },
+  );
+
+  const read = () => {
+    switch (status) {
+      case "pending":
+        throw suspender;
+      case "error":
+        throw response;
+      default:
+        return response;
+    }
+  };
+
+  return { read };
 }

@@ -1,18 +1,22 @@
 import { useState } from "react";
-import { IconButton } from "@mui/material";
-import { Button as ChakraButton } from "@chakra-ui/react";
+import { Button, IconButton } from "@mui/material";
 
 import SkillModal from "../../../pages/Skills/components/SkillModal";
 import { Skill as SkillSchema } from "../../schemas/schemas";
 import { useSkillMutations } from "../../../services/api";
 import { EditIcon } from "../../../pages/assets";
+
+import ScaffoldListPage from "../../components/ScaffoldListPage";
+import MuiProvider from "../../design/mui/MuiProvider";
+import { fetchData } from "../../services/api/api";
+import {
+  ScaffoldAttributeDisplay,
+  ScaffoldExtraDisplay,
+} from "../../components/ScaffoldColumns";
+
 import type { Skill } from "../../../services/api";
 
-import {
-  ScaffoldExtraColumn,
-  ScaffoldFieldColumn,
-} from "../../components/ScaffoldColumns";
-import ScaffoldListPage from "../../components/ScaffoldListPage";
+const resource = fetchData(SkillSchema);
 
 const SkillsListPage: React.FC = () => {
   const { createSkill, updateSkill } = useSkillMutations();
@@ -38,26 +42,29 @@ const SkillsListPage: React.FC = () => {
         onSave={skillToEdit ? saveEditSkill : addNewSkill}
         skill={skillToEdit || undefined}
       />
-      <ScaffoldListPage
-        schema={SkillSchema}
-        renderActions={() => (
-          <CreateSkill onClick={() => setIsModalOpen(true)} />
-        )}
-      >
-        <ScaffoldFieldColumn label="Skill Name" field="name" />
-        <ScaffoldExtraColumn
-          label="Actions"
-          renderValue={({ value }) => (
-            <ActionButtons
-              value={value}
-              editSkill={(skill) => {
-                setSkillToEdit(skill);
-                setIsModalOpen(true);
-              }}
-            />
+      <MuiProvider>
+        <ScaffoldListPage
+          schema={SkillSchema}
+          renderActions={() => (
+            <CreateSkill onClick={() => setIsModalOpen(true)} />
           )}
-        />
-      </ScaffoldListPage>
+          useData={() => resource.read()}
+        >
+          <ScaffoldAttributeDisplay label="Skill Name" attribute="name" />
+          <ScaffoldExtraDisplay
+            label="Actions"
+            render={({ record }) => (
+              <ActionButtons
+                value={record}
+                editSkill={(skill) => {
+                  setSkillToEdit(skill);
+                  setIsModalOpen(true);
+                }}
+              />
+            )}
+          />
+        </ScaffoldListPage>
+      </MuiProvider>
     </>
   );
 };
@@ -65,7 +72,7 @@ const SkillsListPage: React.FC = () => {
 export default SkillsListPage;
 
 const ActionButtons: React.FC<{
-  // @todo this is type Skill, will be fixed with design layer refactor
+  // @todo this is type Skill, will be fixed with components as hooks refactor
   value: any;
   editSkill: (skill: Skill) => void;
 }> = ({ value, editSkill }) => {
@@ -82,8 +89,8 @@ const ActionButtons: React.FC<{
 
 const CreateSkill: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
-    <ChakraButton size="lg" variant="primary" onClick={onClick}>
+    <Button variant="contained" onClick={onClick}>
       Add Skill
-    </ChakraButton>
+    </Button>
   );
 };

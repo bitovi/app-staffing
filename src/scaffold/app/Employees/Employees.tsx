@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, IconButton } from "@mui/material";
-import { Button as ChakraButton } from "@chakra-ui/react";
 import isEmpty from "lodash/isEmpty";
 
-import { Employee as EmployeeSchema } from "../../schemas/schemas";
+import MuiProvider from "../../design/mui/MuiProvider";
 import ScaffoldListPage from "../../components/ScaffoldListPage";
 import {
-  ScaffoldExtraColumn,
-  ScaffoldFieldColumn,
+  ScaffoldExtraDisplay,
+  ScaffoldAttributeDisplay,
 } from "../../components/ScaffoldColumns";
+import type { ValueComponent } from "../../design/interfaces";
+import { fetchData } from "../../services/api/api";
+
+import { Employee as EmployeeSchema } from "../../schemas/schemas";
 import { Employee, useEmployeeMutations } from "../../../services/api";
 import DeleteConfirmationModal from "../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
 import EmployeeModal from "../../../pages/Employees/components/EmployeeModal";
-import type { ValueComponent } from "../../components/ScaffoldListPage";
 import styles from "./Employees.module.css";
 import { EditIcon, TrashIcon } from "../../../pages/assets";
+
+const resource = fetchData(EmployeeSchema);
 
 const EmployeesListPage: React.FC = () => {
   const { createEmployee, updateEmployee, destroyEmployee } =
@@ -37,6 +41,8 @@ const EmployeesListPage: React.FC = () => {
     await createEmployee(data);
   };
 
+  console.log("resource", resource);
+
   return (
     <>
       <DeleteConfirmationModal
@@ -55,34 +61,37 @@ const EmployeesListPage: React.FC = () => {
         onClose={() => setShowEmployeeModal(false)}
         onSave={addNewEmployee}
       />
-      <ScaffoldListPage
-        schema={EmployeeSchema}
-        valueComponents={{
-          skills: CustomSkillField,
-        }}
-        renderActions={() => (
-          <CreateEmployee onClick={() => setShowEmployeeModal(true)} />
-        )}
-      >
-        <ScaffoldFieldColumn field="name" label="Name" />
-        <ScaffoldFieldColumn field="start_date" label="Start Date" />
-        <ScaffoldFieldColumn field="end_date" label="End Date" />
-        <ScaffoldFieldColumn
-          field="skills"
-          label="Skills"
-          ValueComponent={CustomSkillField}
-        />
-        <ScaffoldExtraColumn
-          label="Actions"
-          renderValue={({ value }) => (
-            <ActionButtons
-              value={value}
-              setEmployeeToDelete={setEmployeeToDelete}
-              setEmployeeToEdit={setEmployeeToEdit}
-            />
+      <MuiProvider>
+        <ScaffoldListPage
+          schema={EmployeeSchema}
+          valueComponents={{
+            skills: CustomSkillField,
+          }}
+          renderActions={() => (
+            <CreateEmployee onClick={() => setShowEmployeeModal(true)} />
           )}
-        />
-      </ScaffoldListPage>
+          useData={() => resource.read()}
+        >
+          <ScaffoldAttributeDisplay attribute="name" label="Name" />
+          <ScaffoldAttributeDisplay attribute="start_date" label="Start Date" />
+          <ScaffoldAttributeDisplay attribute="end_date" label="End Date" />
+          <ScaffoldAttributeDisplay
+            attribute="skills"
+            label="Skills"
+            ValueComponent={CustomSkillField}
+          />
+          <ScaffoldExtraDisplay
+            label="Actions"
+            render={({ record }) => (
+              <ActionButtons
+                value={record}
+                setEmployeeToDelete={setEmployeeToDelete}
+                setEmployeeToEdit={setEmployeeToEdit}
+              />
+            )}
+          />
+        </ScaffoldListPage>
+      </MuiProvider>
     </>
   );
 };
@@ -90,6 +99,7 @@ const EmployeesListPage: React.FC = () => {
 export default EmployeesListPage;
 
 const ActionButtons: React.FC<{
+  // @todo this is type Employee, will be fixed with components as hooks refactor
   value: any;
   setEmployeeToEdit: React.Dispatch<React.SetStateAction<Employee | null>>;
   setEmployeeToDelete: React.Dispatch<React.SetStateAction<Employee | null>>;
@@ -118,9 +128,9 @@ const CreateEmployee: React.FC<{
   onClick: () => void;
 }> = ({ onClick }) => {
   return (
-    <ChakraButton size="lg" variant="primary" onClick={onClick}>
+    <Button variant="contained" onClick={onClick}>
       Add Team Member
-    </ChakraButton>
+    </Button>
   );
 };
 

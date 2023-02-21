@@ -1,50 +1,53 @@
-import { render } from "@testing-library/react";
+import { screen, render } from "@testing-library/react";
 import Skills from "./Skills";
 
 jest.mock("../../services/api/api", () => ({
-  getData: () =>
-    Promise.resolve([
-      {
-        id: "37f303e7-5c60-4814-998d-de3a1c191d9c",
-        name: "Product Design",
+  fetchData: () => {
+    return {
+      read: () => {
+        return [
+          {
+            id: "37f303e7-5c60-4814-998d-de3a1c191d9c",
+            name: "Product Design",
+          },
+          {
+            id: "751fd197-eea6-4ebe-bbee-b71a821db998",
+            name: "Angular",
+          },
+        ];
       },
-      {
-        id: "751fd197-eea6-4ebe-bbee-b71a821db998",
-        name: "Angular",
-      },
-    ]),
+    };
+  },
 }));
 
-describe("scaffold/app/Skills", () => {
-  describe("Skills page", () => {
-    it("renders table headers", async () => {
-      const { findByText } = render(<Skills />);
-      const tableHeaderName = await findByText(/Skill name/i);
-      const tableHeaderAction = await findByText(/Actions/i);
-      expect(tableHeaderName).toBeInTheDocument();
-      expect(tableHeaderAction).toBeInTheDocument();
-    });
+// @todo use msw and test loading/empty states after data layer is implemented
 
-    it("renders Add Skill button", async () => {
-      const { findByText } = render(<Skills />);
-      const addSkillButton = await findByText("Add Skill");
-      expect(addSkillButton).toBeInTheDocument();
-    });
+describe("scaffold/app/Skills", () => {
+  it("renders page header", async () => {
+    const { findAllByText } = render(<Skills />);
+    const pageHeader = await findAllByText(/skill/i);
+    expect(pageHeader[0]).toBeInTheDocument();
+    expect(pageHeader[0]?.tagName).toBe("H1");
   });
 
-  describe("Skills buttons", () => {
-    it("renders Add Skill button", async () => {
-      const { findByText } = render(<Skills />);
-      const addSkillButton = await findByText("Add Skill");
-      expect(addSkillButton).toBeInTheDocument();
-    });
+  it("renders table headers", async () => {
+    const { findByText } = render(<Skills />);
+    const tableHeaderName = await findByText(/skill name/i);
+    const tableHeaderAction = await findByText(/actions/i);
+    expect(tableHeaderName).toBeInTheDocument();
+    expect(tableHeaderAction).toBeInTheDocument();
+  });
 
-    it("renders Edit Skill buttons", async () => {
-      const { findAllByRole } = render(<Skills />);
-      const editIcons = await findAllByRole("button", {
-        name: "Edit Skill",
-      });
-      expect(editIcons[0]).toBeInTheDocument();
-    });
+  it("renders Add Skill button", async () => {
+    const { findByText } = render(<Skills />);
+    const addSkillButton = await findByText(/add skill/i);
+    expect(addSkillButton).toBeInTheDocument();
+  });
+
+  it("renders first row", async () => {
+    render(<Skills />);
+
+    const firstRowName = screen.getByText("Product Design");
+    expect(firstRowName).toBeInTheDocument();
   });
 });
