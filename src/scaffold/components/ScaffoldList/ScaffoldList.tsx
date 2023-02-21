@@ -11,10 +11,10 @@ import {
   ScaffoldAttributeDisplay,
   ScaffoldExtraDisplay,
 } from "../ScaffoldColumns";
-
-import { Employee, Schema } from "../../schemas/schemas";
-import type { FlatRecord, ValueComponent } from "../../design/interfaces";
 import { fetchData } from "../../services/api/api";
+
+import type { Schema } from "../../schemas/schemas";
+import type { FlatRecord, ValueComponent } from "../../design/interfaces";
 
 interface ScaffoldListProps {
   schema: Schema;
@@ -34,7 +34,7 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
 
   // @todo implement this in a better way when data layer is implemented
   if (!useData) {
-    const resource = fetchData(Employee);
+    const resource = fetchData(schema);
     useData = () => resource.read();
   }
 

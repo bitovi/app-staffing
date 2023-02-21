@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import isEmpty from "lodash/isEmpty";
 
 import MuiProvider from "../../design/mui/MuiProvider";
@@ -16,6 +16,7 @@ import { Employee, useEmployeeMutations } from "../../../services/api";
 import DeleteConfirmationModal from "../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
 import EmployeeModal from "../../../pages/Employees/components/EmployeeModal";
 import styles from "./Employees.module.css";
+import { EditIcon, TrashIcon } from "../../../pages/assets";
 
 const resource = fetchData(EmployeeSchema);
 
@@ -39,6 +40,8 @@ const EmployeesListPage: React.FC = () => {
   const addNewEmployee = async (data: Omit<Employee, "id">) => {
     await createEmployee(data);
   };
+
+  console.log("resource", resource);
 
   return (
     <>
@@ -96,18 +99,27 @@ const EmployeesListPage: React.FC = () => {
 export default EmployeesListPage;
 
 const ActionButtons: React.FC<{
+  // @todo this is type Employee, will be fixed with components as hooks refactor
   value: any;
   setEmployeeToEdit: React.Dispatch<React.SetStateAction<Employee | null>>;
   setEmployeeToDelete: React.Dispatch<React.SetStateAction<Employee | null>>;
 }> = ({ value, setEmployeeToEdit, setEmployeeToDelete }) => {
   return (
     <>
-      <Button variant="text" onClick={() => setEmployeeToEdit(value)}>
-        Edit
-      </Button>
-      <Button variant="text" onClick={() => setEmployeeToDelete(value)}>
-        Delete
-      </Button>
+      <IconButton
+        aria-label="Edit Employee"
+        size="small"
+        onClick={() => setEmployeeToEdit(value)}
+      >
+        <EditIcon fill="currentColor" />
+      </IconButton>
+      <IconButton
+        aria-label="Delete Employee"
+        size="small"
+        onClick={() => setEmployeeToDelete(value)}
+      >
+        <TrashIcon fill="currentColor" />
+      </IconButton>
     </>
   );
 };

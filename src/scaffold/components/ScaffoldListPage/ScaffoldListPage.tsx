@@ -7,7 +7,7 @@ import type {
 } from "../../design/interfaces";
 
 interface ScaffoldListPageProps extends XLayoutProps {
-  valueComponents: { [attribute: string]: ValueComponent };
+  valueComponents?: { [attribute: string]: ValueComponent };
   useData?: () => FlatRecord[];
 }
 

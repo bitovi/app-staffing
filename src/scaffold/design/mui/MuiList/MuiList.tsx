@@ -20,6 +20,9 @@ const styles = {
   table: css`
     background-color: white;
   `,
+  th: css`
+    font-weight: bold;
+  `,
 };
 
 const MuiList: React.FC<XListProps> = ({ columns, useData }) => {
@@ -29,7 +32,9 @@ const MuiList: React.FC<XListProps> = ({ columns, useData }) => {
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column.headerName}>{column.headerName}</TableCell>
+              <TableCell key={column.headerName} css={styles.th}>
+                {column.headerName}
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
