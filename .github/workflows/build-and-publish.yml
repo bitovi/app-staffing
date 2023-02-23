@@ -18,6 +18,8 @@ jobs:
         with:
           node-version: 14
 
+      - name: Sync
+        run: npm install
       - name: Install
         run: npm ci --verbose
 
