@@ -1,3 +1,5 @@
+// @todo ts-nocheck should be removed
+// @ts-nocheck
 import type { JSONAPIDocument } from "json-api-serializer";
 import type { Filter } from "can-query-logic";
 

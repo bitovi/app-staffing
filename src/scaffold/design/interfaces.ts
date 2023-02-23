@@ -25,7 +25,7 @@ export type ValueComponent = React.FC<{
 export interface XLayoutProps {
   schema: Schema;
   renderActions?: () => JSX.Element;
-  children: any;
+  children?: any;
 }
 
 export interface XListProps {
