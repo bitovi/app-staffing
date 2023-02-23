@@ -1,8 +1,9 @@
+import { cloneDeep } from "lodash";
 import type {
   FlatRecord,
   Primitive,
   Relationship,
-} from "../../design/interfaces";
+} from "../../presentation/interfaces";
 import type { Schema } from "../../schemas/schemas";
 import * as schemas from "../../schemas/schemas";
 
@@ -28,7 +29,7 @@ interface JsonApiRecord {
 }
 
 interface JsonApiResponse {
-  data: JsonApiRecord[];
+  data: JsonApiRecord[] | JsonApiRecord;
   included?: JsonApiIncluded[];
   jsonapi: { version: string };
   links: { [key: string]: string };
@@ -97,8 +98,9 @@ function getFlattenedIncluded(included?: JsonApiIncluded[]): FlatIncluded {
  */
 function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
   const flatIncluded = getFlattenedIncluded(data?.included);
+  const records = Array.isArray(data.data) ? data.data : [data.data];
 
-  return data.data.map((record: JsonApiRecord) => {
+  return records.map((record: JsonApiRecord) => {
     const flatRecord: FlatRecord = {
       ...record.attributes,
       id: record.id,
@@ -114,15 +116,41 @@ function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
         ...flatIncluded[key][related.id],
         id: related.id,
         label: flatIncluded[key][related.id][displayValueKey],
-      })) as Relationship;
+      })) as Relationship[];
     }
 
     return flatRecord;
   });
 }
 
+export function fetchOne(
+  schema: Schema,
+  id: string | number,
+): { read: () => FlatRecord } {
+  let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s/${id}`;
+
+  const includes = schema.hasMany
+    ?.map((relationship) => relationship.target.toLowerCase())
+    .join("&");
+
+  if (includes) {
+    url = `${url}?include=${includes}`;
+  }
+
+  const promise = fetch(url)
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      return getFlatRecords(res)[0];
+    });
+
+  return wrapPromise<FlatRecord>(promise);
+}
+
 export function fetchData(schema: Schema): { read: () => FlatRecord[] } {
   let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s`;
+
   const includes = schema.hasMany
     ?.map((relationship) => relationship.target.toLowerCase())
     .join("&");
@@ -139,12 +167,12 @@ export function fetchData(schema: Schema): { read: () => FlatRecord[] } {
       return getFlatRecords(res);
     });
 
-  return wrapPromise(promise);
+  return wrapPromise<FlatRecord[]>(promise);
 }
 
-function wrapPromise(promise: Promise<FlatRecord[]>) {
+function wrapPromise<T>(promise: Promise<T>) {
   let status = "pending";
-  let response: FlatRecord[];
+  let response: T;
 
   const suspender = promise.then(
     (res) => {

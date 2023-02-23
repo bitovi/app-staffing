@@ -7,12 +7,12 @@ import { useSkillMutations } from "../../../services/api";
 import { EditIcon } from "../../../pages/assets";
 
 import ScaffoldListPage from "../../components/ScaffoldListPage";
-import MuiProvider from "../../design/mui/MuiProvider";
+import MuiProvider from "../../presentation/mui/MuiProvider";
 import { fetchData } from "../../services/api/api";
 import {
   ScaffoldAttributeDisplay,
   ScaffoldExtraDisplay,
-} from "../../components/ScaffoldColumns";
+} from "../../components/ScaffoldDisplays";
 
 import type { Skill } from "../../../services/api";
 

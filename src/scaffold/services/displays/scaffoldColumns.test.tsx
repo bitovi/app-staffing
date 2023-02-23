@@ -1,16 +1,16 @@
 import { cloneDeep } from "lodash";
 
-import { ScaffoldExtraDisplay } from "../../components/ScaffoldColumns";
-import { ScaffoldAttributeDisplay } from "../../components/ScaffoldColumns";
+import { ScaffoldExtraDisplay } from "../../components/ScaffoldDisplays";
+import { ScaffoldAttributeDisplay } from "../../components/ScaffoldDisplays";
 import {
   getScaffoldColumn,
-  getColumnsFromChildren,
-  getColumnsFromSchema,
-  injectExtraColumns,
+  getDisplaysFromChildren,
+  getDisplaysFromSchema,
+  injectExtraDisplays,
   hasValidChildren,
-} from "./scaffoldColumns";
+} from "./scaffoldDisplays";
 import type { Schema } from "../../schemas/schemas";
-import type { ScaffoldColumn } from "./scaffoldColumns";
+import type { ScaffoldDisplay } from "./scaffoldDisplays";
 
 const TestSchema: Schema = {
   name: "Test",
@@ -20,12 +20,12 @@ const TestSchema: Schema = {
   jsonApiField: "tests",
 };
 
-// @todo removing renderCell function from objects because jest is giving
+// @todo removing render function from objects because jest is giving
 // an error when comparing an array of objects with functions (even if equal)
 // https://stackoverflow.com/a/60989588/4781945
 const removeRenderCellFn = (item: any) => {
   const clone = cloneDeep(item);
-  delete clone.renderCell;
+  delete clone.render;
   return clone;
 };
 
@@ -56,12 +56,12 @@ describe("scaffold/services/scaffoldColumns", () => {
     });
   });
 
-  describe("injectExtraColumns", () => {
+  describe("injectExtraDisplays", () => {
     it("adds ScaffoldExtraDisplay to the end of the mui column array", () => {
-      const initialColumns: ScaffoldColumn[] = [
-        { attribute: "one", headerName: "one", renderCell: jest.fn() },
-        { attribute: "two", headerName: "two", renderCell: jest.fn() },
-        { attribute: "three", headerName: "three", renderCell: jest.fn() },
+      const initialColumns: ScaffoldDisplay[] = [
+        { attribute: "one", label: "one", render: jest.fn() },
+        { attribute: "two", label: "two", render: jest.fn() },
+        { attribute: "three", label: "three", render: jest.fn() },
       ];
 
       const extraColumns = [
@@ -72,15 +72,15 @@ describe("scaffold/services/scaffoldColumns", () => {
         />,
       ];
 
-      const expectedColumns: ScaffoldColumn[] = [
-        { attribute: "one", headerName: "one", renderCell: jest.fn() },
-        { attribute: "two", headerName: "two", renderCell: jest.fn() },
-        { attribute: "three", headerName: "three", renderCell: jest.fn() },
-        { attribute: "four", headerName: "four", renderCell: jest.fn() },
-        { attribute: "five", headerName: "five", renderCell: jest.fn() },
+      const expectedColumns: ScaffoldDisplay[] = [
+        { attribute: "one", label: "one", render: jest.fn() },
+        { attribute: "two", label: "two", render: jest.fn() },
+        { attribute: "three", label: "three", render: jest.fn() },
+        { attribute: "four", label: "four", render: jest.fn() },
+        { attribute: "five", label: "five", render: jest.fn() },
       ].map(removeRenderCellFn);
 
-      const result = injectExtraColumns(initialColumns, extraColumns).map(
+      const result = injectExtraDisplays(initialColumns, extraColumns).map(
         removeRenderCellFn,
       );
 
@@ -89,32 +89,32 @@ describe("scaffold/services/scaffoldColumns", () => {
   });
 
   describe("getScaffoldColumn", () => {
-    // @todo this test returns different renderCell (fn), not sure how to
+    // @todo this test returns different render (fn), not sure how to
     // test this with jest
-    it("returns ScaffoldColumn", () => {
-      const expected = { attribute: "test", headerName: "test" };
+    it("returns ScaffoldDisplay", () => {
+      const expected = { attribute: "test", label: "test" };
       const result = getScaffoldColumn({
         label: "test",
         attribute: "test",
         attributeSchema: "string",
       });
       const resultWithoutRenderCell: any = cloneDeep(result);
-      delete resultWithoutRenderCell.renderCell;
+      delete resultWithoutRenderCell.render;
 
       expect(resultWithoutRenderCell).toEqual(expected);
     });
   });
 
-  describe("getColumnsFromChildren", () => {
-    it("returns ScaffoldColumn[] for the ScaffoldAttributeDisplay items", () => {
+  describe("getDisplaysFromChildren", () => {
+    it("returns ScaffoldDisplay[] for the ScaffoldAttributeDisplay items", () => {
       const children = [
         <ScaffoldExtraDisplay label="one" render={jest.fn()} />,
         <ScaffoldAttributeDisplay label="two" attribute="two" />,
         <ScaffoldExtraDisplay label="three" render={jest.fn()} />,
       ];
 
-      const expected = [{ attribute: "two", headerName: "two" }];
-      const result = getColumnsFromChildren(TestSchema, children).map(
+      const expected = [{ attribute: "two", label: "two" }];
+      const result = getDisplaysFromChildren(TestSchema, children).map(
         removeRenderCellFn,
       );
 
@@ -127,8 +127,8 @@ describe("scaffold/services/scaffoldColumns", () => {
         <ScaffoldExtraDisplay label="three" render={() => <div />} />,
       ];
 
-      const expected: ScaffoldColumn[] = [];
-      const result = getColumnsFromChildren(TestSchema, children).map(
+      const expected: ScaffoldDisplay[] = [];
+      const result = getDisplaysFromChildren(TestSchema, children).map(
         removeRenderCellFn,
       );
 
@@ -136,15 +136,15 @@ describe("scaffold/services/scaffoldColumns", () => {
     });
   });
 
-  describe("getColumnsFromSchema", () => {
-    it("returns ScaffoldColumn[] for a given schema", () => {
-      const result = getColumnsFromSchema(TestSchema, null).map(
+  describe("getDisplaysFromSchema", () => {
+    it("returns ScaffoldDisplay[] for a given schema", () => {
+      const result = getDisplaysFromSchema(TestSchema, null).map(
         removeRenderCellFn,
       );
       const expected = [
-        { attribute: "id", headerName: "id" },
-        { attribute: "name", headerName: "name" },
-        { attribute: "testrelationship", headerName: "TestRelationship" },
+        { attribute: "id", label: "id" },
+        { attribute: "name", label: "name" },
+        { attribute: "testrelationship", label: "TestRelationship" },
       ];
 
       expect(result).toEqual(expected);

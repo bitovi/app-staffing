@@ -1,5 +1,5 @@
 import type { Attribute, Schema } from "../schemas/schemas";
-import type { ScaffoldColumn } from "../services/columns/scaffoldColumns";
+import type { ScaffoldDisplay } from "../services/displays/scaffoldDisplays";
 
 export type Primitive = string | boolean | number;
 
@@ -7,9 +7,9 @@ export type Relationship = {
   id: string;
   label: string;
   [field: string]: Primitive;
-}[];
+};
 
-export type CellValue = Primitive | Relationship;
+export type CellValue = Primitive | Relationship | Relationship[];
 
 export interface FlatRecord {
   id: string | number;
@@ -25,12 +25,17 @@ export type ValueComponent = React.FC<{
 export interface XLayoutProps {
   schema: Schema;
   renderActions?: () => JSX.Element;
-  children: any;
+  children?: any; // @todo required for layout, but not for Scaffold implementation
 }
 
 export interface XListProps {
-  columns: ScaffoldColumn[];
+  displays: ScaffoldDisplay[];
   useData: () => FlatRecord[];
+}
+
+export interface XDetailsProps {
+  displays: ScaffoldDisplay[];
+  useData: () => FlatRecord;
 }
 
 export interface XProviderProps<T> {

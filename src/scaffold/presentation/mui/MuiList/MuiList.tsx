@@ -25,22 +25,22 @@ const styles = {
   `,
 };
 
-const MuiList: React.FC<XListProps> = ({ columns, useData }) => {
+const MuiList: React.FC<XListProps> = ({ displays, useData }) => {
   return (
     <TableContainer css={styles.tableContainer}>
       <Table css={styles.table}>
         <TableHead>
           <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.headerName} css={styles.th}>
-                {column.headerName}
+            {displays.map((display) => (
+              <TableCell key={display.label} css={styles.th}>
+                {display.label}
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          <Suspense fallback={<SkeletonCells columns={columns} />}>
-            <MuiListRows columns={columns} useData={useData} />
+          <Suspense fallback={<SkeletonCells displays={displays} />}>
+            <MuiListRows displays={displays} useData={useData} />
           </Suspense>
         </TableBody>
       </Table>
@@ -50,17 +50,16 @@ const MuiList: React.FC<XListProps> = ({ columns, useData }) => {
 
 export default MuiList;
 
-const MuiListRows: React.FC<XListProps> = ({ columns, useData }) => {
+const MuiListRows: React.FC<XListProps> = ({ displays, useData }) => {
   const data = useData();
 
   return (
     <>
       {data.map((item) => (
         <TableRow key={item.id}>
-          {columns.map((column) => (
-            <TableCell key={`${item.id}-${column.attribute}`}>
-              {column.renderCell({
-                value: item[column.attribute],
+          {displays.map((display) => (
+            <TableCell key={`${item.id}-${display.key}`}>
+              {display.render({
                 record: item,
               })}
             </TableCell>
@@ -73,13 +72,13 @@ const MuiListRows: React.FC<XListProps> = ({ columns, useData }) => {
 
 type SkeletonCellsProps = Omit<XListProps, "useData">;
 
-const SkeletonCells = ({ columns }: SkeletonCellsProps) => {
+const SkeletonCells = ({ displays }: SkeletonCellsProps) => {
   return (
     <>
       {[1, 2, 3].map((key) => (
         <TableRow key={key}>
-          {columns.map((column) => (
-            <TableCell key={column.headerName}>
+          {displays.map((display) => (
+            <TableCell key={display.label}>
               <Skeleton variant="rounded" />
             </TableCell>
           ))}
