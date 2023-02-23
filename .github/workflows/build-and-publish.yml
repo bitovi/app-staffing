@@ -19,7 +19,7 @@ jobs:
           node-version: 14
 
       - name: Install
-        run: npm ci
+        run: npm ci --verbose
 
       - name: Typecheck
         run: npm run typecheck
