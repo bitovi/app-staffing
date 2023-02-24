@@ -73,3 +73,5 @@ jobs:
           repo: operations-staffing-app
           branch: main
           workflow: deploy-trigger.yaml
+        env:
+          API_BASE_URL: https://scaffold.bitovi-sandbox.com/api

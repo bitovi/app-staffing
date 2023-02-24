@@ -1,5 +1,5 @@
 
-FROM node:14 AS builder
+FROM node:16 AS builder
 
 WORKDIR /usr/src/app
 
@@ -28,7 +28,7 @@ ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
 
 
-FROM node:14 as development
+FROM node:16 as development
 # Create app directory
 WORKDIR /usr/src/app
 
