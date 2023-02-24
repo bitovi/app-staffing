@@ -11,7 +11,6 @@ import {
   BooleanList,
   DefaultDate,
   DateList,
-  List as DefaultList,
   Number,
   NumberList,
   Relationship,
@@ -21,7 +20,6 @@ import {
 } from "./defaultComponents";
 
 export interface DefaultValueComponents {
-  List: React.FC<{ children: React.ReactNode[] }>;
   String: React.FC<{ value: string }>;
   StringList: React.FC<{ values: string[] }>;
   Number: React.FC<{ value: number }>;
@@ -43,7 +41,6 @@ export interface ScaffoldPresentationContextProps {
 }
 
 export const ScaffoldPresentationDefaultValueComponents = {
-  List: DefaultList,
   String,
   StringList,
   Number,

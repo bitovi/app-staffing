@@ -1,19 +1,13 @@
 import { Fragment } from "react";
 import type { Relationship as RelationshipType } from "../../presentation/interfaces";
 
-export const List: React.FC<{ children: React.ReactNode[] }> = ({
-  children,
-}) => {
-  return <div>{children}</div>;
-};
-
 export const String: React.FC<{ value: string }> = ({ value }) => {
   return <>{value}</>;
 };
 
 export const StringList: React.FC<{ values: string[] }> = ({ values }) => {
   return (
-    <List>
+    <>
       {values.map((value, index) => {
         return (
           <Fragment key={index}>
@@ -22,17 +16,17 @@ export const StringList: React.FC<{ values: string[] }> = ({ values }) => {
           </Fragment>
         );
       })}
-    </List>
+    </>
   );
 };
 
 export const Number: React.FC<{ value: number }> = ({ value }) => {
-  return <>{value}</>;
+  return <>{new Intl.NumberFormat(navigator.language).format(value)}</>;
 };
 
 export const NumberList: React.FC<{ values: number[] }> = ({ values }) => {
   return (
-    <List>
+    <>
       {values.map((value, index) => {
         return (
           <Fragment key={index}>
@@ -41,7 +35,7 @@ export const NumberList: React.FC<{ values: number[] }> = ({ values }) => {
           </Fragment>
         );
       })}
-    </List>
+    </>
   );
 };
 
@@ -51,7 +45,7 @@ export const Boolean: React.FC<{ value: boolean }> = ({ value }) => {
 
 export const BooleanList: React.FC<{ values: boolean[] }> = ({ values }) => {
   return (
-    <List>
+    <>
       {values.map((value, index) => {
         return (
           <Fragment key={index}>
@@ -60,17 +54,19 @@ export const BooleanList: React.FC<{ values: boolean[] }> = ({ values }) => {
           </Fragment>
         );
       })}
-    </List>
+    </>
   );
 };
 
 export const DefaultDate: React.FC<{ value: string }> = ({ value }) => {
-  return <>{new Date(value).toLocaleDateString() || "test"}</>;
+  return (
+    <>{new Intl.DateTimeFormat(navigator.language).format(new Date(value))}</>
+  );
 };
 
 export const DateList: React.FC<{ values: string[] }> = ({ values }) => {
   return (
-    <List>
+    <>
       {values.map((value, index) => {
         return (
           <Fragment key={index}>
@@ -79,7 +75,7 @@ export const DateList: React.FC<{ values: string[] }> = ({ values }) => {
           </Fragment>
         );
       })}
-    </List>
+    </>
   );
 };
 
@@ -93,7 +89,7 @@ export const RelationshipList: React.FC<{ values: RelationshipType[] }> = ({
   values,
 }) => {
   return (
-    <List>
+    <>
       {values.map((value, index) => {
         return (
           <Fragment key={value.id}>
@@ -102,6 +98,6 @@ export const RelationshipList: React.FC<{ values: RelationshipType[] }> = ({
           </Fragment>
         );
       })}
-    </List>
+    </>
   );
 };

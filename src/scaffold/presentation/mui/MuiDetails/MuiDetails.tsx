@@ -11,7 +11,7 @@ const styles = {
   `,
   box: css`
     background-color: white;
-    padding: 5px;
+    padding: 10px 0px;
     margin: 15px;
   `,
 };
@@ -34,17 +34,17 @@ const MuiFields: React.FC<XDetailsProps> = ({ displays, useData }) => {
   return (
     <Grid container spacing={2}>
       {displays.map((display) => (
-        <Grid key={display.key} spacing={1} container item>
+        <Grid key={display.key} spacing={2} container item>
           <Grid
             item
-            xs={1}
+            xs={2}
             display="flex"
             justifyContent="flex-end"
             alignItems="center"
           >
             <span css={styles.label}>{display.label}</span>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             {display.render({ record })}
           </Grid>
         </Grid>
