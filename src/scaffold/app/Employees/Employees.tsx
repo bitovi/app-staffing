@@ -41,8 +41,6 @@ const EmployeesListPage: React.FC = () => {
     await createEmployee(data);
   };
 
-  console.log("resource", resource);
-
   return (
     <>
       <DeleteConfirmationModal
@@ -84,7 +82,8 @@ const EmployeesListPage: React.FC = () => {
             label="Actions"
             render={({ record }) => (
               <ActionButtons
-                value={record}
+                // @todo temporary until schema/resources are strongly typed
+                value={record as unknown as Employee}
                 setEmployeeToDelete={setEmployeeToDelete}
                 setEmployeeToEdit={setEmployeeToEdit}
               />
@@ -100,7 +99,7 @@ export default EmployeesListPage;
 
 const ActionButtons: React.FC<{
   // @todo this is type Employee, will be fixed with components as hooks refactor
-  value: any;
+  value: Employee;
   setEmployeeToEdit: React.Dispatch<React.SetStateAction<Employee | null>>;
   setEmployeeToDelete: React.Dispatch<React.SetStateAction<Employee | null>>;
 }> = ({ value, setEmployeeToEdit, setEmployeeToDelete }) => {
