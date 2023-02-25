@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 
 import Employees from "./Employees";
 
-jest.mock("../../services/api/api", () => ({
+jest.mock("../../../services/api/api", () => ({
   fetchData: () => {
     return {
       read: () => {

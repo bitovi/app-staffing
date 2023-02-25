@@ -7,7 +7,7 @@ import ScaffoldPresentationProvider, {
 import MuiLayout from "../MuiLayout";
 import MuiList from "../MuiList";
 import MuiDetails from "../MuiDetails";
-import { Relationship, RelationshipList } from "./defaultComponents";
+import { Relationship, RelationshipList } from "./DefaultComponents";
 import type { XProviderProps } from "../../interfaces";
 
 const defaultTheme = createTheme();

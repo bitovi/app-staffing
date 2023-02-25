@@ -1,6 +1,5 @@
 import { render } from "@testing-library/react";
-
-import ScaffoldList from ".";
+import ScaffoldDetailsPage from ".";
 import type { Schema } from "../../schemas/schemas";
 
 const TestSchema: Schema = {
@@ -10,10 +9,10 @@ const TestSchema: Schema = {
   jsonApiField: "tests",
 };
 
-describe("scaffold/components/ScaffoldList", () => {
-  describe("ScaffoldList", () => {
+describe("scaffold/components/ScaffoldDetailsPage", () => {
+  describe("ScaffoldDetailsPage", () => {
     it("works", () => {
-      render(<ScaffoldList schema={TestSchema} />);
+      render(<ScaffoldDetailsPage schema={TestSchema} />);
     });
   });
 });

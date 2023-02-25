@@ -17,7 +17,7 @@ import {
   RelationshipList,
   String,
   StringList,
-} from "./defaultComponents";
+} from "./DefaultComponents";
 
 export interface DefaultValueComponents {
   String: React.FC<{ value: string }>;

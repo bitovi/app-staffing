@@ -2,7 +2,7 @@
 import { Chip } from "@mui/material";
 import { css } from "@emotion/react";
 
-import type { Relationship as RelationshipType } from "../../interfaces";
+import type { Relationship as RelationshipType } from "../../../interfaces";
 
 const styles = {
   chip: css`
