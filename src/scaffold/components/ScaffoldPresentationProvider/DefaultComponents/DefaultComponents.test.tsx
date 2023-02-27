@@ -1,4 +1,3 @@
-import timezoneMock from "timezone-mock";
 import { render, screen } from "@testing-library/react";
 import {
   String,
@@ -14,14 +13,6 @@ import {
 } from ".";
 
 describe("scaffold/components/ScaffoldPresentationProvider/DefaultComponents", () => {
-  beforeAll(() => {
-    timezoneMock.register("US/Eastern");
-  });
-
-  afterAll(() => {
-    timezoneMock.unregister();
-  });
-
   describe("String", () => {
     it("works", async () => {
       render(<String value="some string" />);
@@ -84,13 +75,13 @@ describe("scaffold/components/ScaffoldPresentationProvider/DefaultComponents", (
     it("formats date for us", async () => {
       jest.spyOn(navigator, "language", "get").mockImplementation(() => "us");
       render(<DefaultDate value="2025-02-08T00:00:00.000Z" />);
-      expect(await screen.findByText("2/7/2025")).toBeInTheDocument();
+      expect(await screen.findByText("2/8/2025")).toBeInTheDocument();
     });
 
     it("formats date for de", async () => {
       jest.spyOn(navigator, "language", "get").mockImplementation(() => "de");
       render(<DefaultDate value="2025-02-08T00:00:00.000Z" />);
-      expect(await screen.findByText("7.2.2025")).toBeInTheDocument();
+      expect(await screen.findByText("8.2.2025")).toBeInTheDocument();
     });
   });
 
@@ -103,7 +94,7 @@ describe("scaffold/components/ScaffoldPresentationProvider/DefaultComponents", (
         />,
       );
       expect(
-        await screen.findByText("2/7/2025; 11/27/2025"),
+        await screen.findByText("2/8/2025; 11/28/2025"),
       ).toBeInTheDocument();
     });
 
@@ -115,7 +106,7 @@ describe("scaffold/components/ScaffoldPresentationProvider/DefaultComponents", (
         />,
       );
       expect(
-        await screen.findByText("7.2.2025; 27.11.2025"),
+        await screen.findByText("8.2.2025; 28.11.2025"),
       ).toBeInTheDocument();
     });
   });
