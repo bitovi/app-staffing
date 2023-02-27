@@ -1,3 +1,4 @@
+import timezoneMock from "timezone-mock";
 import { render, screen } from "@testing-library/react";
 import {
   String,
@@ -13,6 +14,14 @@ import {
 } from ".";
 
 describe("scaffold/components/ScaffoldPresentationProvider/DefaultComponents", () => {
+  beforeAll(() => {
+    timezoneMock.register("US/Eastern");
+  });
+
+  afterAll(() => {
+    timezoneMock.unregister();
+  });
+
   describe("String", () => {
     it("works", async () => {
       render(<String value="some string" />);
