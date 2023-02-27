@@ -77,7 +77,8 @@ const EmployeesListPage: React.FC = () => {
             label="Actions"
             render={({ record }) => (
               <ActionButtons
-                value={record}
+                // @todo temporary until schema/resources are strongly typed
+                value={record as unknown as Employee}
                 viewEmployee={() => history.push(`/team-members/${record.id}`)}
                 setEmployeeToDelete={setEmployeeToDelete}
                 setEmployeeToEdit={setEmployeeToEdit}
@@ -94,7 +95,7 @@ export default EmployeesListPage;
 
 const ActionButtons: React.FC<{
   // @todo this is type Employee, will be fixed with components as hooks refactor
-  value: any;
+  value: Employee;
   viewEmployee: () => void;
   setEmployeeToEdit: React.Dispatch<React.SetStateAction<Employee | null>>;
   setEmployeeToDelete: React.Dispatch<React.SetStateAction<Employee | null>>;
