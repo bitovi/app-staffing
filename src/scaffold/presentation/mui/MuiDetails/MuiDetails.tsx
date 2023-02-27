@@ -37,14 +37,14 @@ const MuiFields: React.FC<XDetailsProps> = ({ displays, useData }) => {
         <Grid key={display.key} spacing={2} container item>
           <Grid
             item
-            xs={2}
+            xs={1}
             display="flex"
             justifyContent="flex-end"
             alignItems="center"
           >
             <span css={styles.label}>{display.label}</span>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={11}>
             {display.render({ record })}
           </Grid>
         </Grid>

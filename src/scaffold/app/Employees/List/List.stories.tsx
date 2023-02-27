@@ -4,7 +4,7 @@ import type { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { Flex, Box } from "@chakra-ui/layout";
 
-import Employees from "./Employees";
+import Employees from "./List";
 
 export default {
   title: "Pages/Employees/List",

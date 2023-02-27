@@ -2,7 +2,7 @@ import { Employee as EmployeeSchema } from "../../../schemas/schemas";
 import ScaffoldDetailsPage from "../../../components/ScaffoldDetailsPage";
 import MuiProvider from "../../../presentation/mui/MuiProvider";
 
-const Employee: React.FC = () => {
+const Details: React.FC = () => {
   return (
     <MuiProvider>
       <ScaffoldDetailsPage schema={EmployeeSchema} />
@@ -10,4 +10,4 @@ const Employee: React.FC = () => {
   );
 };
 
-export default Employee;
+export default Details;

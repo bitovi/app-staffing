@@ -17,7 +17,7 @@ import { Employee as EmployeeSchema } from "../../../schemas/schemas";
 import { Employee, useEmployeeMutations } from "../../../../services/api";
 import DeleteConfirmationModal from "../../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
 import EmployeeModal from "../../../../pages/Employees/components/EmployeeModal";
-import styles from "./Employees.module.css";
+import styles from "./List.module.css";
 
 const resource = fetchData(EmployeeSchema);
 
