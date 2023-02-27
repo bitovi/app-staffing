@@ -55,7 +55,8 @@ const SkillsListPage: React.FC = () => {
             label="Actions"
             render={({ record }) => (
               <ActionButtons
-                value={record}
+                // @todo temporary until schema/resources are strongly typed
+                value={record as unknown as Skill}
                 editSkill={(skill) => {
                   setSkillToEdit(skill);
                   setIsModalOpen(true);
@@ -73,7 +74,7 @@ export default SkillsListPage;
 
 const ActionButtons: React.FC<{
   // @todo this is type Skill, will be fixed with components as hooks refactor
-  value: any;
+  value: Skill;
   editSkill: (skill: Skill) => void;
 }> = ({ value, editSkill }) => {
   return (

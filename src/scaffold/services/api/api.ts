@@ -1,9 +1,8 @@
-import { cloneDeep } from "lodash";
 import type {
   FlatRecord,
   Primitive,
   Relationship,
-} from "../../presentation/interfaces";
+} from "../../design/interfaces";
 import type { Schema } from "../../schemas/schemas";
 import * as schemas from "../../schemas/schemas";
 
@@ -116,7 +115,7 @@ function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
         ...flatIncluded[key][related.id],
         id: related.id,
         label: flatIncluded[key][related.id][displayValueKey],
-      })) as Relationship[];
+      })) as Relationship;
     }
 
     return flatRecord;

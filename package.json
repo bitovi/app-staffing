@@ -108,7 +108,6 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.11.7",
-    "@mui/x-data-grid": "^5.17.22",
     "@types/uuid": "^8.3.3",
     "can-deparam": "^1.2.3",
     "can-local-store": "^1.0.1",
