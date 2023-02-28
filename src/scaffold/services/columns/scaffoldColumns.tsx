@@ -5,7 +5,7 @@ import type {
   CellValue,
   FlatRecord,
   ValueComponent,
-} from "../../design/interfaces";
+} from "../../presentation/interfaces";
 import {
   ScaffoldAttributeDisplay,
   ScaffoldExtraDisplay,

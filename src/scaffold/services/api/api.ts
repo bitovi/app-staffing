@@ -2,7 +2,7 @@ import type {
   FlatRecord,
   Primitive,
   Relationship,
-} from "../../design/interfaces";
+} from "../../presentation/interfaces";
 import type { Schema } from "../../schemas/schemas";
 import * as schemas from "../../schemas/schemas";
 
@@ -115,7 +115,7 @@ function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
         ...flatIncluded[key][related.id],
         id: related.id,
         label: flatIncluded[key][related.id][displayValueKey],
-      })) as Relationship;
+      })) as Relationship[];
     }
 
     return flatRecord;

@@ -2,7 +2,7 @@ import type {
   ValueComponent,
   FlatRecord,
   CellValue,
-} from "../../design/interfaces";
+} from "../../presentation/interfaces";
 import type { Attribute } from "../../schemas/schemas";
 
 export type Render = ({ record }: { record: FlatRecord }) => JSX.Element;
