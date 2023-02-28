@@ -36,7 +36,7 @@ export interface ScaffoldPresentationContextProps {
   List: React.FC<XListProps>;
   Layout: React.FC<XLayoutProps>;
   Details: React.FC<XDetailsProps>;
-  // @todo Form
+  Form: React.FC<any>;
   defaultValueComponents: DefaultValueComponents;
 }
 
@@ -59,6 +59,7 @@ export const ScaffoldPresentationContext =
     List: ({ displays, useData }) => null,
     Layout: ({ schema, children }) => null,
     Details: ({ displays, useData }) => null,
+    Form: ({ schema }) => null,
     defaultValueComponents: ScaffoldPresentationDefaultValueComponents,
   });
 
@@ -72,13 +73,14 @@ interface ScaffoldPresentationProviderProps
 
 const ScaffoldPresentationProvider: React.FC<
   ScaffoldPresentationProviderProps
-> = ({ List, Layout, Details, defaultValueComponents, children }) => {
+> = ({ List, Layout, Details, Form, defaultValueComponents, children }) => {
   return (
     <ScaffoldPresentationContext.Provider
       value={{
         List,
         Layout,
         Details,
+        Form,
         defaultValueComponents,
       }}
     >

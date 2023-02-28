@@ -25,6 +25,7 @@ const MuiLayout: React.FC<XLayoutProps> = ({
   renderActions,
   children,
 }) => {
+  console.log("mui layout", children);
   return (
     <Container disableGutters maxWidth={false}>
       <div css={styles.headerRow}>

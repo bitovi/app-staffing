@@ -6,6 +6,7 @@ import ScaffoldPresentationProvider, {
 } from "../../../components/ScaffoldPresentationProvider";
 import MuiLayout from "../MuiLayout";
 import MuiList from "../MuiList";
+import MuiForm from "../MuiForm";
 import MuiDetails from "../MuiDetails";
 import { Relationship, RelationshipList } from "./DefaultComponents";
 import type { XProviderProps } from "../../interfaces";
@@ -22,6 +23,7 @@ const MuiProvider: React.FC<XProviderProps<Theme>> = ({
         List={MuiList}
         Layout={MuiLayout}
         Details={MuiDetails}
+        Form={MuiForm}
         defaultValueComponents={{
           ...ScaffoldPresentationDefaultValueComponents,
           Relationship,
