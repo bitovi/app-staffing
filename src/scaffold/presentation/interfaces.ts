@@ -27,7 +27,7 @@ export type ValueComponent = React.FC<{
 export type FieldComponent = React.FC<{
   value: Primitive;
   onUpdate: (value: Primitive) => void;
-  attributeSchema: Attribute | null;
+  attributeSchema?: Attribute;
 }>;
 
 export interface XLayoutProps {
