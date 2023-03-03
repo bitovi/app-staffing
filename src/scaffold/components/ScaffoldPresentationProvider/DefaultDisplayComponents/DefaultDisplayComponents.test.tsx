@@ -12,7 +12,7 @@ import {
   RelationshipList,
 } from ".";
 
-describe("scaffold/components/ScaffoldPresentationProvider/DefaultComponents", () => {
+describe("scaffold/components/ScaffoldPresentationProvider/DefaultDisplayComponents", () => {
   describe("String", () => {
     it("works", async () => {
       render(<String value="some string" />);

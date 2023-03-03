@@ -9,7 +9,7 @@ import MuiLayout from "../MuiLayout";
 import MuiList from "../MuiList";
 import MuiForm from "../MuiForm";
 import MuiDetails from "../MuiDetails";
-import { Relationship, RelationshipList } from "./DefaultComponents";
+import { Relationship, RelationshipList } from "./DefaultDisplayComponents";
 import type { XProviderProps } from "../../interfaces";
 
 const defaultTheme = createTheme();
@@ -30,7 +30,9 @@ const MuiProvider: React.FC<XProviderProps<Theme>> = ({
           Relationship,
           RelationshipList,
         }}
-        defaultFieldComponents={ScaffoldPresentationDefaultFieldComponents}
+        defaultFieldComponents={{
+          ...ScaffoldPresentationDefaultFieldComponents,
+        }}
       >
         {children}
       </ScaffoldPresentationProvider>

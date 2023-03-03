@@ -29,11 +29,7 @@ const TestSchema: Schema = {
 // @todo removing render function from objects because jest is giving
 // an error when comparing an array of objects with functions (even if equal)
 // https://stackoverflow.com/a/60989588/4781945
-<<<<<<< HEAD
 export const removeRenderFn = (item: any) => {
-=======
-const removeRenderCellFn = (item: any) => {
->>>>>>> main
   const clone = cloneDeep(item);
   delete clone.render;
   return clone;
@@ -88,21 +84,13 @@ describe("scaffold/services/scaffoldDisplays", () => {
         { key: "three", label: "three", render: jest.fn() },
         { key: "four", label: "four", render: jest.fn() },
         { key: "five", label: "five", render: jest.fn() },
-<<<<<<< HEAD
       ].map(removeRenderFn);
-=======
-      ].map(removeRenderCellFn);
->>>>>>> main
 
       const result = injectExtraDisplays(
         initialDisplays,
         ScaffoldPresentationDefaultValueComponents,
         extraDisplays,
-<<<<<<< HEAD
       ).map(removeRenderFn);
-=======
-      ).map(removeRenderCellFn);
->>>>>>> main
 
       expect(result).toEqual(expectedDisplays);
     });
@@ -136,11 +124,7 @@ describe("scaffold/services/scaffoldDisplays", () => {
         TestSchema,
         ScaffoldPresentationDefaultValueComponents,
         children,
-<<<<<<< HEAD
       ).map(removeRenderFn);
-=======
-      ).map(removeRenderCellFn);
->>>>>>> main
 
       expect(result).toEqual(expected);
     });
@@ -156,11 +140,7 @@ describe("scaffold/services/scaffoldDisplays", () => {
         TestSchema,
         ScaffoldPresentationDefaultValueComponents,
         children,
-<<<<<<< HEAD
       ).map(removeRenderFn);
-=======
-      ).map(removeRenderCellFn);
->>>>>>> main
 
       expect(result).toEqual(expected);
     });
@@ -172,11 +152,7 @@ describe("scaffold/services/scaffoldDisplays", () => {
         TestSchema,
         ScaffoldPresentationDefaultValueComponents,
         null,
-<<<<<<< HEAD
       ).map(removeRenderFn);
-=======
-      ).map(removeRenderCellFn);
->>>>>>> main
       const expected = [
         { key: "id", label: "Id" },
         { key: "firstName", label: "FirstName" },
