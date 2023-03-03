@@ -3,6 +3,7 @@ import type {
   Primitive,
   Relationship,
 } from "../../presentation/interfaces";
+import type { FormState } from "../../components/ScaffoldForm/ScaffoldForm";
 import type { Schema } from "../../schemas/schemas";
 import * as schemas from "../../schemas/schemas";
 
@@ -120,6 +121,33 @@ function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
 
     return flatRecord;
   });
+}
+
+export async function createOne(
+  schema: Schema,
+  formState: FormState,
+): Promise<void> {
+  const url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s`;
+  const body = {
+    jsonapi: { version: 1.0 },
+    data: {
+      type: "employees",
+      attributes: formState,
+      // @todo relationships: { skills: { data: [] } },
+    },
+  };
+
+  const raw = await fetch(url, {
+    method: "post",
+    headers: {
+      Accept: "application/vnd.api+json",
+      "Content-Type": "application/vnd.api+json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  await raw.json();
+  // @todo store response in cache
 }
 
 export function fetchOne(

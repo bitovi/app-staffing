@@ -5,7 +5,7 @@ export {
   NumberList,
   Boolean,
   BooleanList,
-  DefaultDate,
+  Date,
   DateList,
   Relationship,
   RelationshipList,

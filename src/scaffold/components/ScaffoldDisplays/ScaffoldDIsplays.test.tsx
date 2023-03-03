@@ -1,5 +1,9 @@
 import { render } from "@testing-library/react";
-import { ScaffoldExtraDisplay, ScaffoldAttributeDisplay } from ".";
+import {
+  ScaffoldExtraDisplay,
+  ScaffoldAttributeDisplay,
+  ScaffoldAttributeField,
+} from ".";
 
 describe("scaffold/components/ScaffoldColumns", () => {
   describe("ScaffoldExtraDisplay", () => {
@@ -11,6 +15,12 @@ describe("scaffold/components/ScaffoldColumns", () => {
   describe("ScaffoldAttributeDisplay", () => {
     it("works", () => {
       render(<ScaffoldAttributeDisplay attribute="field" />);
+    });
+  });
+
+  describe("ScaffoldAttributeField", () => {
+    it("works", () => {
+      render(<ScaffoldAttributeField attribute="field" render={jest.fn()} />);
     });
   });
 });

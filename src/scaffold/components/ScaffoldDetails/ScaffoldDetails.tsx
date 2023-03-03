@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { fetchOne } from "../../services/api/api";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
-import { getDisplays } from "../ScaffoldList/ScaffoldList";
+import { getDisplays } from "../../services/displays/scaffoldDisplays";
 
 import type { Schema } from "../../schemas/schemas";
 import type { FlatRecord, ValueComponent } from "../../presentation/interfaces";

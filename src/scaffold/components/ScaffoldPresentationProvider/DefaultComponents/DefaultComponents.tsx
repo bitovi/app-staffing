@@ -58,9 +58,13 @@ export const BooleanList: React.FC<{ values: boolean[] }> = ({ values }) => {
   );
 };
 
-export const DefaultDate: React.FC<{ value: string }> = ({ value }) => {
+export const Date: React.FC<{ value: string }> = ({ value }) => {
   return (
-    <>{new Intl.DateTimeFormat(navigator.language).format(new Date(value))}</>
+    <>
+      {new Intl.DateTimeFormat(navigator.language).format(
+        new window.Date(value),
+      )}
+    </>
   );
 };
 
@@ -70,7 +74,7 @@ export const DateList: React.FC<{ values: string[] }> = ({ values }) => {
       {values.map((value, index) => {
         return (
           <Fragment key={index}>
-            <DefaultDate value={value} />
+            <Date value={value} />
             {index !== values.length - 1 && "; "}
           </Fragment>
         );

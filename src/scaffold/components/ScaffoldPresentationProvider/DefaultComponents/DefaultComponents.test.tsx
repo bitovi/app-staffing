@@ -6,7 +6,7 @@ import {
   NumberList,
   Boolean,
   BooleanList,
-  DefaultDate,
+  Date,
   DateList,
   Relationship,
   RelationshipList,
@@ -71,16 +71,16 @@ describe("scaffold/components/ScaffoldPresentationProvider/DefaultComponents", (
     });
   });
 
-  describe("DefaultDate", () => {
+  describe("Date", () => {
     it("formats date for us", async () => {
       jest.spyOn(navigator, "language", "get").mockImplementation(() => "us");
-      render(<DefaultDate value="2025-02-08T00:00:00.000Z" />);
+      render(<Date value="2025-02-08T00:00:00.000Z" />);
       expect(await screen.findByText("2/8/2025")).toBeInTheDocument();
     });
 
     it("formats date for de", async () => {
       jest.spyOn(navigator, "language", "get").mockImplementation(() => "de");
-      render(<DefaultDate value="2025-02-08T00:00:00.000Z" />);
+      render(<Date value="2025-02-08T00:00:00.000Z" />);
       expect(await screen.findByText("8.2.2025")).toBeInTheDocument();
     });
   });
