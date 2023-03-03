@@ -14,9 +14,9 @@
     "depcheck": "depcheck .",
     "clean": "rm -rf build coverage",
     "dev": "react-scripts start",
-    "test": "react-scripts test",
-    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
-    "test:ci": "CI=true react-scripts test --coverage",
+    "test": "TZ=UTC react-scripts test",
+    "test:debug": "TZ=UT react-scripts --inspect-brk test --runInBand --no-cache",
+    "test:ci": "TZ=UT CI=true react-scripts test --coverage",
     "storybook": "start-storybook -s public -p 6006",
     "storybook:build": "build-storybook --quiet -s public -o build/storybook",
     "build": "react-scripts build"

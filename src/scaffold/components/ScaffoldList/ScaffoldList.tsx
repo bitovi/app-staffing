@@ -1,20 +1,22 @@
 import { Children as ReactChildren } from "react";
 
 import {
-  getColumnsFromChildren,
-  getColumnsFromSchema,
+  getDisplaysFromChildren,
+  getDisplaysFromSchema,
   hasValidChildren,
-  injectExtraColumns,
-} from "../../services/columns/scaffoldColumns";
-import { useScaffoldDesign } from "../ScaffoldDesignProvider";
+  injectExtraDisplays,
+  ScaffoldDisplay,
+} from "../../services/displays/scaffoldDisplays";
+import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
 import {
   ScaffoldAttributeDisplay,
   ScaffoldExtraDisplay,
-} from "../ScaffoldColumns";
+} from "../ScaffoldDisplays";
 import { fetchData } from "../../services/api/api";
 
 import type { Schema } from "../../schemas/schemas";
-import type { FlatRecord, ValueComponent } from "../../design/interfaces";
+import type { FlatRecord, ValueComponent } from "../../presentation/interfaces";
+import { DefaultValueComponents } from "../ScaffoldPresentationProvider/ScaffoldPresentationProvider";
 
 interface ScaffoldListProps {
   schema: Schema;
@@ -29,8 +31,13 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
   useData,
   children,
 }) => {
-  const columns = getColumns(schema, valueComponents, children);
-  const { List } = useScaffoldDesign();
+  const { List, defaultValueComponents } = useScaffoldPresentation();
+  const displays = getDisplays(
+    schema,
+    valueComponents,
+    defaultValueComponents,
+    children,
+  );
 
   // @todo implement this in a better way when data layer is implemented
   if (!useData) {
@@ -38,27 +45,36 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
     useData = () => resource.read();
   }
 
-  return <List columns={columns} useData={useData} />;
+  return <List displays={displays} useData={useData} />;
 };
 
-function getColumns(
+export function getDisplays(
   schema: Schema,
   valueComponents: { [field: string]: ValueComponent } | undefined,
+  defaultValueComponents: DefaultValueComponents,
   children: React.ReactNode | null,
-) {
+): ScaffoldDisplay[] {
   // casting as JSX.Element because helper functions require access to
   // `child.type.name` and `child.props`
   const childArray = ReactChildren.toArray(children) as JSX.Element[];
 
-  let columns = hasValidChildren(ScaffoldAttributeDisplay.name, childArray)
-    ? getColumnsFromChildren(schema, childArray)
-    : getColumnsFromSchema(schema, valueComponents || null);
+  let displays = hasValidChildren(ScaffoldAttributeDisplay.name, childArray)
+    ? getDisplaysFromChildren(schema, defaultValueComponents, childArray)
+    : getDisplaysFromSchema(
+        schema,
+        defaultValueComponents,
+        valueComponents || null,
+      );
 
   if (hasValidChildren(ScaffoldExtraDisplay.name, childArray)) {
-    columns = injectExtraColumns(columns, childArray);
+    displays = injectExtraDisplays(
+      displays,
+      defaultValueComponents,
+      childArray,
+    );
   }
 
-  return columns;
+  return displays;
 }
 
 export default ScaffoldList;

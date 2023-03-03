@@ -1,9 +1,9 @@
 import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import Employees from "./Employees";
+import Employees from "./List";
 
-jest.mock("../../services/api/api", () => ({
+jest.mock("../../../services/api/api", () => ({
   fetchData: () => {
     return {
       read: () => {
@@ -52,7 +52,7 @@ jest.mock("../../services/api/api", () => ({
 
 // @todo use msw and test loading/empty states after data layer is implemented
 
-describe("scaffold/app/Employees", () => {
+describe("scaffold/app/Employees/List", () => {
   it("renders page header", async () => {
     const { findAllByText } = render(<Employees />);
     const pageHeader = await findAllByText(/employee/i);

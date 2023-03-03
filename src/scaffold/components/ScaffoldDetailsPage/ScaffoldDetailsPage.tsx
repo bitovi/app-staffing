@@ -1,4 +1,4 @@
-import ScaffoldList from "../ScaffoldList";
+import ScaffoldDetails from "../ScaffoldDetails";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
 import type {
   FlatRecord,
@@ -6,12 +6,12 @@ import type {
   XLayoutProps,
 } from "../../presentation/interfaces";
 
-interface ScaffoldListPageProps extends XLayoutProps {
+interface ScaffoldDetailsPageProps extends XLayoutProps {
   valueComponents?: { [attribute: string]: ValueComponent };
-  useData?: () => FlatRecord[];
+  useData?: () => FlatRecord;
 }
 
-const ScaffoldListPage: React.FC<ScaffoldListPageProps> = ({
+const ScaffoldDetailsPage: React.FC<ScaffoldDetailsPageProps> = ({
   schema,
   valueComponents,
   renderActions,
@@ -22,15 +22,15 @@ const ScaffoldListPage: React.FC<ScaffoldListPageProps> = ({
 
   return (
     <Layout schema={schema} renderActions={renderActions}>
-      <ScaffoldList
+      <ScaffoldDetails
         schema={schema}
         valueComponents={valueComponents}
         useData={useData}
       >
         {children}
-      </ScaffoldList>
+      </ScaffoldDetails>
     </Layout>
   );
 };
 
-export default ScaffoldListPage;
+export default ScaffoldDetailsPage;

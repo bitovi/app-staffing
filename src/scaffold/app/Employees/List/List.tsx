@@ -1,26 +1,28 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Button, IconButton } from "@mui/material";
 import isEmpty from "lodash/isEmpty";
 
-import MuiProvider from "../../design/mui/MuiProvider";
-import ScaffoldListPage from "../../components/ScaffoldListPage";
+import MuiProvider from "../../../presentation/mui/MuiProvider";
+import ScaffoldListPage from "../../../components/ScaffoldListPage";
 import {
   ScaffoldExtraDisplay,
   ScaffoldAttributeDisplay,
-} from "../../components/ScaffoldColumns";
-import type { ValueComponent } from "../../design/interfaces";
-import { fetchData } from "../../services/api/api";
+} from "../../../components/ScaffoldDisplays";
+import type { ValueComponent } from "../../../presentation/interfaces";
+import { fetchData } from "../../../services/api/api";
 
-import { Employee as EmployeeSchema } from "../../schemas/schemas";
-import { Employee, useEmployeeMutations } from "../../../services/api";
-import DeleteConfirmationModal from "../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
-import EmployeeModal from "../../../pages/Employees/components/EmployeeModal";
-import styles from "./Employees.module.css";
-import { EditIcon, TrashIcon } from "../../../pages/assets";
+import { EditIcon, TrashIcon, ViewIcon } from "../../../../pages/assets";
+import { Employee as EmployeeSchema } from "../../../schemas/schemas";
+import { Employee, useEmployeeMutations } from "../../../../services/api";
+import DeleteConfirmationModal from "../../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
+import EmployeeModal from "../../../../pages/Employees/components/EmployeeModal";
+import styles from "./List.module.css";
 
 const resource = fetchData(EmployeeSchema);
 
 const EmployeesListPage: React.FC = () => {
+  const history = useHistory();
   const { createEmployee, updateEmployee, destroyEmployee } =
     useEmployeeMutations();
 
@@ -62,9 +64,6 @@ const EmployeesListPage: React.FC = () => {
       <MuiProvider>
         <ScaffoldListPage
           schema={EmployeeSchema}
-          valueComponents={{
-            skills: CustomSkillField,
-          }}
           renderActions={() => (
             <CreateEmployee onClick={() => setShowEmployeeModal(true)} />
           )}
@@ -73,17 +72,14 @@ const EmployeesListPage: React.FC = () => {
           <ScaffoldAttributeDisplay attribute="name" label="Name" />
           <ScaffoldAttributeDisplay attribute="start_date" label="Start Date" />
           <ScaffoldAttributeDisplay attribute="end_date" label="End Date" />
-          <ScaffoldAttributeDisplay
-            attribute="skills"
-            label="Skills"
-            ValueComponent={CustomSkillField}
-          />
+          <ScaffoldAttributeDisplay attribute="skills" label="Skills" />
           <ScaffoldExtraDisplay
             label="Actions"
             render={({ record }) => (
               <ActionButtons
                 // @todo temporary until schema/resources are strongly typed
                 value={record as unknown as Employee}
+                viewEmployee={() => history.push(`/team-members/${record.id}`)}
                 setEmployeeToDelete={setEmployeeToDelete}
                 setEmployeeToEdit={setEmployeeToEdit}
               />
@@ -100,11 +96,15 @@ export default EmployeesListPage;
 const ActionButtons: React.FC<{
   // @todo this is type Employee, will be fixed with components as hooks refactor
   value: Employee;
+  viewEmployee: () => void;
   setEmployeeToEdit: React.Dispatch<React.SetStateAction<Employee | null>>;
   setEmployeeToDelete: React.Dispatch<React.SetStateAction<Employee | null>>;
-}> = ({ value, setEmployeeToEdit, setEmployeeToDelete }) => {
+}> = ({ value, viewEmployee, setEmployeeToEdit, setEmployeeToDelete }) => {
   return (
     <>
+      <IconButton aria-label="View Icon" size="small" onClick={viewEmployee}>
+        <ViewIcon fill="currentColor" />
+      </IconButton>
       <IconButton
         aria-label="Edit Employee"
         size="small"
