@@ -1,17 +1,28 @@
 import { createContext, useContext } from "react";
 
+<<<<<<< HEAD
 import type {
   Primitive,
+=======
+import {
+>>>>>>> main
   XListProps,
   XLayoutProps,
   XDetailsProps,
   Relationship as RelationshipType,
+<<<<<<< HEAD
   XFormProps,
+=======
+>>>>>>> main
 } from "../../presentation/interfaces";
 import {
   Boolean,
   BooleanList,
+<<<<<<< HEAD
   Date,
+=======
+  DefaultDate,
+>>>>>>> main
   DateList,
   Number,
   NumberList,
@@ -20,12 +31,15 @@ import {
   String,
   StringList,
 } from "./DefaultComponents";
+<<<<<<< HEAD
 import {
   Boolean as BooleanInput,
   Date as DateInput,
   Number as NumberInput,
   String as StringInput,
 } from "./DefaultFieldComponents";
+=======
+>>>>>>> main
 
 export interface DefaultValueComponents {
   String: React.FC<{ value: string }>;
@@ -39,6 +53,7 @@ export interface DefaultValueComponents {
   Relationship: React.FC<{ value: RelationshipType }>;
   RelationshipList: React.FC<{ values: RelationshipType[] }>;
 }
+<<<<<<< HEAD
 export interface DefaultFieldComponents {
   Boolean: React.FC<{
     value: boolean;
@@ -57,14 +72,21 @@ export interface DefaultFieldComponents {
     onUpdate: (value: Primitive) => void;
   }>;
 }
+=======
+>>>>>>> main
 
 export interface ScaffoldPresentationContextProps {
   List: React.FC<XListProps>;
   Layout: React.FC<XLayoutProps>;
   Details: React.FC<XDetailsProps>;
+<<<<<<< HEAD
   Form: React.FC<XFormProps>;
   defaultValueComponents: DefaultValueComponents;
   defaultFieldComponents: DefaultFieldComponents;
+=======
+  // @todo Form
+  defaultValueComponents: DefaultValueComponents;
+>>>>>>> main
 }
 
 export const ScaffoldPresentationDefaultValueComponents = {
@@ -74,12 +96,17 @@ export const ScaffoldPresentationDefaultValueComponents = {
   NumberList,
   Boolean,
   BooleanList,
+<<<<<<< HEAD
   Date,
+=======
+  Date: DefaultDate,
+>>>>>>> main
   DateList,
   Relationship,
   RelationshipList,
 };
 
+<<<<<<< HEAD
 export const ScaffoldPresentationDefaultFieldComponents = {
   String: StringInput,
   Number: NumberInput,
@@ -96,6 +123,15 @@ export const ScaffoldPresentationContext =
     Form: () => null,
     defaultValueComponents: ScaffoldPresentationDefaultValueComponents,
     defaultFieldComponents: ScaffoldPresentationDefaultFieldComponents,
+=======
+export const ScaffoldPresentationContext =
+  createContext<ScaffoldPresentationContextProps>({
+    // @todo default/headless components?
+    List: ({ displays, useData }) => null,
+    Layout: ({ schema, children }) => null,
+    Details: ({ displays, useData }) => null,
+    defaultValueComponents: ScaffoldPresentationDefaultValueComponents,
+>>>>>>> main
   });
 
 export const useScaffoldPresentation = (): ScaffoldPresentationContextProps =>
@@ -108,6 +144,7 @@ interface ScaffoldPresentationProviderProps
 
 const ScaffoldPresentationProvider: React.FC<
   ScaffoldPresentationProviderProps
+<<<<<<< HEAD
 > = ({
   List,
   Layout,
@@ -117,15 +154,22 @@ const ScaffoldPresentationProvider: React.FC<
   defaultFieldComponents,
   children,
 }) => {
+=======
+> = ({ List, Layout, Details, defaultValueComponents, children }) => {
+>>>>>>> main
   return (
     <ScaffoldPresentationContext.Provider
       value={{
         List,
         Layout,
         Details,
+<<<<<<< HEAD
         Form,
         defaultValueComponents,
         defaultFieldComponents,
+=======
+        defaultValueComponents,
+>>>>>>> main
       }}
     >
       {children}

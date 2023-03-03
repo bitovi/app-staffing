@@ -1,7 +1,5 @@
-import type { FormState } from "../components/ScaffoldForm/ScaffoldForm";
 import type { Attribute, Schema } from "../schemas/schemas";
 import type { ScaffoldDisplay } from "../services/displays/scaffoldDisplays";
-import type { ScaffoldFormField } from "../services/formFields/scaffoldFormFields";
 
 export type Primitive = string | boolean | number;
 
@@ -24,12 +22,6 @@ export type ValueComponent = React.FC<{
   attributeSchema: Attribute | null;
 }>;
 
-export type FieldComponent = React.FC<{
-  attributeSchema: Attribute;
-  value: Primitive;
-  onUpdate: any;
-}>;
-
 export interface XLayoutProps {
   schema: Schema;
   renderActions?: () => JSX.Element;
@@ -44,14 +36,6 @@ export interface XListProps {
 export interface XDetailsProps {
   displays: ScaffoldDisplay[];
   useData: () => FlatRecord;
-}
-
-export interface XFormProps {
-  isEdit: boolean;
-  fields: ScaffoldFormField[];
-  formState: FormState;
-  onUpdate: (key: string, value: Primitive) => void;
-  onSave: () => void;
 }
 
 export interface XProviderProps<T> {
