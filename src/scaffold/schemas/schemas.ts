@@ -40,13 +40,14 @@ export const Employee: Schema = {
     start_date: "date",
     end_date: "date",
   },
-  // validation
+  // @todo validation
   belongsToMany: [
     { target: "Role", options: { through: "role__employee", as: "roles" } },
   ],
-  hasMany: [
-    { target: "Skills", options: { through: "skill__employee", as: "skills" } },
-  ],
+  // @todo:
+  // hasMany: [
+  //   { target: "Skills", options: { through: "skill__employee", as: "skills" } },
+  // ],
   /* EXTRA */
   displayField: "name",
   jsonApiField: "employees",

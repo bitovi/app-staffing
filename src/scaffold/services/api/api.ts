@@ -126,14 +126,14 @@ export function fetchOne(
   schema: Schema,
   id: string | number,
 ): { read: () => FlatRecord } {
-  let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s/${id}`;
+  let url = `${window.env.API_BASE_URL}/${schema.name}/${id}`;
 
   const includes = schema.hasMany
-    ?.map((relationship) => relationship.target.toLowerCase())
+    ?.map((relationship) => relationship.target)
     .join("&");
 
   if (includes) {
-    url = `${url}?include=${includes}`;
+    url = `${url}?included=${includes}`;
   }
 
   const promise = fetch(url)
@@ -148,14 +148,14 @@ export function fetchOne(
 }
 
 export function fetchData(schema: Schema): { read: () => FlatRecord[] } {
-  let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s`;
+  let url = `${window.env.API_BASE_URL}/${schema.name}`;
 
   const includes = schema.hasMany
-    ?.map((relationship) => relationship.target.toLowerCase())
+    ?.map((relationship) => relationship.target)
     .join("&");
 
   if (includes) {
-    url = `${url}?include=${includes}`;
+    url = `${url}?included=${includes}`;
   }
 
   const promise = fetch(url)

@@ -13,7 +13,7 @@ export interface Skill extends BaseData {
 export type NewSkill = Partial<Omit<Skill, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Skill>(
-  "/skills",
+  "/Skill",
   "skills",
   { title: "Skill" },
 );
