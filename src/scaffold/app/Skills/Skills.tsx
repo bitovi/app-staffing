@@ -8,7 +8,7 @@ import { EditIcon } from "../../../pages/assets";
 
 import ScaffoldListPage from "../../components/ScaffoldListPage";
 import MuiProvider from "../../presentation/mui/MuiProvider";
-import { fetchData } from "../../services/api/api";
+import { getMany } from "../../services/api/api";
 import {
   ScaffoldAttributeDisplay,
   ScaffoldExtraDisplay,
@@ -16,7 +16,7 @@ import {
 
 import type { Skill } from "../../../services/api";
 
-const resource = fetchData(SkillSchema);
+const resource = getMany(SkillSchema);
 
 const SkillsListPage: React.FC = () => {
   const { createSkill, updateSkill } = useSkillMutations();

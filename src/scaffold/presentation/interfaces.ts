@@ -1,7 +1,10 @@
-import { FormState } from "../components/ScaffoldForm/ScaffoldForm";
-import type { Attribute, Schema } from "../schemas/schemas";
+import { FormState } from "../components/ScaffoldForm";
+import type { Attribute, AttributeSchema, Schema } from "../schemas/schemas";
 import type { ScaffoldDisplay } from "../services/displays/scaffoldDisplays";
-import { ScaffoldFormField } from "../services/formFields/scaffoldFormFields";
+import {
+  FormFieldValueType,
+  ScaffoldFormField,
+} from "../services/formFields/scaffoldFormFields";
 
 export type Primitive = string | boolean | number;
 
@@ -25,7 +28,7 @@ export type ValueComponent = React.FC<{
 }>;
 
 export type FieldComponent = React.FC<{
-  value: Primitive;
+  value: Primitive | string[];
   onUpdate: (value: Primitive) => void;
   attributeSchema?: Attribute;
 }>;
@@ -50,7 +53,15 @@ export interface XFormProps {
   isEdit: boolean;
   fields: ScaffoldFormField[];
   formState: FormState;
-  onUpdate: (key: string, value: Primitive) => void;
+  onUpdateField: ({
+    key,
+    value,
+    attributeSchema,
+  }: {
+    key: string;
+    value: FormFieldValueType;
+    attributeSchema: AttributeSchema;
+  }) => void;
   onSave: () => void;
 }
 

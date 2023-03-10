@@ -4,7 +4,7 @@ export {
   ScaffoldPresentationDefaultFieldComponents,
 } from "./ScaffoldPresentationProvider";
 export type {
-  DefaultValueComponents,
-  DefaultFieldComponents,
+  DefaultValueComponentsTypes,
+  DefaultFieldComponentsTypes,
 } from "./ScaffoldPresentationProvider";
 export { default } from "./ScaffoldPresentationProvider";

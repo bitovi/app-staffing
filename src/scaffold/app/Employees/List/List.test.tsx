@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import Employees from "./List";
 
 jest.mock("../../../services/api/api", () => ({
-  fetchData: () => {
+  getMany: () => {
     return {
       read: () => {
         return [

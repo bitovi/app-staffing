@@ -2,7 +2,7 @@ import { screen, render } from "@testing-library/react";
 import Skills from "./Skills";
 
 jest.mock("../../services/api/api", () => ({
-  fetchData: () => {
+  getMany: () => {
     return {
       read: () => {
         return [

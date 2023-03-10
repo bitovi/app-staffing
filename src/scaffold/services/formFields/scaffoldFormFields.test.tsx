@@ -40,22 +40,44 @@ describe("scaffold/services/formFields/scaffoldFormFields", () => {
       const resultWithoutRender: any = cloneDeep(result);
       delete resultWithoutRender.render;
 
-      expect(resultWithoutRender).toEqual({ key: "name", label: "Name" });
+      expect(resultWithoutRender).toEqual({
+        key: "name",
+        label: "Name",
+        attributeSchema: { type: "string", allowNull: false },
+      });
     });
   });
 
   describe("getFormFieldsFromSchema", () => {
-    it("returns ScaffoldFormField[] for a schema", () => {
-      const result = getFormFieldsFromSchema(
-        TestSchema,
-        ScaffoldPresentationDefaultFieldComponents,
+    it("returns ScaffoldFormField[] for a schema", async () => {
+      const result = (
+        await getFormFieldsFromSchema(
+          TestSchema,
+          ScaffoldPresentationDefaultFieldComponents,
+        )
       ).map(removeRenderFn);
 
       expect(result).toEqual([
-        { key: "name", label: "Name" },
-        { key: "age", label: "Age" },
-        { key: "date_of_birth", label: "Date Of Birth" },
-        { key: "is_employed", label: "Is Employed" },
+        {
+          key: "name",
+          label: "Name",
+          attributeSchema: { type: "string", allowNull: false },
+        },
+        {
+          key: "age",
+          label: "Age",
+          attributeSchema: { type: "number", allowNull: false },
+        },
+        {
+          key: "date_of_birth",
+          label: "Date Of Birth",
+          attributeSchema: { type: "date", allowNull: false },
+        },
+        {
+          key: "is_employed",
+          label: "Is Employed",
+          attributeSchema: { type: "boolean", allowNull: false },
+        },
       ]);
     });
   });
@@ -82,14 +104,22 @@ describe("scaffold/services/formFields/scaffoldFormFields", () => {
       ).map(removeRenderFn);
 
       expect(result).toEqual([
-        { key: "name", label: "Full Name" },
-        { key: "date_of_birth", label: "DOB" },
+        {
+          key: "name",
+          label: "Full Name",
+          attributeSchema: { type: "string", allowNull: false },
+        },
+        {
+          key: "date_of_birth",
+          label: "DOB",
+          attributeSchema: { type: "date", allowNull: false },
+        },
       ]);
     });
   });
 
   describe("getFormFields", () => {
-    it("returns based on schema if no valid children", () => {
+    it("returns based on schema if no valid children", async () => {
       const children = (
         <>
           <ScaffoldAttributeDisplay attribute="name" label="Name" />
@@ -97,22 +127,40 @@ describe("scaffold/services/formFields/scaffoldFormFields", () => {
         </>
       );
 
-      const result = getFormFields(
-        TestSchema,
-        {},
-        ScaffoldPresentationDefaultFieldComponents,
-        children,
+      const result = (
+        await getFormFields(
+          TestSchema,
+          {},
+          ScaffoldPresentationDefaultFieldComponents,
+          children,
+        )
       ).map(removeRenderFn);
 
       expect(result).toEqual([
-        { key: "name", label: "Name" },
-        { key: "age", label: "Age" },
-        { key: "date_of_birth", label: "Date Of Birth" },
-        { key: "is_employed", label: "Is Employed" },
+        {
+          key: "name",
+          label: "Name",
+          attributeSchema: { type: "string", allowNull: false },
+        },
+        {
+          key: "age",
+          label: "Age",
+          attributeSchema: { type: "number", allowNull: false },
+        },
+        {
+          key: "date_of_birth",
+          label: "Date Of Birth",
+          attributeSchema: { type: "date", allowNull: false },
+        },
+        {
+          key: "is_employed",
+          label: "Is Employed",
+          attributeSchema: { type: "boolean", allowNull: false },
+        },
       ]);
     });
 
-    it("returns based on children", () => {
+    it("returns based on children", async () => {
       const children = (
         <ScaffoldAttributeField
           attribute="name"
@@ -121,14 +169,22 @@ describe("scaffold/services/formFields/scaffoldFormFields", () => {
         />
       );
 
-      const result = getFormFields(
-        TestSchema,
-        {},
-        ScaffoldPresentationDefaultFieldComponents,
-        children,
+      const result = (
+        await getFormFields(
+          TestSchema,
+          {},
+          ScaffoldPresentationDefaultFieldComponents,
+          children,
+        )
       ).map(removeRenderFn);
 
-      expect(result).toEqual([{ key: "name", label: "Full Name" }]);
+      expect(result).toEqual([
+        {
+          key: "name",
+          label: "Full Name",
+          attributeSchema: { allowNull: false, type: "string" },
+        },
+      ]);
     });
   });
 

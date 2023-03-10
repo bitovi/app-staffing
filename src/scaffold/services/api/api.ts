@@ -1,11 +1,16 @@
+import plur from "plur";
 import type {
   FlatRecord,
   Primitive,
   Relationship,
 } from "../../presentation/interfaces";
-import type { FormState } from "../../components/ScaffoldForm/ScaffoldForm";
+import type { FormState } from "../../components/ScaffoldForm";
 import type { Schema } from "../../schemas/schemas";
 import * as schemas from "../../schemas/schemas";
+import {
+  FormFieldValueType,
+  ScaffoldFormField,
+} from "../formFields/scaffoldFormFields";
 
 interface JsonApiAttributes {
   [field: string]: Primitive;
@@ -96,7 +101,7 @@ function getFlattenedIncluded(included?: JsonApiIncluded[]): FlatIncluded {
  * to:
  * { id, ...attributes, skills: []}
  */
-function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
+export function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
   const flatIncluded = getFlattenedIncluded(data?.included);
   const records = Array.isArray(data.data) ? data.data : [data.data];
 
@@ -125,16 +130,43 @@ function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
 
 export async function createOne(
   schema: Schema,
+  formFields: ScaffoldFormField[],
   formState: FormState,
 ): Promise<void> {
-  const url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s`;
+  const url = `${window.env.API_BASE_URL}/${plur(schema.name.toLowerCase())}`;
+
+  // json api specific formatting
+  const data: {
+    relationships: { [key: string]: { data: { type: string; id: string }[] } };
+    attributes: { [key: string]: FormFieldValueType | null };
+    type: string;
+  } = {
+    relationships: {},
+    attributes: {},
+    type: "employees",
+  };
+
+  for (let i = 0; i < formFields.length; i++) {
+    const field = formFields[i];
+
+    if (field.attributeSchema.type === "relationship") {
+      data.relationships = {
+        ...data.relationships,
+        [field.key]: {
+          data: (formState[field.key] as string[]).map((id) => ({
+            type: field.key,
+            id,
+          })),
+        },
+      };
+    } else {
+      data.attributes[field.key] = formState[field.key] || null;
+    }
+  }
+
   const body = {
-    jsonapi: { version: 1.0 },
-    data: {
-      type: "employees",
-      attributes: formState,
-      // @todo relationships: { skills: { data: [] } },
-    },
+    jsonapi: { version: "1.0" },
+    data: data,
   };
 
   const raw = await fetch(url, {
@@ -150,11 +182,13 @@ export async function createOne(
   // @todo store response in cache
 }
 
-export function fetchOne(
+export function getOne(
   schema: Schema,
   id: string | number,
 ): { read: () => FlatRecord } {
-  let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s/${id}`;
+  let url = `${window.env.API_BASE_URL}/${plur(
+    schema.name.toLowerCase(),
+  )}/${id}`;
 
   const includes = schema.hasMany
     ?.map((relationship) => relationship.target.toLowerCase())
@@ -175,8 +209,8 @@ export function fetchOne(
   return wrapPromise<FlatRecord>(promise);
 }
 
-export function fetchData(schema: Schema): { read: () => FlatRecord[] } {
-  let url = `${window.env.API_BASE_URL}/${schema.name.toLowerCase()}s`;
+export function getMany(schema: Schema): { read: () => FlatRecord[] } {
+  let url = `${window.env.API_BASE_URL}/${plur(schema.name.toLowerCase())}`;
 
   const includes = schema.hasMany
     ?.map((relationship) => relationship.target.toLowerCase())

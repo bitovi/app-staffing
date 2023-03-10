@@ -7,7 +7,7 @@ jest.mock("react-router-dom", () => ({
 }));
 
 jest.mock("../../../services/api/api", () => ({
-  fetchOne: () => {
+  getOne: () => {
     return {
       read: () => {
         return {

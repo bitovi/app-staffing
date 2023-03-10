@@ -13,7 +13,7 @@ import {
   ScaffoldExtraDisplay,
 } from "../../components/ScaffoldDisplays";
 import type { Render, RenderValue } from "../../components/ScaffoldDisplays";
-import type { DefaultValueComponents } from "../../components/ScaffoldPresentationProvider";
+import type { DefaultValueComponentsTypes } from "../../components/ScaffoldPresentationProvider";
 
 export interface ScaffoldDisplay {
   key: string;
@@ -24,7 +24,7 @@ export interface ScaffoldDisplay {
 export function getDefaultRender(
   attribute: string,
   attributeType: string,
-  defaultValueComponents: DefaultValueComponents,
+  defaultValueComponents: DefaultValueComponentsTypes,
 ): ({ record }: { record: FlatRecord }) => React.ReactNode {
   const { String, Number, Boolean, Relationship, RelationshipList, Date } =
     defaultValueComponents;
@@ -82,7 +82,7 @@ export function getScaffoldDisplay({
   attributeSchema?: Attribute | null;
   ValueComponent?: ValueComponent | null;
   valueComponents?: { [attribute: string]: ValueComponent } | null;
-  defaultValueComponents: DefaultValueComponents;
+  defaultValueComponents: DefaultValueComponentsTypes;
   render?: Render | null;
   renderValue?: RenderValue | null;
 }): ScaffoldDisplay {
@@ -152,7 +152,7 @@ export function getScaffoldDisplay({
 
 export function getDisplaysFromChildren(
   schema: Schema,
-  defaultValueComponents: DefaultValueComponents,
+  defaultValueComponents: DefaultValueComponentsTypes,
   children: JSX.Element[],
 ): ScaffoldDisplay[] {
   const displays = children
@@ -181,7 +181,7 @@ export function getDisplaysFromChildren(
 
 export function getDisplaysFromSchema(
   schema: Schema,
-  defaultValueComponents: DefaultValueComponents,
+  defaultValueComponents: DefaultValueComponentsTypes,
   valueComponents: { [attribute: string]: ValueComponent } | null,
 ): ScaffoldDisplay[] {
   const attributesDisplays = Object.entries(schema.attributes).map(
@@ -211,7 +211,7 @@ export function getDisplaysFromSchema(
 
 export function injectExtraDisplays(
   displays: ScaffoldDisplay[],
-  defaultValueComponents: DefaultValueComponents,
+  defaultValueComponents: DefaultValueComponentsTypes,
   children: JSX.Element[],
 ): ScaffoldDisplay[] {
   const updatedDisplays = cloneDeep(displays);
@@ -246,7 +246,7 @@ export function hasValidChildren(
 export function getDisplays(
   schema: Schema,
   valueComponents: { [field: string]: ValueComponent } | undefined,
-  defaultValueComponents: DefaultValueComponents,
+  defaultValueComponents: DefaultValueComponentsTypes,
   children: React.ReactNode | null,
 ): ScaffoldDisplay[] {
   // casting as JSX.Element because helper functions require access to

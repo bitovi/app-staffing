@@ -5,29 +5,35 @@ import {
   ScaffoldAttributeFieldProps,
 } from "../../components/ScaffoldDisplays";
 import type { FieldComponent, Primitive } from "../../presentation/interfaces";
-import type { Attribute, Schema } from "../../schemas/schemas";
-import type { DefaultFieldComponents } from "../../components/ScaffoldPresentationProvider/ScaffoldPresentationProvider";
+import type { Attribute, AttributeSchema, Schema } from "../../schemas/schemas";
+import type { DefaultFieldComponentsTypes } from "../../components/ScaffoldPresentationProvider";
+import { getFlatRecords } from "../api/api";
 
-export type Render = ({
+export type FormFieldValueType = Primitive | string[];
+
+export type FormFieldRender = ({
   value,
+  label,
   onUpdate,
 }: {
-  value: Primitive;
-  onUpdate: (value: Primitive) => void;
+  value: FormFieldValueType;
+  label: string;
+  onUpdate: (value: FormFieldValueType) => void;
 }) => JSX.Element;
 
 export interface ScaffoldFormField {
   key: string;
   label: string;
-  render: Render;
+  attributeSchema: AttributeSchema;
+  render: FormFieldRender;
 }
 
-export function getFormFields(
+export async function getFormFields(
   schema: Schema,
   fieldComponents: { [attribute: string]: FieldComponent },
-  defaultFieldComponents: DefaultFieldComponents,
+  defaultFieldComponents: DefaultFieldComponentsTypes,
   children: React.ReactNode | null,
-): ScaffoldFormField[] {
+): Promise<ScaffoldFormField[]> {
   const childArray = ReactChildren.toArray(children) as JSX.Element[];
 
   return hasValidChildren(ScaffoldAttributeField.name, childArray)
@@ -37,7 +43,7 @@ export function getFormFields(
 
 export function getFormFieldsFromChildren(
   schema: Schema,
-  defaultFieldComponents: DefaultFieldComponents,
+  defaultFieldComponents: DefaultFieldComponentsTypes,
   children: JSX.Element[],
 ): ScaffoldFormField[] {
   const formFields = children
@@ -56,11 +62,11 @@ export function getFormFieldsFromChildren(
   return formFields;
 }
 
-export function getFormFieldsFromSchema(
+export async function getFormFieldsFromSchema(
   schema: Schema,
-  defaultFieldComponents: DefaultFieldComponents,
+  defaultFieldComponents: DefaultFieldComponentsTypes,
   fieldComponents?: { [attribute: string]: FieldComponent },
-): ScaffoldFormField[] {
+): Promise<ScaffoldFormField[]> {
   const attributesFormFields = Object.entries(schema.attributes)
     .filter(([_, schema]) => {
       return typeof schema === "object" ? !schema?.primaryKey : true;
@@ -74,7 +80,33 @@ export function getFormFieldsFromSchema(
       });
     });
 
-  return [...attributesFormFields];
+  const hasManyFormFields = await Promise.all(
+    Object.values(schema?.hasMany || []).map(async (value) => {
+      const raw = await fetch(
+        `${
+          window.env.API_BASE_URL
+        }/${value.target.toLowerCase()}?${encodeURIComponent(
+          "filter[name][$gt]",
+        )}=RE`,
+      );
+      const response = await raw.json();
+      const options = getFlatRecords(response).map((item) => ({
+        id: item.id as string,
+        label: item.name as string,
+      }));
+
+      return getScaffoldFormField({
+        attribute: value.target.toLowerCase(),
+        label: value.target,
+        attributeSchema: "relationship",
+        defaultFieldComponents,
+        fieldComponents,
+        options,
+      });
+    }),
+  );
+
+  return [...attributesFormFields, ...hasManyFormFields];
 }
 
 export function getScaffoldFormField({
@@ -85,14 +117,16 @@ export function getScaffoldFormField({
   FieldComponent = undefined,
   fieldComponents = undefined,
   render = undefined,
+  options = undefined,
 }: {
   attribute: string;
   attributeSchema: Attribute;
-  defaultFieldComponents: DefaultFieldComponents;
+  defaultFieldComponents: DefaultFieldComponentsTypes;
   label?: string;
   FieldComponent?: FieldComponent;
   fieldComponents?: { [attribute: string]: FieldComponent };
-  render?: Render;
+  render?: FormFieldRender;
+  options?: { id: string; label: string }[];
 }): ScaffoldFormField {
   if (typeof attributeSchema === "string") {
     attributeSchema = { type: attributeSchema, allowNull: false };
@@ -106,14 +140,16 @@ export function getScaffoldFormField({
         .replace(/(^\w)/g, (g) => g[0].toUpperCase())
         .replace(/([-_]\w)/g, (g) => " " + g[1].toUpperCase())
         .trim(),
+    attributeSchema,
     render: () => <></>,
   };
 
   if (render) {
-    formField.render = ({ value, onUpdate }) =>
+    formField.render = ({ value, label, onUpdate }) =>
       render({
         value,
-        onUpdate: (value: Primitive) => onUpdate(value),
+        label,
+        onUpdate: (value) => onUpdate(value),
       });
   } else if (FieldComponent) {
     formField.render = ({ value, onUpdate }) => (
@@ -135,8 +171,9 @@ export function getScaffoldFormField({
   } else {
     formField.render = getDefaultRender(
       attribute,
-      attributeSchema.type,
+      attributeSchema,
       defaultFieldComponents,
+      options,
     );
   }
 
@@ -145,28 +182,41 @@ export function getScaffoldFormField({
 
 export function getDefaultRender(
   attribute: string,
-  attributeType: string,
-  defaultFieldComponents: DefaultFieldComponents,
-): Render {
-  const { String, Number, Boolean, Date } = defaultFieldComponents;
+  attributeSchema: AttributeSchema,
+  defaultFieldComponents: DefaultFieldComponentsTypes,
+  options: { id: string; label: string }[] = [],
+): FormFieldRender {
+  const { String, Number, Boolean, Date, Relationship } =
+    defaultFieldComponents;
 
-  return ({ value, onUpdate }) => {
-    if (attributeType === "date") {
-      return <Date value={value as string} onUpdate={onUpdate} />;
+  return ({ value, label, onUpdate }) => {
+    if (attributeSchema.type === "date" && typeof value === "string") {
+      return <Date label={label} value={value} onUpdate={onUpdate} />;
     }
 
-    if (attributeType === "boolean") {
-      return <Boolean value={value as boolean} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "boolean" && typeof value === "boolean") {
+      return <Boolean label={label} value={value} onUpdate={onUpdate} />;
     }
 
-    if (attributeType === "Number") {
-      return <Number value={value as number} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "number" && typeof value === "number") {
+      return <Number label={label} value={value} onUpdate={onUpdate} />;
     }
 
-    if (attributeType === "string") {
-      return <String value={value as string} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "string" && typeof value === "string") {
+      return <String label={label} value={value} onUpdate={onUpdate} />;
     }
 
-    return <String value={value as string} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "relationship" && Array.isArray(value)) {
+      return (
+        <Relationship
+          label={label}
+          options={options}
+          values={value}
+          onUpdate={onUpdate}
+        />
+      );
+    }
+
+    return <String label={label} value={value as string} onUpdate={onUpdate} />;
   };
 }

@@ -9,7 +9,7 @@ import {
   ScaffoldExtraDisplay,
   ScaffoldAttributeDisplay,
 } from "../../../components/ScaffoldDisplays";
-import { fetchData } from "../../../services/api/api";
+import { getMany } from "../../../services/api/api";
 
 import { EditIcon, TrashIcon, ViewIcon } from "../../../../pages/assets";
 import { Employee as EmployeeSchema } from "../../../schemas/schemas";
@@ -17,7 +17,7 @@ import { Employee, useEmployeeMutations } from "../../../../services/api";
 import DeleteConfirmationModal from "../../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
 import EmployeeModal from "../../../../pages/Employees/components/EmployeeModal";
 
-const resource = fetchData(EmployeeSchema);
+const resource = getMany(EmployeeSchema);
 
 const EmployeesListPage: React.FC = () => {
   const history = useHistory();

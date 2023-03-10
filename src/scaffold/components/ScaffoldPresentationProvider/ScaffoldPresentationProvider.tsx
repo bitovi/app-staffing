@@ -25,9 +25,10 @@ import {
   Date as DateInput,
   Number as NumberInput,
   String as StringInput,
+  Relationship as RelationshipInput,
 } from "./DefaultFieldComponents";
 
-export interface DefaultValueComponents {
+export interface DefaultValueComponentsTypes {
   String: React.FC<{ value: string }>;
   StringList: React.FC<{ values: string[] }>;
   Number: React.FC<{ value: number }>;
@@ -39,22 +40,32 @@ export interface DefaultValueComponents {
   Relationship: React.FC<{ value: RelationshipType }>;
   RelationshipList: React.FC<{ values: RelationshipType[] }>;
 }
-export interface DefaultFieldComponents {
+export interface DefaultFieldComponentsTypes {
   Boolean: React.FC<{
     value: boolean;
-    onUpdate: (value: Primitive) => void;
+    label: string;
+    onUpdate: (value: boolean) => void;
   }>;
   Date: React.FC<{
     value: string;
-    onUpdate: (value: Primitive) => void;
+    label: string;
+    onUpdate: (value: string) => void;
   }>;
   Number: React.FC<{
     value: number;
-    onUpdate: (value: Primitive) => void;
+    label: string;
+    onUpdate: (value: number) => void;
   }>;
   String: React.FC<{
     value: string;
-    onUpdate: (value: Primitive) => void;
+    label: string;
+    onUpdate: (value: string) => void;
+  }>;
+  Relationship: React.FC<{
+    values: string[];
+    options: { id: string; label: string }[];
+    label: string;
+    onUpdate: (value: string[]) => void;
   }>;
 }
 
@@ -63,8 +74,8 @@ export interface ScaffoldPresentationContextProps {
   Layout: React.FC<XLayoutProps>;
   Details: React.FC<XDetailsProps>;
   Form: React.FC<XFormProps>;
-  defaultValueComponents: DefaultValueComponents;
-  defaultFieldComponents: DefaultFieldComponents;
+  defaultValueComponents: DefaultValueComponentsTypes;
+  defaultFieldComponents: DefaultFieldComponentsTypes;
 }
 
 export const ScaffoldPresentationDefaultValueComponents = {
@@ -85,6 +96,7 @@ export const ScaffoldPresentationDefaultFieldComponents = {
   Number: NumberInput,
   Boolean: BooleanInput,
   Date: DateInput,
+  Relationship: RelationshipInput,
 };
 
 export const ScaffoldPresentationContext =
