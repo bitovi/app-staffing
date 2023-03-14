@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { getOne } from "../../services/api/api";
+import { getOne, suspendPromise } from "../../services/api/api";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
 import { getDisplays } from "../../services/displays/scaffoldDisplays";
 
@@ -29,7 +29,7 @@ const ScaffoldDetails: React.FC<ScaffoldDetailsProps> = ({
   );
 
   if (!useData) {
-    const resource = getOne(schema, id);
+    const resource = suspendPromise(getOne(schema, id));
     useData = () => resource.read();
   }
 

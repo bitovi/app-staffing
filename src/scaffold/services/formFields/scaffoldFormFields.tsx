@@ -83,11 +83,7 @@ export async function getFormFieldsFromSchema(
   const hasManyFormFields = await Promise.all(
     Object.values(schema?.hasMany || []).map(async (value) => {
       const raw = await fetch(
-        `${
-          window.env.API_BASE_URL
-        }/${value.target.toLowerCase()}?${encodeURIComponent(
-          "filter[name][$gt]",
-        )}=RE`,
+        `${window.env.API_BASE_URL}/${value.target.toLowerCase()}`,
       );
       const response = await raw.json();
       const options = getFlatRecords(response).map((item) => ({
@@ -190,28 +186,34 @@ export function getDefaultRender(
     defaultFieldComponents;
 
   return ({ value, label, onUpdate }) => {
-    if (attributeSchema.type === "date" && typeof value === "string") {
-      return <Date label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "date") {
+      return <Date label={label} value={value as string} onUpdate={onUpdate} />;
     }
 
-    if (attributeSchema.type === "boolean" && typeof value === "boolean") {
-      return <Boolean label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "boolean") {
+      return (
+        <Boolean label={label} value={value as boolean} onUpdate={onUpdate} />
+      );
     }
 
-    if (attributeSchema.type === "number" && typeof value === "number") {
-      return <Number label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "number") {
+      return (
+        <Number label={label} value={value as number} onUpdate={onUpdate} />
+      );
     }
 
-    if (attributeSchema.type === "string" && typeof value === "string") {
-      return <String label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "string") {
+      return (
+        <String label={label} value={value as string} onUpdate={onUpdate} />
+      );
     }
 
-    if (attributeSchema.type === "relationship" && Array.isArray(value)) {
+    if (attributeSchema.type === "relationship") {
       return (
         <Relationship
           label={label}
           options={options}
-          values={value}
+          values={value as string[]}
           onUpdate={onUpdate}
         />
       );

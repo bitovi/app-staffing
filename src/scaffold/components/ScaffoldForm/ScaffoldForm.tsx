@@ -6,9 +6,14 @@ import {
   ScaffoldFormField,
 } from "../../services/formFields/scaffoldFormFields";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
-import { createOne } from "../../services/api/api";
-import type { FieldComponent, Primitive } from "../../presentation/interfaces";
-import type { Schema } from "../../schemas/schemas";
+import { createOne, getOne, updateOne } from "../../services/api/api";
+import type {
+  FieldComponent,
+  FlatRecord,
+  Primitive,
+} from "../../presentation/interfaces";
+import type { Relationship, Schema } from "../../schemas/schemas";
+import { useParams } from "react-router-dom";
 
 export type FormState = { [key: string]: Primitive | string[] };
 interface ScaffoldFormProps {
@@ -26,6 +31,7 @@ const ScaffoldForm: React.FC<ScaffoldFormProps> = ({
   routeOnSuccess,
   children,
 }) => {
+  const { id } = useParams<{ id: string }>();
   const { Form, defaultFieldComponents } = useScaffoldPresentation();
   const [formFields, setFormFields] = useState<ScaffoldFormField[]>([]);
   const [formState, setFormState] = useState<FormState>({});
@@ -36,15 +42,18 @@ const ScaffoldForm: React.FC<ScaffoldFormProps> = ({
       fieldComponents || {},
       defaultFieldComponents,
       children,
-    ).then((formFields) => {
+    ).then(async (formFields) => {
       setFormFields(formFields);
-      setFormState(getDefaultFormState(formFields));
+      const defaultValues = isEdit && id ? await getOne(schema, id) : undefined;
+      setFormState(getDefaultFormState(formFields, defaultValues));
     });
-  }, []);
+  }, [id]);
 
   const onSave = async () => {
     try {
-      await createOne(schema, formFields, formState);
+      if (isEdit) await updateOne(schema, id, formFields, formState);
+      else await createOne(schema, formFields, formState);
+
       routeOnSuccess();
     } catch (error) {
       console.error("failed to create", error);
@@ -74,19 +83,36 @@ const ScaffoldForm: React.FC<ScaffoldFormProps> = ({
 
 export default ScaffoldForm;
 
-function getDefaultFormState(formFields: ScaffoldFormField[]): FormState {
+function getDefaultFormState(
+  formFields: ScaffoldFormField[],
+  defaultValues?: FlatRecord,
+): FormState {
   return formFields.reduce((acc, next) => {
+    // edge-case, input expects array of ids but default returns array of objects
+    let defaultRelationshipValue = null;
+    if (defaultValues && next.attributeSchema.type === "relationship") {
+      const relationship = defaultValues[next.key];
+      defaultRelationshipValue = Array.isArray(relationship)
+        ? relationship.map((item) => item.id)
+        : null;
+    }
+
     return {
       ...acc,
       // set default value
-      [next.key]:
-        next.attributeSchema.type === "relationship"
-          ? []
-          : next.attributeSchema.type === "boolean"
-          ? false
-          : next.attributeSchema.type === "number"
-          ? 0
-          : "",
+      [next.key]: defaultRelationshipValue
+        ? defaultRelationshipValue
+        : defaultValues
+        ? defaultValues[next.key]
+        : next.attributeSchema.type === "relationship"
+        ? []
+        : next.attributeSchema.type === "boolean"
+        ? false
+        : next.attributeSchema.type === "number"
+        ? 0
+        : next.attributeSchema.type === "date"
+        ? ""
+        : "",
     };
   }, {});
 }

@@ -170,7 +170,64 @@ export async function createOne(
   };
 
   const raw = await fetch(url, {
-    method: "post",
+    method: "POST",
+    headers: {
+      Accept: "application/vnd.api+json",
+      "Content-Type": "application/vnd.api+json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  await raw.json();
+  // @todo store response in cache
+}
+
+export async function updateOne(
+  schema: Schema,
+  id: string,
+  formFields: ScaffoldFormField[],
+  formState: FormState,
+): Promise<void> {
+  const url = `${window.env.API_BASE_URL}/${plur(
+    schema.name.toLowerCase(),
+  )}/${id}`;
+
+  // json api specific formatting
+  const data: {
+    relationships: { [key: string]: { data: { type: string; id: string }[] } };
+    attributes: { [key: string]: FormFieldValueType | null };
+    type: string;
+  } = {
+    relationships: {},
+    attributes: {},
+    type: "employees",
+  };
+
+  for (let i = 0; i < formFields.length; i++) {
+    const field = formFields[i];
+
+    if (field.attributeSchema.type === "relationship") {
+      data.relationships = {
+        ...data.relationships,
+        [field.key]: {
+          data: (formState[field.key] as string[]).map((id) => ({
+            type: field.key,
+            id,
+          })),
+        },
+      };
+    } else {
+      data.attributes[field.key] = formState[field.key] || null;
+    }
+  }
+
+  const body = {
+    jsonapi: { version: "1.0" },
+    data: data,
+  };
+
+  const raw = await fetch(url, {
+    method: "PATCH",
     headers: {
       Accept: "application/vnd.api+json",
       "Content-Type": "application/vnd.api+json",
@@ -185,7 +242,7 @@ export async function createOne(
 export function getOne(
   schema: Schema,
   id: string | number,
-): { read: () => FlatRecord } {
+): Promise<FlatRecord> {
   let url = `${window.env.API_BASE_URL}/${plur(
     schema.name.toLowerCase(),
   )}/${id}`;
@@ -198,18 +255,16 @@ export function getOne(
     url = `${url}?include=${includes}`;
   }
 
-  const promise = fetch(url)
+  return fetch(url)
     .then((res) => {
       return res.json();
     })
     .then((res) => {
       return getFlatRecords(res)[0];
     });
-
-  return wrapPromise<FlatRecord>(promise);
 }
 
-export function getMany(schema: Schema): { read: () => FlatRecord[] } {
+export function getMany(schema: Schema): Promise<FlatRecord[]> {
   let url = `${window.env.API_BASE_URL}/${plur(schema.name.toLowerCase())}`;
 
   const includes = schema.hasMany
@@ -220,18 +275,16 @@ export function getMany(schema: Schema): { read: () => FlatRecord[] } {
     url = `${url}?include=${includes}`;
   }
 
-  const promise = fetch(url)
+  return fetch(url)
     .then((res) => {
       return res.json();
     })
     .then((res) => {
       return getFlatRecords(res);
     });
-
-  return wrapPromise<FlatRecord[]>(promise);
 }
 
-function wrapPromise<T>(promise: Promise<T>) {
+export function suspendPromise<T>(promise: Promise<T>) {
   let status = "pending";
   let response: T;
 

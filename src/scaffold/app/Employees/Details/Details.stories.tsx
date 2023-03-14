@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { rest } from "msw";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
-import { MemoryRouter, Route, RouterProps } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router-dom";
 
 import { Flex, Box } from "@chakra-ui/layout";
 
 import Details from "./Details";
-// <MemoryRouter initialEntries={["/routeName/param"]} <Route component={(routerProps) => <Story {...routerProps} />} path="/routeName/:paramName"/>  </MemoryRouter>)
+
 export default {
   title: "Pages/Employees/Details",
   component: Details,
@@ -18,8 +18,8 @@ export default {
       }, []);
 
       return (
-        <MemoryRouter initialEntries={["/team-members/1"]}>
-          <Route component={() => <Story />} path="/team-members/:paramName" />
+        <MemoryRouter initialEntries={["/details/1234"]}>
+          <Route exact component={() => <Story />} path="/details/:id" />
         </MemoryRouter>
       );
     },
