@@ -61,7 +61,7 @@ export const Date: DefaultFieldComponentsTypes["String"] = ({
       <label>{label}: </label>
       <input
         type="date"
-        value={value}
+        value={value?.split("T")[0] ?? ""}
         onChange={(e) => onUpdate(e.target.value)}
       />
     </div>
@@ -77,7 +77,7 @@ export const Relationship: DefaultFieldComponentsTypes["Relationship"] = ({
   return (
     <fieldset>
       <label>{label}: </label>
-      {/* {options.map((option) => (
+      {options.map((option) => (
         <div key={option.id}>
           <input
             id={`checkbox-${option.id}`}
@@ -97,7 +97,7 @@ export const Relationship: DefaultFieldComponentsTypes["Relationship"] = ({
           />
           <label htmlFor={`checkbox-${option.id}`}>{` ${option.label}`}</label>
         </div>
-      ))} */}
+      ))}
     </fieldset>
   );
 };

@@ -1,9 +1,6 @@
 import { Children as ReactChildren } from "react";
 import { hasValidChildren } from "../displays/scaffoldDisplays";
-import {
-  ScaffoldAttributeField,
-  ScaffoldAttributeFieldProps,
-} from "../../components/ScaffoldDisplays";
+import { ScaffoldAttributeField } from "../../components/ScaffoldDisplays";
 import type { FieldComponent, Primitive } from "../../presentation/interfaces";
 import type { Attribute, AttributeSchema, Schema } from "../../schemas/schemas";
 import type { DefaultFieldComponentsTypes } from "../../components/ScaffoldPresentationProvider";
@@ -49,13 +46,15 @@ export function getFormFieldsFromChildren(
   const formFields = children
     .filter((child) => child.type.name === ScaffoldAttributeField.name)
     .map((child) => {
-      const { props }: { props: ScaffoldAttributeFieldProps } = child;
+      const { props } = child;
 
       return getScaffoldFormField({
         attribute: props.attribute,
         attributeSchema: schema.attributes[props.attribute],
         label: props.label,
         defaultFieldComponents,
+        render: props.render,
+        FieldComponent: props.FieldComponent,
       });
     });
 

@@ -77,7 +77,7 @@ export const Relationship: DefaultFieldComponentsTypes["Relationship"] = ({
 }) => {
   // values is array of ids, Autocomplete expects array of objects with a shape
   // that matches options
-  const fullValues = values.map((value: any) => {
+  const fullValues = values.map((value: string) => {
     return options.find((option) => option.id === value);
   });
 
@@ -88,7 +88,9 @@ export const Relationship: DefaultFieldComponentsTypes["Relationship"] = ({
       filterSelectedOptions
       options={options}
       onChange={(_, values) => {
-        const ids = values.map((value) => value.id);
+        const ids = values
+          .filter((value) => value !== undefined)
+          .map((value) => value?.id) as string[];
         onUpdate(ids);
       }}
       renderInput={(params) => <TextField {...params} label={label} />}

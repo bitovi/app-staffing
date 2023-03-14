@@ -62,8 +62,7 @@ export interface DefaultFieldComponentsTypes {
     onUpdate: (value: string) => void;
   }>;
   Relationship: React.FC<{
-    // values: string[];
-    values: any;
+    values: string[];
     options: { id: string; label: string }[];
     label: string;
     onUpdate: (value: string[]) => void;
