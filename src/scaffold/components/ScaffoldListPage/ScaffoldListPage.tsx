@@ -8,6 +8,9 @@ import type {
 
 interface ScaffoldListPageProps extends XLayoutProps {
   valueComponents?: { [attribute: string]: ValueComponent };
+  listActions?: {
+    delete?: () => void;
+  };
   useData?: () => FlatRecord[];
 }
 
@@ -15,6 +18,7 @@ const ScaffoldListPage: React.FC<ScaffoldListPageProps> = ({
   schema,
   valueComponents,
   renderActions,
+  listActions,
   children,
   useData,
 }) => {
@@ -25,6 +29,7 @@ const ScaffoldListPage: React.FC<ScaffoldListPageProps> = ({
       <ScaffoldList
         schema={schema}
         valueComponents={valueComponents}
+        actions={listActions}
         useData={useData}
       >
         {children}
