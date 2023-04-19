@@ -54,7 +54,7 @@ export function getDisplayValueKeyForSchema(schemaKey: string): string {
   const schemaEntries = Object.values(schemas);
 
   for (let i = 0; i < schemaEntries.length; i++) {
-    if (schemaEntries[i].jsonApiField === schemaKey) {
+    if (schemaEntries[i].name === schemaKey) {
       return schemaEntries[i].displayField;
     }
   }
@@ -65,9 +65,9 @@ export function getDisplayValueKeyForSchema(schemaKey: string): string {
 /**
  * convert included from:
  * { included: [
- *  { type: 'skills', id: 'skill-id-1', attributes: { name: 'Skill 1' } },
- *  { type: 'skills', id: 'skill-id-2', attributes: { name: 'Skill 2' } },
- *  { type: 'projects', id: 'project-id-1', attributes: { name: 'Project 1' } },
+ *  { type: 'Skill', id: 'skill-id-1', attributes: { name: 'Skill 1' } },
+ *  { type: 'Skill', id: 'skill-id-2', attributes: { name: 'Skill 2' } },
+ *  { type: 'Project', id: 'project-id-1', attributes: { name: 'Project 1' } },
  * ] }
  * to:
  * {
@@ -82,7 +82,6 @@ export function getDisplayValueKeyForSchema(schemaKey: string): string {
  */
 function getFlattenedIncluded(included?: JsonApiIncluded[]): FlatIncluded {
   if (!included) return {};
-
   return included.reduce(
     (acc: FlatIncluded, next) => ({
       ...acc,
@@ -115,13 +114,16 @@ export function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
 
     for (let i = 0; i < relationships.length; i++) {
       const [key, relationship] = relationships[i];
-      const displayValueKey = getDisplayValueKeyForSchema(key);
+      const type = relationship.data[0].type;
+      const displayValueKey = getDisplayValueKeyForSchema(type);
 
-      flatRecord[key] = relationship.data.map((related) => ({
-        ...flatIncluded[key][related.id],
-        id: related.id,
-        label: flatIncluded[key][related.id][displayValueKey],
-      })) as Relationship[];
+      flatRecord[key] = relationship.data.map((related) => {
+        return {
+          ...flatIncluded[type][related.id],
+          id: related.id,
+          label: flatIncluded[type][related.id][displayValueKey],
+        };
+      }) as Relationship[];
     }
 
     return flatRecord;
@@ -143,7 +145,7 @@ export async function createOne(
   } = {
     relationships: {},
     attributes: {},
-    type: "employees",
+    type: "Employee",
   };
 
   for (let i = 0; i < formFields.length; i++) {
@@ -200,7 +202,7 @@ export async function updateOne(
   } = {
     relationships: {},
     attributes: {},
-    type: "employees",
+    type: "Employee",
   };
 
   for (let i = 0; i < formFields.length; i++) {

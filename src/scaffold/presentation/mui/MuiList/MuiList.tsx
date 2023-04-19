@@ -52,6 +52,7 @@ export default MuiList;
 
 const MuiListRows: React.FC<XListProps> = ({ displays, useData }) => {
   const data = useData();
+  console.log("data???", data);
 
   return (
     <>

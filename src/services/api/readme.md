@@ -139,7 +139,7 @@ In order to circumvent storing our SWR cache data in the shape of the server and
 ```tsx
 {
   data: {
-    type: "employees",
+    type: "Employee",
     id: "2",
     attributes: {
       name: "Apple Seed",
@@ -150,7 +150,7 @@ In order to circumvent storing our SWR cache data in the shape of the server and
       skills: {
         data: [
           {
-            type: "skills",
+            type: "Skill",
             id: "3",
           }
         ]
@@ -158,7 +158,7 @@ In order to circumvent storing our SWR cache data in the shape of the server and
     }
   },
   included: {
-    type: "skills",
+    type: "Skill",
     id: "3",
     attributes: {
       name: "React",
@@ -196,7 +196,7 @@ as the deserializer will utilize the included field to hydrate the flattened out
     ...
     skills: [
       {
-        type: "skills",
+        type: "Skill",
         id: "3",
       }
     ]

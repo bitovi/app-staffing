@@ -3,7 +3,7 @@ import type { JSONEmployee, JSONRole } from "../fixtures";
 import faker from "faker";
 
 export interface JSONAssignment {
-  type: "assignments";
+  type: "Assignment";
   id: string;
   attributes: {
     start_date?: Date;
@@ -11,10 +11,10 @@ export interface JSONAssignment {
   };
   relationships: {
     employee?: {
-      data: { type: "employees"; id: string };
+      data: { type: "Employee"; id: string };
     };
     role?: {
-      data: { type: "roles"; id: string };
+      data: { type: "Role"; id: string };
     };
   };
 }
@@ -29,7 +29,7 @@ export function makeAssignment(
   faker.seed(fakerSeedBase + assignmentId);
 
   return {
-    type: "assignments",
+    type: "Assignment",
     id: `${++assignmentId}`,
     attributes: {
       start_date: faker.date.past(),

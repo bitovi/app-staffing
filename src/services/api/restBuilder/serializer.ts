@@ -12,7 +12,7 @@ const serializer = new JsonApiSerializer({
   unconvertCase: "camelCase",
 });
 
-serializer.register("assignments", {
+const assignment = {
   id: "id",
   relationships: {
     employee: {
@@ -22,9 +22,11 @@ serializer.register("assignments", {
       type: "roles",
     },
   },
-});
+};
+serializer.register("assignments", assignment);
+serializer.register("Assignment", assignment);
 
-serializer.register("employees", {
+const employee = {
   id: "id",
   relationships: {
     assignments: {
@@ -34,18 +36,22 @@ serializer.register("employees", {
       type: "skills",
     },
   },
-});
+};
+serializer.register("employees", employee);
+serializer.register("Employee", employee);
 
-serializer.register("projects", {
+const project = {
   id: "id",
   relationships: {
     roles: {
       type: "roles",
     },
   },
-});
+};
+serializer.register("projects", project);
+serializer.register("Project", project);
 
-serializer.register("roles", {
+const role = {
   id: "id",
   relationships: {
     assignments: {
@@ -58,10 +64,14 @@ serializer.register("roles", {
       type: "skills",
     },
   },
-});
+};
+serializer.register("roles", role);
+serializer.register("Role", role);
 
-serializer.register("skills", {
+const skill = {
   id: "id",
-});
+};
+serializer.register("skills", skill);
+serializer.register("Skill", skill);
 
 export default serializer;
