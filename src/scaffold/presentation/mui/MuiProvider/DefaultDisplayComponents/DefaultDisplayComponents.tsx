@@ -19,8 +19,7 @@ const styles = {
 export const Relationship: React.FC<{ value: RelationshipType }> = ({
   value,
 }) => {
-  // console.log("value???", value);
-  return <Chip css={styles.chip} label={"test" ?? value.label} />;
+  return <Chip css={styles.chip} label={value.label} />;
 };
 
 export const RelationshipList: React.FC<{ values: RelationshipType[] }> = ({

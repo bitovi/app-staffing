@@ -15,7 +15,7 @@ export type NewProject = Partial<Omit<Project, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Project>(
   "/projects",
-  "projects",
+  "Project",
   { title: "Project" },
 );
 

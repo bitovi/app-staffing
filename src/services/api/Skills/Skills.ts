@@ -14,7 +14,7 @@ export type NewSkill = Partial<Omit<Skill, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Skill>(
   "/skills",
-  "skills",
+  "Skill",
   { title: "Skill" },
 );
 

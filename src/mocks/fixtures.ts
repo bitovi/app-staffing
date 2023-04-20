@@ -28,27 +28,27 @@ const included = [
   ...jsonSkills,
 ];
 
-export const assignments = serializer.deserialize("assignments", {
+export const assignments = serializer.deserialize("Assignment", {
   data: jsonAssignments,
   included,
 }) as Assignment[];
 
-export const employees = serializer.deserialize("employees", {
+export const employees = serializer.deserialize("Employee", {
   data: jsonEmployees,
   included,
 }) as Employee[];
 
-export const projects = serializer.deserialize("projects", {
+export const projects = serializer.deserialize("Project", {
   data: jsonProjects,
   included,
 }) as Project[];
 
-export const roles = serializer.deserialize("roles", {
+export const roles = serializer.deserialize("Role", {
   data: jsonRoles,
   included,
 }) as Role[];
 
-export const skills = serializer.deserialize("skills", {
+export const skills = serializer.deserialize("Skill", {
   data: jsonSkills,
   included,
 }) as Skill[];

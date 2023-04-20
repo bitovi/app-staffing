@@ -54,7 +54,7 @@ rather than an array and joining operation results go within an "included" field
 {
   "data": [
     {
-      "type": "employees",
+      "type": "Employee",
       "id": "1",
       "attributes": {
         "name": "Carl Person",

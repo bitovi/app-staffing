@@ -1,77 +1,67 @@
 import JsonApiSerializer from "json-api-serializer";
 
 export type SerializerTypes =
-  | "assignments"
-  | "employees"
-  | "projects"
-  | "roles"
-  | "skills";
+  | "Assignment"
+  | "Employee"
+  | "Project"
+  | "Role"
+  | "Skill";
 
 const serializer = new JsonApiSerializer({
   convertCase: "snake_case",
   unconvertCase: "camelCase",
 });
 
-const assignment = {
+serializer.register("Assignment", {
   id: "id",
   relationships: {
     employee: {
-      type: "employees",
+      type: "Employee",
     },
     role: {
-      type: "roles",
+      type: "Role",
     },
   },
-};
-serializer.register("assignments", assignment);
-serializer.register("Assignment", assignment);
+});
 
-const employee = {
+serializer.register("Employee", {
   id: "id",
   relationships: {
     assignments: {
-      type: "assignments",
+      type: "Assignment",
     },
     skills: {
-      type: "skills",
+      type: "Skill",
     },
   },
-};
-serializer.register("employees", employee);
-serializer.register("Employee", employee);
+});
 
-const project = {
+serializer.register("Project", {
   id: "id",
   relationships: {
     roles: {
-      type: "roles",
+      type: "Role",
     },
   },
-};
-serializer.register("projects", project);
-serializer.register("Project", project);
+});
 
-const role = {
+serializer.register("Role", {
   id: "id",
   relationships: {
     assignments: {
-      type: "assignments",
+      type: "Assignment",
     },
     project: {
-      type: "projects",
+      type: "Project",
     },
     skills: {
-      type: "skills",
+      type: "Skill",
     },
   },
-};
-serializer.register("roles", role);
-serializer.register("Role", role);
+});
 
-const skill = {
+serializer.register("Skill", {
   id: "id",
-};
-serializer.register("skills", skill);
-serializer.register("Skill", skill);
+});
 
 export default serializer;
