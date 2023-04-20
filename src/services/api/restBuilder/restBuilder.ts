@@ -62,8 +62,6 @@ export default function restBuilder<Data extends BaseData>(
         );
 
         if (response) {
-          console.log("type", type);
-          console.log("response", response);
           const list = serializer.deserialize(type, response) as Data[];
           for (const item of list) {
             parseDate(item);
