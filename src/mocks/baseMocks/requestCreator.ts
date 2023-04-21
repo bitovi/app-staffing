@@ -41,6 +41,14 @@ interface RelatedStore {
 
 const API_BASE_URL = window.env.API_BASE_URL;
 
+const typesToStore: { [type: string]: string } = {
+  Employee: "employees",
+  Skill: "skills",
+  Project: "projects",
+  Assignment: "assignments",
+  Role: "roles",
+};
+
 export default function requestCreator<Resource extends BaseResource>(
   resourcePath: string,
   store: CanLocalStore<Resource>,
@@ -265,7 +273,8 @@ async function getIncluded(items: BaseResource[]): Promise<BaseResource[]> {
             continue;
           }
 
-          const store = stores[type];
+          const store = stores[typesToStore[type]];
+
           if (!store) {
             throw new Error(
               `${item.type}[${item.id}].relationships.${key}: Invalid type ${type}`,
