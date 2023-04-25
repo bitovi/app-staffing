@@ -1,9 +1,6 @@
 import { Children as ReactChildren } from "react";
 import { hasValidChildren } from "../displays/scaffoldDisplays";
-import {
-  ScaffoldAttributeField,
-  ScaffoldAttributeFieldProps,
-} from "../../components/ScaffoldDisplays";
+import { ScaffoldAttributeField } from "../../components/ScaffoldDisplays";
 import type { FieldComponent, Primitive } from "../../presentation/interfaces";
 import type { Attribute, AttributeSchema, Schema } from "../../schemas/schemas";
 import type { DefaultFieldComponentsTypes } from "../../components/ScaffoldPresentationProvider";
@@ -49,13 +46,15 @@ export function getFormFieldsFromChildren(
   const formFields = children
     .filter((child) => child.type.name === ScaffoldAttributeField.name)
     .map((child) => {
-      const { props }: { props: ScaffoldAttributeFieldProps } = child;
+      const { props } = child;
 
       return getScaffoldFormField({
         attribute: props.attribute,
         attributeSchema: schema.attributes[props.attribute],
         label: props.label,
         defaultFieldComponents,
+        render: props.render,
+        FieldComponent: props.FieldComponent,
       });
     });
 
@@ -186,28 +185,34 @@ export function getDefaultRender(
     defaultFieldComponents;
 
   return ({ value, label, onUpdate }) => {
-    if (attributeSchema.type === "date" && typeof value === "string") {
-      return <Date label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "date") {
+      return <Date label={label} value={value as string} onUpdate={onUpdate} />;
     }
 
-    if (attributeSchema.type === "boolean" && typeof value === "boolean") {
-      return <Boolean label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "boolean") {
+      return (
+        <Boolean label={label} value={value as boolean} onUpdate={onUpdate} />
+      );
     }
 
-    if (attributeSchema.type === "number" && typeof value === "number") {
-      return <Number label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "number") {
+      return (
+        <Number label={label} value={value as number} onUpdate={onUpdate} />
+      );
     }
 
-    if (attributeSchema.type === "string" && typeof value === "string") {
-      return <String label={label} value={value} onUpdate={onUpdate} />;
+    if (attributeSchema.type === "string") {
+      return (
+        <String label={label} value={value as string} onUpdate={onUpdate} />
+      );
     }
 
-    if (attributeSchema.type === "relationship" && Array.isArray(value)) {
+    if (attributeSchema.type === "relationship") {
       return (
         <Relationship
           label={label}
           options={options}
-          values={value}
+          values={value as string[]}
           onUpdate={onUpdate}
         />
       );

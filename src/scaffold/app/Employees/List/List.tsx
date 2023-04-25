@@ -9,7 +9,7 @@ import {
   ScaffoldExtraDisplay,
   ScaffoldAttributeDisplay,
 } from "../../../components/ScaffoldDisplays";
-import { getMany } from "../../../services/api/api";
+import { getMany, suspendPromise } from "../../../services/api/api";
 
 import { EditIcon, TrashIcon, ViewIcon } from "../../../../pages/assets";
 import { Employee as EmployeeSchema } from "../../../schemas/schemas";
@@ -17,7 +17,7 @@ import { Employee, useEmployeeMutations } from "../../../../services/api";
 import DeleteConfirmationModal from "../../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
 import EmployeeModal from "../../../../pages/Employees/components/EmployeeModal";
 
-const resource = getMany(EmployeeSchema);
+const resource = suspendPromise(getMany(EmployeeSchema));
 
 const EmployeesListPage: React.FC = () => {
   const history = useHistory();
@@ -68,6 +68,9 @@ const EmployeesListPage: React.FC = () => {
                 // @todo temporary until schema/resources are strongly typed
                 value={record as unknown as Employee}
                 viewEmployee={() => history.push(`/team-members/${record.id}`)}
+                editEmployee={() =>
+                  history.push(`/team-members/${record.id}/edit`)
+                }
                 setEmployeeToDelete={setEmployeeToDelete}
                 setEmployeeToEdit={setEmployeeToEdit}
               />
@@ -85,18 +88,29 @@ const ActionButtons: React.FC<{
   // @todo this is type Employee, will be fixed with components as hooks refactor
   value: Employee;
   viewEmployee: () => void;
+  editEmployee: () => void;
   setEmployeeToEdit: React.Dispatch<React.SetStateAction<Employee | null>>;
   setEmployeeToDelete: React.Dispatch<React.SetStateAction<Employee | null>>;
-}> = ({ value, viewEmployee, setEmployeeToEdit, setEmployeeToDelete }) => {
+}> = ({
+  value,
+  viewEmployee,
+  editEmployee,
+  setEmployeeToEdit,
+  setEmployeeToDelete,
+}) => {
   return (
     <>
-      <IconButton aria-label="View Icon" size="small" onClick={viewEmployee}>
+      <IconButton
+        aria-label="View Employee"
+        size="small"
+        onClick={viewEmployee}
+      >
         <ViewIcon fill="currentColor" />
       </IconButton>
       <IconButton
         aria-label="Edit Employee"
         size="small"
-        onClick={() => setEmployeeToEdit(value)}
+        onClick={editEmployee}
       >
         <EditIcon fill="currentColor" />
       </IconButton>

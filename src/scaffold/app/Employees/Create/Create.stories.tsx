@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { rest } from "msw";
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
+import { MemoryRouter } from "react-router-dom";
 
 import { Flex, Box } from "@chakra-ui/layout";
 
@@ -12,11 +12,11 @@ export default {
   // workaround to reset msw data between stories
   decorators: [
     (Story) => {
-      useEffect(() => {
-        return () => window.location.reload();
-      }, []);
-
-      return <Story />;
+      return (
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      );
     },
   ],
 } as ComponentMeta<typeof CreateEmployee>;

@@ -10,6 +10,10 @@ const TestSchema: Schema = {
   jsonApiField: "tests",
 };
 
+jest.mock("react-router-dom", () => ({
+  useParams: () => ({ id: "fake-id" }),
+}));
+
 describe("scaffold/components/ScaffoldForm", () => {
   it("works", () => {
     render(<ScaffoldForm schema={TestSchema} routeOnSuccess={jest.fn()} />);

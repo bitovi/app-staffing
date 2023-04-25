@@ -61,7 +61,7 @@ export const Date: DefaultFieldComponentsTypes["String"] = ({
       <label>{label}: </label>
       <input
         type="date"
-        value={value}
+        value={value?.split("T")[0] ?? ""}
         onChange={(e) => onUpdate(e.target.value)}
       />
     </div>

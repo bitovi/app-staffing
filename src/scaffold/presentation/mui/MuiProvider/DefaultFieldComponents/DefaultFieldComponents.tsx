@@ -48,7 +48,7 @@ export const Date: DefaultFieldComponentsTypes["Date"] = ({
       label={label}
       type="date"
       variant="outlined"
-      value={value}
+      value={value?.split("T")[0] ?? ""}
       InputLabelProps={{ shrink: true }}
       onChange={(e) => onUpdate(e.target.value)}
     />
@@ -75,14 +75,22 @@ export const Relationship: DefaultFieldComponentsTypes["Relationship"] = ({
   label,
   onUpdate,
 }) => {
-  // @todo should this be a controlled input?
+  // values is array of ids, Autocomplete expects array of objects with a shape
+  // that matches options
+  const fullValues = values.map((value: string) => {
+    return options.find((option) => option.id === value);
+  });
+
   return (
     <Autocomplete
+      value={fullValues}
       multiple
       filterSelectedOptions
       options={options}
       onChange={(_, values) => {
-        const ids = values.map((value) => value.id);
+        const ids = values
+          .filter((value) => value !== undefined)
+          .map((value) => value?.id) as string[];
         onUpdate(ids);
       }}
       renderInput={(params) => <TextField {...params} label={label} />}

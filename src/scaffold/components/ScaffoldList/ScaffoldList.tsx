@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { getDisplays } from "../../services/displays/scaffoldDisplays";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
-import { getMany } from "../../services/api/api";
+import { getMany, suspendPromise } from "../../services/api/api";
 
 import type { Schema } from "../../schemas/schemas";
 import type { FlatRecord, ValueComponent } from "../../presentation/interfaces";
@@ -9,6 +10,9 @@ interface ScaffoldListProps {
   schema: Schema;
   valueComponents?: { [attribute: string]: ValueComponent };
   useData?: () => FlatRecord[];
+  actions?: {
+    delete?: () => void;
+  };
   children?: React.ReactNode | null;
 }
 
@@ -16,9 +20,11 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
   schema,
   valueComponents,
   useData,
+  actions,
   children,
 }) => {
-  const { List, defaultValueComponents } = useScaffoldPresentation();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const { List, Modal, defaultValueComponents } = useScaffoldPresentation();
   const displays = getDisplays(
     schema,
     valueComponents,
@@ -28,11 +34,21 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
 
   // @todo implement this in a better way when data layer is implemented
   if (!useData) {
-    const resource = getMany(schema);
+    const resource = suspendPromise(getMany(schema));
     useData = () => resource.read();
   }
 
-  return <List displays={displays} useData={useData} />;
+  return (
+    <>
+      <List displays={displays} useData={useData} />
+      {actions?.delete && (
+        <Modal
+          open={isDeleteModalOpen}
+          handleClose={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+        />
+      )}
+    </>
+  );
 };
 
 export default ScaffoldList;

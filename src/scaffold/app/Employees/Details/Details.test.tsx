@@ -7,34 +7,31 @@ jest.mock("react-router-dom", () => ({
 }));
 
 jest.mock("../../../services/api/api", () => ({
+  ...jest.requireActual("../../../services/api/api"),
   getOne: () => {
-    return {
-      read: () => {
-        return {
-          name: "Bartholome Blanda",
-          start_date: null,
-          end_date: null,
-          id: "6630618b-e3e8-4ce0-bd69-1a4c1c811b52",
-          skills: [
-            {
-              name: "React",
-              id: "32bbac66-eeb6-4495-b0ab-3f8e3d5af85c",
-              label: "React",
-            },
-            {
-              name: "Backend",
-              id: "ba241f5c-ccff-48e1-8070-197366afe152",
-              label: "Backend",
-            },
-            {
-              name: "Project Management",
-              id: "b71f7a24-e7a2-40d7-9be6-6ea4408a5b78",
-              label: "Project Management",
-            },
-          ],
-        };
-      },
-    };
+    return Promise.resolve({
+      name: "Bartholome Blanda",
+      start_date: null,
+      end_date: null,
+      id: "6630618b-e3e8-4ce0-bd69-1a4c1c811b52",
+      skills: [
+        {
+          name: "React",
+          id: "32bbac66-eeb6-4495-b0ab-3f8e3d5af85c",
+          label: "React",
+        },
+        {
+          name: "Backend",
+          id: "ba241f5c-ccff-48e1-8070-197366afe152",
+          label: "Backend",
+        },
+        {
+          name: "Project Management",
+          id: "b71f7a24-e7a2-40d7-9be6-6ea4408a5b78",
+          label: "Project Management",
+        },
+      ],
+    });
   },
 }));
 
