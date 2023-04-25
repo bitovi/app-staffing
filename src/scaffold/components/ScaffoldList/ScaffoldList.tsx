@@ -1,6 +1,6 @@
 import { getDisplays } from "../../services/displays/scaffoldDisplays";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
-import { fetchData } from "../../services/api/api";
+import { getMany } from "../../services/api/api";
 
 import type { Schema } from "../../schemas/schemas";
 import type { FlatRecord, ValueComponent } from "../../presentation/interfaces";
@@ -28,7 +28,7 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
 
   // @todo implement this in a better way when data layer is implemented
   if (!useData) {
-    const resource = fetchData(schema);
+    const resource = getMany(schema);
     useData = () => resource.read();
   }
 

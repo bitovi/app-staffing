@@ -9,6 +9,13 @@ import MuiLayout from "../MuiLayout";
 import MuiList from "../MuiList";
 import MuiForm from "../MuiForm";
 import MuiDetails from "../MuiDetails";
+import {
+  String as StringInput,
+  Number as NumberInput,
+  Date as DateInput,
+  Boolean as BooleanInput,
+  Relationship as RelationshipInput,
+} from "./DefaultFieldComponents";
 import { Relationship, RelationshipList } from "./DefaultDisplayComponents";
 import type { XProviderProps } from "../../interfaces";
 
@@ -32,6 +39,11 @@ const MuiProvider: React.FC<XProviderProps<Theme>> = ({
         }}
         defaultFieldComponents={{
           ...ScaffoldPresentationDefaultFieldComponents,
+          String: StringInput,
+          Date: DateInput,
+          Number: NumberInput,
+          Boolean: BooleanInput,
+          Relationship: RelationshipInput,
         }}
       >
         {children}

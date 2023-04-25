@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { css } from "@emotion/react";
 
-import type { Primitive, XFormProps } from "../../interfaces";
+import type { XFormProps } from "../../interfaces";
 
 const styles = {
   box: css`
@@ -19,7 +19,7 @@ const MuiForm: React.FC<XFormProps> = ({
   isEdit,
   fields,
   formState,
-  onUpdate,
+  onUpdateField,
   onSave,
 }) => {
   return (
@@ -27,19 +27,16 @@ const MuiForm: React.FC<XFormProps> = ({
       <Grid container spacing={2}>
         {fields.map((field) => (
           <Fragment key={field.key}>
-            <Grid
-              display="flex"
-              justifyContent="flex-end"
-              alignItems="center"
-              item
-              xs={1.5}
-            >
-              <span css={styles.label}>{field.label}</span>
-            </Grid>
-            <Grid item xs={10.5}>
+            <Grid item xs={12}>
               {field.render({
                 value: formState[field.key],
-                onUpdate: (value: Primitive) => onUpdate(field.key, value),
+                label: field.label,
+                onUpdate: (value) =>
+                  onUpdateField({
+                    key: field.key,
+                    value,
+                    attributeSchema: field.attributeSchema,
+                  }),
               })}
             </Grid>
           </Fragment>

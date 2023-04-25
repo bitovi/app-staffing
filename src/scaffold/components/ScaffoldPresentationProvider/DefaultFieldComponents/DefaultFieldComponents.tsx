@@ -1,49 +1,103 @@
-import { Primitive } from "../../../presentation/interfaces";
+import type { DefaultFieldComponentsTypes } from "../ScaffoldPresentationProvider";
 
-export const String: React.FC<{
-  value: string;
-  onUpdate: (value: Primitive) => void;
-}> = ({ value, onUpdate }) => {
+export const String: DefaultFieldComponentsTypes["String"] = ({
+  value,
+  label,
+  onUpdate,
+}) => {
   return (
-    <input
-      type="text"
-      value={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
+    <div>
+      <label>{label}: </label>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onUpdate(e.target.value)}
+      />
+    </div>
   );
 };
 
-export const Number: React.FC<{
-  value: number;
-  onUpdate: (value: Primitive) => void;
-}> = ({ value, onUpdate }) => {
+export const Number: DefaultFieldComponentsTypes["Number"] = ({
+  value,
+  label,
+  onUpdate,
+}) => {
   return (
-    <input
-      type="number"
-      value={value}
-      onChange={(e) => onUpdate(window.Number(e.target.value))}
-    />
+    <div>
+      <label>{label}: </label>
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => onUpdate(window.Number(e.target.value))}
+      />
+    </div>
   );
 };
 
-export const Boolean: React.FC<{
-  value: boolean;
-  onUpdate: (value: Primitive) => void;
-}> = ({ value, onUpdate }) => {
+export const Boolean: DefaultFieldComponentsTypes["Boolean"] = ({
+  value,
+  label,
+  onUpdate,
+}) => {
   return (
-    <input type="checkbox" checked={value} onChange={() => onUpdate(!value)} />
+    <div>
+      <input
+        type="checkbox"
+        checked={value}
+        onChange={() => onUpdate(!value)}
+      />
+      <label> {label}</label>
+    </div>
   );
 };
 
-export const Date: React.FC<{
-  value: string;
-  onUpdate: (value: Primitive) => void;
-}> = ({ value, onUpdate }) => {
+export const Date: DefaultFieldComponentsTypes["String"] = ({
+  value,
+  label,
+  onUpdate,
+}) => {
   return (
-    <input
-      type="date"
-      value={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
+    <div>
+      <label>{label}: </label>
+      <input
+        type="date"
+        value={value}
+        onChange={(e) => onUpdate(e.target.value)}
+      />
+    </div>
+  );
+};
+
+export const Relationship: DefaultFieldComponentsTypes["Relationship"] = ({
+  values,
+  label,
+  options,
+  onUpdate,
+}) => {
+  return (
+    <fieldset>
+      <label>{label}: </label>
+      {options.map((option) => (
+        <div key={option.id}>
+          <input
+            id={`checkbox-${option.id}`}
+            type="checkbox"
+            name={option.label}
+            checked={values?.includes(option.id)}
+            onChange={() => {
+              if (values.includes(option.id)) {
+                const index = values.indexOf(option.id);
+                const newValues = [...values];
+                newValues.splice(index, 1);
+                onUpdate(newValues);
+              } else {
+                onUpdate([...values, option.id]);
+              }
+            }}
+          />
+          <label htmlFor={`checkbox-${option.id}`}>{` ${option.label}`}</label>
+        </div>
+      ))}
+    </fieldset>
   );
 };

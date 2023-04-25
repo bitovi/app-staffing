@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isEmpty } from "lodash";
 import {
+  FormFieldValueType,
   getFormFields,
   ScaffoldFormField,
 } from "../../services/formFields/scaffoldFormFields";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
+import { createOne } from "../../services/api/api";
 import type { FieldComponent, Primitive } from "../../presentation/interfaces";
 import type { Schema } from "../../schemas/schemas";
-import { createOne } from "../../services/api/api";
 
-export type FormState = { [key: string]: Primitive };
+export type FormState = { [key: string]: Primitive | string[] };
 interface ScaffoldFormProps {
   isEdit?: boolean;
   schema: Schema;
@@ -25,36 +27,46 @@ const ScaffoldForm: React.FC<ScaffoldFormProps> = ({
   children,
 }) => {
   const { Form, defaultFieldComponents } = useScaffoldPresentation();
-  const formFields = getFormFields(
-    schema,
-    fieldComponents || {},
-    defaultFieldComponents,
-    children,
-  );
-  const [formState, setFormState] = useState<FormState>(
-    getDefaultFormState(schema, formFields),
-  );
+  const [formFields, setFormFields] = useState<ScaffoldFormField[]>([]);
+  const [formState, setFormState] = useState<FormState>({});
+
+  useEffect(() => {
+    getFormFields(
+      schema,
+      fieldComponents || {},
+      defaultFieldComponents,
+      children,
+    ).then((formFields) => {
+      setFormFields(formFields);
+      setFormState(getDefaultFormState(formFields));
+    });
+  }, []);
 
   const onSave = async () => {
     try {
-      const formattedFormState = formFields.reduce((acc, next) => {
-        return { ...acc, [next.key]: formState[next.key] || null };
-      }, {});
-      await createOne(schema, formattedFormState);
+      await createOne(schema, formFields, formState);
       routeOnSuccess();
     } catch (error) {
       console.error("failed to create", error);
     }
   };
 
+  const onUpdateField = ({
+    key,
+    value,
+  }: {
+    key: string;
+    value: FormFieldValueType;
+  }) => {
+    setFormState({ ...formState, [key]: value });
+  };
+
   return (
     <Form
       isEdit={isEdit}
-      fields={formFields}
+      fields={!isEmpty(formState) ? formFields : []}
       formState={formState}
-      onUpdate={(key: string, value: Primitive) =>
-        setFormState({ ...formState, [key]: value })
-      }
+      onUpdateField={onUpdateField}
       onSave={onSave}
     />
   );
@@ -62,19 +74,19 @@ const ScaffoldForm: React.FC<ScaffoldFormProps> = ({
 
 export default ScaffoldForm;
 
-function getDefaultFormState(
-  schema: Schema,
-  formFields: ScaffoldFormField[],
-): FormState {
+function getDefaultFormState(formFields: ScaffoldFormField[]): FormState {
   return formFields.reduce((acc, next) => {
-    let attributeSchema = schema.attributes[next.key];
-    attributeSchema =
-      typeof attributeSchema === "object"
-        ? attributeSchema.type
-        : attributeSchema;
-
-    const defaultValue: Primitive = attributeSchema === "boolean" ? false : "";
-
-    return { ...acc, [next.key]: defaultValue };
+    return {
+      ...acc,
+      // set default value
+      [next.key]:
+        next.attributeSchema.type === "relationship"
+          ? []
+          : next.attributeSchema.type === "boolean"
+          ? false
+          : next.attributeSchema.type === "number"
+          ? 0
+          : "",
+    };
   }, {});
 }

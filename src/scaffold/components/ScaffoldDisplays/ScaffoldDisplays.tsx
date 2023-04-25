@@ -5,7 +5,7 @@ import type {
   FieldComponent,
 } from "../../presentation/interfaces";
 import type { Attribute } from "../../schemas/schemas";
-import type { Render as FieldRender } from "../../services/formFields/scaffoldFormFields";
+import type { FormFieldRender } from "../../services/formFields/scaffoldFormFields";
 
 export type Render = ({ record }: { record: FlatRecord }) => JSX.Element;
 
@@ -42,7 +42,7 @@ export const ScaffoldAttributeDisplay: React.FC<
 export type ScaffoldAttributeFieldProps = {
   attribute: string;
   label?: string;
-} & ({ render?: FieldRender } | { FieldComponent?: FieldComponent });
+} & ({ render?: FormFieldRender } | { FieldComponent?: FieldComponent });
 
 export const ScaffoldAttributeField: React.FC<
   ScaffoldAttributeFieldProps

@@ -1,1 +1,7 @@
-export { String, Number, Boolean, Date } from "./DefaultFieldComponents";
+export {
+  String,
+  Number,
+  Boolean,
+  Date,
+  Relationship,
+} from "./DefaultFieldComponents";

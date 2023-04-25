@@ -1,12 +1,12 @@
-export type Attribute =
-  | string
-  | {
-      type: string;
-      allowNull: boolean;
-      primaryKey?: boolean;
-      defaultValue?: string;
-      unique?: boolean;
-    };
+export type AttributeSchema = {
+  type: string;
+  allowNull: boolean;
+  primaryKey?: boolean;
+  defaultValue?: string;
+  unique?: boolean;
+};
+
+export type Attribute = string | AttributeSchema;
 
 export interface Relationship {
   target: string;

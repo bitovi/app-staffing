@@ -77,6 +77,12 @@
     "workerDirectory": "public"
   },
   "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!plur)/"
+    ],
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "\\.stories\\."
@@ -121,6 +127,7 @@
     "json-api-serializer": "^2.6.6",
     "lodash": "^4.17.21",
     "node-sass": "^6.0.1",
+    "plur": "^5.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.19.3",

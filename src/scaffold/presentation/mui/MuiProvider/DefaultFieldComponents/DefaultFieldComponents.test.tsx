@@ -1,7 +1,7 @@
 import { render, fireEvent } from "@testing-library/react";
 import { String, Number, Boolean, Date } from ".";
 
-describe("scaffold/components/ScaffoldPresentationProvider/DefaultFieldComponents", () => {
+describe("scaffold/presentation/mui/MuiProvider/DefaultFieldComponents", () => {
   describe("String", () => {
     it("works", async () => {
       const callbackFn = jest.fn();
