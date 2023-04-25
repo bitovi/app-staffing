@@ -77,6 +77,12 @@
     "workerDirectory": "public"
   },
   "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!plur)/"
+    ],
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "\\.stories\\."

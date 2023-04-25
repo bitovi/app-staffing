@@ -83,11 +83,7 @@ export async function getFormFieldsFromSchema(
   const hasManyFormFields = await Promise.all(
     Object.values(schema?.hasMany || []).map(async (value) => {
       const raw = await fetch(
-        `${
-          window.env.API_BASE_URL
-        }/${value.target.toLowerCase()}?${encodeURIComponent(
-          "filter[name][$gt]",
-        )}=RE`,
+        `${window.env.API_BASE_URL}/${value.target.toLowerCase()}`,
       );
       const response = await raw.json();
       const options = getFlatRecords(response).map((item) => ({
