@@ -5,8 +5,8 @@ export {
   NumberList,
   Boolean,
   BooleanList,
-  DefaultDate,
+  Date,
   DateList,
   Relationship,
   RelationshipList,
-} from "./DefaultComponents";
+} from "./DefaultDisplayComponents";

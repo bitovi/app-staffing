@@ -12,6 +12,7 @@ const Dashboard = lazy(() => import("../pages/Dashboard"));
 const ProjectRoutes = lazy(() => import("../pages/Projects/Routes"));
 const EmployeesList = lazy(() => import("../scaffold/app/Employees/List"));
 const EmployeeDetails = lazy(() => import("../scaffold/app/Employees/Details"));
+const EmployeeCreate = lazy(() => import("../scaffold/app/Employees/Create"));
 const SkillsList = lazy(() => import("../scaffold/app/Skills"));
 
 export default function App(): JSX.Element {
@@ -22,6 +23,11 @@ export default function App(): JSX.Element {
           <Route path="/" exact>
             <ErrorBoundary>
               <Dashboard />
+            </ErrorBoundary>
+          </Route>
+          <Route path="/team-members/add">
+            <ErrorBoundary>
+              <EmployeeCreate />
             </ErrorBoundary>
           </Route>
           <Route path="/team-members/:id">

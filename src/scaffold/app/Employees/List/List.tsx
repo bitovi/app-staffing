@@ -9,7 +9,6 @@ import {
   ScaffoldExtraDisplay,
   ScaffoldAttributeDisplay,
 } from "../../../components/ScaffoldDisplays";
-import type { ValueComponent } from "../../../presentation/interfaces";
 import { fetchData } from "../../../services/api/api";
 
 import { EditIcon, TrashIcon, ViewIcon } from "../../../../pages/assets";
@@ -17,14 +16,12 @@ import { Employee as EmployeeSchema } from "../../../schemas/schemas";
 import { Employee, useEmployeeMutations } from "../../../../services/api";
 import DeleteConfirmationModal from "../../../../pages/Employees/components/EmployeeDeleteConfirmationModal";
 import EmployeeModal from "../../../../pages/Employees/components/EmployeeModal";
-import styles from "./List.module.css";
 
 const resource = fetchData(EmployeeSchema);
 
 const EmployeesListPage: React.FC = () => {
   const history = useHistory();
-  const { createEmployee, updateEmployee, destroyEmployee } =
-    useEmployeeMutations();
+  const { updateEmployee, destroyEmployee } = useEmployeeMutations();
 
   const [showEmployeeModal, setShowEmployeeModal] = useState<boolean>(false);
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
@@ -37,10 +34,6 @@ const EmployeesListPage: React.FC = () => {
       const id = employeeToEdit.id;
       await updateEmployee(id, employeeToUpdate);
     }
-  };
-
-  const addNewEmployee = async (data: Omit<Employee, "id">) => {
-    await createEmployee(data);
   };
 
   return (
@@ -56,16 +49,11 @@ const EmployeesListPage: React.FC = () => {
         onSave={(employee) => submitUpdateEmployee(employee as Employee)}
         employee={employeeToEdit ? employeeToEdit : undefined}
       />
-      <EmployeeModal
-        isOpen={showEmployeeModal}
-        onClose={() => setShowEmployeeModal(false)}
-        onSave={addNewEmployee}
-      />
       <MuiProvider>
         <ScaffoldListPage
           schema={EmployeeSchema}
           renderActions={() => (
-            <CreateEmployee onClick={() => setShowEmployeeModal(true)} />
+            <CreateEmployee onClick={() => history.push("/team-members/add")} />
           )}
           useData={() => resource.read()}
         >
@@ -130,18 +118,5 @@ const CreateEmployee: React.FC<{
     <Button variant="contained" onClick={onClick}>
       Add Team Member
     </Button>
-  );
-};
-
-const CustomSkillField: ValueComponent = ({ value }) => {
-  return (
-    <div>
-      {Array.isArray(value) &&
-        value.map((val) => (
-          <span key={val.label} className={styles.customSkillField}>
-            {val.label}
-          </span>
-        ))}
-    </div>
   );
 };

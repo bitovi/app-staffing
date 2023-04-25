@@ -1,3 +1,4 @@
+import { Children as ReactChildren } from "react";
 import { v4 as uuidv4 } from "uuid";
 import cloneDeep from "lodash/cloneDeep";
 
@@ -240,4 +241,33 @@ export function hasValidChildren(
   children: JSX.Element[],
 ): boolean {
   return children.some((child) => child.type.name === name);
+}
+
+export function getDisplays(
+  schema: Schema,
+  valueComponents: { [field: string]: ValueComponent } | undefined,
+  defaultValueComponents: DefaultValueComponents,
+  children: React.ReactNode | null,
+): ScaffoldDisplay[] {
+  // casting as JSX.Element because helper functions require access to
+  // `child.type.name` and `child.props`
+  const childArray = ReactChildren.toArray(children) as JSX.Element[];
+
+  let displays = hasValidChildren(ScaffoldAttributeDisplay.name, childArray)
+    ? getDisplaysFromChildren(schema, defaultValueComponents, childArray)
+    : getDisplaysFromSchema(
+        schema,
+        defaultValueComponents,
+        valueComponents || null,
+      );
+
+  if (hasValidChildren(ScaffoldExtraDisplay.name, childArray)) {
+    displays = injectExtraDisplays(
+      displays,
+      defaultValueComponents,
+      childArray,
+    );
+  }
+
+  return displays;
 }

@@ -1,5 +1,4 @@
-import { render, screen, within, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render } from "@testing-library/react";
 
 import Employees from "./List";
 
@@ -72,29 +71,5 @@ describe("scaffold/app/Employees/List", () => {
     const { findByText } = render(<Employees />);
     const addSkillButton = await findByText(/add team member/i);
     expect(addSkillButton).toBeInTheDocument();
-  });
-
-  it("resets modal form fields when closed", async () => {
-    render(<Employees />);
-
-    const addButton = screen.getByText(/add team member/i);
-
-    userEvent.click(addButton);
-
-    const modal = await screen.findByRole("dialog");
-    const cancelButton = within(modal).getByText(/Cancel/i);
-
-    const modalNameInput = await screen.findByPlaceholderText(/^name$/i);
-    userEvent.type(modalNameInput, "Johnny Appleseed");
-    expect(modalNameInput).toHaveValue("Johnny Appleseed");
-
-    userEvent.click(cancelButton);
-
-    await waitFor(() => expect(modal).not.toBeInTheDocument());
-
-    userEvent.click(addButton);
-
-    const modalNameInput2 = await screen.findByPlaceholderText(/^name$/i);
-    expect(modalNameInput2).toHaveValue("");
   });
 });
