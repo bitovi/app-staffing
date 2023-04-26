@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { getDisplays } from "../../services/displays/scaffoldDisplays";
 import { useScaffoldPresentation } from "../ScaffoldPresentationProvider";
 import { getMany, suspendPromise } from "../../services/api/api";
@@ -20,11 +19,9 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
   schema,
   valueComponents,
   useData,
-  actions,
   children,
 }) => {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const { List, Modal, defaultValueComponents } = useScaffoldPresentation();
+  const { List, defaultValueComponents } = useScaffoldPresentation();
   const displays = getDisplays(
     schema,
     valueComponents,
@@ -38,17 +35,7 @@ const ScaffoldList: React.FC<ScaffoldListProps> = ({
     useData = () => resource.read();
   }
 
-  return (
-    <>
-      <List displays={displays} useData={useData} />
-      {actions?.delete && (
-        <Modal
-          open={isDeleteModalOpen}
-          handleClose={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
-        />
-      )}
-    </>
-  );
+  return <List displays={displays} useData={useData} />;
 };
 
 export default ScaffoldList;

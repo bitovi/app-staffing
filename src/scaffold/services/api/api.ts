@@ -1,4 +1,5 @@
 import plur from "plur";
+import isEmpty from "lodash/isEmpty";
 import type {
   FlatRecord,
   Primitive,
@@ -114,16 +115,21 @@ export function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
 
     for (let i = 0; i < relationships.length; i++) {
       const [key, relationship] = relationships[i];
-      const type = relationship.data[0].type;
-      const displayValueKey = getDisplayValueKeyForSchema(type);
+      const type = relationship?.data[0]?.type;
 
-      flatRecord[key] = relationship.data.map((related) => {
-        return {
-          ...flatIncluded[type][related.id],
-          id: related.id,
-          label: flatIncluded[type][related.id][displayValueKey],
-        };
-      }) as Relationship[];
+      if (type) {
+        const displayValueKey = getDisplayValueKeyForSchema(type);
+
+        flatRecord[key] = relationship.data.map((related) => {
+          return {
+            ...flatIncluded[type][related.id],
+            id: related.id,
+            label: flatIncluded[type][related.id][displayValueKey],
+          };
+        }) as Relationship[];
+      } else {
+        flatRecord[key] = [];
+      }
     }
 
     return flatRecord;
@@ -139,7 +145,7 @@ export async function createOne(
 
   // json api specific formatting
   const data: {
-    relationships: { [key: string]: { data: { type: string; id: string }[] } };
+    relationships?: { [key: string]: { data: { type: string; id: string }[] } };
     attributes: { [key: string]: FormFieldValueType | null };
     type: string;
   } = {
@@ -152,15 +158,17 @@ export async function createOne(
     const field = formFields[i];
 
     if (field.attributeSchema.type === "relationship") {
-      data.relationships = {
-        ...data.relationships,
-        [field.key]: {
-          data: (formState[field.key] as string[]).map((id) => ({
-            type: field.key,
-            id,
-          })),
-        },
-      };
+      if (!isEmpty(formState[field.key])) {
+        data.relationships = {
+          ...data.relationships,
+          [field.key]: {
+            data: (formState[field.key] as string[]).map((id) => ({
+              type: field.key,
+              id,
+            })),
+          },
+        };
+      }
     } else {
       data.attributes[field.key] = formState[field.key] || null;
     }
@@ -286,7 +294,9 @@ export function getMany(schema: Schema): Promise<FlatRecord[]> {
     });
 }
 
-export function suspendPromise<T>(promise: Promise<T>) {
+export function suspendPromise<T>(promise: Promise<T>): {
+  read: () => T;
+} {
   let status = "pending";
   let response: T;
 
