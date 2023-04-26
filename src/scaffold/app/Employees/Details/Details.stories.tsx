@@ -6,7 +6,6 @@ import { MemoryRouter, Route } from "react-router-dom";
 import { Flex, Box } from "@chakra-ui/layout";
 
 import Details from "./Details";
-
 export default {
   title: "Pages/Employees/Details",
   component: Details,

@@ -9,6 +9,7 @@ import MuiLayout from "../MuiLayout";
 import MuiList from "../MuiList";
 import MuiForm from "../MuiForm";
 import MuiDetails from "../MuiDetails";
+import MuiModal from "../MuiModal";
 import {
   String as StringInput,
   Number as NumberInput,
@@ -32,6 +33,7 @@ const MuiProvider: React.FC<XProviderProps<Theme>> = ({
         Layout={MuiLayout}
         Details={MuiDetails}
         Form={MuiForm}
+        Modal={MuiModal}
         defaultValueComponents={{
           ...ScaffoldPresentationDefaultValueComponents,
           Relationship,

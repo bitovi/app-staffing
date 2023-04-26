@@ -74,6 +74,7 @@ export interface ScaffoldPresentationContextProps {
   Layout: React.FC<XLayoutProps>;
   Details: React.FC<XDetailsProps>;
   Form: React.FC<XFormProps>;
+  Modal: React.FC<any>;
   defaultValueComponents: DefaultValueComponentsTypes;
   defaultFieldComponents: DefaultFieldComponentsTypes;
 }
@@ -106,6 +107,7 @@ export const ScaffoldPresentationContext =
     Layout: () => null,
     Details: () => null,
     Form: () => null,
+    Modal: () => null,
     defaultValueComponents: ScaffoldPresentationDefaultValueComponents,
     defaultFieldComponents: ScaffoldPresentationDefaultFieldComponents,
   });
@@ -125,6 +127,7 @@ const ScaffoldPresentationProvider: React.FC<
   Layout,
   Details,
   Form,
+  Modal,
   defaultValueComponents,
   defaultFieldComponents,
   children,
@@ -136,6 +139,7 @@ const ScaffoldPresentationProvider: React.FC<
         Layout,
         Details,
         Form,
+        Modal,
         defaultValueComponents,
         defaultFieldComponents,
       }}
