@@ -10,7 +10,7 @@ describe("Pages/Projects/components/RoleList", function () {
   jest.runAllTimers();
 
   it("renders button to add a new role", async function () {
-    const project = Serializer.deserialize("projects", { data: projects[0] });
+    const project = Serializer.deserialize("Project", { data: projects[0] });
 
     const { findByRole } = render(
       <Suspense fallback={<div>Loading...</div>}>

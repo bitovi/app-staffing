@@ -1,4 +1,5 @@
 import plur from "plur";
+import isEmpty from "lodash/isEmpty";
 import type {
   FlatRecord,
   Primitive,
@@ -54,7 +55,7 @@ export function getDisplayValueKeyForSchema(schemaKey: string): string {
   const schemaEntries = Object.values(schemas);
 
   for (let i = 0; i < schemaEntries.length; i++) {
-    if (schemaEntries[i].jsonApiField === schemaKey) {
+    if (schemaEntries[i].name === schemaKey) {
       return schemaEntries[i].displayField;
     }
   }
@@ -65,9 +66,9 @@ export function getDisplayValueKeyForSchema(schemaKey: string): string {
 /**
  * convert included from:
  * { included: [
- *  { type: 'skills', id: 'skill-id-1', attributes: { name: 'Skill 1' } },
- *  { type: 'skills', id: 'skill-id-2', attributes: { name: 'Skill 2' } },
- *  { type: 'projects', id: 'project-id-1', attributes: { name: 'Project 1' } },
+ *  { type: 'Skill', id: 'skill-id-1', attributes: { name: 'Skill 1' } },
+ *  { type: 'Skill', id: 'skill-id-2', attributes: { name: 'Skill 2' } },
+ *  { type: 'Project', id: 'project-id-1', attributes: { name: 'Project 1' } },
  * ] }
  * to:
  * {
@@ -82,7 +83,6 @@ export function getDisplayValueKeyForSchema(schemaKey: string): string {
  */
 function getFlattenedIncluded(included?: JsonApiIncluded[]): FlatIncluded {
   if (!included) return {};
-
   return included.reduce(
     (acc: FlatIncluded, next) => ({
       ...acc,
@@ -115,13 +115,21 @@ export function getFlatRecords(data: JsonApiResponse): FlatRecord[] {
 
     for (let i = 0; i < relationships.length; i++) {
       const [key, relationship] = relationships[i];
-      const displayValueKey = getDisplayValueKeyForSchema(key);
+      const type = relationship?.data[0]?.type;
 
-      flatRecord[key] = relationship.data.map((related) => ({
-        ...flatIncluded[key][related.id],
-        id: related.id,
-        label: flatIncluded[key][related.id][displayValueKey],
-      })) as Relationship[];
+      if (type) {
+        const displayValueKey = getDisplayValueKeyForSchema(type);
+
+        flatRecord[key] = relationship.data.map((related) => {
+          return {
+            ...flatIncluded[type][related.id],
+            id: related.id,
+            label: flatIncluded[type][related.id][displayValueKey],
+          };
+        }) as Relationship[];
+      } else {
+        flatRecord[key] = [];
+      }
     }
 
     return flatRecord;
@@ -137,28 +145,30 @@ export async function createOne(
 
   // json api specific formatting
   const data: {
-    relationships: { [key: string]: { data: { type: string; id: string }[] } };
+    relationships?: { [key: string]: { data: { type: string; id: string }[] } };
     attributes: { [key: string]: FormFieldValueType | null };
     type: string;
   } = {
     relationships: {},
     attributes: {},
-    type: "employees",
+    type: "Employee",
   };
 
   for (let i = 0; i < formFields.length; i++) {
     const field = formFields[i];
 
     if (field.attributeSchema.type === "relationship") {
-      data.relationships = {
-        ...data.relationships,
-        [field.key]: {
-          data: (formState[field.key] as string[]).map((id) => ({
-            type: field.key,
-            id,
-          })),
-        },
-      };
+      if (!isEmpty(formState[field.key])) {
+        data.relationships = {
+          ...data.relationships,
+          [field.key]: {
+            data: (formState[field.key] as string[]).map((id) => ({
+              type: field.key,
+              id,
+            })),
+          },
+        };
+      }
     } else {
       data.attributes[field.key] = formState[field.key] || null;
     }
@@ -200,7 +210,7 @@ export async function updateOne(
   } = {
     relationships: {},
     attributes: {},
-    type: "employees",
+    type: "Employee",
   };
 
   for (let i = 0; i < formFields.length; i++) {
@@ -284,7 +294,9 @@ export function getMany(schema: Schema): Promise<FlatRecord[]> {
     });
 }
 
-export function suspendPromise<T>(promise: Promise<T>) {
+export function suspendPromise<T>(promise: Promise<T>): {
+  read: () => T;
+} {
   let status = "pending";
   let response: T;
 

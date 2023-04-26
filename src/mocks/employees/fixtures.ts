@@ -7,7 +7,7 @@ import { addAssignment } from "../assignments/fixtures";
 import { addRole } from "../roles/fixtures";
 
 export interface JSONEmployee {
-  type: "employees";
+  type: "Employee";
   id: string;
   attributes: {
     name: string;
@@ -16,10 +16,10 @@ export interface JSONEmployee {
   };
   relationships: {
     assignments?: {
-      data: Array<{ type: "assignments"; id: string }>;
+      data: Array<{ type: "Assignment"; id: string }>;
     };
     skills?: {
-      data: Array<{ type: "skills"; id: string }>;
+      data: Array<{ type: "Skill"; id: string }>;
     };
   };
 }
@@ -31,7 +31,7 @@ export function makeEmployee(): JSONEmployee {
   faker.seed(fakerSeedBase + employeeId);
 
   return {
-    type: "employees",
+    type: "Employee",
     id: `${++employeeId}`,
     attributes: {
       name: faker.name.findName(),
@@ -49,7 +49,7 @@ export function makeEmployee(): JSONEmployee {
       skills: {
         data: faker.random
           .arrayElements(skills, faker.datatype.number({ min: 1, max: 3 }))
-          .map(({ id }) => ({ type: "skills", id })),
+          .map(({ id }) => ({ type: "Skill", id })),
       },
     },
   };

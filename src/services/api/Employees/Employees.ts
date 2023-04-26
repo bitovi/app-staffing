@@ -16,7 +16,7 @@ export interface Employee extends BaseData {
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Employee>(
   "/employees",
-  "employees",
+  "Employee",
   { title: "Team Member" },
 );
 

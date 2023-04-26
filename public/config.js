@@ -16,6 +16,6 @@
  */
 
 window.env = {
-  API_BASE_URL: "https://api.dev.bitovi-staffing.com",
+  API_BASE_URL: "https://scaffold.bitovi-sandbox.com/api",
   // API_AUTH_TOKEN: "<base64 encoded username:password>",
 };

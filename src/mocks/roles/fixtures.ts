@@ -5,7 +5,7 @@ import faker from "faker";
 import { skills } from "../skills/fixtures";
 
 export interface JSONRole {
-  type: "roles";
+  type: "Role";
   id: string;
   attributes: {
     start_date?: Date;
@@ -15,13 +15,13 @@ export interface JSONRole {
   };
   relationships: {
     assignments?: {
-      data: Array<{ type: "assignments"; id: string }>;
+      data: Array<{ type: "Assignment"; id: string }>;
     };
     project?: {
-      data: { type: "projects"; id: string };
+      data: { type: "Project"; id: string };
     };
     skills?: {
-      data: Array<{ type: "skills"; id: string }>;
+      data: Array<{ type: "Skill"; id: string }>;
     };
   };
 }
@@ -33,7 +33,7 @@ export function makeRole(project: JSONProject): JSONRole {
   faker.seed(fakerSeedBase + roleId);
 
   return {
-    type: "roles",
+    type: "Role",
     id: `${++roleId}`,
     attributes: {
       start_date: faker.date.past(),
@@ -62,7 +62,7 @@ export function makeRole(project: JSONProject): JSONRole {
       skills: {
         data: faker.random
           .arrayElements(skills, faker.datatype.number({ min: 1, max: 1 }))
-          .map(({ id }) => ({ type: "skills", id })),
+          .map(({ id }) => ({ type: "Skill", id })),
       },
     },
   };

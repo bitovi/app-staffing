@@ -66,7 +66,7 @@ WithData.parameters = {
               self: "/employees/f23140f8-88ee-4b9c-a223-7078a1ee2425?include=skills",
             },
             data: {
-              type: "employees",
+              type: "Employee",
               id: "f23140f8-88ee-4b9c-a223-7078a1ee2425",
               attributes: {
                 name: "Adolph Kshlerin",
@@ -77,7 +77,7 @@ WithData.parameters = {
                 skills: {
                   data: [
                     {
-                      type: "skills",
+                      type: "Skill",
                       id: "bbfef8b9-3c73-4ed3-8225-3ef99738a7c1",
                     },
                   ],
@@ -86,7 +86,7 @@ WithData.parameters = {
             },
             included: [
               {
-                type: "skills",
+                type: "Skill",
                 id: "bbfef8b9-3c73-4ed3-8225-3ef99738a7c1",
                 attributes: { name: "DevOps" },
               },

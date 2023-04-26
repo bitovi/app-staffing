@@ -24,7 +24,7 @@ const parentStore = { path: "/projects", sourceRelationship: "project" };
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Role>(
   "/roles",
-  "roles",
+  "Role",
   { title: "Role" },
   parentStore,
 );

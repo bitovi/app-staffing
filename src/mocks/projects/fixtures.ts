@@ -1,7 +1,7 @@
 import faker from "faker";
 
 export interface JSONProject {
-  type: "projects";
+  type: "Project";
   id: string;
   attributes: {
     name: string;
@@ -16,7 +16,7 @@ export function makeProject(): JSONProject {
   faker.seed(fakerSeedBase + projectId);
 
   return {
-    type: "projects",
+    type: "Project",
     id: `${++projectId}`,
     attributes: {
       name: `${faker.name.jobDescriptor()} ${faker.name.jobTitle()}s`,

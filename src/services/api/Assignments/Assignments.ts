@@ -17,7 +17,7 @@ export type NewAssignment = Partial<Omit<Assignment, "id">>;
 
 const { useRestOne, useRestList, useRestMutations } = restBuilder<Assignment>(
   "/assignments",
-  "assignments",
+  "Assignment",
   { title: "Assignment" },
 );
 
