@@ -54,7 +54,7 @@ export default function restBuilder<Data extends BaseData>(
 } {
   function useRestList(query?: ListQuery<Data>): Data[] {
     const { data, error } = useSWR<Data[], Error>(
-      path,
+      [path, JSON.stringify(query)],
       async (path) => {
         const response = await fetcher<JSONAPIDocument>(
           "GET",
